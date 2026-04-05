@@ -1,36 +1,65 @@
+{{alias}}( N, x, stride, scale, sumsq )
+    Returns updated scale and sum-of-squares in scaled form.
 
-    dlassq.ndarray( N, x, stride, offset, scale, sumsq )
-        Return an updated sum of squares represented in scaled form
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: number
+        `x`.
 
-        x: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `x`.
+    scale: number
+        `scale`.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    sumsq: number
+        `sumsq`.
 
-        scale: number
-            scale.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        sumsq: number
-            sumsq.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( N, x, stride, offset, scale, sumsq )
+    Returns updated scale and sum-of-squares in scaled form using
+    alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    x: number
+        `x`.
+
+    stride: integer
+        `stride`.
+
+    offset: integer
+        `offset`.
+
+    scale: number
+        `scale`.
+
+    sumsq: number
+        `sumsq`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

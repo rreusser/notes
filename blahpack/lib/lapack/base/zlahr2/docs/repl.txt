@@ -1,72 +1,141 @@
+{{alias}}( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT, Y, strideY1, strideY2, offsetY )
+    Reduces the first nb columns of a complex general rectangular matrix to
+    upper trapezoidal form.
 
-    zlahr2.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, t, strideT, offsetT, ldt, y, strideY, offsetY, ldy )
-        Reduce NB columns of a complex matrix in Hessenberg form
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    K: integer
+        inner dimension.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    nb: integer
+        `nb`.
 
-        nb: integer
-            nb.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    offsetA: integer
+        starting index for `A`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    tau: Float64Array
+        `tau`.
 
-        tau: Float64Array
-            input array.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        strideTAU: integer
-            stride length for `tau`.
+    offsetTAU: integer
+        starting index for `TAU`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `tau`.
+    T: Float64Array
+        `T`.
 
-        t: Float64Array
-            input array.
+    strideT1: integer
+        stride of dimension 1 of `T`.
 
-        strideT: integer
-            stride length for `t`.
+    strideT2: integer
+        stride of dimension 2 of `T`.
 
-        offsetT: NonNegativeInteger
-            starting index for `t`.
+    offsetT: integer
+        starting index for `T`.
 
-        ldt: integer
-            ldt.
+    Y: Float64Array
+        `Y`.
 
-        y: Float64Array
-            input array.
+    strideY1: integer
+        stride of dimension 1 of `Y`.
 
-        strideY: integer
-            stride length for `y`.
+    strideY2: integer
+        stride of dimension 2 of `Y`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    offsetY: integer
+        starting index for `Y`.
 
-        ldy: integer
-            ldy.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+
+{{alias}}.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT, Y, strideY1, strideY2, offsetY )
+    Reduces the first nb columns of a complex general rectangular matrix to
+    upper trapezoidal form using alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    nb: integer
+        `nb`.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    tau: Float64Array
+        `tau`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    T: Float64Array
+        `T`.
+
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    Y: Float64Array
+        `Y`.
+
+    strideY1: integer
+        stride of dimension 1 of `Y`.
+
+    strideY2: integer
+        stride of dimension 2 of `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

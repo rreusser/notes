@@ -1,48 +1,55 @@
+{{alias}}( a, b, c, d )
+    @license Apache-2.0.
 
-    dlanv2.ndarray( a, b, c, d, rt1r, rt1i, rt2r, rt2i, cs, sn )
-        Computes the Schur factorization of a 2x2 nonsymmetric matrix
+    Parameters
+    ----------
+    a: number
+        `a`.
 
-        Parameters
-        ----------
-        a: number
-            a.
+    b: number
+        `b`.
 
-        b: number
-            b.
+    c: number
+        `c`.
 
-        c: number
-            c.
+    d: number
+        `d`.
 
-        d: number
-            d.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        rt1r: number
-            rt1r.
+    Examples
+    --------
+    // TODO: Add examples
 
-        rt1i: number
-            rt1i.
 
-        rt2r: number
-            rt2r.
+{{alias}}.ndarray( A, B, C, D )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        rt2i: number
-            rt2i.
+    Parameters
+    ----------
+    A: Float64Array
+        `A`.
 
-        cs: number
-            cs.
+    B: Float64Array
+        `B`.
 
-        sn: number
-            sn.
+    C: Float64Array
+        `C`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    D: Float64Array
+        `D`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

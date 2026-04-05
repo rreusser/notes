@@ -1,45 +1,77 @@
+{{alias}}( uplo, N, A, LDA, IPIV, strideIPIV )
+    Computes the factorization of a complex Hermitian matrix A using the.
 
-    zhetf2.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
-        Complex Hermitian indefinite factorization (unblocked Bunch-Kaufman)
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        IPIV: Int32Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideIPIV: integer
-            stride length for `IPIV`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
+    Computes the factorization of a complex Hermitian matrix A using the
+    using alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

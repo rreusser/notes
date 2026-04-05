@@ -1,54 +1,65 @@
+{{alias}}( i0, n0, z, stride, pp )
+    Computes one dqds transform in ping-pong form without a shift.
 
-    dlasq6.ndarray( i0, n0, z, stride, offset, pp, dmin, dmin1, dmin2, dn, dnm1, dnm2 )
-        Compute one dqds transform without shift
+    Parameters
+    ----------
+    i0: number
+        `i0`.
 
-        Parameters
-        ----------
-        i0: integer
-            i0.
+    n0: number
+        `n0`.
 
-        n0: integer
-            n0.
+    z: number
+        `z`.
 
-        z: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `z`.
+    pp: number
+        `pp`.
 
-        offset: NonNegativeInteger
-            starting index for `z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        pp: integer
-            pp.
+    Examples
+    --------
+    // TODO: Add examples
 
-        dmin: number
-            dmin.
 
-        dmin1: number
-            dmin1.
+{{alias}}.ndarray( i0, n0, z, stride, offset, pp )
+    Computes one dqds transform in ping-pong form without a shift using
+    alternative indexing semantics.
 
-        dmin2: number
-            dmin2.
+    Parameters
+    ----------
+    i0: number
+        `i0`.
 
-        dn: number
-            dn.
+    n0: number
+        `n0`.
 
-        dnm1: number
-            dnm1.
+    z: number
+        `z`.
 
-        dnm2: number
-            dnm2.
+    stride: integer
+        `stride`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    offset: integer
+        `offset`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    pp: number
+        `pp`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,60 +1,79 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zgecon.ndarray( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Estimate the reciprocal condition number of a complex general matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        N: NonNegativeInteger
-            number of columns.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        A: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideA1: integer
-            stride of the first dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+{{alias}}.ndarray( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        anorm: number
-            anorm.
+    N: integer
+        number of columns.
 
-        rcond: number
-            rcond.
+    A: Float64Array
+        `A`.
 
-        WORK: Float64Array
-            input array.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    offsetA: integer
+        starting index for `A`.
 
-        RWORK: Float64Array
-            output array.
+    anorm: number
+        `anorm`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    rcond: number
+        `rcond`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    WORK: Float64Array
+        `WORK`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

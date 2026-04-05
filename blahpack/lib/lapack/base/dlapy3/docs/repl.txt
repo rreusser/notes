@@ -1,27 +1,50 @@
+{{alias}}( x, y, z )
+    Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 
-    dlapy3.ndarray( x, y, z )
-        Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+    Parameters
+    ----------
+    x: number
+        `x`.
 
-        Parameters
-        ----------
-        x: number
-            x.
+    y: number
+        `y`.
 
-        y: number
-            y.
+    z: number
+        `z`.
 
-        z: number
-            z.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+
+{{alias}}.ndarray( x, y, z )
+    Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow
+    using alternative indexing semantics.
+
+    Parameters
+    ----------
+    x: number
+        `x`.
+
+    y: number
+        `y`.
+
+    z: number
+        `z`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

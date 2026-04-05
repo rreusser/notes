@@ -1,57 +1,94 @@
+{{alias}}( uplo, N, nrhs, AP, IPIV, B, LDB )
+    Solves a system of linear equations with a real symmetric matrix in
+    packed storage using the factorization computed by dsptrf.
 
-    dsptrs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solves a system of linear equations with a real symmetric matrix in packed storage using the factorization computed by dsptrf.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAP: integer
-            stride length for `AP`.
+    B: Float64Array
+        `B`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    LDB: integer
+        leading dimension of `B`.
 
-        IPIV: Int32Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
 
-        B: Float64Array
-            output matrix.
+{{alias}}.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solves a system of linear equations with a real symmetric matrix in
+    packed storage using the factorization computed by dsptrf using
+    alternative indexing semantics.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    N: integer
+        number of columns.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    nrhs: integer
+        number of right-hand sides.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    AP: Float64Array
+        `AP`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

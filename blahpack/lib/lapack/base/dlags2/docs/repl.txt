@@ -1,57 +1,93 @@
+{{alias}}( upper, a1, a2, a3, b1, b2, b3 )
+    Computes 2-by-2 orthogonal matrices U, V, and Q, such that if UPPER is
+    true:.
 
-    dlags2.ndarray( upper, a1, a2, a3, b1, b2, b3, csu, snu, csv, snv, csq, snq )
-        Computes 2-by-2 orthogonal matrices U, V, Q for simultaneous upper/lower triangularization
+    Parameters
+    ----------
+    upper: boolean
+        `upper`.
 
-        Parameters
-        ----------
-        upper: boolean
-            upper.
+    a1: number
+        `a1`.
 
-        a1: number
-            a1.
+    a2: number
+        `a2`.
 
-        a2: number
-            a2.
+    a3: number
+        `a3`.
 
-        a3: number
-            a3.
+    b1: number
+        `b1`.
 
-        b1: number
-            b1.
+    b2: number
+        `b2`.
 
-        b2: number
-            b2.
+    b3: number
+        `b3`.
 
-        b3: number
-            b3.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        csu: number
-            csu.
+    Examples
+    --------
+    // TODO: Add examples
 
-        snu: number
-            snu.
 
-        csv: number
-            csv.
+{{alias}}.ndarray( upper, a1, a2, a3, b1, b2, b3, csu, snu, csv, snv, csq, snq )
+    Computes 2-by-2 orthogonal matrices U, V, and Q, such that if UPPER is
+    true: using alternative indexing semantics.
 
-        snv: number
-            snv.
+    Parameters
+    ----------
+    upper: boolean
+        `upper`.
 
-        csq: number
-            csq.
+    a1: number
+        `a1`.
 
-        snq: number
-            snq.
+    a2: number
+        `a2`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    a3: number
+        `a3`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    b1: number
+        `b1`.
+
+    b2: number
+        `b2`.
+
+    b3: number
+        `b3`.
+
+    csu: number
+        `csu`.
+
+    snu: number
+        `snu`.
+
+    csv: number
+        `csv`.
+
+    snv: number
+        `snv`.
+
+    csq: number
+        `csq`.
+
+    snq: number
+        `snq`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

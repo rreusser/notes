@@ -1,87 +1,77 @@
+{{alias}}( norm, uplo, N, AP, WORK )
+    Returns the value of the one-norm, Frobenius norm, infinity-norm, or the
+    largest absolute value of any element of a real symmetric matrix
+    supplied in packed storage.
 
-    dlansp( norm, uplo, N, AP, WORK )
-        Returns the value of the one-norm, Frobenius norm, infinity-norm, or
-        the largest absolute value of any element of a real symmetric matrix
-        supplied in packed storage.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            Specifies the norm: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            Specifies whether the upper or lower triangle is stored: 'upper' or
-            'lower'.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            Order of the matrix.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            Packed symmetric matrix, length >= N*(N+1)/2.
+    WORK: Float64Array
+        `WORK`.
 
-        WORK: Float64Array
-            Workspace array, length >= N.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: number
-            Norm value.
-
-        Examples
-        --------
-        > var AP = new {{alias:@stdlib/array/float64}}( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
-        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
-        > dlansp( 'max', 'upper', 3, AP, WORK )
-        7.0
+    Examples
+    --------
+    // TODO: Add examples
 
 
-    dlansp.ndarray( norm, uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
-        Returns the value of the one-norm, Frobenius norm, infinity-norm, or
-        the largest absolute value of any element of a real symmetric matrix
-        supplied in packed storage using alternative indexing semantics.
+{{alias}}.ndarray( norm, uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
+    Returns the value of the one-norm, Frobenius norm, infinity-norm, or the
+    largest absolute value of any element of a real symmetric matrix
+    supplied in packed storage using alternative indexing semantics.
 
-        Parameters
-        ----------
-        norm: string
-            Specifies the norm: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        uplo: string
-            Specifies whether the upper or lower triangle is stored: 'upper' or
-            'lower'.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            Order of the matrix.
+    N: integer
+        number of columns.
 
-        AP: Float64Array
-            Packed symmetric matrix, length >= N*(N+1)/2.
+    AP: Float64Array
+        `AP`.
 
-        strideAP: integer
-            Stride length for `AP`.
+    strideAP: integer
+        stride length for `AP`.
 
-        offsetAP: NonNegativeInteger
-            Starting index for `AP`.
+    offsetAP: integer
+        starting index for `AP`.
 
-        WORK: Float64Array
-            Workspace array, length >= N.
+    WORK: Float64Array
+        `WORK`.
 
-        strideWORK: integer
-            Stride length for `WORK`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetWORK: NonNegativeInteger
-            Starting index for `WORK`.
+    offsetWORK: integer
+        starting index for `WORK`.
 
-        Returns
-        -------
-        out: number
-            Norm value.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Examples
-        --------
-        > var AP = new {{alias:@stdlib/array/float64}}( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
-        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
-        > dlansp.ndarray( 'max', 'upper', 3, AP, 1, 0, WORK, 1, 0 )
-        7.0
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

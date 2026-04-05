@@ -1,0 +1,96 @@
+{{alias}}( order, N, A, LDA, IPIV, strideIPIV, WORK, strideWORK, lwork )
+    Computes the inverse of a matrix using the LU factorization computed by
+    zgetrf.
+
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    LDA: integer
+        leading dimension of `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork )
+    Computes the inverse of a matrix using the LU factorization computed by
+    zgetrf using alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

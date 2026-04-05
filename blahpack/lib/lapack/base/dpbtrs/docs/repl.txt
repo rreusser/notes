@@ -1,54 +1,95 @@
+{{alias}}( order, uplo, N, kd, nrhs, AB, LDAB, B, LDB )
+    Solves a system of linear equations A_X = B with a symmetric positive.
 
-    dpbtrs.ndarray( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB )
-        Solve a banded symmetric positive definite system using Cholesky factorization
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        kd: integer
-            kd.
+    kd: number
+        `kd`.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        AB: Float64Array
-            input matrix.
+    AB: Float64Array
+        `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    B: Float64Array
+        `B`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB2: integer
-            stride of the second dimension of `B`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+{{alias}}.ndarray( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB )
+    Solves a system of linear equations A_X = B with a symmetric positive
+    using alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    kd: number
+        `kd`.
+
+    nrhs: integer
+        number of right-hand sides.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,54 +1,93 @@
+{{alias}}( uplo, N, A, LDA, s, strideS, scond, amax )
+    Equilibrates a symmetric matrix A using the scaling factors in the
+    vector S.
 
-    dlaqsy.ndarray( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax, equed )
-        Equilibrate a symmetric matrix using scaling factors
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    s: Float64Array
+        `s`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideS: integer
+        stride length for `S`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    scond: number
+        `scond`.
 
-        s: Float64Array
-            output array.
+    amax: number
+        `amax`.
 
-        strideS: integer
-            stride length for `s`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        scond: number
-            scond.
 
-        amax: number
-            amax.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax, equed )
+    Equilibrates a symmetric matrix A using the scaling factors in the
+    vector S using alternative indexing semantics.
 
-        equed: string
-            specifies the operation type.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    s: Float64Array
+        `s`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    scond: number
+        `scond`.
+
+    amax: number
+        `amax`.
+
+    equed: string
+        `equed`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

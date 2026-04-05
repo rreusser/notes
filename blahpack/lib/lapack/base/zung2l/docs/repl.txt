@@ -1,57 +1,98 @@
+{{alias}}( M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
+    Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
 
-    zung2l.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
-        Generate unitary matrix Q from QL reflectors
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    K: integer
+        inner dimension.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    TAU: Float64Array
+        `TAU`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    WORK: Float64Array
+        `WORK`.
 
-        TAU: Float64Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            output array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+    Generate an M-by-N complex unitary matrix Q with orthonormal columns,
+    using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    K: integer
+        inner dimension.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

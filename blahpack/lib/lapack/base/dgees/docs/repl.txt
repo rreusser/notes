@@ -1,96 +1,165 @@
+{{alias}}( jobvs, sort, select, N, A, LDA, sdim, WR, strideWR, WI, strideWI, VS, LDVS, WORK, strideWORK, lwork, BWORK, strideBWORK )
+    Computes for an N-by-N real nonsymmetric matrix A, the eigenvalues, the
+    real.
 
-    dgees.ndarray( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, BWORK, strideBWORK, offsetBWORK )
-        Computes eigenvalues and Schur decomposition of a real general matrix
+    Parameters
+    ----------
+    jobvs: string
+        `jobvs`.
 
-        Parameters
-        ----------
-        jobvs: string
-            specifies the operation type.
+    sort: string
+        `sort`.
 
-        sort: string
-            specifies the operation type.
+    select: number
+        `select`.
 
-        select: boolean
-            select.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    sdim: number
+        `sdim`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    WR: Float64Array
+        `WR`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideWR: integer
+        stride length for `WR`.
 
-        sdim: integer
-            sdim.
+    WI: Float64Array
+        `WI`.
 
-        WR: Float64Array
-            input array.
+    strideWI: integer
+        stride length for `WI`.
 
-        strideWR: integer
-            stride length for `WR`.
+    VS: Float64Array
+        `VS`.
 
-        offsetWR: NonNegativeInteger
-            starting index for `WR`.
+    LDVS: integer
+        leading dimension of `VS`.
 
-        WI: Float64Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideWI: integer
-            stride length for `WI`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetWI: NonNegativeInteger
-            starting index for `WI`.
+    lwork: integer
+        `lwork`.
 
-        VS: Float64Array
-            input matrix.
+    BWORK: Int32Array
+        `BWORK`.
 
-        strideVS1: integer
-            stride of the first dimension of `VS`.
+    strideBWORK: integer
+        stride length for `BWORK`.
 
-        strideVS2: integer
-            stride of the second dimension of `VS`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetVS: NonNegativeInteger
-            starting index for `VS`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            input array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, BWORK, strideBWORK, offsetBWORK )
+    Computes for an N-by-N real nonsymmetric matrix A, the eigenvalues, the
+    real using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    jobvs: string
+        `jobvs`.
 
-        lwork: integer
-            lwork.
+    sort: string
+        `sort`.
 
-        BWORK: Float64Array
-            output array.
+    select: number
+        `select`.
 
-        strideBWORK: integer
-            stride length for `BWORK`.
+    N: integer
+        number of columns.
 
-        offsetBWORK: NonNegativeInteger
-            starting index for `BWORK`.
+    A: Float64Array
+        `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    sdim: number
+        `sdim`.
+
+    WR: Float64Array
+        `WR`.
+
+    strideWR: integer
+        stride length for `WR`.
+
+    offsetWR: integer
+        starting index for `WR`.
+
+    WI: Float64Array
+        `WI`.
+
+    strideWI: integer
+        stride length for `WI`.
+
+    offsetWI: integer
+        starting index for `WI`.
+
+    VS: Float64Array
+        `VS`.
+
+    strideVS1: integer
+        stride of dimension 1 of `VS`.
+
+    strideVS2: integer
+        stride of dimension 2 of `VS`.
+
+    offsetVS: integer
+        starting index for `VS`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    BWORK: Int32Array
+        `BWORK`.
+
+    strideBWORK: integer
+        stride length for `BWORK`.
+
+    offsetBWORK: integer
+        starting index for `BWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

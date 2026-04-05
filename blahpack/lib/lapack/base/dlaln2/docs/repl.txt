@@ -1,87 +1,146 @@
+{{alias}}( ltrans, na, nw, smin, ca, A, LDA, d1, d2, B, LDB, wr, wi, X, LDX )
+    Solves a 1-by-1 or 2-by-2 linear system of the form:.
 
-    dlaln2.ndarray( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d2, B, strideB1, strideB2, offsetB, wr, wi, X, strideX1, strideX2, offsetX, scale, xnorm )
-        Solves a 1x1 or 2x2 linear system with scaling to prevent overflow
+    Parameters
+    ----------
+    ltrans: number
+        `ltrans`.
 
-        Parameters
-        ----------
-        ltrans: boolean
-            ltrans.
+    na: number
+        `na`.
 
-        na: integer
-            na.
+    nw: integer
+        `nw`.
 
-        nw: integer
-            nw.
+    smin: number
+        `smin`.
 
-        smin: number
-            smin.
+    ca: number
+        `ca`.
 
-        ca: number
-            ca.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    d1: number
+        `d1`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    d2: number
+        `d2`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    B: Float64Array
+        `B`.
 
-        d1: number
-            d1.
+    LDB: integer
+        leading dimension of `B`.
 
-        d2: number
-            d2.
+    wr: number
+        `wr`.
 
-        B: Float64Array
-            input matrix.
+    wi: number
+        `wi`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    X: Float64Array
+        `X`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    LDX: integer
+        leading dimension of `X`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        wr: number
-            wr.
+    Examples
+    --------
+    // TODO: Add examples
 
-        wi: number
-            wi.
 
-        X: Float64Array
-            output matrix.
+{{alias}}.ndarray( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d2, B, strideB1, strideB2, offsetB, wr, wi, X, strideX1, strideX2, offsetX, scale, xnorm )
+    Solves a 1-by-1 or 2-by-2 linear system of the form: using alternative
+    indexing semantics.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    Parameters
+    ----------
+    ltrans: number
+        `ltrans`.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    na: number
+        `na`.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    nw: integer
+        `nw`.
 
-        scale: number
-            scale.
+    smin: number
+        `smin`.
 
-        xnorm: number
-            xnorm.
+    ca: number
+        `ca`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    A: Float64Array
+        `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    d1: number
+        `d1`.
+
+    d2: number
+        `d2`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    wr: number
+        `wr`.
+
+    wi: number
+        `wi`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    scale: number
+        `scale`.
+
+    xnorm: number
+        `xnorm`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

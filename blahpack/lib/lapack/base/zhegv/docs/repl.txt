@@ -1,84 +1,144 @@
+{{alias}}( itype, jobz, uplo, N, A, LDA, B, LDB, w, strideW, WORK, strideWORK, lwork, RWORK, strideRWORK )
+    Computes all the eigenvalues, and optionally, the eigenvectors of a
+    complex.
 
-    zhegv.ndarray( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
-        Computes all eigenvalues and optionally eigenvectors of a complex generalized Hermitian-definite eigenproblem
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Parameters
-        ----------
-        itype: integer
-            itype.
+    jobz: string
+        `jobz`.
 
-        jobz: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    w: Float64Array
+        `w`.
 
-        B: Float64Array
-            input matrix.
+    strideW: integer
+        stride length for `W`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    WORK: Float64Array
+        `WORK`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    lwork: integer
+        `lwork`.
 
-        w: Float64Array
-            input array.
+    RWORK: Float64Array
+        `RWORK`.
 
-        strideW: integer
-            stride length for `w`.
+    strideRWORK: integer
+        stride length for `RWORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        WORK: Float64Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideWORK: integer
-            stride length for `WORK`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+{{alias}}.ndarray( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+    Computes all the eigenvalues, and optionally, the eigenvectors of a
+    complex using alternative indexing semantics.
 
-        lwork: integer
-            lwork.
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        RWORK: Float64Array
-            output array.
+    jobz: string
+        `jobz`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    A: Float64Array
+        `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

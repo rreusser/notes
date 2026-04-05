@@ -1,81 +1,138 @@
+{{alias}}( N, M, p, A, LDA, TAUA, strideTAUA, B, LDB, TAUB, strideTAUB, WORK, strideWORK, lwork )
+    Computes a generalized QR factorization of an N-by-M matrix A and an
+    N-by-P matrix B.
 
-    zggqrf.ndarray( N, M, p, A, strideA1, strideA2, offsetA, TAUA, strideTAUA, offsetTAUA, B, strideB1, strideB2, offsetB, TAUB, strideTAUB, offsetTAUB, WORK, strideWORK, offsetWORK, lwork )
-        Computes a generalized QR factorization of an N-by-M matrix A and an N-by-P matrix B.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    p: number
+        `p`.
 
-        p: integer
-            p.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    TAUA: Float64Array
+        `TAUA`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideTAUA: integer
+        stride length for `TAUA`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    B: Float64Array
+        `B`.
 
-        TAUA: Float64Array
-            input array.
+    LDB: integer
+        leading dimension of `B`.
 
-        strideTAUA: integer
-            stride length for `TAUA`.
+    TAUB: Float64Array
+        `TAUB`.
 
-        offsetTAUA: NonNegativeInteger
-            starting index for `TAUA`.
+    strideTAUB: integer
+        stride length for `TAUB`.
 
-        B: Float64Array
-            input matrix.
+    WORK: Float64Array
+        `WORK`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    lwork: integer
+        `lwork`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        TAUB: Float64Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideTAUB: integer
-            stride length for `TAUB`.
 
-        offsetTAUB: NonNegativeInteger
-            starting index for `TAUB`.
+{{alias}}.ndarray( N, M, p, A, strideA1, strideA2, offsetA, TAUA, strideTAUA, offsetTAUA, B, strideB1, strideB2, offsetB, TAUB, strideTAUB, offsetTAUB, WORK, strideWORK, offsetWORK, lwork )
+    Computes a generalized QR factorization of an N-by-M matrix A and an
+    N-by-P matrix B using alternative indexing semantics.
 
-        WORK: Float64Array
-            output array.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    M: integer
+        number of rows.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    p: number
+        `p`.
 
-        lwork: integer
-            lwork.
+    A: Float64Array
+        `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    TAUA: Float64Array
+        `TAUA`.
+
+    strideTAUA: integer
+        stride length for `TAUA`.
+
+    offsetTAUA: integer
+        starting index for `TAUA`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    TAUB: Float64Array
+        `TAUB`.
+
+    strideTAUB: integer
+        stride length for `TAUB`.
+
+    offsetTAUB: integer
+        starting index for `TAUB`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

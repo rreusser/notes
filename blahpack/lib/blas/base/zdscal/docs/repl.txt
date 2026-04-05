@@ -1,36 +1,59 @@
+{{alias}}( N, da, zx, strideX )
+    Scale a complex double-precision vector by a double-precision constant.
 
-    zdscal.ndarray( N, alpha, x, stride, offset, incx )
-        Scale a complex double-precision vector by a double-precision constant.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    da: number
+        `da`.
 
-        alpha: number
-            scalar constant.
+    zx: number
+        `zx`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        stride: integer
-            stride length for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        incx: integer
-            incx.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( N, da, zx, strideX, offsetX )
+    Scale a complex double-precision vector by a double-precision constant
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    da: number
+        `da`.
+
+    zx: number
+        `zx`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

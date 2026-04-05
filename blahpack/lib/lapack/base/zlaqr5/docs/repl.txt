@@ -1,132 +1,151 @@
+{{alias}}( v, idx )
+    Complex multi-shift QR sweep.
 
-    zlaqr5.ndarray( wantt, wantz, kacc22, N, ktop, kbot, nshfts, s, strideS, offsetS, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH )
-        Complex multi-shift QR sweep
+    Parameters
+    ----------
+    v: Float64Array
+        `v`.
 
-        Parameters
-        ----------
-        wantt: boolean
-            wantt.
+    idx: number
+        `idx`.
 
-        wantz: boolean
-            wantz.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        kacc22: integer
-            kacc22.
+    Examples
+    --------
+    // TODO: Add examples
 
-        N: NonNegativeInteger
-            number of columns.
 
-        ktop: integer
-            ktop.
+{{alias}}.ndarray( wantt, wantz, kacc22, N, ktop, kbot, nshfts, s, strideS, offsetS, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH )
+    Complex multi-shift QR sweep using alternative indexing semantics.
 
-        kbot: integer
-            kbot.
+    Parameters
+    ----------
+    wantt: boolean
+        `wantt`.
 
-        nshfts: integer
-            nshfts.
+    wantz: boolean
+        `wantz`.
 
-        s: Float64Array
-            input array.
+    kacc22: number
+        `kacc22`.
 
-        strideS: integer
-            stride length for `s`.
+    N: integer
+        number of columns.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    ktop: number
+        `ktop`.
 
-        H: Float64Array
-            input matrix.
+    kbot: number
+        `kbot`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    nshfts: integer
+        `nshfts`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    s: Float64Array
+        `s`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    strideS: integer
+        stride length for `S`.
 
-        iloz: integer
-            iloz.
+    offsetS: integer
+        starting index for `S`.
 
-        ihiz: integer
-            ihiz.
+    H: Float64Array
+        `H`.
 
-        Z: Float64Array
-            input matrix.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    offsetH: integer
+        starting index for `H`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    iloz: number
+        `iloz`.
 
-        V: Float64Array
-            input matrix.
+    ihiz: number
+        `ihiz`.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    Z: Float64Array
+        `Z`.
 
-        strideV2: integer
-            stride of the second dimension of `V`.
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
 
-        U: Float64Array
-            input matrix.
+    offsetZ: integer
+        starting index for `Z`.
 
-        strideU1: integer
-            stride of the first dimension of `U`.
+    V: Float64Array
+        `V`.
 
-        strideU2: integer
-            stride of the second dimension of `U`.
+    strideV1: integer
+        stride of dimension 1 of `V`.
 
-        offsetU: NonNegativeInteger
-            starting index for `U`.
+    strideV2: integer
+        stride of dimension 2 of `V`.
 
-        nv: integer
-            nv.
+    offsetV: integer
+        starting index for `V`.
 
-        WV: Float64Array
-            input matrix.
+    U: Float64Array
+        `U`.
 
-        strideWV1: integer
-            stride of the first dimension of `WV`.
+    strideU1: integer
+        stride of dimension 1 of `U`.
 
-        strideWV2: integer
-            stride of the second dimension of `WV`.
+    strideU2: integer
+        stride of dimension 2 of `U`.
 
-        offsetWV: NonNegativeInteger
-            starting index for `WV`.
+    offsetU: integer
+        starting index for `U`.
 
-        nh: integer
-            nh.
+    nv: integer
+        `nv`.
 
-        WH: Float64Array
-            output matrix.
+    WV: Float64Array
+        `WV`.
 
-        strideWH1: integer
-            stride of the first dimension of `WH`.
+    strideWV1: integer
+        stride of dimension 1 of `WV`.
 
-        strideWH2: integer
-            stride of the second dimension of `WH`.
+    strideWV2: integer
+        stride of dimension 2 of `WV`.
 
-        offsetWH: NonNegativeInteger
-            starting index for `WH`.
+    offsetWV: integer
+        starting index for `WV`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    nh: integer
+        `nh`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    WH: Float64Array
+        `WH`.
+
+    strideWH1: integer
+        stride of dimension 1 of `WH`.
+
+    strideWH2: integer
+        stride of dimension 2 of `WH`.
+
+    offsetWH: integer
+        starting index for `WH`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

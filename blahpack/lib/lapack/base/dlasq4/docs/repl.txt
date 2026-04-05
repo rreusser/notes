@@ -1,66 +1,126 @@
+{{alias}}( i0, n0, z, stride, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g )
+    Computes an approximation TAU to the smallest eigenvalue using values of
+    d.
 
-    dlasq4.ndarray( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g )
-        Compute approximate singular value for dqds iteration
+    Parameters
+    ----------
+    i0: number
+        `i0`.
 
-        Parameters
-        ----------
-        i0: integer
-            i0.
+    n0: number
+        `n0`.
 
-        n0: integer
-            n0.
+    z: number
+        `z`.
 
-        z: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `z`.
+    pp: number
+        `pp`.
 
-        offset: NonNegativeInteger
-            starting index for `z`.
+    n0in: number
+        `n0in`.
 
-        pp: integer
-            pp.
+    dmin: number
+        `dmin`.
 
-        n0in: integer
-            n0in.
+    dmin1: number
+        `dmin1`.
 
-        dmin: number
-            dmin.
+    dmin2: number
+        `dmin2`.
 
-        dmin1: number
-            dmin1.
+    dn: number
+        `dn`.
 
-        dmin2: number
-            dmin2.
+    dn1: number
+        `dn1`.
 
-        dn: number
-            dn.
+    dn2: number
+        `dn2`.
 
-        dn1: number
-            dn1.
+    tau: number
+        `tau`.
 
-        dn2: number
-            dn2.
+    ttype: number
+        `ttype`.
 
-        tau: number
-            tau.
+    g: number
+        `g`.
 
-        ttype: integer
-            ttype.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        g: number
-            g.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g )
+    Computes an approximation TAU to the smallest eigenvalue using values of
+    d using alternative indexing semantics.
+
+    Parameters
+    ----------
+    i0: number
+        `i0`.
+
+    n0: number
+        `n0`.
+
+    z: number
+        `z`.
+
+    stride: integer
+        `stride`.
+
+    offset: integer
+        `offset`.
+
+    pp: number
+        `pp`.
+
+    n0in: number
+        `n0in`.
+
+    dmin: number
+        `dmin`.
+
+    dmin1: number
+        `dmin1`.
+
+    dmin2: number
+        `dmin2`.
+
+    dn: number
+        `dn`.
+
+    dn1: number
+        `dn1`.
+
+    dn2: number
+        `dn2`.
+
+    tau: number
+        `tau`.
+
+    ttype: number
+        `ttype`.
+
+    g: number
+        `g`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

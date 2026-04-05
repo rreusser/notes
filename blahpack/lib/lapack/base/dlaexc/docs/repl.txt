@@ -1,66 +1,113 @@
+{{alias}}( wantq, N, T, LDT, Q, LDQ, j1, n1, n2, WORK, strideWORK )
+    Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper.
 
-    dlaexc.ndarray( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK )
-        Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix
+    Parameters
+    ----------
+    wantq: boolean
+        `wantq`.
 
-        Parameters
-        ----------
-        wantq: boolean
-            wantq.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    T: Float64Array
+        `T`.
 
-        T: Float64Array
-            input matrix.
+    LDT: integer
+        leading dimension of `T`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    Q: Float64Array
+        `Q`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    j1: number
+        `j1`.
 
-        Q: Float64Array
-            input matrix.
+    n1: number
+        `n1`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    n2: number
+        `n2`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        j1: integer
-            j1.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        n1: integer
-            n1.
+    Examples
+    --------
+    // TODO: Add examples
 
-        n2: integer
-            n2.
 
-        WORK: Float64Array
-            output array.
+{{alias}}.ndarray( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK )
+    Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper
+    using alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    wantq: boolean
+        `wantq`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    T: Float64Array
+        `T`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    j1: number
+        `j1`.
+
+    n1: number
+        `n1`.
+
+    n2: number
+        `n2`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,42 +1,73 @@
+{{alias}}( N, x, strideX, y, strideY, ssmin )
+    @license Apache-2.0.
 
-    zlapll.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
-        Measures the linear dependence of two vectors.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        y: Float64Array
-            output array.
+    ssmin: number
+        `ssmin`.
 
-        strideY: integer
-            stride length for `y`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ssmin: number
-            ssmin.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    ssmin: number
+        `ssmin`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

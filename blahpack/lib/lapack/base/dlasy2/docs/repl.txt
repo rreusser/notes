@@ -1,87 +1,146 @@
+{{alias}}( ltranl, ltranr, isgn, n1, n2, TL, LDTL, TR, LDTR, B, LDB, scale, X, LDX, xnorm )
+    Solves for the N1-by-N2 matrix X in:.
 
-    dlasy2.ndarray( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm )
-        Solves the real Sylvester matrix equation for 1-by-1 or 2-by-2 matrices
+    Parameters
+    ----------
+    ltranl: number
+        `ltranl`.
 
-        Parameters
-        ----------
-        ltranl: boolean
-            ltranl.
+    ltranr: number
+        `ltranr`.
 
-        ltranr: boolean
-            ltranr.
+    isgn: number
+        `isgn`.
 
-        isgn: integer
-            isgn.
+    n1: number
+        `n1`.
 
-        n1: integer
-            n1.
+    n2: number
+        `n2`.
 
-        n2: integer
-            n2.
+    TL: Float64Array
+        `TL`.
 
-        TL: Float64Array
-            input matrix.
+    LDTL: integer
+        leading dimension of `TL`.
 
-        strideTL1: integer
-            stride of the first dimension of `TL`.
+    TR: Float64Array
+        `TR`.
 
-        strideTL2: integer
-            stride of the second dimension of `TL`.
+    LDTR: integer
+        leading dimension of `TR`.
 
-        offsetTL: NonNegativeInteger
-            starting index for `TL`.
+    B: Float64Array
+        `B`.
 
-        TR: Float64Array
-            input matrix.
+    LDB: integer
+        leading dimension of `B`.
 
-        strideTR1: integer
-            stride of the first dimension of `TR`.
+    scale: number
+        `scale`.
 
-        strideTR2: integer
-            stride of the second dimension of `TR`.
+    X: Float64Array
+        `X`.
 
-        offsetTR: NonNegativeInteger
-            starting index for `TR`.
+    LDX: integer
+        leading dimension of `X`.
 
-        B: Float64Array
-            input matrix.
+    xnorm: number
+        `xnorm`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
 
-        scale: number
-            scale.
+{{alias}}.ndarray( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm )
+    Solves for the N1-by-N2 matrix X in: using alternative indexing
+    semantics.
 
-        X: Float64Array
-            output matrix.
+    Parameters
+    ----------
+    ltranl: number
+        `ltranl`.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    ltranr: number
+        `ltranr`.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    isgn: number
+        `isgn`.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    n1: number
+        `n1`.
 
-        xnorm: number
-            xnorm.
+    n2: number
+        `n2`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    TL: Float64Array
+        `TL`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideTL1: integer
+        stride of dimension 1 of `TL`.
+
+    strideTL2: integer
+        stride of dimension 2 of `TL`.
+
+    offsetTL: integer
+        starting index for `TL`.
+
+    TR: Float64Array
+        `TR`.
+
+    strideTR1: integer
+        stride of dimension 1 of `TR`.
+
+    strideTR2: integer
+        stride of dimension 2 of `TR`.
+
+    offsetTR: integer
+        starting index for `TR`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    scale: number
+        `scale`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    xnorm: number
+        `xnorm`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

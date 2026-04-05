@@ -1,36 +1,59 @@
+{{alias}}( N, sa, x, strideX )
+    Scales a vector by the reciprocal of a scalar, performing the scaling.
 
-    drscl.ndarray( N, sa, x, stride, offset, incx )
-        Scale a vector by the reciprocal of a scalar
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    sa: number
+        `sa`.
 
-        sa: number
-            sa.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        stride: integer
-            stride length for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        incx: integer
-            incx.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( N, sa, x, strideX, offsetX )
+    Scales a vector by the reciprocal of a scalar, performing the scaling
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    sa: number
+        `sa`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

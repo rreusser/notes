@@ -1,132 +1,233 @@
+{{alias}}( ijob, nitmax, N, mmax, minp, nbmin, abstol, reltol, pivmin, d, strideD, e, strideE, E2, strideE2, NVAL, strideNVAL, AB, LDAB, c, strideC, mout, NAB, LDNAB, WORK, strideWORK, IWORK, strideIWORK )
+    Computes the number of eigenvalues of a symmetric tridiagonal matrix T.
 
-    dlaebz.ndarray( ijob, nitmax, N, minp, nbmin, abstol, reltol, pivmin, d, strideD, offsetD, e, strideE, offsetE, E2, strideE2, offsetE2, NVAL, strideNVAL, offsetNVAL, AB, strideAB1, strideAB2, offsetAB, c, strideC, offsetC, mout, NAB, strideNAB1, strideNAB2, offsetNAB, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Auxiliary bisection routine for tridiagonal eigenvalue computation
+    Parameters
+    ----------
+    ijob: number
+        `ijob`.
 
-        Parameters
-        ----------
-        ijob: integer
-            ijob.
+    nitmax: number
+        `nitmax`.
 
-        nitmax: integer
-            nitmax.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    mmax: number
+        `mmax`.
 
-        minp: integer
-            minp.
+    minp: number
+        `minp`.
 
-        nbmin: integer
-            nbmin.
+    nbmin: number
+        `nbmin`.
 
-        abstol: number
-            abstol.
+    abstol: number
+        `abstol`.
 
-        reltol: number
-            reltol.
+    reltol: number
+        `reltol`.
 
-        pivmin: number
-            pivmin.
+    pivmin: number
+        `pivmin`.
 
-        d: Float64Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideD: integer
-            stride length for `d`.
+    strideD: integer
+        stride length for `D`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    e: Float64Array
+        `e`.
 
-        e: Float64Array
-            input array.
+    strideE: integer
+        stride length for `E`.
 
-        strideE: integer
-            stride length for `e`.
+    E2: Float64Array
+        `E2`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    strideE2: integer
+        stride of dimension 2 of `E`.
 
-        E2: Float64Array
-            input array.
+    NVAL: Float64Array
+        `NVAL`.
 
-        strideE2: integer
-            stride length for `E2`.
+    strideNVAL: integer
+        stride length for `NVAL`.
 
-        offsetE2: NonNegativeInteger
-            starting index for `E2`.
+    AB: Float64Array
+        `AB`.
 
-        NVAL: Int32Array
-            input array.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideNVAL: integer
-            stride length for `NVAL`.
+    c: Float64Array
+        `c`.
 
-        offsetNVAL: NonNegativeInteger
-            starting index for `NVAL`.
+    strideC: integer
+        stride length for `C`.
 
-        AB: Float64Array
-            input matrix.
+    mout: number
+        `mout`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    NAB: Float64Array
+        `NAB`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    LDNAB: integer
+        leading dimension of `NAB`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    WORK: Float64Array
+        `WORK`.
 
-        c: Float64Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideC: integer
-            stride length for `c`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        mout: integer
-            mout.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        NAB: Int32Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideNAB1: integer
-            stride of the first dimension of `NAB`.
 
-        strideNAB2: integer
-            stride of the second dimension of `NAB`.
+{{alias}}.ndarray( ijob, nitmax, N, mmax, minp, nbmin, abstol, reltol, pivmin, d, strideD, offsetD, e, strideE, offsetE, E2, strideE2, offsetE2, NVAL, strideNVAL, offsetNVAL, AB, strideAB1, strideAB2, offsetAB, c, strideC, offsetC, mout, NAB, strideNAB1, strideNAB2, offsetNAB, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Computes the number of eigenvalues of a symmetric tridiagonal matrix T
+    using alternative indexing semantics.
 
-        offsetNAB: NonNegativeInteger
-            starting index for `NAB`.
+    Parameters
+    ----------
+    ijob: number
+        `ijob`.
 
-        WORK: Float64Array
-            input array.
+    nitmax: number
+        `nitmax`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    N: integer
+        number of columns.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    mmax: number
+        `mmax`.
 
-        IWORK: Int32Array
-            output array.
+    minp: number
+        `minp`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    nbmin: number
+        `nbmin`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    abstol: number
+        `abstol`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    reltol: number
+        `reltol`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    pivmin: number
+        `pivmin`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    E2: Float64Array
+        `E2`.
+
+    strideE2: integer
+        stride of dimension 2 of `E`.
+
+    offsetE2: integer
+        starting index for `E2`.
+
+    NVAL: Float64Array
+        `NVAL`.
+
+    strideNVAL: integer
+        stride length for `NVAL`.
+
+    offsetNVAL: integer
+        starting index for `NVAL`.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    mout: number
+        `mout`.
+
+    NAB: Float64Array
+        `NAB`.
+
+    strideNAB1: integer
+        stride of dimension 1 of `NAB`.
+
+    strideNAB2: integer
+        stride of dimension 2 of `NAB`.
+
+    offsetNAB: integer
+        starting index for `NAB`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

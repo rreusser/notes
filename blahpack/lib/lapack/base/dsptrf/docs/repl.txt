@@ -1,42 +1,69 @@
+{{alias}}( uplo, N, AP, IPIV )
+    Computes the Bunch-Kaufman factorization of a real symmetric matrix in
+    packed storage.
 
-    dsptrf.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV )
-        Computes the Bunch-Kaufman factorization of a real symmetric matrix in packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAP: integer
-            stride length for `AP`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IPIV: Int32Array
-            output array.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV )
+    Computes the Bunch-Kaufman factorization of a real symmetric matrix in
+    packed storage using alternative indexing semantics.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,66 +1,113 @@
+{{alias}}( N, DL, strideDL, d, strideD, DU, strideDU, DU2, strideDU2, IPIV, strideIPIV )
+    Computes an LU factorization of a real tridiagonal matrix A using.
 
-    dgttrf.ndarray( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV )
-        Computes the LU factorization of a real tridiagonal matrix
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    DL: Float64Array
+        `DL`.
 
-        DL: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDL: integer
-            stride length for `DL`.
+    d: Float64Array
+        `d`.
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    DU: Float64Array
+        `DU`.
 
-        strideD: integer
-            stride length for `d`.
+    strideDU: integer
+        stride length for `DU`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    DU2: Float64Array
+        `DU2`.
 
-        DU: Float64Array
-            input array.
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
 
-        strideDU: integer
-            stride length for `DU`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        DU2: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideDU2: integer
-            stride length for `DU2`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetDU2: NonNegativeInteger
-            starting index for `DU2`.
 
-        IPIV: Int32Array
-            output array.
+{{alias}}.ndarray( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV )
+    Computes an LU factorization of a real tridiagonal matrix A using using
+    alternative indexing semantics.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    DL: Float64Array
+        `DL`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideDL: integer
+        stride length for `DL`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetDL: integer
+        starting index for `DL`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    DU: Float64Array
+        `DU`.
+
+    strideDU: integer
+        stride length for `DU`.
+
+    offsetDU: integer
+        starting index for `DU`.
+
+    DU2: Float64Array
+        `DU2`.
+
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
+
+    offsetDU2: integer
+        starting index for `DU2`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

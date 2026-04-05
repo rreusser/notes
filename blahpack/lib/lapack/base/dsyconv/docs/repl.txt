@@ -1,57 +1,99 @@
+{{alias}}( uplo, way, N, A, LDA, IPIV, strideIPIV, E, strideE )
+    Converts a symmetric matrix given by `dsytrf` (Bunch-Kaufman
+    factorization).
 
-    dsyconv.ndarray( uplo, way, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, e, strideE, offsetE )
-        Converts a symmetric matrix factored by dsytrf to standard L*D*L^T form and vice versa
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    way: string
+        `way`.
 
-        way: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    E: Float64Array
+        `E`.
 
-        IPIV: Int32Array
-            input array.
+    strideE: integer
+        stride length for `E`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        e: Float64Array
-            output array.
 
-        strideE: integer
-            stride length for `e`.
+{{alias}}.ndarray( uplo, way, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, E, strideE, offsetE )
+    Converts a symmetric matrix given by `dsytrf` (Bunch-Kaufman
+    factorization) using alternative indexing semantics.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    way: string
+        `way`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    E: Float64Array
+        `E`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,33 +1,47 @@
+{{alias}}( f, g )
+    Generates a plane rotation so that:.
 
-    dlartg.ndarray( f, g, c, s, r )
-        Generate a plane rotation (real Givens rotation)
+    Parameters
+    ----------
+    f: number
+        `f`.
 
-        Parameters
-        ----------
-        f: number
-            f.
+    g: number
+        `g`.
 
-        g: number
-            g.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        c: number
-            c.
+    Examples
+    --------
+    // TODO: Add examples
 
-        s: number
-            s.
 
-        r: number
-            r.
+{{alias}}.ndarray( f, g, out )
+    Generates a plane rotation so that: using alternative indexing
+    semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    f: number
+        `f`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    g: number
+        `g`.
+
+    out: number
+        `out`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

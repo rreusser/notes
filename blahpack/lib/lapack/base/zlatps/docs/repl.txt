@@ -1,63 +1,106 @@
+{{alias}}( uplo, trans, diag, normin, N, AP, x, scale, CNORM )
+    Solves a complex triangular system with scaling to prevent overflow,
+    where the matrix is in packed storage.
 
-    zlatps.ndarray( uplo, trans, diag, normin, N, AP, strideAP, offsetAP, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
-        Solves a complex triangular system with scaling to prevent overflow, where the matrix is in packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        trans: string
-            specifies the operation type.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        diag: string
-            specifies the operation type.
+    normin: string
+        `normin`.
 
-        normin: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    x: Float64Array
+        `x`.
 
-        strideAP: integer
-            stride length for `AP`.
+    scale: number
+        `scale`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    CNORM: Float64Array
+        `CNORM`.
 
-        x: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideX: integer
-            stride length for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
 
-        scale: number
-            scale.
+{{alias}}.ndarray( uplo, trans, diag, normin, N, AP, strideAP, offsetAP, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
+    Solves a complex triangular system with scaling to prevent overflow,
+    where the matrix is in packed storage using alternative indexing
+    semantics.
 
-        CNORM: Float64Array
-            output array.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideCNORM: integer
-            stride length for `CNORM`.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        offsetCNORM: NonNegativeInteger
-            starting index for `CNORM`.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    normin: string
+        `normin`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    scale: number
+        `scale`.
+
+    CNORM: Float64Array
+        `CNORM`.
+
+    strideCNORM: integer
+        stride length for `CNORM`.
+
+    offsetCNORM: integer
+        starting index for `CNORM`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

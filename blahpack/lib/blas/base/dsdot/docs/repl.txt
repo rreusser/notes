@@ -1,45 +1,69 @@
+{{alias}}( N, x, strideX, y, strideY )
+    Computes the dot product of two vectors with extended precision
+    accumulation.
 
-    dsdot.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
-        Compute the dot product of two vectors with extended precision accumulation
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float32Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        incx: integer
-            incx.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        y: Float32Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideY: integer
-            stride length for `y`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY )
+    Computes the dot product of two vectors with extended precision
+    accumulation using alternative indexing semantics.
 
-        incy: integer
-            incy.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    x: Float64Array
+        `x`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

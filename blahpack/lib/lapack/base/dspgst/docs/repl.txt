@@ -1,51 +1,75 @@
+{{alias}}( itype, uplo, N, AP, BP )
+    Reduces a real symmetric-definite generalized eigenproblem to standard
+    form using packed storage.
 
-    dspgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
-        Reduces a real symmetric-definite generalized eigenproblem to
-        standard form using packed storage.
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Parameters
-        ----------
-        itype: integer
-            Problem type (1, 2, or 3).
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            Specifies whether upper or lower triangle is stored
-            ('upper' or 'lower').
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            Order of matrices A and B.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            Symmetric matrix A in packed storage.
+    BP: Float64Array
+        `BP`.
 
-        strideAP: integer
-            Stride length for `AP`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetAP: NonNegativeInteger
-            Starting index for `AP`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        BP: Float64Array
-            Triangular factor from Cholesky factorization of B in
-            packed storage.
 
-        strideBP: integer
-            Stride length for `BP`.
+{{alias}}.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
+    Reduces a real symmetric-definite generalized eigenproblem to standard
+    form using packed storage using alternative indexing semantics.
 
-        offsetBP: NonNegativeInteger
-            Starting index for `BP`.
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Returns
-        -------
-        info: integer
-            Status code. 0 indicates success.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        > var AP = new {{alias:@stdlib/array/float64}}( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-        > var BP = new {{alias:@stdlib/array/float64}}( [ 2.0, 0.0, 2.0, 0.0, 0.0, 1.5 ] );
-        > var info = dspgst.ndarray( 1, 'upper', 3, AP, 1, 0, BP, 1, 0 )
-        0
+    N: integer
+        number of columns.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    BP: Float64Array
+        `BP`.
+
+    strideBP: integer
+        stride length for `BP`.
+
+    offsetBP: integer
+        starting index for `BP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

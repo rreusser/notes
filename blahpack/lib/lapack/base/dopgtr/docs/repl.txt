@@ -1,63 +1,102 @@
+{{alias}}( order, uplo, N, AP, TAU, Q, LDQ, WORK )
+    Generates a real orthogonal matrix Q from the elementary reflectors
+    returned by dsptrd.
 
-    dopgtr.ndarray( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
-        Generates a real orthogonal matrix Q from the elementary reflectors returned by dsptrd.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        AP: Float64Array
-            input array.
+    AP: Float64Array
+        `AP`.
 
-        strideAP: integer
-            stride length for `AP`.
+    TAU: Float64Array
+        `TAU`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Q: Float64Array
+        `Q`.
 
-        TAU: Float64Array
-            input array.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Q: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
+    Generates a real orthogonal matrix Q from the elementary reflectors
+    returned by dsptrd using alternative indexing semantics.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    AP: Float64Array
+        `AP`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideAP: integer
+        stride length for `AP`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetAP: integer
+        starting index for `AP`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

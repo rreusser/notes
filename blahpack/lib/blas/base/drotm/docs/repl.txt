@@ -1,48 +1,80 @@
+{{alias}}( N, x, strideX, y, strideY, param )
+    Applies a modified Givens plane rotation.
 
-    drotm.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, dparam, strideDPARAM, offsetDPARAM )
-        Apply a modified Givens plane rotation
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        y: Float64Array
-            output array.
+    param: Float64Array
+        `param`.
 
-        strideY: integer
-            stride length for `y`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        dparam: Float64Array
-            input array.
 
-        strideDPARAM: integer
-            stride length for `dparam`.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, param, strideParam, offsetParam )
+    Applies a modified Givens plane rotation using alternative indexing
+    semantics.
 
-        offsetDPARAM: NonNegativeInteger
-            starting index for `dparam`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    x: Float64Array
+        `x`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    param: Float64Array
+        `param`.
+
+    strideParam: integer
+        stride length for `Param`.
+
+    offsetParam: integer
+        starting index for `Param`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,41 +1,93 @@
+{{alias}}( order, N, A, LDA, k1, k2, IPIV, strideIPIV, incx )
+    Performs a series of row interchanges on a complex double-precision
+    matrix `A`.
 
-    zlaswp.ndarray( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx )
-        Performs a series of row interchanges on a complex double-precision matrix.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        N: integer
-            Number of columns in A.
-        A: Complex128Array
-            Input matrix.
-        strideA1: integer
-            Stride of the first dimension of A.
-        strideA2: integer
-            Stride of the second dimension of A.
-        offsetA: integer
-            Index offset for A (in complex elements).
-        k1: integer
-            Index of first row to interchange (0-based).
-        k2: integer
-            Index of last row to interchange (0-based).
-        IPIV: Int32Array
-            Vector of pivot indices (0-based).
-        strideIPIV: integer
-            Stride for IPIV.
-        offsetIPIV: integer
-            Index offset for IPIV.
-        incx: integer
-            Direction in which to apply pivots.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: Complex128Array
-            Permuted matrix A.
+    A: Float64Array
+        `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    LDA: integer
+        leading dimension of `A`.
+
+    k1: number
+        `k1`.
+
+    k2: number
+        `k2`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    incx: number
+        `incx`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx )
+    Performs a series of row interchanges on a complex double-precision
+    matrix `A` using alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    k1: number
+        `k1`.
+
+    k2: number
+        `k2`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    incx: number
+        `incx`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

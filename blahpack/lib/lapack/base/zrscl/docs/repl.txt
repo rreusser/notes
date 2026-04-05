@@ -1,33 +1,58 @@
+{{alias}}( N, a, x, strideX )
+    @license Apache-2.0.
 
-    zrscl.ndarray( N, a, x, stride, offset )
-        Multiplies a complex vector by the reciprocal of a complex scalar.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    a: number
+        `a`.
 
-        a: Complex128
-            a.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        stride: integer
-            stride length for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( N, a, x, strideX, offsetX )
+    @license Apache-2.0 using alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    a: number
+        `a`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

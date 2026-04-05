@@ -1,30 +1,62 @@
+{{alias}}( re, im )
+    Computes the parameters for a Givens rotation.
 
-    zrotg.ndarray( a, b, c, s )
-        Construct a Givens plane rotation with real cosine and complex sine.
+    Parameters
+    ----------
+    re: number
+        `re`.
 
-        Parameters
-        ----------
-        a: number
-            a.
+    im: number
+        `im`.
 
-        b: number
-            b.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        c: number
-            c.
+    Examples
+    --------
+    // TODO: Add examples
 
-        s: number
-            s.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( a, offsetA, b, offsetB, c, offsetC, s, offsetS )
+    Computes the parameters for a Givens rotation using alternative indexing
+    semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    a: number
+        `a`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    b: number
+        `b`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    c: number
+        `c`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    s: number
+        `s`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

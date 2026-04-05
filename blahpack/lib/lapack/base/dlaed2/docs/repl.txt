@@ -1,132 +1,190 @@
+{{alias}}( N, n1, d, Q, LDQ, INDXQ, rho, z, DLAMBDA, w, Q2, INDX, INDXC, INDXP, COLTYP )
+    Merges the two sets of eigenvalues together into a single sorted set,
+    then tries to deflate the size of the problem.
 
-    dlaed2.ndarray( K, N, n1, d, strideD, offsetD, Q, strideQ1, strideQ2, offsetQ, INDXQ, strideINDXQ, offsetINDXQ, rho, z, strideZ, offsetZ, DLAMBDA, strideDLAMBDA, offsetDLAMBDA, w, strideW, offsetW, Q2, strideQ2, offsetQ2, INDX, strideINDX, offsetINDX, INDXC, strideINDXC, offsetINDXC, INDXP, strideINDXP, offsetINDXP, COLTYP, strideCOLTYP, offsetCOLTYP )
-        Merge eigenvalues and deflate secular equation in divide and conquer
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        K: NonNegativeInteger
-            number of superdiagonals.
+    n1: number
+        `n1`.
 
-        N: NonNegativeInteger
-            number of columns.
+    d: Float64Array
+        `d`.
 
-        n1: integer
-            n1.
+    Q: Float64Array
+        `Q`.
 
-        d: Float64Array
-            input array.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        strideD: integer
-            stride length for `d`.
+    INDXQ: Float64Array
+        `INDXQ`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    rho: number
+        `rho`.
 
-        Q: Float64Array
-            input matrix.
+    z: Float64Array
+        `z`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    DLAMBDA: Float64Array
+        `DLAMBDA`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    w: Float64Array
+        `w`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    Q2: Float64Array
+        `Q2`.
 
-        INDXQ: Int32Array
-            input array.
+    INDX: Float64Array
+        `INDX`.
 
-        strideINDXQ: integer
-            stride length for `INDXQ`.
+    INDXC: Float64Array
+        `INDXC`.
 
-        offsetINDXQ: NonNegativeInteger
-            starting index for `INDXQ`.
+    INDXP: Float64Array
+        `INDXP`.
 
-        rho: number
-            rho.
+    COLTYP: Float64Array
+        `COLTYP`.
 
-        z: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ: integer
-            stride length for `z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetZ: NonNegativeInteger
-            starting index for `z`.
 
-        DLAMBDA: Float64Array
-            input array.
+{{alias}}.ndarray( N, n1, d, strideD, offsetD, Q, strideQ1, strideQ2, offsetQ, INDXQ, strideINDXQ, offsetINDXQ, rho, z, strideZ, offsetZ, DLAMBDA, strideDLAMBDA, offsetDLAMBDA, w, strideW, offsetW, Q2, strideQ21, offsetQ2, INDX, strideINDX, offsetINDX, INDXC, strideINDXC, offsetINDXC, INDXP, strideINDXP, offsetINDXP, COLTYP, strideCOLTYP, offsetCOLTYP )
+    Merges the two sets of eigenvalues together into a single sorted set,
+    then tries to deflate the size of the problem using alternative indexing
+    semantics.
 
-        strideDLAMBDA: integer
-            stride length for `DLAMBDA`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetDLAMBDA: NonNegativeInteger
-            starting index for `DLAMBDA`.
+    n1: number
+        `n1`.
 
-        w: Float64Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideW: integer
-            stride length for `w`.
+    strideD: integer
+        stride length for `D`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    offsetD: integer
+        starting index for `D`.
 
-        Q2: Float64Array
-            input array.
+    Q: Float64Array
+        `Q`.
 
-        strideQ2: integer
-            stride length for `Q2`.
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
 
-        offsetQ2: NonNegativeInteger
-            starting index for `Q2`.
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
 
-        INDX: Int32Array
-            input array.
+    offsetQ: integer
+        starting index for `Q`.
 
-        strideINDX: integer
-            stride length for `INDX`.
+    INDXQ: Float64Array
+        `INDXQ`.
 
-        offsetINDX: NonNegativeInteger
-            starting index for `INDX`.
+    strideINDXQ: integer
+        stride length for `INDXQ`.
 
-        INDXC: Int32Array
-            input array.
+    offsetINDXQ: integer
+        starting index for `INDXQ`.
 
-        strideINDXC: integer
-            stride length for `INDXC`.
+    rho: number
+        `rho`.
 
-        offsetINDXC: NonNegativeInteger
-            starting index for `INDXC`.
+    z: Float64Array
+        `z`.
 
-        INDXP: Int32Array
-            input array.
+    strideZ: integer
+        stride length for `Z`.
 
-        strideINDXP: integer
-            stride length for `INDXP`.
+    offsetZ: integer
+        starting index for `Z`.
 
-        offsetINDXP: NonNegativeInteger
-            starting index for `INDXP`.
+    DLAMBDA: Float64Array
+        `DLAMBDA`.
 
-        COLTYP: Int32Array
-            output array.
+    strideDLAMBDA: integer
+        stride length for `DLAMBDA`.
 
-        strideCOLTYP: integer
-            stride length for `COLTYP`.
+    offsetDLAMBDA: integer
+        starting index for `DLAMBDA`.
 
-        offsetCOLTYP: NonNegativeInteger
-            starting index for `COLTYP`.
+    w: Float64Array
+        `w`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideW: integer
+        stride length for `W`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetW: integer
+        starting index for `W`.
+
+    Q2: Float64Array
+        `Q2`.
+
+    strideQ21: integer
+        stride of dimension 1 of `Q2`.
+
+    offsetQ2: integer
+        starting index for `Q2`.
+
+    INDX: Float64Array
+        `INDX`.
+
+    strideINDX: integer
+        stride length for `INDX`.
+
+    offsetINDX: integer
+        starting index for `INDX`.
+
+    INDXC: Float64Array
+        `INDXC`.
+
+    strideINDXC: integer
+        stride length for `INDXC`.
+
+    offsetINDXC: integer
+        starting index for `INDXC`.
+
+    INDXP: Float64Array
+        `INDXP`.
+
+    strideINDXP: integer
+        stride length for `INDXP`.
+
+    offsetINDXP: integer
+        starting index for `INDXP`.
+
+    COLTYP: Float64Array
+        `COLTYP`.
+
+    strideCOLTYP: integer
+        stride length for `COLTYP`.
+
+    offsetCOLTYP: integer
+        starting index for `COLTYP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

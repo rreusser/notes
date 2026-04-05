@@ -1,66 +1,96 @@
+{{alias}}( order, trans, M, N, nrhs, A, LDA, B, LDB )
+    Solves overdetermined or underdetermined real linear systems involving
+    an.
 
-    dgels.ndarray( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK, lwork )
-        Solve overdetermined or underdetermined real linear systems using QR or LQ factorization
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        trans: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB2: integer
-            stride of the second dimension of `B`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+{{alias}}.ndarray( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+    Solves overdetermined or underdetermined real linear systems involving
+    an using alternative indexing semantics.
 
-        WORK: Float64Array
-            output array.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    M: integer
+        number of rows.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        lwork: integer
-            lwork.
+    nrhs: integer
+        number of right-hand sides.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    A: Float64Array
+        `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

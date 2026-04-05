@@ -1,63 +1,107 @@
+{{alias}}( N, nrhs, DL, strideDL, d, strideD, DU, strideDU, B, LDB )
+    Solves a general real tridiagonal system of linear equations A * X = B.
 
-    dgtsv.ndarray( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, B, strideB1, strideB2, offsetB )
-        Solves a general real tridiagonal system of linear equations
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    DL: Float64Array
+        `DL`.
 
-        DL: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDL: integer
-            stride length for `DL`.
+    d: Float64Array
+        `d`.
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    DU: Float64Array
+        `DU`.
 
-        strideD: integer
-            stride length for `d`.
+    strideDU: integer
+        stride length for `DU`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    B: Float64Array
+        `B`.
 
-        DU: Float64Array
-            input array.
+    LDB: integer
+        leading dimension of `B`.
 
-        strideDU: integer
-            stride length for `DU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        B: Float64Array
-            output matrix.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+{{alias}}.ndarray( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, B, strideB1, strideB2, offsetB )
+    Solves a general real tridiagonal system of linear equations A * X = B
+    using alternative indexing semantics.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    nrhs: integer
+        number of right-hand sides.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    DL: Float64Array
+        `DL`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideDL: integer
+        stride length for `DL`.
+
+    offsetDL: integer
+        starting index for `DL`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    DU: Float64Array
+        `DU`.
+
+    strideDU: integer
+        stride length for `DU`.
+
+    offsetDU: integer
+        starting index for `DU`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

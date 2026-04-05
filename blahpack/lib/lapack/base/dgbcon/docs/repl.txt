@@ -1,75 +1,132 @@
+{{alias}}( norm, N, kl, ku, AB, LDAB, IPIV, strideIPIV, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
+    Estimates the reciprocal of the condition number of a general band
+    matrix A,.
 
-    dgbcon.ndarray( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Estimates the reciprocal condition number of a general banded matrix
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    kl: integer
+        `kl`.
 
-        kl: integer
-            kl.
+    ku: integer
+        `ku`.
 
-        ku: integer
-            ku.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    anorm: number
+        `anorm`.
 
-        IPIV: Int32Array
-            input array.
+    rcond: number
+        `rcond`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        anorm: number
-            anorm.
+    IWORK: Int32Array
+        `IWORK`.
 
-        rcond: number
-            rcond.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        WORK: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
 
-        IWORK: Int32Array
-            output array.
+{{alias}}.ndarray( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates the reciprocal of the condition number of a general band
+    matrix A, using alternative indexing semantics.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    kl: integer
+        `kl`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    ku: integer
+        `ku`.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    anorm: number
+        `anorm`.
+
+    rcond: number
+        `rcond`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

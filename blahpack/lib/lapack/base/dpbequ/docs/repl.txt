@@ -1,54 +1,85 @@
+{{alias}}( uplo, N, kd, AB, LDAB, s, strideS )
+    Computes row and column scalings intended to equilibrate a symmetric
+    positive definite band matrix and reduce its condition number.
 
-    dpbequ.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, s, strideS, offsetS, scond, amax )
-        Compute row and column scalings to equilibrate a symmetric positive definite band matrix.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    kd: number
+        `kd`.
 
-        kd: integer
-            kd.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    s: Float64Array
+        `s`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    strideS: integer
+        stride length for `S`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        s: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideS: integer
-            stride length for `s`.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+{{alias}}.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, s, strideS, offsetS )
+    Computes row and column scalings intended to equilibrate a symmetric
+    positive definite band matrix and reduce its condition number using
+    alternative indexing semantics.
 
-        scond: number
-            scond.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        amax: number
-            amax.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    kd: number
+        `kd`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    s: Float64Array
+        `s`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

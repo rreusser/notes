@@ -1,54 +1,96 @@
+{{alias}}( order, N, kl, ku, ncols, AB, LDAB, AFB, LDAFB )
+    Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general
+    banded matrix.
 
-    dla_gbrpvgrw.ndarray( N, kl, ku, ncols, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB )
-        Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        kl: integer
-            kl.
+    kl: integer
+        `kl`.
 
-        ku: integer
-            ku.
+    ku: integer
+        `ku`.
 
-        ncols: integer
-            ncols.
+    ncols: number
+        `ncols`.
 
-        AB: Float64Array
-            input matrix.
+    AB: Float64Array
+        `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    AFB: Float64Array
+        `AFB`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    LDAFB: integer
+        leading dimension of `AFB`.
 
-        AFB: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideAFB1: integer
-            stride of the first dimension of `AFB`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideAFB2: integer
-            stride of the second dimension of `AFB`.
 
-        offsetAFB: NonNegativeInteger
-            starting index for `AFB`.
+{{alias}}.ndarray( N, kl, ku, ncols, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB )
+    Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general
+    banded matrix using alternative indexing semantics.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    kl: integer
+        `kl`.
+
+    ku: integer
+        `ku`.
+
+    ncols: number
+        `ncols`.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    AFB: Float64Array
+        `AFB`.
+
+    strideAFB1: integer
+        stride of dimension 1 of `AFB`.
+
+    strideAFB2: integer
+        stride of dimension 2 of `AFB`.
+
+    offsetAFB: integer
+        starting index for `AFB`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

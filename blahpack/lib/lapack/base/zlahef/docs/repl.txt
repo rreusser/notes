@@ -1,63 +1,82 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zlahef.ndarray( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW )
-        Complex Hermitian indefinite panel factorization (blocked Bunch-Kaufman)
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        N: NonNegativeInteger
-            number of columns.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        nb: integer
-            nb.
+    Examples
+    --------
+    // TODO: Add examples
 
-        kb: integer
-            kb.
 
-        A: Float64Array
-            input matrix.
+{{alias}}.ndarray( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    N: integer
+        number of columns.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    nb: integer
+        `nb`.
 
-        IPIV: Int32Array
-            input array.
+    kb: integer
+        `kb`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    A: Float64Array
+        `A`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        W: Float64Array
-            output matrix.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        strideW1: integer
-            stride of the first dimension of `W`.
+    offsetA: integer
+        starting index for `A`.
 
-        strideW2: integer
-            stride of the second dimension of `W`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetW: NonNegativeInteger
-            starting index for `W`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetIPIV: integer
+        starting index for `IPIV`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    W: Float64Array
+        `W`.
+
+    strideW1: integer
+        stride of dimension 1 of `W`.
+
+    strideW2: integer
+        stride of dimension 2 of `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

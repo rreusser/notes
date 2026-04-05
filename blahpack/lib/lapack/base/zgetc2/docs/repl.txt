@@ -1,51 +1,87 @@
+{{alias}}( N, A, LDA, IPIV, strideIPIV, JPIV, strideJPIV )
+    Computes an LU factorization with complete pivoting of a general N-by-N
+    complex matrix.
 
-    zgetc2.ndarray( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
-        Computes the LU factorization with complete pivoting of the general n-by-n matrix.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    JPIV: Int32Array
+        `JPIV`.
 
-        IPIV: Int32Array
-            input array.
+    strideJPIV: integer
+        stride length for `JPIV`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        JPIV: Int32Array
-            output array.
 
-        strideJPIV: integer
-            stride length for `JPIV`.
+{{alias}}.ndarray( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+    Computes an LU factorization with complete pivoting of a general N-by-N
+    complex matrix using alternative indexing semantics.
 
-        offsetJPIV: NonNegativeInteger
-            starting index for `JPIV`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    A: Float64Array
+        `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    JPIV: Int32Array
+        `JPIV`.
+
+    strideJPIV: integer
+        stride length for `JPIV`.
+
+    offsetJPIV: integer
+        starting index for `JPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

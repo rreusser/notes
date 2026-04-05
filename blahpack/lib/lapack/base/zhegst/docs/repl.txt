@@ -1,51 +1,87 @@
+{{alias}}( itype, uplo, N, A, LDA, B, LDB )
+    Reduces a complex Hermitian-definite generalized eigenproblem to
+    standard form.
 
-    zhegst.ndarray( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
-        Reduces a Hermitian-definite generalized eigenproblem to standard form (blocked)
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Parameters
-        ----------
-        itype: integer
-            itype.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        B: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB1: integer
-            stride of the first dimension of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+{{alias}}.ndarray( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+    Reduces a complex Hermitian-definite generalized eigenproblem to
+    standard form using alternative indexing semantics.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

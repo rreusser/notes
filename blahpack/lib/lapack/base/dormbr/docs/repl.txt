@@ -1,81 +1,137 @@
+{{alias}}( order, vect, side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK )
+    If VECT = 'Q', overwrite the matrix C with one of:.
 
-    dormbr.ndarray( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork )
-        Multiply a matrix by the orthogonal matrix from a bidiagonal reduction
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        vect: string
-            specifies the operation type.
+    vect: string
+        `vect`.
 
-        side: string
-            specifies the operation type.
+    side: string
+        specifies the side of the operation.
 
-        trans: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    K: integer
+        inner dimension.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    TAU: Float64Array
+        `TAU`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        TAU: Float64Array
-            input array.
+    C: Float64Array
+        `C`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    LDC: integer
+        leading dimension of `C`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    WORK: Float64Array
+        `WORK`.
 
-        C: Float64Array
-            input matrix.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
 
-        WORK: Float64Array
-            output array.
+{{alias}}.ndarray( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    If VECT = 'Q', overwrite the matrix C with one of: using alternative
+    indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    vect: string
+        `vect`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    side: string
+        specifies the side of the operation.
 
-        lwork: integer
-            lwork.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

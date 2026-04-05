@@ -1,51 +1,92 @@
+{{alias}}( order, uplo, trans, diag, N, A, LDA, x, strideX )
+    Solve one of the systems of equations.
 
-    ztrsv.ndarray( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX )
-        Solve a complex triangular system of equations with a single right-hand side
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        trans: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        diag: string
-            specifies the operation type.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    x: Float64Array
+        `x`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideX: integer
+        stride length for `X`.
 
-        x: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideX: integer
-            stride length for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX )
+    Solve one of the systems of equations using alternative indexing
+    semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    diag: string
+        specifies whether the matrix is unit triangular.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

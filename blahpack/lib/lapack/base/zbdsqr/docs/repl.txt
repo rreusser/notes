@@ -1,96 +1,164 @@
+{{alias}}( order, uplo, N, ncvt, nru, ncc, d, strideD, e, strideE, VT, LDVT, U, LDU, C, LDC, RWORK, strideRWORK )
+    Returns |a| with the sign of b (Fortran SIGN intrinsic).
 
-    zbdsqr.ndarray( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK )
-        Compute SVD of a real bidiagonal matrix
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        ncvt: integer
-            ncvt.
+    ncvt: integer
+        `ncvt`.
 
-        nru: integer
-            nru.
+    nru: integer
+        `nru`.
 
-        ncc: integer
-            ncc.
+    ncc: integer
+        `ncc`.
 
-        d: Float64Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideD: integer
-            stride length for `d`.
+    strideD: integer
+        stride length for `D`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    e: Float64Array
+        `e`.
 
-        e: Float64Array
-            input array.
+    strideE: integer
+        stride length for `E`.
 
-        strideE: integer
-            stride length for `e`.
+    VT: Float64Array
+        `VT`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    LDVT: integer
+        leading dimension of `VT`.
 
-        VT: Float64Array
-            input matrix.
+    U: Float64Array
+        `U`.
 
-        strideVT1: integer
-            stride of the first dimension of `VT`.
+    LDU: integer
+        leading dimension of `U`.
 
-        strideVT2: integer
-            stride of the second dimension of `VT`.
+    C: Float64Array
+        `C`.
 
-        offsetVT: NonNegativeInteger
-            starting index for `VT`.
+    LDC: integer
+        leading dimension of `C`.
 
-        U: Float64Array
-            input matrix.
+    RWORK: Float64Array
+        `RWORK`.
 
-        strideU1: integer
-            stride of the first dimension of `U`.
+    strideRWORK: integer
+        stride length for `RWORK`.
 
-        strideU2: integer
-            stride of the second dimension of `U`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetU: NonNegativeInteger
-            starting index for `U`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        C: Float64Array
-            input matrix.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+{{alias}}.ndarray( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK )
+    Returns |a| with the sign of b (Fortran SIGN intrinsic) using
+    alternative indexing semantics.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    N: integer
+        number of columns.
 
-        RWORK: Float64Array
-            output array.
+    ncvt: integer
+        `ncvt`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    nru: integer
+        `nru`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    ncc: integer
+        `ncc`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    d: Float64Array
+        `d`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    VT: Float64Array
+        `VT`.
+
+    strideVT1: integer
+        stride of dimension 1 of `VT`.
+
+    strideVT2: integer
+        stride of dimension 2 of `VT`.
+
+    offsetVT: integer
+        starting index for `VT`.
+
+    U: Float64Array
+        `U`.
+
+    strideU1: integer
+        stride of dimension 1 of `U`.
+
+    strideU2: integer
+        stride of dimension 2 of `U`.
+
+    offsetU: integer
+        starting index for `U`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

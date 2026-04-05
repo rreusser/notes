@@ -1,39 +1,67 @@
+{{alias}}( N, x, strideX, y, strideY )
+    Copies a vector x to a vector y.
 
-    dcopy.ndarray( N, x, strideX, offsetX, y, strideY, offsetY )
-        Copy a vector x to a vector y
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        y: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideY: integer
-            stride length for `y`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY )
+    Copies a vector x to a vector y using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

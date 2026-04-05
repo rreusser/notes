@@ -1,60 +1,108 @@
+{{alias}}( order, norm, N, A, LDA, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
+    Estimates the reciprocal of the condition number of a general real
+    matrix A,.
 
-    dgecon.ndarray( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Estimate the reciprocal condition number of a general matrix
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    norm: string
+        `norm`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    anorm: number
+        `anorm`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    rcond: number
+        `rcond`.
 
-        anorm: number
-            anorm.
+    WORK: Float64Array
+        `WORK`.
 
-        rcond: number
-            rcond.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        WORK: Float64Array
-            input array.
+    IWORK: Int32Array
+        `IWORK`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        IWORK: Int32Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideIWORK: integer
-            stride length for `IWORK`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+{{alias}}.ndarray( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates the reciprocal of the condition number of a general real
+    matrix A, using alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    anorm: number
+        `anorm`.
+
+    rcond: number
+        `rcond`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

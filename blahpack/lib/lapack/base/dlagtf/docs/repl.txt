@@ -1,72 +1,126 @@
+{{alias}}( N, a, strideA, lambda, b, strideB, c, strideC, tol, d, strideD, IN, strideIN )
+    Computes an LU factorization of the matrix (T - lambda_I), where T is
+    an.
 
-    dlagtf.ndarray( N, a, strideA, offsetA, lambda, b, strideB, offsetB, c, strideC, offsetC, tol, d, strideD, offsetD, IN, strideIN, offsetIN )
-        Factorizes the matrix (T - lambda*I) where T is a tridiagonal matrix
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    a: Float64Array
+        `a`.
 
-        a: Float64Array
-            input array.
+    strideA: integer
+        stride length for `A`.
 
-        strideA: integer
-            stride length for `a`.
+    lambda: number
+        `lambda`.
 
-        offsetA: NonNegativeInteger
-            starting index for `a`.
+    b: Float64Array
+        `b`.
 
-        lambda: number
-            lambda.
+    strideB: integer
+        stride length for `B`.
 
-        b: Float64Array
-            input array.
+    c: Float64Array
+        `c`.
 
-        strideB: integer
-            stride length for `b`.
+    strideC: integer
+        stride length for `C`.
 
-        offsetB: NonNegativeInteger
-            starting index for `b`.
+    tol: number
+        `tol`.
 
-        c: Float64Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideC: integer
-            stride length for `c`.
+    strideD: integer
+        stride length for `D`.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    IN: Float64Array
+        `IN`.
 
-        tol: number
-            tol.
+    strideIN: integer
+        stride length for `IN`.
 
-        d: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideD: integer
-            stride length for `d`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
 
-        IN: Int32Array
-            output array.
+{{alias}}.ndarray( N, a, strideA, offsetA, lambda, b, strideB, offsetB, c, strideC, offsetC, tol, d, strideD, offsetD, IN, strideIN, offsetIN )
+    Computes an LU factorization of the matrix (T - lambda_I), where T is an
+    using alternative indexing semantics.
 
-        strideIN: integer
-            stride length for `IN`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetIN: NonNegativeInteger
-            starting index for `IN`.
+    a: Float64Array
+        `a`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA: integer
+        stride length for `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    lambda: number
+        `lambda`.
+
+    b: Float64Array
+        `b`.
+
+    strideB: integer
+        stride length for `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    tol: number
+        `tol`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    IN: Float64Array
+        `IN`.
+
+    strideIN: integer
+        stride length for `IN`.
+
+    offsetIN: integer
+        starting index for `IN`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

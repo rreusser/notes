@@ -1,60 +1,79 @@
+{{alias}}( order, A, LDA, B, LDB, safmin )
+    Computes the eigenvalues of a 2-by-2 generalized eigenvalue problem `A -
+    w B`, with scaling as necessary to avoid over-/underflow.
 
-    dlag2.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, safmin, scale1, scale2, wr1, wr2, wi )
-        Compute the eigenvalues of a 2-by-2 generalized eigenvalue problem.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            output matrix.
+    safmin: number
+        `safmin`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
 
-        safmin: number
-            safmin.
+{{alias}}.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, safmin )
+    Computes the eigenvalues of a 2-by-2 generalized eigenvalue problem `A -
+    w B`, with scaling as necessary to avoid over-/underflow using
+    alternative indexing semantics.
 
-        scale1: number
-            scale1.
+    Parameters
+    ----------
+    A: Float64Array
+        `A`.
 
-        scale2: number
-            scale2.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        wr1: number
-            wr1.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        wr2: number
-            wr2.
+    offsetA: integer
+        starting index for `A`.
 
-        wi: number
-            wi.
+    B: Float64Array
+        `B`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    strideB1: integer
+        stride of dimension 1 of `B`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    safmin: number
+        `safmin`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

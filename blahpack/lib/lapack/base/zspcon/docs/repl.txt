@@ -1,57 +1,99 @@
+{{alias}}( uplo, N, AP, IPIV, strideIPIV, anorm, rcond, WORK, strideWORK )
+    Estimates the reciprocal of the condition number of a complex symmetric
+    matrix in packed storage.
 
-    zspcon.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK )
-        Estimates the reciprocal of the condition number of a complex symmetric matrix in packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAP: integer
-            stride length for `AP`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    anorm: number
+        `anorm`.
 
-        IPIV: Int32Array
-            input array.
+    rcond: number
+        `rcond`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        anorm: number
-            anorm.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        rcond: number
-            rcond.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            output array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK )
+    Estimates the reciprocal of the condition number of a complex symmetric
+    matrix in packed storage using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    anorm: number
+        `anorm`.
+
+    rcond: number
+        `rcond`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

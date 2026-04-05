@@ -1,57 +1,101 @@
+{{alias}}( order, N, ilo, ihi, A, LDA, TAU, strideTAU, WORK, strideWORK )
+    Reduce a general matrix to upper Hessenberg form (unblocked).
 
-    dgehd2.ndarray( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
-        Reduce a general matrix to upper Hessenberg form (unblocked)
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        ilo: integer
-            ilo.
+    ilo: integer
+        `ilo`.
 
-        ihi: integer
-            ihi.
+    ihi: integer
+        `ihi`.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    TAU: Float64Array
+        `TAU`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        TAU: Float64Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        WORK: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideWORK: integer
-            stride length for `WORK`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+{{alias}}.ndarray( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+    Reduce a general matrix to upper Hessenberg form (unblocked) using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    ilo: integer
+        `ilo`.
+
+    ihi: integer
+        `ihi`.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,39 +1,74 @@
+{{alias}}( D, x1, dy1, param )
+    Constructs a modified Givens plane rotation.
 
-    drotmg.ndarray( dd1, dd2, dx1, dy1, dparam, strideDPARAM, offsetDPARAM )
-        Construct a modified Givens plane rotation
+    Parameters
+    ----------
+    D: Float64Array
+        `D`.
 
-        Parameters
-        ----------
-        dd1: number
-            dd1.
+    x1: number
+        `x1`.
 
-        dd2: number
-            dd2.
+    dy1: number
+        `dy1`.
 
-        dx1: number
-            dx1.
+    param: Float64Array
+        `param`.
 
-        dy1: number
-            dy1.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        dparam: Float64Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideDPARAM: integer
-            stride length for `dparam`.
 
-        offsetDPARAM: NonNegativeInteger
-            starting index for `dparam`.
+{{alias}}.ndarray( D, strideD, offsetD, x1, strideX1, offsetX1, dy1, param, strideParam, offsetParam )
+    Constructs a modified Givens plane rotation using alternative indexing
+    semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    D: Float64Array
+        `D`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    x1: number
+        `x1`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    offsetX1: integer
+        starting index for `X1`.
+
+    dy1: number
+        `dy1`.
+
+    param: Float64Array
+        `param`.
+
+    strideParam: integer
+        stride length for `Param`.
+
+    offsetParam: integer
+        starting index for `Param`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

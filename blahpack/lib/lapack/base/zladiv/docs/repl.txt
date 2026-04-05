@@ -1,24 +1,68 @@
+{{alias}}( x, offsetX, y, offsetY, out, offsetOut )
+    Performs complex division: out = X / Y, where X and Y are complex.
 
-    zladiv.ndarray( x, y )
-        Perform complex division using dladiv
+    Parameters
+    ----------
+    x: number
+        `x`.
 
-        Parameters
-        ----------
-        x: Complex128
-            x.
+    offsetX: integer
+        starting index for `X`.
 
-        y: Complex128
-            y.
+    y: number
+        `y`.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    offsetY: integer
+        starting index for `Y`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    out: number
+        `out`.
+
+    offsetOut: integer
+        starting index for `Out`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( x, offsetX, y, offsetY, out, offsetOut )
+    Performs complex division: out = X / Y, where X and Y are complex using
+    alternative indexing semantics.
+
+    Parameters
+    ----------
+    x: number
+        `x`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: number
+        `y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    out: number
+        `out`.
+
+    offsetOut: integer
+        starting index for `Out`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

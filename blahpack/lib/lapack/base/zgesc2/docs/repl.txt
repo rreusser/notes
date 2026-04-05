@@ -1,63 +1,108 @@
+{{alias}}( N, A, LDA, RHS, strideRHS, IPIV, strideIPIV, JPIV, strideJPIV, scale )
+    Solves a system of linear equations `A * X = scale * RHS` with a
+    general.
 
-    zgesc2.ndarray( N, A, strideA1, strideA2, offsetA, RHS, strideRHS, offsetRHS, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV, scale )
-        Solves a system of linear equations using the LU factorization with complete pivoting computed by zgetc2.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    RHS: Float64Array
+        `RHS`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideRHS: integer
+        stride length for `RHS`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        RHS: Float64Array
-            input array.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        strideRHS: integer
-            stride length for `RHS`.
+    JPIV: Int32Array
+        `JPIV`.
 
-        offsetRHS: NonNegativeInteger
-            starting index for `RHS`.
+    strideJPIV: integer
+        stride length for `JPIV`.
 
-        IPIV: Int32Array
-            input array.
+    scale: number
+        `scale`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        JPIV: Int32Array
-            output array.
 
-        strideJPIV: integer
-            stride length for `JPIV`.
+{{alias}}.ndarray( N, A, strideA1, strideA2, offsetA, RHS, strideRHS, offsetRHS, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV, scale )
+    Solves a system of linear equations `A * X = scale * RHS` with a general
+    using alternative indexing semantics.
 
-        offsetJPIV: NonNegativeInteger
-            starting index for `JPIV`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        scale: number
-            scale.
+    A: Float64Array
+        `A`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    RHS: Float64Array
+        `RHS`.
+
+    strideRHS: integer
+        stride length for `RHS`.
+
+    offsetRHS: integer
+        starting index for `RHS`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    JPIV: Int32Array
+        `JPIV`.
+
+    strideJPIV: integer
+        stride length for `JPIV`.
+
+    offsetJPIV: integer
+        starting index for `JPIV`.
+
+    scale: number
+        `scale`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

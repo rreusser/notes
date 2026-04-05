@@ -1,57 +1,90 @@
+{{alias}}( uplo, N, A, LDA, IPIV, strideIPIV )
+    Computes the factorization of a complex Hermitian matrix using
+    Bunch-Kaufman.
 
-    zhetrf.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork )
-        Complex Hermitian indefinite factorization (blocked Bunch-Kaufman)
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        IPIV: Int32Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideIPIV: integer
-            stride length for `IPIV`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork )
+    Computes the factorization of a complex Hermitian matrix using
+    Bunch-Kaufman using alternative indexing semantics.
 
-        WORK: Float64Array
-            output array.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    N: integer
+        number of columns.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    A: Float64Array
+        `A`.
 
-        lwork: integer
-            lwork.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

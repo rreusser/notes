@@ -1,48 +1,78 @@
+{{alias}}( N, A, LDA, s, strideS )
+    Computes row and column scalings intended to equilibrate a Hermitian
+    positive.
 
-    zpoequ.ndarray( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax )
-        Compute row/column scaling for Hermitian positive definite matrix
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    s: Float64Array
+        `s`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideS: integer
+        stride length for `S`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        s: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideS: integer
-            stride length for `s`.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+{{alias}}.ndarray( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax )
+    Computes row and column scalings intended to equilibrate a Hermitian
+    positive using alternative indexing semantics.
 
-        scond: number
-            scond.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        amax: number
-            amax.
+    A: Float64Array
+        `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    s: Float64Array
+        `s`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    scond: number
+        `scond`.
+
+    amax: number
+        `amax`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,63 +1,104 @@
+{{alias}}( order, uplo, N, nb, A, LDA, IPIV, strideIPIV, W, LDW )
+    Computes a partial factorization of a real symmetric matrix A using the.
 
-    dlasyf.ndarray( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW )
-        Compute a partial factorization of a symmetric matrix using Bunch-Kaufman pivoting
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nb: integer
-            nb.
+    nb: integer
+        `nb`.
 
-        kb: integer
-            kb.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    W: Float64Array
+        `W`.
 
-        IPIV: Int32Array
-            input array.
+    LDW: integer
+        leading dimension of `W`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        W: Float64Array
-            output matrix.
 
-        strideW1: integer
-            stride of the first dimension of `W`.
+{{alias}}.ndarray( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW )
+    Computes a partial factorization of a real symmetric matrix A using the
+    using alternative indexing semantics.
 
-        strideW2: integer
-            stride of the second dimension of `W`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetW: NonNegativeInteger
-            starting index for `W`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    nb: integer
+        `nb`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    W: Float64Array
+        `W`.
+
+    strideW1: integer
+        stride of dimension 1 of `W`.
+
+    strideW2: integer
+        stride of dimension 2 of `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

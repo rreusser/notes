@@ -1,75 +1,120 @@
+{{alias}}( order, jobz, uplo, N, AP, w, Z, LDZ, WORK, RWORK )
+    Computes all eigenvalues and optionally eigenvectors of a complex
+    Hermitian matrix in packed storage.
 
-    zhpev.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Computes all eigenvalues and optionally eigenvectors of a complex Hermitian matrix in packed storage.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        jobz: string
-            specifies the operation type.
+    jobz: string
+        `jobz`.
 
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        AP: Float64Array
-            input array.
+    AP: Float64Array
+        `AP`.
 
-        strideAP: integer
-            stride length for `AP`.
+    w: Float64Array
+        `w`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Z: Float64Array
+        `Z`.
 
-        w: Float64Array
-            input array.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        strideW: integer
-            stride length for `w`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    RWORK: Float64Array
+        `RWORK`.
 
-        Z: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+{{alias}}.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    Computes all eigenvalues and optionally eigenvectors of a complex
+    Hermitian matrix in packed storage using alternative indexing semantics.
 
-        WORK: Float64Array
-            input array.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        RWORK: Float64Array
-            output array.
+    AP: Float64Array
+        `AP`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    strideAP: integer
+        stride length for `AP`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    offsetAP: integer
+        starting index for `AP`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    w: Float64Array
+        `w`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

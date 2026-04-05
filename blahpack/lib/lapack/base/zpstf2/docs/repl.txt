@@ -1,54 +1,97 @@
+{{alias}}( order, uplo, N, A, LDA, PIV, RANK, tol, WORK )
+    Computes the Cholesky factorization with complete pivoting of a complex
+    Hermitian positive semi-definite matrix (unblocked algorithm).
 
-    zpstf2.ndarray( uplo, N, A, strideA1, strideA2, offsetA, piv, stridePIV, offsetPIV, rank, tol, work )
-        Computes the Cholesky factorization with complete pivoting of a complex Hermitian positive semi-definite matrix (unblocked algorithm).
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    PIV: Float64Array
+        `PIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    RANK: Float64Array
+        `RANK`.
 
-        piv: Int32Array
-            input array.
+    tol: number
+        `tol`.
 
-        stridePIV: integer
-            stride length for `piv`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetPIV: NonNegativeInteger
-            starting index for `piv`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        rank: integer
-            rank.
+    Examples
+    --------
+    // TODO: Add examples
 
-        tol: number
-            tol.
 
-        work: number
-            work.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, PIV, stridePIV, offsetPIV, RANK, tol, WORK )
+    Computes the Cholesky factorization with complete pivoting of a complex
+    Hermitian positive semi-definite matrix (unblocked algorithm) using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    PIV: Float64Array
+        `PIV`.
+
+    stridePIV: integer
+        stride length for `PIV`.
+
+    offsetPIV: integer
+        starting index for `PIV`.
+
+    RANK: Float64Array
+        `RANK`.
+
+    tol: number
+        `tol`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

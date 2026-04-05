@@ -1,87 +1,140 @@
+{{alias}}( job, compz, N, ilo, ihi, H, LDH, WR, strideWR, WI, strideWI, Z, LDZ )
+    Computes the eigenvalues of a real upper Hessenberg matrix H, and.
 
-    dhseqr.ndarray( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
-        Computes eigenvalues and Schur decomposition of an upper Hessenberg matrix
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    compz: string
+        `compz`.
 
-        compz: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    ilo: integer
+        `ilo`.
 
-        ilo: integer
-            ilo.
+    ihi: integer
+        `ihi`.
 
-        ihi: integer
-            ihi.
+    H: Float64Array
+        `H`.
 
-        H: Float64Array
-            input matrix.
+    LDH: integer
+        leading dimension of `H`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    WR: Float64Array
+        `WR`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    strideWR: integer
+        stride length for `WR`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    WI: Float64Array
+        `WI`.
 
-        WR: Float64Array
-            input array.
+    strideWI: integer
+        stride length for `WI`.
 
-        strideWR: integer
-            stride length for `WR`.
+    Z: Float64Array
+        `Z`.
 
-        offsetWR: NonNegativeInteger
-            starting index for `WR`.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        WI: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideWI: integer
-            stride length for `WI`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetWI: NonNegativeInteger
-            starting index for `WI`.
 
-        Z: Float64Array
-            input matrix.
+{{alias}}.ndarray( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
+    Computes the eigenvalues of a real upper Hessenberg matrix H, and using
+    alternative indexing semantics.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    compz: string
+        `compz`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    N: integer
+        number of columns.
 
-        WORK: Float64Array
-            output array.
+    ilo: integer
+        `ilo`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    ihi: integer
+        `ihi`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    H: Float64Array
+        `H`.
 
-        lwork: integer
-            lwork.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetH: integer
+        starting index for `H`.
+
+    WR: Float64Array
+        `WR`.
+
+    strideWR: integer
+        stride length for `WR`.
+
+    offsetWR: integer
+        starting index for `WR`.
+
+    WI: Float64Array
+        `WI`.
+
+    strideWI: integer
+        stride length for `WI`.
+
+    offsetWI: integer
+        starting index for `WI`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

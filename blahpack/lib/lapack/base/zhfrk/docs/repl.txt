@@ -1,60 +1,105 @@
+{{alias}}( transr, uplo, trans, N, K, alpha, A, LDA, beta, C )
+    Performs a Hermitian rank-k operation for a matrix in Rectangular Full
+    Packed format.
 
-    zhfrk.ndarray( transr, uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, c, strideC, offsetC )
-        Performs a Hermitian rank-k operation for a matrix in Rectangular Full Packed format.
+    Parameters
+    ----------
+    transr: string
+        `transr`.
 
-        Parameters
-        ----------
-        transr: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        trans: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    K: integer
+        inner dimension.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    alpha: number
+        scalar constant.
 
-        alpha: number
-            scalar constant.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    beta: number
+        scalar constant.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    C: Float64Array
+        `C`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        beta: number
-            scalar constant.
+    Examples
+    --------
+    // TODO: Add examples
 
-        c: Float64Array
-            output array.
 
-        strideC: integer
-            stride length for `c`.
+{{alias}}.ndarray( transr, uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC, offsetC )
+    Performs a Hermitian rank-k operation for a matrix in Rectangular Full
+    Packed format using alternative indexing semantics.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    Parameters
+    ----------
+    transr: string
+        `transr`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    beta: number
+        scalar constant.
+
+    C: Float64Array
+        `C`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,21 +1,40 @@
+{{alias}}( z )
+    Computes the sum of the absolute values of the real and imaginary parts
+    of a double-precision complex number.
 
-    dcabs1.ndarray( z )
-        Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
+    Parameters
+    ----------
+    z: number
+        `z`.
 
-        Parameters
-        ----------
-        z: Complex128
-            z.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+
+{{alias}}.ndarray( z )
+    Computes the sum of the absolute values of the real and imaginary parts
+    of a double-precision complex number using alternative indexing
+    semantics.
+
+    Parameters
+    ----------
+    z: number
+        `z`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

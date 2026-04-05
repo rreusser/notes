@@ -1,69 +1,120 @@
+{{alias}}( ijob, N, Z, LDZ, RHS, strideRHS, rdsum, rdscal, IPIV, strideIPIV, JPIV, strideJPIV )
+    Computes a contribution to the reciprocal Dif-estimate using the LU
+    factorization computed by zgetc2.
 
-    zlatdf.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
-        Computes a contribution to the reciprocal Dif-estimate using the LU factorization computed by zgetc2.
+    Parameters
+    ----------
+    ijob: number
+        `ijob`.
 
-        Parameters
-        ----------
-        ijob: integer
-            ijob.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    Z: Float64Array
+        `Z`.
 
-        Z: Float64Array
-            input matrix.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    RHS: Float64Array
+        `RHS`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    strideRHS: integer
+        stride length for `RHS`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    rdsum: number
+        `rdsum`.
 
-        RHS: Float64Array
-            input array.
+    rdscal: number
+        `rdscal`.
 
-        strideRHS: integer
-            stride length for `RHS`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetRHS: NonNegativeInteger
-            starting index for `RHS`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        rdsum: number
-            rdsum.
+    JPIV: Int32Array
+        `JPIV`.
 
-        rdscal: number
-            rdscal.
+    strideJPIV: integer
+        stride length for `JPIV`.
 
-        IPIV: Int32Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
 
-        JPIV: Int32Array
-            output array.
+{{alias}}.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+    Computes a contribution to the reciprocal Dif-estimate using the LU
+    factorization computed by zgetc2 using alternative indexing semantics.
 
-        strideJPIV: integer
-            stride length for `JPIV`.
+    Parameters
+    ----------
+    ijob: number
+        `ijob`.
 
-        offsetJPIV: NonNegativeInteger
-            starting index for `JPIV`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Z: Float64Array
+        `Z`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    RHS: Float64Array
+        `RHS`.
+
+    strideRHS: integer
+        stride length for `RHS`.
+
+    offsetRHS: integer
+        starting index for `RHS`.
+
+    rdsum: number
+        `rdsum`.
+
+    rdscal: number
+        `rdscal`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    JPIV: Int32Array
+        `JPIV`.
+
+    strideJPIV: integer
+        stride length for `JPIV`.
+
+    offsetJPIV: integer
+        starting index for `JPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

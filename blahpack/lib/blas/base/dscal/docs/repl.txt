@@ -1,0 +1,31 @@
+{{alias}}( N, da, x, strideX, offsetX )
+    @license Apache-2.0.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    da: number
+        `da`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

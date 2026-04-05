@@ -1,84 +1,161 @@
+{{alias}}( i0, n0, z, stride, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau )
+    Checks for deflation, computes a shift (TAU) and calls dqds. In case of.
 
-    dlasq3.ndarray( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau )
-        Check for deflation and compute shift for dqds iteration
+    Parameters
+    ----------
+    i0: number
+        `i0`.
 
-        Parameters
-        ----------
-        i0: integer
-            i0.
+    n0: number
+        `n0`.
 
-        n0: integer
-            n0.
+    z: number
+        `z`.
 
-        z: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `z`.
+    pp: number
+        `pp`.
 
-        offset: NonNegativeInteger
-            starting index for `z`.
+    dmin: number
+        `dmin`.
 
-        pp: integer
-            pp.
+    sigma: number
+        `sigma`.
 
-        dmin: number
-            dmin.
+    desig: number
+        `desig`.
 
-        sigma: number
-            sigma.
+    qmax: number
+        `qmax`.
 
-        desig: number
-            desig.
+    nfail: number
+        `nfail`.
 
-        qmax: number
-            qmax.
+    iter: number
+        `iter`.
 
-        nfail: integer
-            nfail.
+    ndiv: number
+        `ndiv`.
 
-        iter: integer
-            iter.
+    ieee: number
+        `ieee`.
 
-        ndiv: integer
-            ndiv.
+    ttype: number
+        `ttype`.
 
-        ieee: boolean
-            ieee.
+    dmin1: number
+        `dmin1`.
 
-        ttype: integer
-            ttype.
+    dmin2: number
+        `dmin2`.
 
-        dmin1: number
-            dmin1.
+    dn: number
+        `dn`.
 
-        dmin2: number
-            dmin2.
+    dn1: number
+        `dn1`.
 
-        dn: number
-            dn.
+    dn2: number
+        `dn2`.
 
-        dn1: number
-            dn1.
+    g: number
+        `g`.
 
-        dn2: number
-            dn2.
+    tau: number
+        `tau`.
 
-        g: number
-            g.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        tau: number
-            tau.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau )
+    Checks for deflation, computes a shift (TAU) and calls dqds. In case of
+    using alternative indexing semantics.
+
+    Parameters
+    ----------
+    i0: number
+        `i0`.
+
+    n0: number
+        `n0`.
+
+    z: number
+        `z`.
+
+    stride: integer
+        `stride`.
+
+    offset: integer
+        `offset`.
+
+    pp: number
+        `pp`.
+
+    dmin: number
+        `dmin`.
+
+    sigma: number
+        `sigma`.
+
+    desig: number
+        `desig`.
+
+    qmax: number
+        `qmax`.
+
+    nfail: number
+        `nfail`.
+
+    iter: number
+        `iter`.
+
+    ndiv: number
+        `ndiv`.
+
+    ieee: number
+        `ieee`.
+
+    ttype: number
+        `ttype`.
+
+    dmin1: number
+        `dmin1`.
+
+    dmin2: number
+        `dmin2`.
+
+    dn: number
+        `dn`.
+
+    dn1: number
+        `dn1`.
+
+    dn2: number
+        `dn2`.
+
+    g: number
+        `g`.
+
+    tau: number
+        `tau`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

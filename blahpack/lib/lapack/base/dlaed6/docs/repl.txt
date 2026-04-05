@@ -1,51 +1,87 @@
+{{alias}}( kniter, orgati, rho, d, z, finit, tau )
+    Computes the positive or negative root (closest to the origin) of the
+    secular equation.
 
-    dlaed6.ndarray( kniter, orgati, rho, d, strideD, offsetD, z, strideZ, offsetZ, finit, tau )
-        Compute one Newton step in the solution of the secular equation.
+    Parameters
+    ----------
+    kniter: number
+        `kniter`.
 
-        Parameters
-        ----------
-        kniter: integer
-            kniter.
+    orgati: number
+        `orgati`.
 
-        orgati: boolean
-            orgati.
+    rho: number
+        `rho`.
 
-        rho: number
-            rho.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    z: Float64Array
+        `z`.
 
-        strideD: integer
-            stride length for `d`.
+    finit: number
+        `finit`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    tau: number
+        `tau`.
 
-        z: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ: integer
-            stride length for `z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetZ: NonNegativeInteger
-            starting index for `z`.
 
-        finit: number
-            finit.
+{{alias}}.ndarray( kniter, orgati, rho, d, strideD, offsetD, z, strideZ, offsetZ, finit, tau )
+    Computes the positive or negative root (closest to the origin) of the
+    secular equation using alternative indexing semantics.
 
-        tau: number
-            tau.
+    Parameters
+    ----------
+    kniter: number
+        `kniter`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    orgati: number
+        `orgati`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    rho: number
+        `rho`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    z: Float64Array
+        `z`.
+
+    strideZ: integer
+        stride length for `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    finit: number
+        `finit`.
+
+    tau: number
+        `tau`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

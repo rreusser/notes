@@ -1,141 +1,237 @@
+{{alias}}( jobu, jobv, jobq, M, N, p, K, l, A, LDA, B, LDB, ALPHA, strideALPHA, BETA, strideBETA, U, LDU, V, LDV, Q, LDQ, WORK, strideWORK, lwork, IWORK, strideIWORK )
+    Computes the generalized singular value decomposition (GSVD) of an
+    M-by-N.
 
-    dggsvd3.ndarray( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
-        Computes the generalized singular value decomposition of a real matrix pair
+    Parameters
+    ----------
+    jobu: string
+        `jobu`.
 
-        Parameters
-        ----------
-        jobu: string
-            specifies the operation type.
+    jobv: number
+        `jobv`.
 
-        jobv: string
-            specifies the operation type.
+    jobq: number
+        `jobq`.
 
-        jobq: string
-            specifies the operation type.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    p: number
+        `p`.
 
-        p: integer
-            p.
+    K: integer
+        inner dimension.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    l: number
+        `l`.
 
-        l: integer
-            l.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    ALPHA: Float64Array
+        `ALPHA`.
 
-        B: Float64Array
-            input matrix.
+    strideALPHA: integer
+        stride length for `ALPHA`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    BETA: Float64Array
+        `BETA`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    strideBETA: integer
+        stride length for `BETA`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    U: Float64Array
+        `U`.
 
-        ALPHA: Float64Array
-            input array.
+    LDU: integer
+        leading dimension of `U`.
 
-        strideALPHA: integer
-            stride length for `ALPHA`.
+    V: Float64Array
+        `V`.
 
-        offsetALPHA: NonNegativeInteger
-            starting index for `ALPHA`.
+    LDV: integer
+        leading dimension of `V`.
 
-        BETA: Float64Array
-            input array.
+    Q: Float64Array
+        `Q`.
 
-        strideBETA: integer
-            stride length for `BETA`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetBETA: NonNegativeInteger
-            starting index for `BETA`.
+    WORK: Float64Array
+        `WORK`.
 
-        U: Float64Array
-            input matrix.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideU1: integer
-            stride of the first dimension of `U`.
+    lwork: integer
+        `lwork`.
 
-        strideU2: integer
-            stride of the second dimension of `U`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        offsetU: NonNegativeInteger
-            starting index for `U`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        V: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideV2: integer
-            stride of the second dimension of `V`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+{{alias}}.ndarray( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+    Computes the generalized singular value decomposition (GSVD) of an
+    M-by-N using alternative indexing semantics.
 
-        Q: Float64Array
-            input matrix.
+    Parameters
+    ----------
+    jobu: string
+        `jobu`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    jobv: number
+        `jobv`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    jobq: number
+        `jobq`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    M: integer
+        number of rows.
 
-        WORK: Float64Array
-            input array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    p: number
+        `p`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    K: integer
+        inner dimension.
 
-        lwork: integer
-            lwork.
+    l: number
+        `l`.
 
-        IWORK: Int32Array
-            output array.
+    A: Float64Array
+        `A`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetA: integer
+        starting index for `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    ALPHA: Float64Array
+        `ALPHA`.
+
+    strideALPHA: integer
+        stride length for `ALPHA`.
+
+    offsetALPHA: integer
+        starting index for `ALPHA`.
+
+    BETA: Float64Array
+        `BETA`.
+
+    strideBETA: integer
+        stride length for `BETA`.
+
+    offsetBETA: integer
+        starting index for `BETA`.
+
+    U: Float64Array
+        `U`.
+
+    strideU1: integer
+        stride of dimension 1 of `U`.
+
+    strideU2: integer
+        stride of dimension 2 of `U`.
+
+    offsetU: integer
+        starting index for `U`.
+
+    V: Float64Array
+        `V`.
+
+    strideV1: integer
+        stride of dimension 1 of `V`.
+
+    strideV2: integer
+        stride of dimension 2 of `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

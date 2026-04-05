@@ -1,93 +1,110 @@
+{{alias}}( nh )
+    Compute the number of simultaneous shifts (ISPEC=15) per iparmq.
 
-    dlaqr0.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
-        Computes eigenvalues and Schur form using multishift QR with aggressive early deflation
+    Parameters
+    ----------
+    nh: integer
+        `nh`.
 
-        Parameters
-        ----------
-        wantt: boolean
-            wantt.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        wantz: boolean
-            wantz.
+    Examples
+    --------
+    // TODO: Add examples
 
-        N: NonNegativeInteger
-            number of columns.
 
-        ilo: integer
-            ilo.
+{{alias}}.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
+    Compute the number of simultaneous shifts (ISPEC=15) per iparmq using
+    alternative indexing semantics.
 
-        ihi: integer
-            ihi.
+    Parameters
+    ----------
+    wantt: boolean
+        `wantt`.
 
-        H: Float64Array
-            input matrix.
+    wantz: boolean
+        `wantz`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    N: integer
+        number of columns.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    ilo: integer
+        `ilo`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    ihi: integer
+        `ihi`.
 
-        WR: Float64Array
-            input array.
+    H: Float64Array
+        `H`.
 
-        strideWR: integer
-            stride length for `WR`.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        offsetWR: NonNegativeInteger
-            starting index for `WR`.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        WI: Float64Array
-            input array.
+    offsetH: integer
+        starting index for `H`.
 
-        strideWI: integer
-            stride length for `WI`.
+    WR: Float64Array
+        `WR`.
 
-        offsetWI: NonNegativeInteger
-            starting index for `WI`.
+    strideWR: integer
+        stride length for `WR`.
 
-        iloz: integer
-            iloz.
+    offsetWR: integer
+        starting index for `WR`.
 
-        ihiz: integer
-            ihiz.
+    WI: Float64Array
+        `WI`.
 
-        Z: Float64Array
-            input matrix.
+    strideWI: integer
+        stride length for `WI`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    offsetWI: integer
+        starting index for `WI`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    iloz: number
+        `iloz`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    ihiz: number
+        `ihiz`.
 
-        WORK: Float64Array
-            output array.
+    Z: Float64Array
+        `Z`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
 
-        lwork: integer
-            lwork.
+    offsetZ: integer
+        starting index for `Z`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    WORK: Float64Array
+        `WORK`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

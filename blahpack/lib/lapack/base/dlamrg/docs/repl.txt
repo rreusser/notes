@@ -1,48 +1,86 @@
+{{alias}}( n1, n2, a, strideA, dtrd1, dtrd2, INDEX, strideINDEX )
+    Merges two sorted integer sublists into a single sorted list.
 
-    dlamrg.ndarray( n1, n2, a, strideA, offsetA, dtrd1, dtrd2, INDEX, strideINDEX, offsetINDEX )
-        LAPACK dlamrg routine
+    Parameters
+    ----------
+    n1: number
+        `n1`.
 
-        Parameters
-        ----------
-        n1: integer
-            n1.
+    n2: number
+        `n2`.
 
-        n2: integer
-            n2.
+    a: Float64Array
+        `a`.
 
-        a: Float64Array
-            input array.
+    strideA: integer
+        stride length for `A`.
 
-        strideA: integer
-            stride length for `a`.
+    dtrd1: number
+        `dtrd1`.
 
-        offsetA: NonNegativeInteger
-            starting index for `a`.
+    dtrd2: number
+        `dtrd2`.
 
-        dtrd1: integer
-            dtrd1.
+    INDEX: Float64Array
+        `INDEX`.
 
-        dtrd2: integer
-            dtrd2.
+    strideINDEX: integer
+        stride length for `INDEX`.
 
-        INDEX: Int32Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideINDEX: integer
-            stride length for `INDEX`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetINDEX: NonNegativeInteger
-            starting index for `INDEX`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( n1, n2, a, strideA, offsetA, dtrd1, dtrd2, INDEX, strideINDEX, offsetINDEX )
+    Merges two sorted integer sublists into a single sorted list using
+    alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    n1: number
+        `n1`.
+
+    n2: number
+        `n2`.
+
+    a: Float64Array
+        `a`.
+
+    strideA: integer
+        stride length for `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    dtrd1: number
+        `dtrd1`.
+
+    dtrd2: number
+        `dtrd2`.
+
+    INDEX: Float64Array
+        `INDEX`.
+
+    strideINDEX: integer
+        stride length for `INDEX`.
+
+    offsetINDEX: integer
+        starting index for `INDEX`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

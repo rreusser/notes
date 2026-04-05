@@ -1,60 +1,116 @@
+{{alias}}( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Perform complex division, storing result in module-level cdR and cdI.
 
-    zsytrs.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solve a complex symmetric indefinite system using factorization from zsytrf
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    offsetA: integer
+        starting index for `A`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        IPIV: Int32Array
-            input array.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    offsetIPIV: integer
+        starting index for `IPIV`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    B: Float64Array
+        `B`.
 
-        B: Float64Array
-            output matrix.
+    strideB1: integer
+        stride of dimension 1 of `B`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideB2: integer
+        stride of dimension 2 of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    offsetB: integer
+        starting index for `B`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+
+{{alias}}.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Perform complex division, storing result in module-level cdR and cdI
+    using alternative indexing semantics.
+
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    N: integer
+        number of columns.
+
+    nrhs: integer
+        number of right-hand sides.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

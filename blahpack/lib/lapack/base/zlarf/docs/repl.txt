@@ -1,60 +1,113 @@
+{{alias}}( order, side, M, N, v, strideV, tau, offsetTau, C, LDC, WORK, strideWORK )
+    Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 
-    zlarf.ndarray( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-        Apply a complex Householder reflector
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    side: string
+        specifies the side of the operation.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        v: Float64Array
-            input array.
+    v: Float64Array
+        `v`.
 
-        strideV: integer
-            stride length for `v`.
+    strideV: integer
+        stride length for `V`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    tau: number
+        `tau`.
 
-        tau: Complex128
-            tau.
+    offsetTau: integer
+        starting index for `Tau`.
 
-        C: Float64Array
-            input matrix.
+    C: Float64Array
+        `C`.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    LDC: integer
+        leading dimension of `C`.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        WORK: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    Apply a complex elementary reflector H to a complex M-by-N matrix C,
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
+
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    v: Float64Array
+        `v`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    tau: number
+        `tau`.
+
+    offsetTau: integer
+        starting index for `Tau`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,63 +1,110 @@
+{{alias}}( order, N, kl, ku, nrhs, AB, LDAB, IPIV, strideIPIV, B, LDB )
+    Solves a system of linear equations A * X = B where A is an N-by-N band.
 
-    dgbsv.ndarray( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solve a banded system of linear equations
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        kl: integer
-            kl.
+    kl: integer
+        `kl`.
 
-        ku: integer
-            ku.
+    ku: integer
+        `ku`.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        AB: Float64Array
-            input matrix.
+    AB: Float64Array
+        `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        IPIV: Int32Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        B: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB1: integer
-            stride of the first dimension of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+{{alias}}.ndarray( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solves a system of linear equations A * X = B where A is an N-by-N band
+    using alternative indexing semantics.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    kl: integer
+        `kl`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    ku: integer
+        `ku`.
+
+    nrhs: integer
+        number of right-hand sides.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

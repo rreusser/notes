@@ -1,42 +1,75 @@
+{{alias}}( norm, N, d, strideD, e, strideE )
+    Computes the value of the one norm, or the Frobenius norm, or the
+    infinity.
 
-    dlanst.ndarray( norm, N, d, strideD, offsetD, e, strideE, offsetE )
-        Compute the norm of a symmetric tridiagonal matrix
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideD: integer
-            stride length for `d`.
+    e: Float64Array
+        `e`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideE: integer
-            stride length for `e`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+{{alias}}.ndarray( norm, N, d, strideD, offsetD, e, strideE, offsetE )
+    Computes the value of the one norm, or the Frobenius norm, or the
+    infinity using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    norm: string
+        `norm`.
+
+    N: integer
+        number of columns.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

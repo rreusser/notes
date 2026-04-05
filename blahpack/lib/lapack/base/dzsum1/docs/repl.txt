@@ -1,33 +1,53 @@
+{{alias}}( N, CX, strideCX )
+    Takes the sum of the absolute values of a complex vector and returns a.
 
-    dzsum1.ndarray( N, x, stride, offset, incx )
-        Sum of absolute values of a complex vector
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    CX: Float64Array
+        `CX`.
 
-        x: Float64Array
-            input array.
+    strideCX: integer
+        stride length for `CX`.
 
-        stride: integer
-            stride length for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        incx: integer
-            incx.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+{{alias}}.ndarray( N, CX, strideCX, offsetCX )
+    Takes the sum of the absolute values of a complex vector and returns a
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    CX: Float64Array
+        `CX`.
+
+    strideCX: integer
+        stride length for `CX`.
+
+    offsetCX: integer
+        starting index for `CX`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

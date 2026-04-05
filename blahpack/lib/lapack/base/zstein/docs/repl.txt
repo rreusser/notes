@@ -1,108 +1,182 @@
+{{alias}}( N, d, strideD, e, strideE, M, w, strideW, IBLOCK, strideIBLOCK, ISPLIT, strideISPLIT, Z, LDZ, WORK, strideWORK, IWORK, strideIWORK, IFAIL, strideIFAIL )
+    Computes the eigenvectors of a real symmetric tridiagonal matrix T.
 
-    zstein.ndarray( N, d, strideD, offsetD, e, strideE, offsetE, M, w, strideW, offsetW, IBLOCK, strideIBLOCK, offsetIBLOCK, ISPLIT, strideISPLIT, offsetISPLIT, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
-        Computes eigenvectors of a real symmetric tridiagonal matrix by inverse iteration
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideD: integer
-            stride length for `d`.
+    e: Float64Array
+        `e`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            input array.
+    M: integer
+        number of rows.
 
-        strideE: integer
-            stride length for `e`.
+    w: Float64Array
+        `w`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    strideW: integer
+        stride length for `W`.
 
-        M: NonNegativeInteger
-            number of rows.
+    IBLOCK: Int32Array
+        `IBLOCK`.
 
-        w: Float64Array
-            input array.
+    strideIBLOCK: integer
+        stride length for `IBLOCK`.
 
-        strideW: integer
-            stride length for `w`.
+    ISPLIT: Int32Array
+        `ISPLIT`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    strideISPLIT: integer
+        stride length for `ISPLIT`.
 
-        IBLOCK: Int32Array
-            input array.
+    Z: Float64Array
+        `Z`.
 
-        strideIBLOCK: integer
-            stride length for `IBLOCK`.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        offsetIBLOCK: NonNegativeInteger
-            starting index for `IBLOCK`.
+    WORK: Float64Array
+        `WORK`.
 
-        ISPLIT: Int32Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideISPLIT: integer
-            stride length for `ISPLIT`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        offsetISPLIT: NonNegativeInteger
-            starting index for `ISPLIT`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        Z: Float64Array
-            input matrix.
+    IFAIL: Float64Array
+        `IFAIL`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    strideIFAIL: integer
+        stride length for `IFAIL`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            input array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( N, d, strideD, offsetD, e, strideE, offsetE, M, w, strideW, offsetW, IBLOCK, strideIBLOCK, offsetIBLOCK, ISPLIT, strideISPLIT, offsetISPLIT, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+    Computes the eigenvectors of a real symmetric tridiagonal matrix T using
+    alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        IWORK: Int32Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    strideD: integer
+        stride length for `D`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    offsetD: integer
+        starting index for `D`.
 
-        IFAIL: Int32Array
-            output array.
+    e: Float64Array
+        `e`.
 
-        strideIFAIL: integer
-            stride length for `IFAIL`.
+    strideE: integer
+        stride length for `E`.
 
-        offsetIFAIL: NonNegativeInteger
-            starting index for `IFAIL`.
+    offsetE: integer
+        starting index for `E`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    IBLOCK: Int32Array
+        `IBLOCK`.
+
+    strideIBLOCK: integer
+        stride length for `IBLOCK`.
+
+    offsetIBLOCK: integer
+        starting index for `IBLOCK`.
+
+    ISPLIT: Int32Array
+        `ISPLIT`.
+
+    strideISPLIT: integer
+        stride length for `ISPLIT`.
+
+    offsetISPLIT: integer
+        starting index for `ISPLIT`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    IFAIL: Float64Array
+        `IFAIL`.
+
+    strideIFAIL: integer
+        stride length for `IFAIL`.
+
+    offsetIFAIL: integer
+        starting index for `IFAIL`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

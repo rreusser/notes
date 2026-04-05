@@ -1,63 +1,82 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zgeequ.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
-        Compute row and column scalings for a complex general matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    idx: number
+        `idx`.
 
-        N: NonNegativeInteger
-            number of columns.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        A: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideA1: integer
-            stride of the first dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+{{alias}}.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        r: Float64Array
-            input array.
+    N: integer
+        number of columns.
 
-        strideR: integer
-            stride length for `r`.
+    A: Float64Array
+        `A`.
 
-        offsetR: NonNegativeInteger
-            starting index for `r`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        c: Float64Array
-            output array.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        strideC: integer
-            stride length for `c`.
+    offsetA: integer
+        starting index for `A`.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    r: Float64Array
+        `r`.
 
-        rowcnd: number
-            rowcnd.
+    strideR: integer
+        stride length for `R`.
 
-        colcnd: number
-            colcnd.
+    offsetR: integer
+        starting index for `R`.
 
-        amax: number
-            amax.
+    c: Float64Array
+        `c`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideC: integer
+        stride length for `C`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetC: integer
+        starting index for `C`.
+
+    rowcnd: number
+        `rowcnd`.
+
+    colcnd: number
+        `colcnd`.
+
+    amax: number
+        `amax`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

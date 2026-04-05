@@ -1,54 +1,92 @@
+{{alias}}( N, nrhs, d, strideD, e, strideE, B, LDB )
+    Solves a tridiagonal system of the form A _ X = B using the L_D*L^T.
 
-    dptts2.ndarray( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB )
-        Solves a tridiagonal system using the LDL^T factorization from dpttrf
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideD: integer
-            stride length for `d`.
+    e: Float64Array
+        `e`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideE: integer
-            stride length for `e`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        B: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB1: integer
-            stride of the first dimension of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+{{alias}}.ndarray( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB )
+    Solves a tridiagonal system of the form A _ X = B using the L_D*L^T
+    using alternative indexing semantics.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    nrhs: integer
+        number of right-hand sides.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

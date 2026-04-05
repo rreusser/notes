@@ -1,46 +1,80 @@
+{{alias}}( order, M, N, A, LDA, IPIV, strideIPIV )
+    Computes an LU factorization of a general complex M-by-N matrix A using.
 
-    zgetrf.ndarray( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
-        Computes an LU factorization of a general complex M-by-N matrix using
-        partial pivoting with row interchanges.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Complex128Array
-            input complex matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A` (complex elements).
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A` (complex elements).
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A` (complex elements).
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        IPIV: Int32Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+{{alias}}.ndarray( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
+    Computes an LU factorization of a general complex M-by-N matrix A using
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

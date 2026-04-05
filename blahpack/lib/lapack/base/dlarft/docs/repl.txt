@@ -1,63 +1,110 @@
+{{alias}}( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
+    Forms the triangular factor T of a real block reflector H of order N,.
 
-    dlarft.ndarray( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT )
-        Form the triangular factor T of a real block reflector.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        direct: string
-            specifies the operation type.
+    direct: string
+        `direct`.
 
-        storev: string
-            specifies the operation type.
+    storev: string
+        `storev`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    K: integer
+        inner dimension.
 
-        V: Float64Array
-            input matrix.
+    V: Float64Array
+        `V`.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    LDV: integer
+        leading dimension of `V`.
 
-        strideV2: integer
-            stride of the second dimension of `V`.
+    TAU: Float64Array
+        `TAU`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        TAU: Float64Array
-            input array.
+    T: Float64Array
+        `T`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    LDT: integer
+        leading dimension of `T`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        T: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideT1: integer
-            stride of the first dimension of `T`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+{{alias}}.ndarray( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT )
+    Forms the triangular factor T of a real block reflector H of order N,
+    using alternative indexing semantics.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    Parameters
+    ----------
+    direct: string
+        `direct`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    storev: string
+        `storev`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    V: Float64Array
+        `V`.
+
+    strideV1: integer
+        stride of dimension 1 of `V`.
+
+    strideV2: integer
+        stride of dimension 2 of `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    T: Float64Array
+        `T`.
+
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

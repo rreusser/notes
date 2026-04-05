@@ -1,129 +1,213 @@
+{{alias}}( trans, ijob, M, N, A, LDA, B, LDB, C, LDC, D, LDD, E, LDE, F, LDF, scale, dif, WORK, strideWORK, lwork, IWORK, strideIWORK )
+    Solves the generalized Sylvester equation using a level-3 blocked
+    algorithm.
 
-    ztgsyl.ndarray( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, D, strideD1, strideD2, offsetD, E, strideE1, strideE2, offsetE, F, strideF1, strideF2, offsetF, scale, dif, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
-        Solves the generalized Sylvester equation using a level-3 blocked algorithm.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        Parameters
-        ----------
-        trans: string
-            specifies the operation type.
+    ijob: number
+        `ijob`.
 
-        ijob: integer
-            ijob.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    C: Float64Array
+        `C`.
 
-        B: Float64Array
-            input matrix.
+    LDC: integer
+        leading dimension of `C`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    D: Float64Array
+        `D`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    LDD: integer
+        leading dimension of `D`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    E: Float64Array
+        `E`.
 
-        C: Float64Array
-            input matrix.
+    LDE: integer
+        leading dimension of `E`.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    F: Float64Array
+        `F`.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    LDF: integer
+        leading dimension of `F`.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    scale: number
+        `scale`.
 
-        D: Float64Array
-            input matrix.
+    dif: number
+        `dif`.
 
-        strideD1: integer
-            stride of the first dimension of `D`.
+    WORK: Float64Array
+        `WORK`.
 
-        strideD2: integer
-            stride of the second dimension of `D`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetD: NonNegativeInteger
-            starting index for `D`.
+    lwork: integer
+        `lwork`.
 
-        E: Float64Array
-            input matrix.
+    IWORK: Int32Array
+        `IWORK`.
 
-        strideE1: integer
-            stride of the first dimension of `E`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        strideE2: integer
-            stride of the second dimension of `E`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetE: NonNegativeInteger
-            starting index for `E`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        F: Float64Array
-            input matrix.
 
-        strideF1: integer
-            stride of the first dimension of `F`.
+{{alias}}.ndarray( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, D, strideD1, strideD2, offsetD, E, strideE1, strideE2, offsetE, F, strideF1, strideF2, offsetF, scale, dif, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+    Solves the generalized Sylvester equation using a level-3 blocked
+    algorithm using alternative indexing semantics.
 
-        strideF2: integer
-            stride of the second dimension of `F`.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        offsetF: NonNegativeInteger
-            starting index for `F`.
+    ijob: number
+        `ijob`.
 
-        scale: number
-            scale.
+    M: integer
+        number of rows.
 
-        dif: number
-            dif.
+    N: integer
+        number of columns.
 
-        WORK: Float64Array
-            input array.
+    A: Float64Array
+        `A`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        lwork: integer
-            lwork.
+    offsetA: integer
+        starting index for `A`.
 
-        IWORK: Int32Array
-            output array.
+    B: Float64Array
+        `B`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    strideB1: integer
+        stride of dimension 1 of `B`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    strideB2: integer
+        stride of dimension 2 of `B`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetB: integer
+        starting index for `B`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    D: Float64Array
+        `D`.
+
+    strideD1: integer
+        stride of dimension 1 of `D`.
+
+    strideD2: integer
+        stride of dimension 2 of `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    E: Float64Array
+        `E`.
+
+    strideE1: integer
+        stride of dimension 1 of `E`.
+
+    strideE2: integer
+        stride of dimension 2 of `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    F: Float64Array
+        `F`.
+
+    strideF1: integer
+        stride of dimension 1 of `F`.
+
+    strideF2: integer
+        stride of dimension 2 of `F`.
+
+    offsetF: integer
+        starting index for `F`.
+
+    scale: number
+        `scale`.
+
+    dif: number
+        `dif`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

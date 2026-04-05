@@ -1,57 +1,96 @@
+{{alias}}( N, x, strideX, y, strideY, c, s, strideCS )
+    Apply a vector of complex plane rotations with real cosines to two
+    complex vectors.
 
-    zlartv.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC, s, strideS, offsetS )
-        Apply a vector of complex plane rotations with real cosines to two complex vectors.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        y: Float64Array
-            input array.
+    c: Float64Array
+        `c`.
 
-        strideY: integer
-            stride length for `y`.
+    s: Float64Array
+        `s`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    strideCS: integer
+        stride length for `CS`.
 
-        c: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideC: integer
-            stride length for `c`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
 
-        s: Float64Array
-            output array.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC, s, strideS, offsetS )
+    Apply a vector of complex plane rotations with real cosines to two
+    complex vectors using alternative indexing semantics.
 
-        strideS: integer
-            stride length for `s`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    x: Float64Array
+        `x`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    strideX: integer
+        stride length for `X`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    s: Float64Array
+        `s`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

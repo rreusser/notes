@@ -1,51 +1,82 @@
+{{alias}}( uplo, N, AP, S, strideS, scond, amax )
+    @license Apache-2.0.
 
-    dlaqsp.ndarray( uplo, N, AP, strideAP, offsetAP, s, strideS, offsetS, scond, amax, equed )
-        Equilibrates a real symmetric matrix in packed storage using scaling factors.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    S: Float64Array
+        `S`.
 
-        strideAP: integer
-            stride length for `AP`.
+    strideS: integer
+        stride length for `S`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    scond: number
+        `scond`.
 
-        s: Float64Array
-            output array.
+    amax: number
+        `amax`.
 
-        strideS: integer
-            stride length for `s`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        scond: number
-            scond.
 
-        amax: number
-            amax.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, S, strideS, offsetS, scond, amax )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        equed: string
-            specifies the operation type.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    S: Float64Array
+        `S`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    scond: number
+        `scond`.
+
+    amax: number
+        `amax`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,66 +1,114 @@
+{{alias}}( trans, M, N, nrhs, A, LDA, B, LDB, WORK, strideWORK, lwork )
+    Solves overdetermined or underdetermined complex linear systems
+    involving an.
 
-    zgels.ndarray( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK, lwork )
-        Solve complex linear least squares using QR or LQ factorization
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        Parameters
-        ----------
-        trans: string
-            specifies the operation type.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    WORK: Float64Array
+        `WORK`.
 
-        B: Float64Array
-            input matrix.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    lwork: integer
+        `lwork`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            output array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK, lwork )
+    Solves overdetermined or underdetermined complex linear systems
+    involving an using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        lwork: integer
-            lwork.
+    M: integer
+        number of rows.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    nrhs: integer
+        number of right-hand sides.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

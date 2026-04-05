@@ -1,75 +1,94 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zgbcon.ndarray( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Estimate reciprocal condition number of complex general band matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        N: NonNegativeInteger
-            number of columns.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        kl: integer
-            kl.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ku: integer
-            ku.
 
-        AB: Float64Array
-            input matrix.
+{{alias}}.ndarray( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    N: integer
+        number of columns.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    kl: integer
+        `kl`.
 
-        IPIV: Int32Array
-            input array.
+    ku: integer
+        `ku`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    AB: Float64Array
+        `AB`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
 
-        anorm: number
-            anorm.
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
 
-        rcond: number
-            rcond.
+    offsetAB: integer
+        starting index for `AB`.
 
-        WORK: Float64Array
-            input array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    offsetIPIV: integer
+        starting index for `IPIV`.
 
-        RWORK: Float64Array
-            output array.
+    anorm: number
+        `anorm`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    rcond: number
+        `rcond`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    WORK: Float64Array
+        `WORK`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

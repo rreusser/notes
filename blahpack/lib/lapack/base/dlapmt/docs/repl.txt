@@ -1,48 +1,83 @@
+{{alias}}( forwrd, M, N, X, LDX, k, strideK )
+    Rearranges the columns of the M-by-N matrix X as specified by the.
 
-    dlapmt.ndarray( forwrd, M, N, X, strideX1, strideX2, offsetX, k, strideK, offsetK )
-        Permute columns of a matrix
+    Parameters
+    ----------
+    forwrd: boolean
+        `forwrd`.
 
-        Parameters
-        ----------
-        forwrd: boolean
-            forwrd.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    X: Float64Array
+        `X`.
 
-        X: Float64Array
-            input matrix.
+    LDX: integer
+        leading dimension of `X`.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    k: Float64Array
+        `k`.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    strideK: integer
+        stride length for `K`.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        k: Int32Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideK: integer
-            stride length for `k`.
 
-        offsetK: NonNegativeInteger
-            starting index for `k`.
+{{alias}}.ndarray( forwrd, M, N, X, strideX1, strideX2, offsetX, k, strideK, offsetK )
+    Rearranges the columns of the M-by-N matrix X as specified by the using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    forwrd: boolean
+        `forwrd`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    k: Float64Array
+        `k`.
+
+    strideK: integer
+        stride length for `K`.
+
+    offsetK: integer
+        starting index for `K`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,33 +1,91 @@
+{{alias}}( f, offsetF, g, offsetG, c, offsetC, s, offsetS, r, offsetR )
+    Compute |re|^2 + |im|^2.
 
-    zlartg.ndarray( f, g, c, s, r )
-        Generate a complex Givens plane rotation
+    Parameters
+    ----------
+    f: number
+        `f`.
 
-        Parameters
-        ----------
-        f: number
-            f.
+    offsetF: integer
+        starting index for `F`.
 
-        g: number
-            g.
+    g: number
+        `g`.
 
-        c: number
-            c.
+    offsetG: integer
+        starting index for `G`.
 
-        s: number
-            s.
+    c: number
+        `c`.
 
-        r: number
-            r.
+    offsetC: integer
+        starting index for `C`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    s: number
+        `s`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetS: integer
+        starting index for `S`.
+
+    r: number
+        `r`.
+
+    offsetR: integer
+        starting index for `R`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( f, offsetF, g, offsetG, c, offsetC, s, offsetS, r, offsetR )
+    Compute |re|^2 + |im|^2 using alternative indexing semantics.
+
+    Parameters
+    ----------
+    f: number
+        `f`.
+
+    offsetF: integer
+        starting index for `F`.
+
+    g: number
+        `g`.
+
+    offsetG: integer
+        starting index for `G`.
+
+    c: number
+        `c`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    s: number
+        `s`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    r: number
+        `r`.
+
+    offsetR: integer
+        starting index for `R`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

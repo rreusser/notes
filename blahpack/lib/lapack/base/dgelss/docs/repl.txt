@@ -1,78 +1,138 @@
+{{alias}}( order, M, N, nrhs, A, LDA, B, LDB, S, strideS, rcond, rank, WORK, strideWORK, lwork )
+    Computes the minimum norm solution to a real linear least squares
+    problem:.
 
-    dgelss.ndarray( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, s, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork )
-        Compute the minimum norm solution using SVD
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            input matrix.
+    S: Float64Array
+        `S`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideS: integer
+        stride length for `S`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    rcond: number
+        `rcond`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    rank: number
+        `rank`.
 
-        s: Float64Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideS: integer
-            stride length for `s`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    lwork: integer
+        `lwork`.
 
-        rcond: number
-            rcond.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        rank: integer
-            rank.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            output array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, S, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork )
+    Computes the minimum norm solution to a real linear least squares
+    problem: using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        lwork: integer
-            lwork.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    nrhs: integer
+        number of right-hand sides.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    S: Float64Array
+        `S`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    rcond: number
+        `rcond`.
+
+    rank: number
+        `rank`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

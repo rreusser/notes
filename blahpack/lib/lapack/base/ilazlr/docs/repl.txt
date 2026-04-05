@@ -1,36 +1,65 @@
+{{alias}}( order, M, N, A, LDA )
+    Scans a complex matrix for its last non-zero row.
 
-    ilazlr.ndarray( M, N, A, strideA1, strideA2, offsetA )
-        Scan a complex matrix for its last non-zero row
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( M, N, A, strideA1, strideA2, offsetA )
+    Scans a complex matrix for its last non-zero row using alternative
+    indexing semantics.
+
+    Parameters
+    ----------
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

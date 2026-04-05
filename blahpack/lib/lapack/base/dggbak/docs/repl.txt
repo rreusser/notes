@@ -1,66 +1,118 @@
+{{alias}}( order, job, side, N, ilo, ihi, LSCALE, strideLSCALE, RSCALE, strideRSCALE, M, V, LDV )
+    @license Apache-2.0.
 
-    dggbak.ndarray( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV )
-        Forms the right or left eigenvectors of a real generalized eigenvalue problem by backward transformation on the computed eigenvectors of the balanced matrix.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    job: string
+        `job`.
 
-        side: string
-            specifies the operation type.
+    side: string
+        specifies the side of the operation.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        ilo: integer
-            ilo.
+    ilo: integer
+        `ilo`.
 
-        ihi: integer
-            ihi.
+    ihi: integer
+        `ihi`.
 
-        LSCALE: Float64Array
-            input array.
+    LSCALE: Float64Array
+        `LSCALE`.
 
-        strideLSCALE: integer
-            stride length for `LSCALE`.
+    strideLSCALE: integer
+        stride length for `LSCALE`.
 
-        offsetLSCALE: NonNegativeInteger
-            starting index for `LSCALE`.
+    RSCALE: Float64Array
+        `RSCALE`.
 
-        RSCALE: Float64Array
-            input array.
+    strideRSCALE: integer
+        stride length for `RSCALE`.
 
-        strideRSCALE: integer
-            stride length for `RSCALE`.
+    M: integer
+        number of rows.
 
-        offsetRSCALE: NonNegativeInteger
-            starting index for `RSCALE`.
+    V: Float64Array
+        `V`.
 
-        M: NonNegativeInteger
-            number of rows.
+    LDV: integer
+        leading dimension of `V`.
 
-        V: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideV2: integer
-            stride of the second dimension of `V`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+{{alias}}.ndarray( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    side: string
+        specifies the side of the operation.
+
+    N: integer
+        number of columns.
+
+    ilo: integer
+        `ilo`.
+
+    ihi: integer
+        `ihi`.
+
+    LSCALE: Float64Array
+        `LSCALE`.
+
+    strideLSCALE: integer
+        stride length for `LSCALE`.
+
+    offsetLSCALE: integer
+        starting index for `LSCALE`.
+
+    RSCALE: Float64Array
+        `RSCALE`.
+
+    strideRSCALE: integer
+        stride length for `RSCALE`.
+
+    offsetRSCALE: integer
+        starting index for `RSCALE`.
+
+    M: integer
+        number of rows.
+
+    V: Float64Array
+        `V`.
+
+    strideV1: integer
+        stride of dimension 1 of `V`.
+
+    strideV2: integer
+        stride of dimension 2 of `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

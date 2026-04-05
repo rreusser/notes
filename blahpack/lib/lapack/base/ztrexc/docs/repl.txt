@@ -1,54 +1,93 @@
+{{alias}}( compq, N, T, LDT, Q, LDQ, ifst, ilst )
+    Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so
+    that.
 
-    ztrexc.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst )
-        Reorder Schur factorization of a complex matrix
+    Parameters
+    ----------
+    compq: string
+        `compq`.
 
-        Parameters
-        ----------
-        compq: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    T: Float64Array
+        `T`.
 
-        T: Float64Array
-            input matrix.
+    LDT: integer
+        leading dimension of `T`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    Q: Float64Array
+        `Q`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    ifst: number
+        `ifst`.
 
-        Q: Float64Array
-            output matrix.
+    ilst: number
+        `ilst`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
 
-        ifst: integer
-            ifst.
+{{alias}}.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst )
+    Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so
+    that using alternative indexing semantics.
 
-        ilst: integer
-            ilst.
+    Parameters
+    ----------
+    compq: string
+        `compq`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    T: Float64Array
+        `T`.
+
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    ifst: number
+        `ifst`.
+
+    ilst: number
+        `ilst`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,33 +1,53 @@
+{{alias}}( N, ZX, strideZX )
+    Finds the index of the first vector element of maximum absolute value.
 
-    izmax1.ndarray( N, x, stride, offset, incx )
-        Find index of first element of maximum absolute value
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    ZX: Float64Array
+        `ZX`.
 
-        x: Float64Array
-            input array.
+    strideZX: integer
+        stride length for `ZX`.
 
-        stride: integer
-            stride length for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        incx: integer
-            incx.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+{{alias}}.ndarray( N, ZX, strideZX, offsetZX )
+    Finds the index of the first vector element of maximum absolute value
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    ZX: Float64Array
+        `ZX`.
+
+    strideZX: integer
+        stride length for `ZX`.
+
+    offsetZX: integer
+        starting index for `ZX`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

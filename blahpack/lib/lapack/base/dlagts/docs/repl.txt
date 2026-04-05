@@ -1,81 +1,140 @@
+{{alias}}( job, N, a, strideA, b, strideB, c, strideC, d, strideD, IN, strideIN, y, strideY, tol )
+    Solves the system (T - lambda_I)_x = y or (T - lambda_I)__T_x = y using.
 
-    dlagts.ndarray( job, N, a, strideA, offsetA, b, strideB, offsetB, c, strideC, offsetC, d, strideD, offsetD, IN, strideIN, offsetIN, y, strideY, offsetY, tol )
-        Solves a tridiagonal system factored by dlagtf
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Parameters
-        ----------
-        job: integer
-            job.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    a: Float64Array
+        `a`.
 
-        a: Float64Array
-            input array.
+    strideA: integer
+        stride length for `A`.
 
-        strideA: integer
-            stride length for `a`.
+    b: Float64Array
+        `b`.
 
-        offsetA: NonNegativeInteger
-            starting index for `a`.
+    strideB: integer
+        stride length for `B`.
 
-        b: Float64Array
-            input array.
+    c: Float64Array
+        `c`.
 
-        strideB: integer
-            stride length for `b`.
+    strideC: integer
+        stride length for `C`.
 
-        offsetB: NonNegativeInteger
-            starting index for `b`.
+    d: Float64Array
+        `d`.
 
-        c: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideC: integer
-            stride length for `c`.
+    IN: Float64Array
+        `IN`.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    strideIN: integer
+        stride length for `IN`.
 
-        d: Float64Array
-            input array.
+    y: Float64Array
+        `y`.
 
-        strideD: integer
-            stride length for `d`.
+    strideY: integer
+        stride length for `Y`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    tol: number
+        `tol`.
 
-        IN: Int32Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideIN: integer
-            stride length for `IN`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetIN: NonNegativeInteger
-            starting index for `IN`.
 
-        y: Float64Array
-            output array.
+{{alias}}.ndarray( job, N, a, strideA, offsetA, b, strideB, offsetB, c, strideC, offsetC, d, strideD, offsetD, IN, strideIN, offsetIN, y, strideY, offsetY, tol )
+    Solves the system (T - lambda_I)_x = y or (T - lambda_I)__T_x = y using
+    using alternative indexing semantics.
 
-        strideY: integer
-            stride length for `y`.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    N: integer
+        number of columns.
 
-        tol: number
-            tol.
+    a: Float64Array
+        `a`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA: integer
+        stride length for `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    b: Float64Array
+        `b`.
+
+    strideB: integer
+        stride length for `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    IN: Float64Array
+        `IN`.
+
+    strideIN: integer
+        stride length for `IN`.
+
+    offsetIN: integer
+        starting index for `IN`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    tol: number
+        `tol`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

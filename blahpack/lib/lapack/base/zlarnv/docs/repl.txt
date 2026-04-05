@@ -1,42 +1,75 @@
+{{alias}}( idist, iseed, strideISEED, N, x, stride )
+    Returns a vector of complex random numbers from a uniform or normal
+    distribution.
 
-    zlarnv.ndarray( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset )
-        Returns a vector of complex random numbers from a uniform or normal distribution.
+    Parameters
+    ----------
+    idist: number
+        `idist`.
 
-        Parameters
-        ----------
-        idist: integer
-            idist.
+    iseed: Float64Array
+        `iseed`.
 
-        iseed: Int32Array
-            input array.
+    strideISEED: integer
+        stride length for `ISEED`.
 
-        strideISEED: integer
-            stride length for `iseed`.
+    N: integer
+        number of columns.
 
-        offsetISEED: NonNegativeInteger
-            starting index for `iseed`.
+    x: number
+        `x`.
 
-        N: NonNegativeInteger
-            number of columns.
+    stride: integer
+        `stride`.
 
-        x: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        stride: integer
-            stride length for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offset: NonNegativeInteger
-            starting index for `x`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset )
+    Returns a vector of complex random numbers from a uniform or normal
+    distribution using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    idist: number
+        `idist`.
+
+    iseed: Float64Array
+        `iseed`.
+
+    strideISEED: integer
+        stride length for `ISEED`.
+
+    offsetISEED: integer
+        starting index for `ISEED`.
+
+    N: integer
+        number of columns.
+
+    x: number
+        `x`.
+
+    stride: integer
+        `stride`.
+
+    offset: integer
+        `offset`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

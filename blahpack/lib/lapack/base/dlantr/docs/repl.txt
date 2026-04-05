@@ -1,54 +1,73 @@
+{{alias}}( a, b )
+    Returns the minimum of two values.
 
-    dlantr.ndarray( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
-        Computes the norm of a real triangular matrix
+    Parameters
+    ----------
+    a: Float64Array
+        `a`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    b: number
+        `b`.
 
-        uplo: string
-            specifies the operation type.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        diag: string
-            specifies the operation type.
+    Examples
+    --------
+    // TODO: Add examples
 
-        M: NonNegativeInteger
-            number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+{{alias}}.ndarray( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+    Returns the minimum of two values using alternative indexing semantics.
 
-        A: Float64Array
-            input matrix.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    M: integer
+        number of rows.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    A: Float64Array
+        `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

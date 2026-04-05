@@ -1,84 +1,143 @@
+{{alias}}( itrans, N, nrhs, DL, strideDL, d, strideD, DU, strideDU, DU2, strideDU2, IPIV, strideIPIV, B, LDB )
+    Solves one of the systems of equations A_X = B or A^T_X = B with a.
 
-    dgtts2.ndarray( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solves a real tridiagonal system using LU factorization from dgttrf (unblocked)
+    Parameters
+    ----------
+    itrans: number
+        `itrans`.
 
-        Parameters
-        ----------
-        itrans: integer
-            itrans.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    DL: Float64Array
+        `DL`.
 
-        DL: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDL: integer
-            stride length for `DL`.
+    d: Float64Array
+        `d`.
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    DU: Float64Array
+        `DU`.
 
-        strideD: integer
-            stride length for `d`.
+    strideDU: integer
+        stride length for `DU`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    DU2: Float64Array
+        `DU2`.
 
-        DU: Float64Array
-            input array.
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
 
-        strideDU: integer
-            stride length for `DU`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        DU2: Float64Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideDU2: integer
-            stride length for `DU2`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetDU2: NonNegativeInteger
-            starting index for `DU2`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        IPIV: Int32Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideIPIV: integer
-            stride length for `IPIV`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+{{alias}}.ndarray( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solves one of the systems of equations A_X = B or A^T_X = B with a using
+    alternative indexing semantics.
 
-        B: Float64Array
-            output matrix.
+    Parameters
+    ----------
+    itrans: number
+        `itrans`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    N: integer
+        number of columns.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    nrhs: integer
+        number of right-hand sides.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    DL: Float64Array
+        `DL`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    strideDL: integer
+        stride length for `DL`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetDL: integer
+        starting index for `DL`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    DU: Float64Array
+        `DU`.
+
+    strideDU: integer
+        stride length for `DU`.
+
+    offsetDU: integer
+        starting index for `DU`.
+
+    DU2: Float64Array
+        `DU2`.
+
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
+
+    offsetDU2: integer
+        starting index for `DU2`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

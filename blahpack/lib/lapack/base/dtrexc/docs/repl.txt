@@ -1,63 +1,108 @@
+{{alias}}( compq, N, T, LDT, Q, LDQ, ifst, ilst, WORK, strideWORK )
+    Reorders the real Schur factorization of a real matrix A = Q_T_Q^T, so
+    that.
 
-    dtrexc.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK )
-        Reorders the real Schur factorization by an orthogonal similarity transformation
+    Parameters
+    ----------
+    compq: string
+        `compq`.
 
-        Parameters
-        ----------
-        compq: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    T: Float64Array
+        `T`.
 
-        T: Float64Array
-            input matrix.
+    LDT: integer
+        leading dimension of `T`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    Q: Float64Array
+        `Q`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    ifst: number
+        `ifst`.
 
-        Q: Float64Array
-            input matrix.
+    ilst: number
+        `ilst`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    WORK: Float64Array
+        `WORK`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        ifst: integer
-            ifst.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ilst: integer
-            ilst.
 
-        WORK: Float64Array
-            output array.
+{{alias}}.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK )
+    Reorders the real Schur factorization of a real matrix A = Q_T_Q^T, so
+    that using alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    compq: string
+        `compq`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    T: Float64Array
+        `T`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    ifst: number
+        `ifst`.
+
+    ilst: number
+        `ilst`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

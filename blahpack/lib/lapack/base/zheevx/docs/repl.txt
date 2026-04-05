@@ -1,120 +1,210 @@
+{{alias}}( jobz, range, uplo, N, A, LDA, vl, vu, il, iu, abstol, out, w, strideW, Z, LDZ, WORK, strideWORK, lwork, RWORK, strideRWORK, IWORK, strideIWORK, IFAIL, strideIFAIL )
+    Computes selected eigenvalues and, optionally, eigenvectors of a
+    complex.
 
-    zheevx.ndarray( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
-        Computes selected eigenvalues and eigenvectors of a complex Hermitian matrix
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        Parameters
-        ----------
-        jobz: string
-            specifies the operation type.
+    range: string
+        `range`.
 
-        range: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    vl: number
+        `vl`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    vu: number
+        `vu`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    il: integer
+        `il`.
 
-        vl: number
-            vl.
+    iu: integer
+        `iu`.
 
-        vu: number
-            vu.
+    abstol: number
+        `abstol`.
 
-        il: integer
-            il.
+    out: number
+        `out`.
 
-        iu: integer
-            iu.
+    w: Float64Array
+        `w`.
 
-        abstol: number
-            abstol.
+    strideW: integer
+        stride length for `W`.
 
-        M: NonNegativeInteger
-            number of rows.
+    Z: Float64Array
+        `Z`.
 
-        w: Float64Array
-            input array.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        strideW: integer
-            stride length for `w`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Z: Float64Array
-            input matrix.
+    lwork: integer
+        `lwork`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    RWORK: Float64Array
+        `RWORK`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    strideRWORK: integer
+        stride length for `RWORK`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        WORK: Float64Array
-            input array.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    IFAIL: Float64Array
+        `IFAIL`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideIFAIL: integer
+        stride length for `IFAIL`.
 
-        lwork: integer
-            lwork.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        RWORK: Float64Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideRWORK: integer
-            stride length for `RWORK`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+{{alias}}.ndarray( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+    Computes selected eigenvalues and, optionally, eigenvectors of a complex
+    using alternative indexing semantics.
 
-        IWORK: Int32Array
-            input array.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    range: string
+        `range`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        IFAIL: Int32Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideIFAIL: integer
-            stride length for `IFAIL`.
+    A: Float64Array
+        `A`.
 
-        offsetIFAIL: NonNegativeInteger
-            starting index for `IFAIL`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    vl: number
+        `vl`.
+
+    vu: number
+        `vu`.
+
+    il: integer
+        `il`.
+
+    iu: integer
+        `iu`.
+
+    abstol: number
+        `abstol`.
+
+    out: number
+        `out`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    IFAIL: Float64Array
+        `IFAIL`.
+
+    strideIFAIL: integer
+        stride length for `IFAIL`.
+
+    offsetIFAIL: integer
+        starting index for `IFAIL`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

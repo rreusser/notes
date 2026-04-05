@@ -1,63 +1,82 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zpbcon.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Estimate reciprocal condition number of complex positive definite band matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        N: NonNegativeInteger
-            number of columns.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        kd: integer
-            kd.
+    Examples
+    --------
+    // TODO: Add examples
 
-        AB: Float64Array
-            input matrix.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+{{alias}}.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    N: integer
+        number of columns.
 
-        anorm: number
-            anorm.
+    kd: number
+        `kd`.
 
-        rcond: number
-            rcond.
+    AB: Float64Array
+        `AB`.
 
-        WORK: Float64Array
-            input array.
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    offsetAB: integer
+        starting index for `AB`.
 
-        RWORK: Float64Array
-            output array.
+    anorm: number
+        `anorm`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    rcond: number
+        `rcond`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    WORK: Float64Array
+        `WORK`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

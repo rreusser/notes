@@ -1,45 +1,68 @@
+{{alias}}( N, zx, strideX, zy, strideY )
+    Interchange two complex double-precision vectors.
 
-    zswap.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
-        Interchange two complex double-precision vectors.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    zx: number
+        `zx`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    zy: number
+        `zy`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        incx: integer
-            incx.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        y: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideY: integer
-            stride length for `y`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+{{alias}}.ndarray( N, zx, strideX, offsetX, zy, strideY, offsetY )
+    Interchange two complex double-precision vectors using alternative
+    indexing semantics.
 
-        incy: integer
-            incy.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    zx: number
+        `zx`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    zy: number
+        `zy`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

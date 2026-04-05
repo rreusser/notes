@@ -1,54 +1,95 @@
+{{alias}}( N, H, LDH, sr1, si1, sr2, si2, v, strideV )
+    Sets a scalar multiple of the first column of the product.
 
-    dlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, sr1, si1, sr2, si2, v, strideV, offsetV )
-        Sets a scalar multiple of the first column of H - shift product
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    H: Float64Array
+        `H`.
 
-        H: Float64Array
-            input matrix.
+    LDH: integer
+        leading dimension of `H`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    sr1: number
+        `sr1`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    si1: number
+        `si1`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    sr2: number
+        `sr2`.
 
-        sr1: number
-            sr1.
+    si2: number
+        `si2`.
 
-        si1: number
-            si1.
+    v: Float64Array
+        `v`.
 
-        sr2: number
-            sr2.
+    strideV: integer
+        stride length for `V`.
 
-        si2: number
-            si2.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        v: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideV: integer
-            stride length for `v`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+{{alias}}.ndarray( N, H, strideH1, strideH2, offsetH, sr1, si1, sr2, si2, v, strideV, offsetV )
+    Sets a scalar multiple of the first column of the product using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    H: Float64Array
+        `H`.
+
+    strideH1: integer
+        stride of dimension 1 of `H`.
+
+    strideH2: integer
+        stride of dimension 2 of `H`.
+
+    offsetH: integer
+        starting index for `H`.
+
+    sr1: number
+        `sr1`.
+
+    si1: number
+        `si1`.
+
+    sr2: number
+        `sr2`.
+
+    si2: number
+        `si2`.
+
+    v: Float64Array
+        `v`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

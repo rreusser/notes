@@ -1,57 +1,101 @@
+{{alias}}( job, side, N, ilo, ihi, SCALE, strideSCALE, M, V, LDV )
+    Back-transforms eigenvectors after balancing by zgebal.
 
-    zgebak.ndarray( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, strideV1, strideV2, offsetV )
-        Back-transforms eigenvectors after balancing by zgebal
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    side: string
+        specifies the side of the operation.
 
-        side: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    ilo: integer
+        `ilo`.
 
-        ilo: integer
-            ilo.
+    ihi: integer
+        `ihi`.
 
-        ihi: integer
-            ihi.
+    SCALE: Float64Array
+        `SCALE`.
 
-        SCALE: Float64Array
-            input array.
+    strideSCALE: integer
+        stride length for `SCALE`.
 
-        strideSCALE: integer
-            stride length for `SCALE`.
+    M: integer
+        number of rows.
 
-        offsetSCALE: NonNegativeInteger
-            starting index for `SCALE`.
+    V: Float64Array
+        `V`.
 
-        M: NonNegativeInteger
-            number of rows.
+    LDV: integer
+        leading dimension of `V`.
 
-        V: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideV2: integer
-            stride of the second dimension of `V`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+{{alias}}.ndarray( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, strideV1, strideV2, offsetV )
+    Back-transforms eigenvectors after balancing by zgebal using alternative
+    indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    side: string
+        specifies the side of the operation.
+
+    N: integer
+        number of columns.
+
+    ilo: integer
+        `ilo`.
+
+    ihi: integer
+        `ihi`.
+
+    SCALE: Float64Array
+        `SCALE`.
+
+    strideSCALE: integer
+        stride length for `SCALE`.
+
+    offsetSCALE: integer
+        starting index for `SCALE`.
+
+    M: integer
+        number of rows.
+
+    V: Float64Array
+        `V`.
+
+    strideV1: integer
+        stride of dimension 1 of `V`.
+
+    strideV2: integer
+        stride of dimension 2 of `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

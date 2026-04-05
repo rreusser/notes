@@ -1,57 +1,101 @@
+{{alias}}( order, M, N, alpha, x, strideX, y, strideY, A, LDA )
+    Performs the rank 1 operation A := alpha_x_y**T + A.
 
-    dger.ndarray( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, strideA1, strideA2, offsetA )
-        Perform the rank-1 update A := alpha*x*y**T + A.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        alpha: number
-            scalar constant.
+    alpha: number
+        scalar constant.
 
-        x: Float64Array
-            input array.
+    x: Float64Array
+        `x`.
 
-        strideX: integer
-            stride length for `x`.
+    strideX: integer
+        stride length for `X`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    y: Float64Array
+        `y`.
 
-        y: Float64Array
-            input array.
+    strideY: integer
+        stride length for `Y`.
 
-        strideY: integer
-            stride length for `y`.
+    A: Float64Array
+        `A`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    LDA: integer
+        leading dimension of `A`.
 
-        A: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideA2: integer
-            stride of the second dimension of `A`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+{{alias}}.ndarray( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, strideA1, strideA2, offsetA )
+    Performs the rank 1 operation A := alpha_x_y**T + A using alternative
+    indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    alpha: number
+        scalar constant.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

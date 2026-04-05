@@ -1,141 +1,173 @@
+{{alias}}( A, sA1, sA2, oA, i, j )
+    Accesses a 2D array element (1-based row i, column j).
 
-    dlaqr5.ndarray( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offsetSR, SI, strideSI, offsetSI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH )
-        Performs a single small-bulge multi-shift QR sweep
+    Parameters
+    ----------
+    A: Float64Array
+        `A`.
 
-        Parameters
-        ----------
-        wantt: boolean
-            wantt.
+    sA1: number
+        `sA1`.
 
-        wantz: boolean
-            wantz.
+    sA2: number
+        `sA2`.
 
-        kacc22: integer
-            kacc22.
+    oA: number
+        `oA`.
 
-        N: NonNegativeInteger
-            number of columns.
+    i: number
+        `i`.
 
-        ktop: integer
-            ktop.
+    j: number
+        `j`.
 
-        kbot: integer
-            kbot.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        nshfts: integer
-            nshfts.
+    Examples
+    --------
+    // TODO: Add examples
 
-        SR: Float64Array
-            input array.
 
-        strideSR: integer
-            stride length for `SR`.
+{{alias}}.ndarray( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offsetSR, SI, strideSI, offsetSI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH )
+    Accesses a 2D array element (1-based row i, column j) using alternative
+    indexing semantics.
 
-        offsetSR: NonNegativeInteger
-            starting index for `SR`.
+    Parameters
+    ----------
+    wantt: boolean
+        `wantt`.
 
-        SI: Float64Array
-            input array.
+    wantz: boolean
+        `wantz`.
 
-        strideSI: integer
-            stride length for `SI`.
+    kacc22: number
+        `kacc22`.
 
-        offsetSI: NonNegativeInteger
-            starting index for `SI`.
+    N: integer
+        number of columns.
 
-        H: Float64Array
-            input matrix.
+    ktop: number
+        `ktop`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    kbot: number
+        `kbot`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    nshfts: integer
+        `nshfts`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    SR: Float64Array
+        `SR`.
 
-        iloz: integer
-            iloz.
+    strideSR: integer
+        stride length for `SR`.
 
-        ihiz: integer
-            ihiz.
+    offsetSR: integer
+        starting index for `SR`.
 
-        Z: Float64Array
-            input matrix.
+    SI: Float64Array
+        `SI`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    strideSI: integer
+        stride length for `SI`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    offsetSI: integer
+        starting index for `SI`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    H: Float64Array
+        `H`.
 
-        V: Float64Array
-            input matrix.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        strideV2: integer
-            stride of the second dimension of `V`.
+    offsetH: integer
+        starting index for `H`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+    iloz: number
+        `iloz`.
 
-        U: Float64Array
-            input matrix.
+    ihiz: number
+        `ihiz`.
 
-        strideU1: integer
-            stride of the first dimension of `U`.
+    Z: Float64Array
+        `Z`.
 
-        strideU2: integer
-            stride of the second dimension of `U`.
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
 
-        offsetU: NonNegativeInteger
-            starting index for `U`.
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
 
-        nv: integer
-            nv.
+    offsetZ: integer
+        starting index for `Z`.
 
-        WV: Float64Array
-            input matrix.
+    V: Float64Array
+        `V`.
 
-        strideWV1: integer
-            stride of the first dimension of `WV`.
+    strideV1: integer
+        stride of dimension 1 of `V`.
 
-        strideWV2: integer
-            stride of the second dimension of `WV`.
+    strideV2: integer
+        stride of dimension 2 of `V`.
 
-        offsetWV: NonNegativeInteger
-            starting index for `WV`.
+    offsetV: integer
+        starting index for `V`.
 
-        nh: integer
-            nh.
+    U: Float64Array
+        `U`.
 
-        WH: Float64Array
-            output matrix.
+    strideU1: integer
+        stride of dimension 1 of `U`.
 
-        strideWH1: integer
-            stride of the first dimension of `WH`.
+    strideU2: integer
+        stride of dimension 2 of `U`.
 
-        strideWH2: integer
-            stride of the second dimension of `WH`.
+    offsetU: integer
+        starting index for `U`.
 
-        offsetWH: NonNegativeInteger
-            starting index for `WH`.
+    nv: integer
+        `nv`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    WV: Float64Array
+        `WV`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideWV1: integer
+        stride of dimension 1 of `WV`.
+
+    strideWV2: integer
+        stride of dimension 2 of `WV`.
+
+    offsetWV: integer
+        starting index for `WV`.
+
+    nh: integer
+        `nh`.
+
+    WH: Float64Array
+        `WH`.
+
+    strideWH1: integer
+        stride of dimension 1 of `WH`.
+
+    strideWH2: integer
+        stride of dimension 2 of `WH`.
+
+    offsetWH: integer
+        starting index for `WH`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

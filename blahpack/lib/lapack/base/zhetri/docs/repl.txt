@@ -1,60 +1,84 @@
+{{alias}}( uplo, N, A, LDA, IPIV )
+    Computes the inverse of a complex Hermitian matrix using the
+    factorization computed by zhetrf.
 
-    zhetri.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
-        Computes the inverse of a complex Hermitian matrix using the factorization computed by zhetrf.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IPIV: Int32Array
-            input array.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
+    Computes the inverse of a complex Hermitian matrix using the
+    factorization computed by zhetrf using alternative indexing semantics.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    A: Float64Array
+        `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Returns
-        -------
-        out: integer
-            Status code. 0 indicates success; k > 0 indicates D(k,k) is zero
-            (1-based).
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Examples
-        --------
-        > var A = new {{alias:@stdlib/array/complex128}}( [ 4.0, 0.0 ] );
-        > var IPIV = new {{alias:@stdlib/array/int32}}( [ 0 ] );
-        > var WORK = new {{alias:@stdlib/array/complex128}}( 1 );
-        > var info = {{alias}}.ndarray( 'upper', 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
-        > info
-        0
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

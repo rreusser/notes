@@ -1,63 +1,111 @@
+{{alias}}( uplo, N, kd, AB, LDAB, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
+    Estimates the reciprocal of the condition number of a symmetric
+    positive.
 
-    dpbcon.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Estimates the reciprocal condition number of a positive definite banded matrix
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    kd: number
+        `kd`.
 
-        kd: integer
-            kd.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    anorm: number
+        `anorm`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    rcond: number
+        `rcond`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    WORK: Float64Array
+        `WORK`.
 
-        anorm: number
-            anorm.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        rcond: number
-            rcond.
+    IWORK: Int32Array
+        `IWORK`.
 
-        WORK: Float64Array
-            input array.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IWORK: Int32Array
-            output array.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+{{alias}}.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates the reciprocal of the condition number of a symmetric positive
+    using alternative indexing semantics.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    kd: number
+        `kd`.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    anorm: number
+        `anorm`.
+
+    rcond: number
+        `rcond`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

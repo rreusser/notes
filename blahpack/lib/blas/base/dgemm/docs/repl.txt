@@ -1,75 +1,131 @@
+{{alias}}( order, transa, transb, M, N, K, alpha, A, LDA, B, LDB, beta, C, LDC )
+    Performs one of the matrix-matrix operations:.
 
-    dgemm.ndarray( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC )
-        Double-precision real matrix-matrix multiply.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        transa: string
-            specifies the operation type.
+    transa: string
+        specifies the operation for matrix `A`.
 
-        transb: string
-            specifies the operation type.
+    transb: string
+        specifies the operation for matrix `B`.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    K: integer
+        inner dimension.
 
-        alpha: number
-            scalar constant.
+    alpha: number
+        scalar constant.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            input matrix.
+    beta: number
+        scalar constant.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    C: Float64Array
+        `C`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    LDC: integer
+        leading dimension of `C`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        beta: number
-            scalar constant.
+    Examples
+    --------
+    // TODO: Add examples
 
-        C: Float64Array
-            output matrix.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+{{alias}}.ndarray( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC )
+    Performs one of the matrix-matrix operations: using alternative indexing
+    semantics.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    Parameters
+    ----------
+    transa: string
+        specifies the operation for matrix `A`.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    transb: string
+        specifies the operation for matrix `B`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    beta: number
+        scalar constant.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

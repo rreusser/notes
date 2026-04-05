@@ -1,66 +1,85 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zgttrf.ndarray( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV )
-        Compute LU factorization of complex tridiagonal matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    idx: number
+        `idx`.
 
-        DL: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideDL: integer
-            stride length for `DL`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
 
-        d: Float64Array
-            input array.
+{{alias}}.ndarray( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        strideD: integer
-            stride length for `d`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    DL: Float64Array
+        `DL`.
 
-        DU: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDU: integer
-            stride length for `DU`.
+    offsetDL: integer
+        starting index for `DL`.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+    d: Float64Array
+        `d`.
 
-        DU2: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideDU2: integer
-            stride length for `DU2`.
+    offsetD: integer
+        starting index for `D`.
 
-        offsetDU2: NonNegativeInteger
-            starting index for `DU2`.
+    DU: Float64Array
+        `DU`.
 
-        IPIV: Int32Array
-            output array.
+    strideDU: integer
+        stride length for `DU`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    offsetDU: integer
+        starting index for `DU`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    DU2: Float64Array
+        `DU2`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetDU2: integer
+        starting index for `DU2`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

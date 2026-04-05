@@ -1,66 +1,105 @@
+{{alias}}( N, x, y, z, strideXYZ, c, s, strideCS )
+    Applies a vector of real plane rotations from both sides to a sequence
+    of 2-by-2 symmetric matrices.
 
-    dlar2v.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, z, strideZ, offsetZ, c, strideC, offsetC, s, strideS, offsetS )
-        Apply a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    y: Float64Array
+        `y`.
 
-        strideX: integer
-            stride length for `x`.
+    z: Float64Array
+        `z`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideXYZ: integer
+        stride length for `XYZ`.
 
-        y: Float64Array
-            input array.
+    c: Float64Array
+        `c`.
 
-        strideY: integer
-            stride length for `y`.
+    s: Float64Array
+        `s`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    strideCS: integer
+        stride length for `CS`.
 
-        z: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ: integer
-            stride length for `z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetZ: NonNegativeInteger
-            starting index for `z`.
 
-        c: Float64Array
-            input array.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, z, strideZ, offsetZ, c, strideC, offsetC, s, strideS, offsetS )
+    Applies a vector of real plane rotations from both sides to a sequence
+    of 2-by-2 symmetric matrices using alternative indexing semantics.
 
-        strideC: integer
-            stride length for `c`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    x: Float64Array
+        `x`.
 
-        s: Float64Array
-            output array.
+    strideX: integer
+        stride length for `X`.
 
-        strideS: integer
-            stride length for `s`.
+    offsetX: integer
+        starting index for `X`.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    y: Float64Array
+        `y`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    strideY: integer
+        stride length for `Y`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetY: integer
+        starting index for `Y`.
+
+    z: Float64Array
+        `z`.
+
+    strideZ: integer
+        stride length for `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    s: Float64Array
+        `s`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

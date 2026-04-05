@@ -1,90 +1,152 @@
+{{alias}}( side, howmny, SELECT, strideSELECT, N, T, LDT, VL, LDVL, VR, LDVR, mm, M, WORK, strideWORK, lwork )
+    Computes some or all of the right and/or left eigenvectors of a real.
 
-    dtrevc3.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork )
-        Computes eigenvectors of a real upper quasi-triangular matrix
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    howmny: string
+        `howmny`.
 
-        howmny: string
-            specifies the operation type.
+    SELECT: Int32Array
+        `SELECT`.
 
-        SELECT: Float64Array
-            input array.
+    strideSELECT: integer
+        stride length for `SELECT`.
 
-        strideSELECT: integer
-            stride length for `SELECT`.
+    N: integer
+        number of columns.
 
-        offsetSELECT: NonNegativeInteger
-            starting index for `SELECT`.
+    T: Float64Array
+        `T`.
 
-        N: NonNegativeInteger
-            number of columns.
+    LDT: integer
+        leading dimension of `T`.
 
-        T: Float64Array
-            input matrix.
+    VL: Float64Array
+        `VL`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    LDVL: integer
+        leading dimension of `VL`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    VR: Float64Array
+        `VR`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    LDVR: integer
+        leading dimension of `VR`.
 
-        VL: Float64Array
-            input matrix.
+    mm: integer
+        `mm`.
 
-        strideVL1: integer
-            stride of the first dimension of `VL`.
+    M: integer
+        number of rows.
 
-        strideVL2: integer
-            stride of the second dimension of `VL`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetVL: NonNegativeInteger
-            starting index for `VL`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        VR: Float64Array
-            input matrix.
+    lwork: integer
+        `lwork`.
 
-        strideVR1: integer
-            stride of the first dimension of `VR`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideVR2: integer
-            stride of the second dimension of `VR`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetVR: NonNegativeInteger
-            starting index for `VR`.
 
-        mm: integer
-            mm.
+{{alias}}.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork )
+    Computes some or all of the right and/or left eigenvectors of a real
+    using alternative indexing semantics.
 
-        M: NonNegativeInteger
-            number of rows.
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        WORK: Float64Array
-            output array.
+    howmny: string
+        `howmny`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    SELECT: Int32Array
+        `SELECT`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideSELECT: integer
+        stride length for `SELECT`.
 
-        lwork: integer
-            lwork.
+    offsetSELECT: integer
+        starting index for `SELECT`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    T: Float64Array
+        `T`.
+
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    VL: Float64Array
+        `VL`.
+
+    strideVL1: integer
+        stride of dimension 1 of `VL`.
+
+    strideVL2: integer
+        stride of dimension 2 of `VL`.
+
+    offsetVL: integer
+        starting index for `VL`.
+
+    VR: Float64Array
+        `VR`.
+
+    strideVR1: integer
+        stride of dimension 1 of `VR`.
+
+    strideVR2: integer
+        stride of dimension 2 of `VR`.
+
+    offsetVR: integer
+        starting index for `VR`.
+
+    mm: integer
+        `mm`.
+
+    M: integer
+        number of rows.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

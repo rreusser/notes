@@ -1,60 +1,107 @@
+{{alias}}( order, side, M, N, v, strideV, tau, C, LDC, WORK, strideWORK )
+    Applies a real elementary reflector H to a real M-by-N matrix C,.
 
-    dlarf.ndarray( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-        Apply a real Householder reflector to a matrix.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    side: string
+        specifies the side of the operation.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        v: Float64Array
-            input array.
+    v: Float64Array
+        `v`.
 
-        strideV: integer
-            stride length for `v`.
+    strideV: integer
+        stride length for `V`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    tau: number
+        `tau`.
 
-        tau: number
-            tau.
+    C: Float64Array
+        `C`.
 
-        C: Float64Array
-            input matrix.
+    LDC: integer
+        leading dimension of `C`.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    WORK: Float64Array
+        `WORK`.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        WORK: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideWORK: integer
-            stride length for `WORK`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+{{alias}}.ndarray( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    Applies a real elementary reflector H to a real M-by-N matrix C, using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    v: Float64Array
+        `v`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    tau: number
+        `tau`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

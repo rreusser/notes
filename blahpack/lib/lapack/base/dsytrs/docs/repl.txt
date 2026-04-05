@@ -1,60 +1,105 @@
+{{alias}}( order, uplo, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
+    Solves a system of linear equations A_X = B with a real symmetric matrix
+    A.
 
-    dsytrs.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solve a symmetric indefinite system using the factorization from dsytrf
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        IPIV: Int32Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        B: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB1: integer
-            stride of the first dimension of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+{{alias}}.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solves a system of linear equations A_X = B with a real symmetric matrix
+    A using alternative indexing semantics.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    nrhs: integer
+        number of right-hand sides.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

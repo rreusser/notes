@@ -1,60 +1,87 @@
+{{alias}}( jobt, N, vl, vu, D, E, pivmin )
+    Counts the number of eigenvalues of a symmetric tridiagonal matrix in an
+    interval.
 
-    dlarrc.ndarray( jobt, N, vl, vu, d, strideD, offsetD, e, strideE, offsetE, pivmin, eigcnt, lcnt, rcnt )
-        Count eigenvalues of a symmetric tridiagonal matrix in an interval
+    Parameters
+    ----------
+    jobt: number
+        `jobt`.
 
-        Parameters
-        ----------
-        jobt: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    vl: number
+        `vl`.
 
-        vl: number
-            vl.
+    vu: number
+        `vu`.
 
-        vu: number
-            vu.
+    D: Float64Array
+        `D`.
 
-        d: Float64Array
-            input array.
+    E: Float64Array
+        `E`.
 
-        strideD: integer
-            stride length for `d`.
+    pivmin: number
+        `pivmin`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        e: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideE: integer
-            stride length for `e`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+{{alias}}.ndarray( jobt, N, vl, vu, D, strideD, offsetD, E, strideE, offsetE, pivmin )
+    Counts the number of eigenvalues of a symmetric tridiagonal matrix in an
+    interval using alternative indexing semantics.
 
-        pivmin: number
-            pivmin.
+    Parameters
+    ----------
+    jobt: number
+        `jobt`.
 
-        eigcnt: integer
-            eigcnt.
+    N: integer
+        number of columns.
 
-        lcnt: integer
-            lcnt.
+    vl: number
+        `vl`.
 
-        rcnt: integer
-            rcnt.
+    vu: number
+        `vu`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    D: Float64Array
+        `D`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    E: Float64Array
+        `E`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    pivmin: number
+        `pivmin`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

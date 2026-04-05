@@ -1,84 +1,143 @@
+{{alias}}( M, N, offset, A, LDA, JPVT, strideJPVT, TAU, strideTAU, VN1, strideVN1, VN2, strideVN2, WORK, strideWORK )
+    Computes a QR factorization with column pivoting of the block.
 
-    dlaqp2.ndarray( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK )
-        Computes a QR factorization with column pivoting using Level 2 BLAS
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    offset: integer
+        `offset`.
 
-        offset: integer
-            offset.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    JPVT: Float64Array
+        `JPVT`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideJPVT: integer
+        stride length for `JPVT`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    TAU: Float64Array
+        `TAU`.
 
-        JPVT: Int32Array
-            input array.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        strideJPVT: integer
-            stride length for `JPVT`.
+    VN1: Float64Array
+        `VN1`.
 
-        offsetJPVT: NonNegativeInteger
-            starting index for `JPVT`.
+    strideVN1: integer
+        stride of dimension 1 of `VN`.
 
-        TAU: Float64Array
-            input array.
+    VN2: Float64Array
+        `VN2`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    strideVN2: integer
+        stride of dimension 2 of `VN`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    WORK: Float64Array
+        `WORK`.
 
-        VN1: Float64Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideVN1: integer
-            stride length for `VN1`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetVN1: NonNegativeInteger
-            starting index for `VN1`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        VN2: Float64Array
-            input array.
 
-        strideVN2: integer
-            stride length for `VN2`.
+{{alias}}.ndarray( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK )
+    Computes a QR factorization with column pivoting of the block using
+    alternative indexing semantics.
 
-        offsetVN2: NonNegativeInteger
-            starting index for `VN2`.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    offset: integer
+        `offset`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    A: Float64Array
+        `A`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    JPVT: Float64Array
+        `JPVT`.
+
+    strideJPVT: integer
+        stride length for `JPVT`.
+
+    offsetJPVT: integer
+        starting index for `JPVT`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    VN1: Float64Array
+        `VN1`.
+
+    strideVN1: integer
+        stride of dimension 1 of `VN`.
+
+    offsetVN1: integer
+        starting index for `VN1`.
+
+    VN2: Float64Array
+        `VN2`.
+
+    strideVN2: integer
+        stride of dimension 2 of `VN`.
+
+    offsetVN2: integer
+        starting index for `VN2`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

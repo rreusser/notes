@@ -1,45 +1,80 @@
+{{alias}}( order, uplo, N, A, LDA, IPIV, strideIPIV )
+    Computes the factorization of a real symmetric matrix A using the.
 
-    dsytf2.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
-        Compute symmetric indefinite factorization with Bunch-Kaufman pivoting (unblocked)
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        IPIV: Int32Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
+    Computes the factorization of a real symmetric matrix A using the using
+    alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

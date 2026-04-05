@@ -1,48 +1,83 @@
+{{alias}}( N, x, strideX, y, strideY, c, strideC )
+    Generates a vector of real plane rotations (Givens rotations).
 
-    dlargv.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC )
-        Generate a vector of real plane rotations.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        y: Float64Array
-            input array.
+    c: Float64Array
+        `c`.
 
-        strideY: integer
-            stride length for `y`.
+    strideC: integer
+        stride length for `C`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        c: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideC: integer
-            stride length for `c`.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC )
+    Generates a vector of real plane rotations (Givens rotations) using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

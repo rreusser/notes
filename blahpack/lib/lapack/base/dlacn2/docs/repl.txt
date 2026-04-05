@@ -1,63 +1,110 @@
+{{alias}}( N, v, strideV, x, strideX, ISGN, strideISGN, EST, KASE, ISAVE, strideISAVE )
+    Estimates the 1-norm of a square matrix using reverse communication.
 
-    dlacn2.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, est, kase, isave, strideISAVE, offsetISAVE )
-        Estimate the 1-norm of a square matrix using reverse communication
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    v: Float64Array
+        `v`.
 
-        v: Float64Array
-            input array.
+    strideV: integer
+        stride length for `V`.
 
-        strideV: integer
-            stride length for `v`.
+    x: Float64Array
+        `x`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    strideX: integer
+        stride length for `X`.
 
-        x: Float64Array
-            input array.
+    ISGN: Float64Array
+        `ISGN`.
 
-        strideX: integer
-            stride length for `x`.
+    strideISGN: integer
+        stride length for `ISGN`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    EST: Float64Array
+        `EST`.
 
-        ISGN: Int32Array
-            output array.
+    KASE: Float64Array
+        `KASE`.
 
-        strideISGN: integer
-            stride length for `ISGN`.
+    ISAVE: Float64Array
+        `ISAVE`.
 
-        offsetISGN: NonNegativeInteger
-            starting index for `ISGN`.
+    strideISAVE: integer
+        stride length for `ISAVE`.
 
-        est: number
-            est.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        kase: integer
-            kase.
+    Examples
+    --------
+    // TODO: Add examples
 
-        isave: Int32Array
-            input array.
 
-        strideISAVE: integer
-            stride length for `isave`.
+{{alias}}.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, EST, KASE, ISAVE, strideISAVE, offsetISAVE )
+    Estimates the 1-norm of a square matrix using reverse communication
+    using alternative indexing semantics.
 
-        offsetISAVE: NonNegativeInteger
-            starting index for `isave`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    v: Float64Array
+        `v`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    ISGN: Float64Array
+        `ISGN`.
+
+    strideISGN: integer
+        stride length for `ISGN`.
+
+    offsetISGN: integer
+        starting index for `ISGN`.
+
+    EST: Float64Array
+        `EST`.
+
+    KASE: Float64Array
+        `KASE`.
+
+    ISAVE: Float64Array
+        `ISAVE`.
+
+    strideISAVE: integer
+        stride length for `ISAVE`.
+
+    offsetISAVE: integer
+        starting index for `ISAVE`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,21 +1,38 @@
+{{alias}}( din )
+    Tests whether a double-precision floating-point number is NaN.
 
-    disnan.ndarray( din )
-        Test if input is NaN
+    Parameters
+    ----------
+    din: number
+        `din`.
 
-        Parameters
-        ----------
-        din: number
-            din.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+
+{{alias}}.ndarray( din )
+    Tests whether a double-precision floating-point number is NaN using
+    alternative indexing semantics.
+
+    Parameters
+    ----------
+    din: number
+        `din`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

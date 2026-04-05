@@ -1,63 +1,108 @@
+{{alias}}( jobz, N, d, strideD, e, strideE, Z, LDZ, WORK, strideWORK )
+    Computes all eigenvalues and, optionally, eigenvectors of a real
+    symmetric.
 
-    dstev.ndarray( jobz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
-        Compute all eigenvalues and optionally eigenvectors of a real symmetric tridiagonal matrix
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        Parameters
-        ----------
-        jobz: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideD: integer
-            stride length for `d`.
+    e: Float64Array
+        `e`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            input array.
+    Z: Float64Array
+        `Z`.
 
-        strideE: integer
-            stride length for `e`.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    WORK: Float64Array
+        `WORK`.
 
-        Z: Float64Array
-            input matrix.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
 
-        WORK: Float64Array
-            output array.
+{{alias}}.ndarray( jobz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
+    Computes all eigenvalues and, optionally, eigenvectors of a real
+    symmetric using alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    d: Float64Array
+        `d`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

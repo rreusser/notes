@@ -1,57 +1,94 @@
+{{alias}}( uplo, N, KD, AB, LDAB, S, strideS, scond, amax )
+    @license Apache-2.0.
 
-    dlaqsb.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, s, strideS, offsetS, scond, amax, equed )
-        Equilibrates a real symmetric band matrix using scaling factors.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    KD: Float64Array
+        `KD`.
 
-        kd: integer
-            kd.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    S: Float64Array
+        `S`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    strideS: integer
+        stride length for `S`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    scond: number
+        `scond`.
 
-        s: Float64Array
-            output array.
+    amax: number
+        `amax`.
 
-        strideS: integer
-            stride length for `s`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetS: NonNegativeInteger
-            starting index for `s`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        scond: number
-            scond.
 
-        amax: number
-            amax.
+{{alias}}.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, S, strideS, offsetS, scond, amax )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        equed: string
-            specifies the operation type.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    kd: number
+        `kd`.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    S: Float64Array
+        `S`.
+
+    strideS: integer
+        stride length for `S`.
+
+    offsetS: integer
+        starting index for `S`.
+
+    scond: number
+        `scond`.
+
+    amax: number
+        `amax`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

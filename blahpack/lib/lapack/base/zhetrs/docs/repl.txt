@@ -1,60 +1,86 @@
+{{alias}}( ar, ai, br, bi )
+    Perform complex division, storing result in module-level cdR and cdI.
 
-    zhetrs.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solve a system of linear equations A*X = B with a Hermitian indefinite matrix using Bunch-Kaufman factorization
+    Parameters
+    ----------
+    ar: number
+        `ar`.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    ai: number
+        `ai`.
 
-        N: NonNegativeInteger
-            number of columns.
+    br: number
+        `br`.
 
-        nrhs: integer
-            nrhs.
+    bi: number
+        `bi`.
 
-        A: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideA2: integer
-            stride of the second dimension of `A`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+{{alias}}.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Perform complex division, storing result in module-level cdR and cdI
+    using alternative indexing semantics.
 
-        IPIV: Int32Array
-            input array.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    N: integer
+        number of columns.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    nrhs: integer
+        number of right-hand sides.
 
-        B: Float64Array
-            output matrix.
+    A: Float64Array
+        `A`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    offsetA: integer
+        starting index for `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    IPIV: Int32Array
+        `IPIV`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

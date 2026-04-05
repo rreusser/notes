@@ -1,45 +1,81 @@
+{{alias}}( N, V, strideV, X, strideX, EST, KASE )
+    Estimates the 1-norm of a square complex matrix A using reverse
+    communication.
 
-    zlacon.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, est, kase )
-        Estimates the 1-norm of a square complex matrix using reverse communication.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    V: Float64Array
+        `V`.
 
-        v: Float64Array
-            input array.
+    strideV: integer
+        stride length for `V`.
 
-        strideV: integer
-            stride length for `v`.
+    X: Float64Array
+        `X`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    strideX: integer
+        stride length for `X`.
 
-        x: Float64Array
-            input array.
+    EST: Float64Array
+        `EST`.
 
-        strideX: integer
-            stride length for `x`.
+    KASE: Float64Array
+        `KASE`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        est: number
-            est.
+    Examples
+    --------
+    // TODO: Add examples
 
-        kase: integer
-            kase.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE )
+    Estimates the 1-norm of a square complex matrix A using reverse
+    communication using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    V: Float64Array
+        `V`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    X: Float64Array
+        `X`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    EST: Float64Array
+        `EST`.
+
+    KASE: Float64Array
+        `KASE`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

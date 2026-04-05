@@ -1,45 +1,75 @@
+{{alias}}( transr, uplo, N, ARF, AP )
+    Copy a triangular matrix from Rectangular Full Packed (RFP) format to
+    standard packed format (TP).
 
-    dtfttp.ndarray( transr, uplo, N, ARF, strideARF, offsetARF, AP, strideAP, offsetAP )
-        Copy a triangular matrix from Rectangular Full Packed (RFP) format to standard packed format (TP).
+    Parameters
+    ----------
+    transr: string
+        `transr`.
 
-        Parameters
-        ----------
-        transr: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    ARF: Float64Array
+        `ARF`.
 
-        ARF: Float64Array
-            input array.
+    AP: Float64Array
+        `AP`.
 
-        strideARF: integer
-            stride length for `ARF`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetARF: NonNegativeInteger
-            starting index for `ARF`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        AP: Float64Array
-            output array.
 
-        strideAP: integer
-            stride length for `AP`.
+{{alias}}.ndarray( transr, uplo, N, ARF, strideARF, offsetARF, AP, strideAP, offsetAP )
+    Copy a triangular matrix from Rectangular Full Packed (RFP) format to
+    standard packed format (TP) using alternative indexing semantics.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Parameters
+    ----------
+    transr: string
+        `transr`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    ARF: Float64Array
+        `ARF`.
+
+    strideARF: integer
+        stride length for `ARF`.
+
+    offsetARF: integer
+        starting index for `ARF`.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

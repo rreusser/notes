@@ -1,48 +1,67 @@
+{{alias}}( v, idx )
+    CABS1 = |Re(z)| + |Im(z)|.
 
-    zlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, s1, s2, v, strideV, offsetV )
-        Set initial vector for Francis QR step
+    Parameters
+    ----------
+    v: Float64Array
+        `v`.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    idx: number
+        `idx`.
 
-        H: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideH2: integer
-            stride of the second dimension of `H`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+{{alias}}.ndarray( N, H, strideH1, strideH2, offsetH, s1, s2, v, strideV, offsetV )
+    CABS1 = |Re(z)| + |Im(z)| using alternative indexing semantics.
 
-        s1: Complex128
-            s1.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        s2: Complex128
-            s2.
+    H: Float64Array
+        `H`.
 
-        v: Float64Array
-            output array.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        strideV: integer
-            stride length for `v`.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    offsetH: integer
+        starting index for `H`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    s1: number
+        `s1`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    s2: number
+        `s2`.
+
+    v: Float64Array
+        `v`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

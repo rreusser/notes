@@ -1,57 +1,101 @@
+{{alias}}( order, uplo, trans, diag, N, nrhs, A, LDA, B, LDB )
+    Solves a triangular system of the form:.
 
-    dtrtrs.ndarray( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
-        Solve a triangular system of linear equations.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        trans: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        diag: string
-            specifies the operation type.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB2: integer
-            stride of the second dimension of `B`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+{{alias}}.ndarray( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+    Solves a triangular system of the form: using alternative indexing
+    semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    diag: string
+        specifies whether the matrix is unit triangular.
+
+    N: integer
+        number of columns.
+
+    nrhs: integer
+        number of right-hand sides.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

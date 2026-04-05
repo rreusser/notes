@@ -1,57 +1,100 @@
+{{alias}}( uplo, N, nrhs, AP, strideAP, IPIV, strideIPIV, B, LDB )
+    Computes the solution to a complex system of linear equations A * X = B
+    where A is Hermitian in packed storage.
 
-    zhpsv.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Computes the solution to a complex system of linear equations A * X = B where A is Hermitian in packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    strideAP: integer
+        stride length for `AP`.
 
-        strideAP: integer
-            stride length for `AP`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        IPIV: Int32Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        B: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB1: integer
-            stride of the first dimension of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+{{alias}}.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Computes the solution to a complex system of linear equations A * X = B
+    where A is Hermitian in packed storage using alternative indexing
+    semantics.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    nrhs: integer
+        number of right-hand sides.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

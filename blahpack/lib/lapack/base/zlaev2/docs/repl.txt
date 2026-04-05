@@ -1,39 +1,49 @@
+{{alias}}( a, b, c )
+    @license Apache-2.0.
 
-    zlaev2.ndarray( a, b, c, rt1, rt2, cs1, sn1 )
-        Computes the eigenvalues and eigenvectors of a 2-by-2 Hermitian matrix.
+    Parameters
+    ----------
+    a: number
+        `a`.
 
-        Parameters
-        ----------
-        a: Complex128
-            a.
+    b: number
+        `b`.
 
-        b: Complex128
-            b.
+    c: number
+        `c`.
 
-        c: Complex128
-            c.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        rt1: number
-            rt1.
+    Examples
+    --------
+    // TODO: Add examples
 
-        rt2: number
-            rt2.
 
-        cs1: number
-            cs1.
+{{alias}}.ndarray( a, b, c )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        sn1: Complex128
-            sn1.
+    Parameters
+    ----------
+    a: number
+        `a`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    b: number
+        `b`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    c: number
+        `c`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

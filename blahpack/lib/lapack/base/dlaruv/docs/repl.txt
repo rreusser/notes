@@ -1,39 +1,69 @@
+{{alias}}( iseed, strideISEED, N, x, strideX )
+    Returns a vector of n random real numbers from a uniform (0,1)
+    distribution.
 
-    dlaruv.ndarray( iseed, strideISEED, offsetISEED, N, x, strideX, offsetX )
-        Generates a vector of random numbers from a uniform distribution
+    Parameters
+    ----------
+    iseed: Float64Array
+        `iseed`.
 
-        Parameters
-        ----------
-        iseed: Int32Array
-            input array.
+    strideISEED: integer
+        stride length for `ISEED`.
 
-        strideISEED: integer
-            stride length for `iseed`.
+    N: integer
+        number of columns.
 
-        offsetISEED: NonNegativeInteger
-            starting index for `iseed`.
+    x: Float64Array
+        `x`.
 
-        N: NonNegativeInteger
-            number of columns.
+    strideX: integer
+        stride length for `X`.
 
-        x: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideX: integer
-            stride length for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+{{alias}}.ndarray( iseed, strideISEED, offsetISEED, N, x, strideX, offsetX )
+    Returns a vector of n random real numbers from a uniform (0,1)
+    distribution using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    iseed: Float64Array
+        `iseed`.
+
+    strideISEED: integer
+        stride length for `ISEED`.
+
+    offsetISEED: integer
+        starting index for `ISEED`.
+
+    N: integer
+        number of columns.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

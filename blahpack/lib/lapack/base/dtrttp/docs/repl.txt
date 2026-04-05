@@ -1,45 +1,78 @@
+{{alias}}( order, uplo, N, A, LDA, AP )
+    Copies a triangular matrix from full format (TR) to standard packed
+    format (TP).
 
-    dtrttp.ndarray( uplo, N, A, strideA1, strideA2, offsetA, AP, strideAP, offsetAP )
-        Copy a triangular matrix from full format to standard packed format.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    AP: Float64Array
+        `AP`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        AP: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideAP: integer
-            stride length for `AP`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, AP, strideAP, offsetAP )
+    Copies a triangular matrix from full format (TR) to standard packed
+    format (TP) using alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

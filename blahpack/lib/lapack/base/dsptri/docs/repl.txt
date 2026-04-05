@@ -1,51 +1,79 @@
+{{alias}}( uplo, N, AP, IPIV )
+    Computes the inverse of a real symmetric matrix in packed storage using
+    the factorization computed by dsptrf.
 
-    dsptri.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
-        Computes the inverse of a real symmetric matrix in packed storage using the factorization computed by dsptrf.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAP: integer
-            stride length for `AP`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IPIV: Int32Array
-            input array.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
+    Computes the inverse of a real symmetric matrix in packed storage using
+    the factorization computed by dsptrf using alternative indexing
+    semantics.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    AP: Float64Array
+        `AP`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideAP: integer
+        stride length for `AP`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetAP: integer
+        starting index for `AP`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

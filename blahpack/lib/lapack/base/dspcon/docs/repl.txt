@@ -1,66 +1,105 @@
+{{alias}}( uplo, N, AP, IPIV, anorm, rcond, WORK, IWORK )
+    Estimates the reciprocal condition number of a real symmetric packed
+    matrix.
 
-    dspcon.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Estimates the reciprocal of the condition number of a real symmetric matrix in packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAP: integer
-            stride length for `AP`.
+    anorm: number
+        `anorm`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    rcond: number
+        `rcond`.
 
-        IPIV: Int32Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        anorm: number
-            anorm.
+    Examples
+    --------
+    // TODO: Add examples
 
-        rcond: number
-            rcond.
 
-        WORK: Float64Array
-            input array.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates the reciprocal condition number of a real symmetric packed
+    matrix using alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        IWORK: Int32Array
-            output array.
+    AP: Float64Array
+        `AP`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    strideAP: integer
+        stride length for `AP`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    offsetAP: integer
+        starting index for `AP`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    IPIV: Int32Array
+        `IPIV`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    anorm: number
+        `anorm`.
+
+    rcond: number
+        `rcond`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,33 +1,57 @@
+{{alias}}( N, zx, strideX, offsetX )
+    Computes the sum of the absolute values of the real and imaginary
+    components of a complex vector.
 
-    dzasum.ndarray( N, x, stride, offset, incx )
-        Compute the sum of absolute values of a complex vector
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    zx: number
+        `zx`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        stride: integer
-            stride length for `x`.
+    offsetX: integer
+        starting index for `X`.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        incx: integer
-            incx.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( N, zx, strideX, offsetX )
+    Computes the sum of the absolute values of the real and imaginary
+    components of a complex vector using alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    zx: number
+        `zx`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

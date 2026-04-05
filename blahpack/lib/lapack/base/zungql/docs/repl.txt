@@ -1,60 +1,101 @@
+{{alias}}( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
+    Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
 
-    zungql.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
-        Generate unitary matrix Q from QL factorization (blocked)
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    K: integer
+        inner dimension.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    TAU: Float64Array
+        `TAU`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        TAU: Float64Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        WORK: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideWORK: integer
-            stride length for `WORK`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+{{alias}}.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+    Generate an M-by-N complex unitary matrix Q with orthonormal columns,
+    using alternative indexing semantics.
 
-        lwork: integer
-            lwork.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    K: integer
+        inner dimension.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

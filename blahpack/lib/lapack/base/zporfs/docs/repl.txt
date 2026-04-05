@@ -1,111 +1,130 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zporfs.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Iterative refinement for Hermitian positive definite system
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        N: NonNegativeInteger
-            number of columns.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        nrhs: integer
-            nrhs.
+    Examples
+    --------
+    // TODO: Add examples
 
-        A: Float64Array
-            input matrix.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+{{alias}}.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    N: integer
+        number of columns.
 
-        AF: Float64Array
-            input matrix.
+    nrhs: integer
+        number of right-hand sides.
 
-        strideAF1: integer
-            stride of the first dimension of `AF`.
+    A: Float64Array
+        `A`.
 
-        strideAF2: integer
-            stride of the second dimension of `AF`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetAF: NonNegativeInteger
-            starting index for `AF`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        B: Float64Array
-            input matrix.
+    offsetA: integer
+        starting index for `A`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    AF: Float64Array
+        `AF`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    strideAF1: integer
+        stride of dimension 1 of `AF`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    strideAF2: integer
+        stride of dimension 2 of `AF`.
 
-        X: Float64Array
-            input matrix.
+    offsetAF: integer
+        starting index for `AF`.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    B: Float64Array
+        `B`.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    strideB1: integer
+        stride of dimension 1 of `B`.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    strideB2: integer
+        stride of dimension 2 of `B`.
 
-        FERR: Float64Array
-            input array.
+    offsetB: integer
+        starting index for `B`.
 
-        strideFERR: integer
-            stride length for `FERR`.
+    X: Float64Array
+        `X`.
 
-        offsetFERR: NonNegativeInteger
-            starting index for `FERR`.
+    strideX1: integer
+        stride of dimension 1 of `X`.
 
-        BERR: Float64Array
-            input array.
+    strideX2: integer
+        stride of dimension 2 of `X`.
 
-        strideBERR: integer
-            stride length for `BERR`.
+    offsetX: integer
+        starting index for `X`.
 
-        offsetBERR: NonNegativeInteger
-            starting index for `BERR`.
+    FERR: Float64Array
+        `FERR`.
 
-        WORK: Float64Array
-            input array.
+    strideFERR: integer
+        stride length for `FERR`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    offsetFERR: integer
+        starting index for `FERR`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    BERR: Float64Array
+        `BERR`.
 
-        RWORK: Float64Array
-            output array.
+    strideBERR: integer
+        stride length for `BERR`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    offsetBERR: integer
+        starting index for `BERR`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    WORK: Float64Array
+        `WORK`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

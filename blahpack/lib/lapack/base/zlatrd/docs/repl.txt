@@ -1,69 +1,120 @@
+{{alias}}( order, uplo, N, nb, A, LDA, e, strideE, TAU, strideTAU, W, LDW )
+    Reduces NB rows and columns of a complex Hermitian matrix A to
+    Hermitian.
 
-    zlatrd.ndarray( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW )
-        Reduce NB rows and columns of a Hermitian matrix to tridiagonal form
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nb: integer
-            nb.
+    nb: integer
+        `nb`.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    e: Float64Array
+        `e`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            input array.
+    TAU: Float64Array
+        `TAU`.
 
-        strideE: integer
-            stride length for `e`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    W: Float64Array
+        `W`.
 
-        TAU: Float64Array
-            input array.
+    LDW: integer
+        leading dimension of `W`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        W: Float64Array
-            output matrix.
 
-        strideW1: integer
-            stride of the first dimension of `W`.
+{{alias}}.ndarray( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW )
+    Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian
+    using alternative indexing semantics.
 
-        strideW2: integer
-            stride of the second dimension of `W`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetW: NonNegativeInteger
-            starting index for `W`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    nb: integer
+        `nb`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    W: Float64Array
+        `W`.
+
+    strideW1: integer
+        stride of dimension 1 of `W`.
+
+    strideW2: integer
+        stride of dimension 2 of `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

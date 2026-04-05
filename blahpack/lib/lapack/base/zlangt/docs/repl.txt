@@ -1,51 +1,89 @@
+{{alias}}( norm, N, DL, strideDL, d, strideD, DU, strideDU )
+    Returns the norm of a complex general tridiagonal matrix A.
 
-    zlangt.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU )
-        Returns the norm of a complex tridiagonal matrix.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    DL: Float64Array
+        `DL`.
 
-        DL: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDL: integer
-            stride length for `DL`.
+    d: Float64Array
+        `d`.
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    DU: Float64Array
+        `DU`.
 
-        strideD: integer
-            stride length for `d`.
+    strideDU: integer
+        stride length for `DU`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        DU: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideDU: integer
-            stride length for `DU`.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+{{alias}}.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU )
+    Returns the norm of a complex general tridiagonal matrix A using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    DL: Float64Array
+        `DL`.
+
+    strideDL: integer
+        stride length for `DL`.
+
+    offsetDL: integer
+        starting index for `DL`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    DU: Float64Array
+        `DU`.
+
+    strideDU: integer
+        stride length for `DU`.
+
+    offsetDU: integer
+        starting index for `DU`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

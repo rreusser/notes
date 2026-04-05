@@ -1,123 +1,213 @@
+{{alias}}( jobz, range, uplo, N, kd, AB, LDAB, Q, LDQ, vl, vu, il, iu, abstol, out, w, strideW, Z, LDZ, WORK, strideWORK, IWORK, strideIWORK, IFAIL, strideIFAIL )
+    Computes selected eigenvalues and, optionally, eigenvectors of a real
+    symmetric band matrix A.
 
-    dsbevx.ndarray( jobz, range, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, Q, strideQ1, strideQ2, offsetQ, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
-        Computes selected eigenvalues and optionally eigenvectors of a real symmetric band matrix.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        Parameters
-        ----------
-        jobz: string
-            specifies the operation type.
+    range: string
+        `range`.
 
-        range: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    kd: number
+        `kd`.
 
-        kd: integer
-            kd.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    Q: Float64Array
+        `Q`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    vl: number
+        `vl`.
 
-        Q: Float64Array
-            input matrix.
+    vu: number
+        `vu`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    il: integer
+        `il`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    iu: integer
+        `iu`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    abstol: number
+        `abstol`.
 
-        vl: number
-            vl.
+    out: number
+        `out`.
 
-        vu: number
-            vu.
+    w: Float64Array
+        `w`.
 
-        il: integer
-            il.
+    strideW: integer
+        stride length for `W`.
 
-        iu: integer
-            iu.
+    Z: Float64Array
+        `Z`.
 
-        abstol: number
-            abstol.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        M: NonNegativeInteger
-            number of rows.
+    WORK: Float64Array
+        `WORK`.
 
-        w: Float64Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideW: integer
-            stride length for `w`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        Z: Float64Array
-            input matrix.
+    IFAIL: Float64Array
+        `IFAIL`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    strideIFAIL: integer
+        stride length for `IFAIL`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            input array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( jobz, range, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, Q, strideQ1, strideQ2, offsetQ, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+    Computes selected eigenvalues and, optionally, eigenvectors of a real
+    symmetric band matrix A using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        IWORK: Int32Array
-            input array.
+    range: string
+        `range`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    N: integer
+        number of columns.
 
-        IFAIL: Int32Array
-            output array.
+    kd: number
+        `kd`.
 
-        strideIFAIL: integer
-            stride length for `IFAIL`.
+    AB: Float64Array
+        `AB`.
 
-        offsetIFAIL: NonNegativeInteger
-            starting index for `IFAIL`.
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetAB: integer
+        starting index for `AB`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    vl: number
+        `vl`.
+
+    vu: number
+        `vu`.
+
+    il: integer
+        `il`.
+
+    iu: integer
+        `iu`.
+
+    abstol: number
+        `abstol`.
+
+    out: number
+        `out`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    IFAIL: Float64Array
+        `IFAIL`.
+
+    strideIFAIL: integer
+        stride length for `IFAIL`.
+
+    offsetIFAIL: integer
+        starting index for `IFAIL`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

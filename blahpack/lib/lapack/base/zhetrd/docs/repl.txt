@@ -1,75 +1,111 @@
+{{alias}}( order, uplo, N, A, LDA, d, strideD, e, strideE, TAU, strideTAU )
+    Reduces a complex Hermitian matrix A to real symmetric tridiagonal form
+    T.
 
-    zhetrd.ndarray( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
-        Reduce a Hermitian matrix to tridiagonal form (blocked)
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    d: Float64Array
+        `d`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    e: Float64Array
+        `e`.
 
-        strideD: integer
-            stride length for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    TAU: Float64Array
+        `TAU`.
 
-        e: Float64Array
-            input array.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        strideE: integer
-            stride length for `e`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        TAU: Float64Array
-            input array.
 
-        strideTAU: integer
-            stride length for `TAU`.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU )
+    Reduces a complex Hermitian matrix A to real symmetric tridiagonal form
+    T using alternative indexing semantics.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    A: Float64Array
+        `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        lwork: integer
-            lwork.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetA: integer
+        starting index for `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

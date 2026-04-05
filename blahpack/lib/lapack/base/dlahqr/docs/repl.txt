@@ -1,81 +1,141 @@
+{{alias}}( wantt, wantz, N, ilo, ihi, H, LDH, WR, strideWR, WI, strideWI, iloz, ihiz, Z, LDZ )
+    Computes the eigenvalues and optionally the Schur factorization of an
+    upper.
 
-    dlahqr.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ )
-        Computes eigenvalues and Schur form of an upper Hessenberg matrix (small/medium)
+    Parameters
+    ----------
+    wantt: boolean
+        `wantt`.
 
-        Parameters
-        ----------
-        wantt: boolean
-            wantt.
+    wantz: boolean
+        `wantz`.
 
-        wantz: boolean
-            wantz.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    ilo: integer
+        `ilo`.
 
-        ilo: integer
-            ilo.
+    ihi: integer
+        `ihi`.
 
-        ihi: integer
-            ihi.
+    H: Float64Array
+        `H`.
 
-        H: Float64Array
-            input matrix.
+    LDH: integer
+        leading dimension of `H`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    WR: Float64Array
+        `WR`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    strideWR: integer
+        stride length for `WR`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    WI: Float64Array
+        `WI`.
 
-        WR: Float64Array
-            input array.
+    strideWI: integer
+        stride length for `WI`.
 
-        strideWR: integer
-            stride length for `WR`.
+    iloz: number
+        `iloz`.
 
-        offsetWR: NonNegativeInteger
-            starting index for `WR`.
+    ihiz: number
+        `ihiz`.
 
-        WI: Float64Array
-            input array.
+    Z: Float64Array
+        `Z`.
 
-        strideWI: integer
-            stride length for `WI`.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        offsetWI: NonNegativeInteger
-            starting index for `WI`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        iloz: integer
-            iloz.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ihiz: integer
-            ihiz.
 
-        Z: Float64Array
-            output matrix.
+{{alias}}.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ )
+    Computes the eigenvalues and optionally the Schur factorization of an
+    upper using alternative indexing semantics.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    Parameters
+    ----------
+    wantt: boolean
+        `wantt`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    wantz: boolean
+        `wantz`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    ilo: integer
+        `ilo`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    ihi: integer
+        `ihi`.
+
+    H: Float64Array
+        `H`.
+
+    strideH1: integer
+        stride of dimension 1 of `H`.
+
+    strideH2: integer
+        stride of dimension 2 of `H`.
+
+    offsetH: integer
+        starting index for `H`.
+
+    WR: Float64Array
+        `WR`.
+
+    strideWR: integer
+        stride length for `WR`.
+
+    offsetWR: integer
+        starting index for `WR`.
+
+    WI: Float64Array
+        `WI`.
+
+    strideWI: integer
+        stride length for `WI`.
+
+    offsetWI: integer
+        starting index for `WI`.
+
+    iloz: number
+        `iloz`.
+
+    ihiz: number
+        `ihiz`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

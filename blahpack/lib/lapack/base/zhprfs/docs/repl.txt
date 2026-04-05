@@ -1,114 +1,169 @@
+{{alias}}( order, uplo, N, nrhs, AP, AFP, IPIV, B, LDB, X, LDX, FERR, BERR )
+    Improves the computed solution to a complex system A * X = B where A is
+    Hermitian in packed storage and provides error bounds.
 
-    zhprfs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Improves the computed solution to a complex system A * X = B where A is Hermitian in packed storage and provides error bounds.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nrhs: integer
-            nrhs.
+    nrhs: integer
+        number of right-hand sides.
 
-        AP: Float64Array
-            input array.
+    AP: Float64Array
+        `AP`.
 
-        strideAP: integer
-            stride length for `AP`.
+    AFP: Float64Array
+        `AFP`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        AFP: Float64Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideAFP: integer
-            stride length for `AFP`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetAFP: NonNegativeInteger
-            starting index for `AFP`.
+    X: Float64Array
+        `X`.
 
-        IPIV: Int32Array
-            input array.
+    LDX: integer
+        leading dimension of `X`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    FERR: Float64Array
+        `FERR`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    BERR: Float64Array
+        `BERR`.
 
-        B: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB2: integer
-            stride of the second dimension of `B`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+{{alias}}.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    Improves the computed solution to a complex system A * X = B where A is
+    Hermitian in packed storage and provides error bounds using alternative
+    indexing semantics.
 
-        X: Float64Array
-            input matrix.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    N: integer
+        number of columns.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    nrhs: integer
+        number of right-hand sides.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    AP: Float64Array
+        `AP`.
 
-        FERR: Float64Array
-            input array.
+    strideAP: integer
+        stride length for `AP`.
 
-        strideFERR: integer
-            stride length for `FERR`.
+    offsetAP: integer
+        starting index for `AP`.
 
-        offsetFERR: NonNegativeInteger
-            starting index for `FERR`.
+    AFP: Float64Array
+        `AFP`.
 
-        BERR: Float64Array
-            input array.
+    strideAFP: integer
+        stride length for `AFP`.
 
-        strideBERR: integer
-            stride length for `BERR`.
+    offsetAFP: integer
+        starting index for `AFP`.
 
-        offsetBERR: NonNegativeInteger
-            starting index for `BERR`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        WORK: Float64Array
-            input array.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    offsetIPIV: integer
+        starting index for `IPIV`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    B: Float64Array
+        `B`.
 
-        RWORK: Float64Array
-            output array.
+    strideB1: integer
+        stride of dimension 1 of `B`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    strideB2: integer
+        stride of dimension 2 of `B`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    offsetB: integer
+        starting index for `B`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    X: Float64Array
+        `X`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    FERR: Float64Array
+        `FERR`.
+
+    strideFERR: integer
+        stride length for `FERR`.
+
+    offsetFERR: integer
+        starting index for `FERR`.
+
+    BERR: Float64Array
+        `BERR`.
+
+    strideBERR: integer
+        stride length for `BERR`.
+
+    offsetBERR: integer
+        starting index for `BERR`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,33 +1,60 @@
+{{alias}}( id, N, d, stride )
+    Sort an array of doubles in increasing or decreasing order using
+    quicksort.
 
-    dlasrt.ndarray( id, N, d, stride, offset )
-        Sort an array of doubles in increasing or decreasing order
+    Parameters
+    ----------
+    id: number
+        `id`.
 
-        Parameters
-        ----------
-        id: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    d: number
+        `d`.
 
-        d: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `d`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `d`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( id, N, d, stride, offset )
+    Sort an array of doubles in increasing or decreasing order using
+    quicksort using alternative indexing semantics.
+
+    Parameters
+    ----------
+    id: number
+        `id`.
+
+    N: integer
+        number of columns.
+
+    d: number
+        `d`.
+
+    stride: integer
+        `stride`.
+
+    offset: integer
+        `offset`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,60 +1,104 @@
+{{alias}}( uplo, N, alpha, A, LDA, x, strideX, beta, y, strideY )
+    Performs the matrix-vector operation:.
 
-    zsymv.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
-        Complex symmetric matrix-vector multiply
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    alpha: number
+        scalar constant.
 
-        alpha: Complex128
-            scalar constant.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    x: Float64Array
+        `x`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideX: integer
+        stride length for `X`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    beta: number
+        scalar constant.
 
-        x: Float64Array
-            input array.
+    y: Float64Array
+        `y`.
 
-        strideX: integer
-            stride length for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        beta: Complex128
-            scalar constant.
+    Examples
+    --------
+    // TODO: Add examples
 
-        y: Float64Array
-            output array.
 
-        strideY: integer
-            stride length for `y`.
+{{alias}}.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+    Performs the matrix-vector operation: using alternative indexing
+    semantics.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    beta: number
+        scalar constant.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,180 +1,247 @@
+{{alias}}( icompq, nl, nr, sqre, d, z, ZW, VF, VFW, VL, VLW, alpha, beta, DSIGMA, IDX, IDXP, IDXQ, PERM, GIVCOL, LDGCOL, GIVNUM, LDGNUM )
+    @license Apache-2.0.
 
-    dlasd7.ndarray( icompq, nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, ZW, strideZW, offsetZW, VF, strideVF, offsetVF, VFW, strideVFW, offsetVFW, VL, strideVL, offsetVL, VLW, strideVLW, offsetVLW, alpha, beta, DSIGMA, strideDSIGMA, offsetDSIGMA, IDX, strideIDX, offsetIDX, IDXP, strideIDXP, offsetIDXP, IDXQ, strideIDXQ, offsetIDXQ, PERM, stridePERM, offsetPERM, givptr, GIVCOL, strideGIVCOL1, strideGIVCOL2, offsetGIVCOL, GIVNUM, strideGIVNUM1, strideGIVNUM2, offsetGIVNUM, c, s )
-        Merge two sets of singular values together into a single sorted set and deflate.
+    Parameters
+    ----------
+    icompq: number
+        `icompq`.
 
-        Parameters
-        ----------
-        icompq: integer
-            icompq.
+    nl: number
+        `nl`.
 
-        nl: integer
-            nl.
+    nr: number
+        `nr`.
 
-        nr: integer
-            nr.
+    sqre: number
+        `sqre`.
 
-        sqre: integer
-            sqre.
+    d: Float64Array
+        `d`.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    z: Float64Array
+        `z`.
 
-        d: Float64Array
-            input array.
+    ZW: Float64Array
+        `ZW`.
 
-        strideD: integer
-            stride length for `d`.
+    VF: Float64Array
+        `VF`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    VFW: Float64Array
+        `VFW`.
 
-        z: Float64Array
-            input array.
+    VL: Float64Array
+        `VL`.
 
-        strideZ: integer
-            stride length for `z`.
+    VLW: Float64Array
+        `VLW`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `z`.
+    alpha: number
+        scalar constant.
 
-        ZW: Float64Array
-            input array.
+    beta: number
+        scalar constant.
 
-        strideZW: integer
-            stride length for `ZW`.
+    DSIGMA: Float64Array
+        `DSIGMA`.
 
-        offsetZW: NonNegativeInteger
-            starting index for `ZW`.
+    IDX: Int32Array
+        `IDX`.
 
-        VF: Float64Array
-            input array.
+    IDXP: Int32Array
+        `IDXP`.
 
-        strideVF: integer
-            stride length for `VF`.
+    IDXQ: Int32Array
+        `IDXQ`.
 
-        offsetVF: NonNegativeInteger
-            starting index for `VF`.
+    PERM: Int32Array
+        `PERM`.
 
-        VFW: Float64Array
-            input array.
+    GIVCOL: Int32Array
+        `GIVCOL`.
 
-        strideVFW: integer
-            stride length for `VFW`.
+    LDGCOL: integer
+        leading dimension of `GCOL`.
 
-        offsetVFW: NonNegativeInteger
-            starting index for `VFW`.
+    GIVNUM: Float64Array
+        `GIVNUM`.
 
-        VL: Float64Array
-            input array.
+    LDGNUM: integer
+        leading dimension of `GNUM`.
 
-        strideVL: integer
-            stride length for `VL`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetVL: NonNegativeInteger
-            starting index for `VL`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        VLW: Float64Array
-            input array.
 
-        strideVLW: integer
-            stride length for `VLW`.
+{{alias}}.ndarray( icompq, nl, nr, sqre, d, strideD, offsetD, z, strideZ, offsetZ, ZW, strideZW, offsetZW, VF, strideVF, offsetVF, VFW, strideVFW, offsetVFW, VL, strideVL, offsetVL, VLW, strideVLW, offsetVLW, alpha, beta, DSIGMA, strideDSIGMA, offsetDSIGMA, IDX, strideIDX, offsetIDX, IDXP, strideIDXP, offsetIDXP, IDXQ, strideIDXQ, offsetIDXQ, PERM, stridePERM, offsetPERM, GIVCOL, strideGIVCOL1, strideGIVCOL2, offsetGIVCOL, GIVNUM, strideGIVNUM1, strideGIVNUM2, offsetGIVNUM )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        offsetVLW: NonNegativeInteger
-            starting index for `VLW`.
+    Parameters
+    ----------
+    icompq: number
+        `icompq`.
 
-        alpha: number
-            scalar constant.
+    nl: number
+        `nl`.
 
-        beta: number
-            scalar constant.
+    nr: number
+        `nr`.
 
-        DSIGMA: Float64Array
-            input array.
+    sqre: number
+        `sqre`.
 
-        strideDSIGMA: integer
-            stride length for `DSIGMA`.
+    d: Float64Array
+        `d`.
 
-        offsetDSIGMA: NonNegativeInteger
-            starting index for `DSIGMA`.
+    strideD: integer
+        stride length for `D`.
 
-        IDX: Int32Array
-            input array.
+    offsetD: integer
+        starting index for `D`.
 
-        strideIDX: integer
-            stride length for `IDX`.
+    z: Float64Array
+        `z`.
 
-        offsetIDX: NonNegativeInteger
-            starting index for `IDX`.
+    strideZ: integer
+        stride length for `Z`.
 
-        IDXP: Int32Array
-            input array.
+    offsetZ: integer
+        starting index for `Z`.
 
-        strideIDXP: integer
-            stride length for `IDXP`.
+    ZW: Float64Array
+        `ZW`.
 
-        offsetIDXP: NonNegativeInteger
-            starting index for `IDXP`.
+    strideZW: integer
+        stride length for `ZW`.
 
-        IDXQ: Int32Array
-            input array.
+    offsetZW: integer
+        starting index for `ZW`.
 
-        strideIDXQ: integer
-            stride length for `IDXQ`.
+    VF: Float64Array
+        `VF`.
 
-        offsetIDXQ: NonNegativeInteger
-            starting index for `IDXQ`.
+    strideVF: integer
+        stride length for `VF`.
 
-        PERM: Int32Array
-            input array.
+    offsetVF: integer
+        starting index for `VF`.
 
-        stridePERM: integer
-            stride length for `PERM`.
+    VFW: Float64Array
+        `VFW`.
 
-        offsetPERM: NonNegativeInteger
-            starting index for `PERM`.
+    strideVFW: integer
+        stride length for `VFW`.
 
-        givptr: integer
-            givptr.
+    offsetVFW: integer
+        starting index for `VFW`.
 
-        GIVCOL: Int32Array
-            input matrix.
+    VL: Float64Array
+        `VL`.
 
-        strideGIVCOL1: integer
-            stride of the first dimension of `GIVCOL`.
+    strideVL: integer
+        stride length for `VL`.
 
-        strideGIVCOL2: integer
-            stride of the second dimension of `GIVCOL`.
+    offsetVL: integer
+        starting index for `VL`.
 
-        offsetGIVCOL: NonNegativeInteger
-            starting index for `GIVCOL`.
+    VLW: Float64Array
+        `VLW`.
 
-        GIVNUM: Float64Array
-            output matrix.
+    strideVLW: integer
+        stride length for `VLW`.
 
-        strideGIVNUM1: integer
-            stride of the first dimension of `GIVNUM`.
+    offsetVLW: integer
+        starting index for `VLW`.
 
-        strideGIVNUM2: integer
-            stride of the second dimension of `GIVNUM`.
+    alpha: number
+        scalar constant.
 
-        offsetGIVNUM: NonNegativeInteger
-            starting index for `GIVNUM`.
+    beta: number
+        scalar constant.
 
-        c: number
-            c.
+    DSIGMA: Float64Array
+        `DSIGMA`.
 
-        s: number
-            s.
+    strideDSIGMA: integer
+        stride length for `DSIGMA`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetDSIGMA: integer
+        starting index for `DSIGMA`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    IDX: Int32Array
+        `IDX`.
+
+    strideIDX: integer
+        stride length for `IDX`.
+
+    offsetIDX: integer
+        starting index for `IDX`.
+
+    IDXP: Int32Array
+        `IDXP`.
+
+    strideIDXP: integer
+        stride length for `IDXP`.
+
+    offsetIDXP: integer
+        starting index for `IDXP`.
+
+    IDXQ: Int32Array
+        `IDXQ`.
+
+    strideIDXQ: integer
+        stride length for `IDXQ`.
+
+    offsetIDXQ: integer
+        starting index for `IDXQ`.
+
+    PERM: Int32Array
+        `PERM`.
+
+    stridePERM: integer
+        stride length for `PERM`.
+
+    offsetPERM: integer
+        starting index for `PERM`.
+
+    GIVCOL: Int32Array
+        `GIVCOL`.
+
+    strideGIVCOL1: integer
+        stride of dimension 1 of `GIVCOL`.
+
+    strideGIVCOL2: integer
+        stride of dimension 2 of `GIVCOL`.
+
+    offsetGIVCOL: integer
+        starting index for `GIVCOL`.
+
+    GIVNUM: Float64Array
+        `GIVNUM`.
+
+    strideGIVNUM1: integer
+        stride of dimension 1 of `GIVNUM`.
+
+    strideGIVNUM2: integer
+        stride of dimension 2 of `GIVNUM`.
+
+    offsetGIVNUM: integer
+        starting index for `GIVNUM`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,42 +1,63 @@
+{{alias}}( uplo, diag, N, AP )
+    Computes the inverse of a real upper or lower triangular matrix in
+    packed storage.
 
-    dtptri.ndarray( uplo, diag, N, AP, strideAP, offsetAP )
-        Computes the inverse of a real upper or lower triangular matrix in
-        packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            Specifies whether the matrix is upper or lower triangular
-            ('upper' or 'lower').
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        diag: string
-            Specifies whether the matrix is unit or non-unit triangular
-            ('unit' or 'non-unit').
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            Order of the matrix.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            Packed triangular matrix of dimension `N*(N+1)/2`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideAP: integer
-            Stride length for `AP`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetAP: NonNegativeInteger
-            Starting index for `AP`.
 
-        Returns
-        -------
-        info: integer
-            Status code. 0 indicates success; k > 0 indicates that A(k,k)
-            is exactly zero and the matrix is singular.
+{{alias}}.ndarray( uplo, diag, N, AP, strideAP, offsetAP )
+    Computes the inverse of a real upper or lower triangular matrix in
+    packed storage using alternative indexing semantics.
 
-        Examples
-        --------
-        > var AP = new {{alias:@stdlib/array/float64}}( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
-        > var info = dtptri.ndarray( 'upper', 'non-unit', 3, AP, 1, 0 )
-        0
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    diag: string
+        specifies whether the matrix is unit triangular.
+
+    N: integer
+        number of columns.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

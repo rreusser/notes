@@ -1,93 +1,147 @@
+{{alias}}( jobvl, jobvr, N, A, LDA, WR, strideWR, WI, strideWI, VL, LDVL, VR, LDVR )
+    Computes the eigenvalues and, optionally, the left and/or right
+    eigenvectors.
 
-    dgeev.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork )
-        Computes eigenvalues and eigenvectors of a real general matrix
+    Parameters
+    ----------
+    jobvl: string
+        `jobvl`.
 
-        Parameters
-        ----------
-        jobvl: string
-            specifies the operation type.
+    jobvr: string
+        `jobvr`.
 
-        jobvr: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    WR: Float64Array
+        `WR`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideWR: integer
+        stride length for `WR`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    WI: Float64Array
+        `WI`.
 
-        WR: Float64Array
-            input array.
+    strideWI: integer
+        stride length for `WI`.
 
-        strideWR: integer
-            stride length for `WR`.
+    VL: Float64Array
+        `VL`.
 
-        offsetWR: NonNegativeInteger
-            starting index for `WR`.
+    LDVL: integer
+        leading dimension of `VL`.
 
-        WI: Float64Array
-            input array.
+    VR: Float64Array
+        `VR`.
 
-        strideWI: integer
-            stride length for `WI`.
+    LDVR: integer
+        leading dimension of `VR`.
 
-        offsetWI: NonNegativeInteger
-            starting index for `WI`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        VL: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideVL1: integer
-            stride of the first dimension of `VL`.
 
-        strideVL2: integer
-            stride of the second dimension of `VL`.
+{{alias}}.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork )
+    Computes the eigenvalues and, optionally, the left and/or right
+    eigenvectors using alternative indexing semantics.
 
-        offsetVL: NonNegativeInteger
-            starting index for `VL`.
+    Parameters
+    ----------
+    jobvl: string
+        `jobvl`.
 
-        VR: Float64Array
-            input matrix.
+    jobvr: string
+        `jobvr`.
 
-        strideVR1: integer
-            stride of the first dimension of `VR`.
+    N: integer
+        number of columns.
 
-        strideVR2: integer
-            stride of the second dimension of `VR`.
+    A: Float64Array
+        `A`.
 
-        offsetVR: NonNegativeInteger
-            starting index for `VR`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        WORK: Float64Array
-            output array.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    offsetA: integer
+        starting index for `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    WR: Float64Array
+        `WR`.
 
-        lwork: integer
-            lwork.
+    strideWR: integer
+        stride length for `WR`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetWR: integer
+        starting index for `WR`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    WI: Float64Array
+        `WI`.
+
+    strideWI: integer
+        stride length for `WI`.
+
+    offsetWI: integer
+        starting index for `WI`.
+
+    VL: Float64Array
+        `VL`.
+
+    strideVL1: integer
+        stride of dimension 1 of `VL`.
+
+    strideVL2: integer
+        stride of dimension 2 of `VL`.
+
+    offsetVL: integer
+        starting index for `VL`.
+
+    VR: Float64Array
+        `VR`.
+
+    strideVR1: integer
+        stride of dimension 1 of `VR`.
+
+    strideVR2: integer
+        stride of dimension 2 of `VR`.
+
+    offsetVR: integer
+        starting index for `VR`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

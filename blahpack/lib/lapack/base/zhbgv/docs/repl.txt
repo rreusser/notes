@@ -1,96 +1,166 @@
+{{alias}}( order, jobz, uplo, N, ka, kb, AB, LDAB, BB, LDBB, w, strideW, Z, LDZ, WORK, strideWORK, RWORK, strideRWORK )
+    Computes all eigenvalues and, optionally, eigenvectors of a complex
+    generalized Hermitian-definite banded eigenproblem A_x = lambda_B_x.
 
-    zhbgv.ndarray( jobz, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Computes all eigenvalues and optionally eigenvectors of a complex Hermitian-definite banded generalized eigenproblem.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        jobz: string
-            specifies the operation type.
+    jobz: string
+        `jobz`.
 
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        ka: integer
-            ka.
+    ka: number
+        `ka`.
 
-        kb: integer
-            kb.
+    kb: integer
+        `kb`.
 
-        AB: Float64Array
-            input matrix.
+    AB: Float64Array
+        `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    BB: Float64Array
+        `BB`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    LDBB: integer
+        leading dimension of `BB`.
 
-        BB: Float64Array
-            input matrix.
+    w: Float64Array
+        `w`.
 
-        strideBB1: integer
-            stride of the first dimension of `BB`.
+    strideW: integer
+        stride length for `W`.
 
-        strideBB2: integer
-            stride of the second dimension of `BB`.
+    Z: Float64Array
+        `Z`.
 
-        offsetBB: NonNegativeInteger
-            starting index for `BB`.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        w: Float64Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideW: integer
-            stride length for `w`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    RWORK: Float64Array
+        `RWORK`.
 
-        Z: Float64Array
-            input matrix.
+    strideRWORK: integer
+        stride length for `RWORK`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
 
-        WORK: Float64Array
-            input array.
+{{alias}}.ndarray( jobz, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    Computes all eigenvalues and, optionally, eigenvectors of a complex
+    generalized Hermitian-definite banded eigenproblem A_x = lambda_B_x
+    using alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        RWORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    ka: number
+        `ka`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    kb: integer
+        `kb`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    AB: Float64Array
+        `AB`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    BB: Float64Array
+        `BB`.
+
+    strideBB1: integer
+        stride of dimension 1 of `BB`.
+
+    strideBB2: integer
+        stride of dimension 2 of `BB`.
+
+    offsetBB: integer
+        starting index for `BB`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

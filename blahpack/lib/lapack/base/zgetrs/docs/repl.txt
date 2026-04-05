@@ -1,0 +1,104 @@
+{{alias}}( order, trans, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
+    Solves a system of linear equations.
+
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
+
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    N: integer
+        number of columns.
+
+    nrhs: integer
+        number of right-hand sides.
+
+    A: Float64Array
+        `A`.
+
+    LDA: integer
+        leading dimension of `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    LDB: integer
+        leading dimension of `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solves a system of linear equations using alternative indexing
+    semantics.
+
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    N: integer
+        number of columns.
+
+    nrhs: integer
+        number of right-hand sides.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

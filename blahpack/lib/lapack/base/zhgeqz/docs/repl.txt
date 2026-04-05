@@ -1,123 +1,209 @@
+{{alias}}( order, job, compq, compz, N, ilo, ihi, H, LDH, T, LDT, ALPHA, strideALPHA, BETA, strideBETA, Q, LDQ, Z, LDZ, WORK, strideWORK, lwork, RWORK, strideRWORK )
+    Compute the eigenvalues of a complex matrix pair (H, T), where H is.
 
-    zhgeqz.ndarray( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
-        Implement the single-shift QZ method for computing generalized eigenvalues of a complex matrix pair in Hessenberg-triangular form.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    job: string
+        `job`.
 
-        compq: string
-            specifies the operation type.
+    compq: string
+        `compq`.
 
-        compz: string
-            specifies the operation type.
+    compz: string
+        `compz`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        ilo: integer
-            ilo.
+    ilo: integer
+        `ilo`.
 
-        ihi: integer
-            ihi.
+    ihi: integer
+        `ihi`.
 
-        H: Float64Array
-            input matrix.
+    H: Float64Array
+        `H`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    LDH: integer
+        leading dimension of `H`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    T: Float64Array
+        `T`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    LDT: integer
+        leading dimension of `T`.
 
-        T: Float64Array
-            input matrix.
+    ALPHA: Float64Array
+        `ALPHA`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    strideALPHA: integer
+        stride length for `ALPHA`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    BETA: Float64Array
+        `BETA`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    strideBETA: integer
+        stride length for `BETA`.
 
-        ALPHA: Float64Array
-            input array.
+    Q: Float64Array
+        `Q`.
 
-        strideALPHA: integer
-            stride length for `ALPHA`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetALPHA: NonNegativeInteger
-            starting index for `ALPHA`.
+    Z: Float64Array
+        `Z`.
 
-        BETA: Float64Array
-            input array.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        strideBETA: integer
-            stride length for `BETA`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetBETA: NonNegativeInteger
-            starting index for `BETA`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Q: Float64Array
-            input matrix.
+    lwork: integer
+        `lwork`.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    RWORK: Float64Array
+        `RWORK`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    strideRWORK: integer
+        stride length for `RWORK`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Z: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+{{alias}}.ndarray( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+    Compute the eigenvalues of a complex matrix pair (H, T), where H is
+    using alternative indexing semantics.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        WORK: Float64Array
-            input array.
+    compq: string
+        `compq`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    compz: string
+        `compz`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    N: integer
+        number of columns.
 
-        lwork: integer
-            lwork.
+    ilo: integer
+        `ilo`.
 
-        RWORK: Float64Array
-            output array.
+    ihi: integer
+        `ihi`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    H: Float64Array
+        `H`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetH: integer
+        starting index for `H`.
+
+    T: Float64Array
+        `T`.
+
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    ALPHA: Float64Array
+        `ALPHA`.
+
+    strideALPHA: integer
+        stride length for `ALPHA`.
+
+    offsetALPHA: integer
+        starting index for `ALPHA`.
+
+    BETA: Float64Array
+        `BETA`.
+
+    strideBETA: integer
+        stride length for `BETA`.
+
+    offsetBETA: integer
+        starting index for `BETA`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

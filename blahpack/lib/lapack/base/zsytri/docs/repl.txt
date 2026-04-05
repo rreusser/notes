@@ -1,54 +1,84 @@
+{{alias}}( uplo, N, A, LDA, IPIV )
+    Computes the inverse of a complex symmetric matrix using the
+    factorization computed by zsytrf.
 
-    zsytri.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
-        Computes the inverse of a complex symmetric matrix using the factorization computed by zsytrf.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IPIV: Int32Array
-            input array.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+{{alias}}.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
+    Computes the inverse of a complex symmetric matrix using the
+    factorization computed by zsytrf using alternative indexing semantics.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    A: Float64Array
+        `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

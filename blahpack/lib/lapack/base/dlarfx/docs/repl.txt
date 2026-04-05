@@ -1,60 +1,105 @@
+{{alias}}( side, M, N, v, strideV, tau, C, LDC, WORK, strideWORK )
+    Applies an elementary reflector H to a real M-by-N matrix C, from
+    either.
 
-    dlarfx.ndarray( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-        Applies an elementary reflector to a general matrix with unrolled loops
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    v: Float64Array
+        `v`.
 
-        v: Float64Array
-            input array.
+    strideV: integer
+        stride length for `V`.
 
-        strideV: integer
-            stride length for `v`.
+    tau: number
+        `tau`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    C: Float64Array
+        `C`.
 
-        tau: number
-            tau.
+    LDC: integer
+        leading dimension of `C`.
 
-        C: Float64Array
-            input matrix.
+    WORK: Float64Array
+        `WORK`.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            output array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    Applies an elementary reflector H to a real M-by-N matrix C, from either
+    using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    v: Float64Array
+        `v`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    tau: number
+        `tau`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

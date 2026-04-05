@@ -1,48 +1,74 @@
+{{alias}}( N, za, zx, strideX, zy, strideY )
+    Scales a complex double-precision vector by a complex constant and adds.
 
-    zaxpy.ndarray( N, za, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
-        Scale a complex vector and add to another complex vector
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    za: number
+        `za`.
 
-        za: Complex128
-            za.
+    zx: number
+        `zx`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    zy: number
+        `zy`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        incx: integer
-            incx.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        y: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideY: integer
-            stride length for `y`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+{{alias}}.ndarray( N, za, zx, strideX, offsetX, zy, strideY, offsetY )
+    Scales a complex double-precision vector by a complex constant and adds
+    using alternative indexing semantics.
 
-        incy: integer
-            incy.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    za: number
+        `za`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    zx: number
+        `zx`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    zy: number
+        `zy`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

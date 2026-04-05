@@ -1,138 +1,233 @@
+{{alias}}( jobu, jobv, jobq, M, p, N, A, LDA, B, LDB, tola, tolb, K, l, U, LDU, V, LDV, Q, LDQ, IWORK, strideIWORK, TAU, strideTAU, WORK, strideWORK, lwork )
+    Computes orthogonal matrices U, V, and Q such that:.
 
-    dggsvp3.ndarray( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
-        Compute the preprocessing for the generalized SVD of real matrices A and B
+    Parameters
+    ----------
+    jobu: string
+        `jobu`.
 
-        Parameters
-        ----------
-        jobu: string
-            specifies the operation type.
+    jobv: number
+        `jobv`.
 
-        jobv: string
-            specifies the operation type.
+    jobq: number
+        `jobq`.
 
-        jobq: string
-            specifies the operation type.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    p: number
+        `p`.
 
-        p: integer
-            p.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    tola: number
+        `tola`.
 
-        B: Float64Array
-            input matrix.
+    tolb: number
+        `tolb`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    K: integer
+        inner dimension.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    l: number
+        `l`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    U: Float64Array
+        `U`.
 
-        tola: number
-            tola.
+    LDU: integer
+        leading dimension of `U`.
 
-        tolb: number
-            tolb.
+    V: Float64Array
+        `V`.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    LDV: integer
+        leading dimension of `V`.
 
-        l: integer
-            l.
+    Q: Float64Array
+        `Q`.
 
-        U: Float64Array
-            input matrix.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        strideU1: integer
-            stride of the first dimension of `U`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        strideU2: integer
-            stride of the second dimension of `U`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        offsetU: NonNegativeInteger
-            starting index for `U`.
+    TAU: Float64Array
+        `TAU`.
 
-        V: Float64Array
-            input matrix.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        strideV1: integer
-            stride of the first dimension of `V`.
+    WORK: Float64Array
+        `WORK`.
 
-        strideV2: integer
-            stride of the second dimension of `V`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetV: NonNegativeInteger
-            starting index for `V`.
+    lwork: integer
+        `lwork`.
 
-        Q: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+{{alias}}.ndarray( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
+    Computes orthogonal matrices U, V, and Q such that: using alternative
+    indexing semantics.
 
-        IWORK: Int32Array
-            input array.
+    Parameters
+    ----------
+    jobu: string
+        `jobu`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    jobv: number
+        `jobv`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    jobq: number
+        `jobq`.
 
-        TAU: Float64Array
-            input array.
+    M: integer
+        number of rows.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    p: number
+        `p`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    N: integer
+        number of columns.
 
-        WORK: Float64Array
-            output array.
+    A: Float64Array
+        `A`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        lwork: integer
-            lwork.
+    offsetA: integer
+        starting index for `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    B: Float64Array
+        `B`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    tola: number
+        `tola`.
+
+    tolb: number
+        `tolb`.
+
+    K: integer
+        inner dimension.
+
+    l: number
+        `l`.
+
+    U: Float64Array
+        `U`.
+
+    strideU1: integer
+        stride of dimension 1 of `U`.
+
+    strideU2: integer
+        stride of dimension 2 of `U`.
+
+    offsetU: integer
+        starting index for `U`.
+
+    V: Float64Array
+        `V`.
+
+    strideV1: integer
+        stride of dimension 1 of `V`.
+
+    strideV2: integer
+        stride of dimension 2 of `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

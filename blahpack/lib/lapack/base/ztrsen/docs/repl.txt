@@ -1,90 +1,156 @@
+{{alias}}( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, W, strideW, M, s, sep, WORK, strideWORK, lwork )
+    Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so
+    that a.
 
-    ztrsen.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, w, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork )
-        Reorder Schur factorization and compute condition numbers
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    compq: string
+        `compq`.
 
-        compq: string
-            specifies the operation type.
+    SELECT: Int32Array
+        `SELECT`.
 
-        SELECT: Float64Array
-            input array.
+    strideSELECT: integer
+        stride length for `SELECT`.
 
-        strideSELECT: integer
-            stride length for `SELECT`.
+    N: integer
+        number of columns.
 
-        offsetSELECT: NonNegativeInteger
-            starting index for `SELECT`.
+    T: Float64Array
+        `T`.
 
-        N: NonNegativeInteger
-            number of columns.
+    LDT: integer
+        leading dimension of `T`.
 
-        T: Float64Array
-            input matrix.
+    Q: Float64Array
+        `Q`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    W: Float64Array
+        `W`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    strideW: integer
+        stride length for `W`.
 
-        Q: Float64Array
-            input matrix.
+    M: integer
+        number of rows.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    s: number
+        `s`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    sep: number
+        `sep`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    WORK: Float64Array
+        `WORK`.
 
-        w: Float64Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideW: integer
-            stride length for `w`.
+    lwork: integer
+        `lwork`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        M: NonNegativeInteger
-            number of rows.
+    Examples
+    --------
+    // TODO: Add examples
 
-        s: number
-            s.
 
-        sep: number
-            sep.
+{{alias}}.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, W, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork )
+    Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so
+    that a using alternative indexing semantics.
 
-        WORK: Float64Array
-            output array.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    compq: string
+        `compq`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    SELECT: Int32Array
+        `SELECT`.
 
-        lwork: integer
-            lwork.
+    strideSELECT: integer
+        stride length for `SELECT`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetSELECT: integer
+        starting index for `SELECT`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    T: Float64Array
+        `T`.
+
+    strideT1: integer
+        stride of dimension 1 of `T`.
+
+    strideT2: integer
+        stride of dimension 2 of `T`.
+
+    offsetT: integer
+        starting index for `T`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    W: Float64Array
+        `W`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    M: integer
+        number of rows.
+
+    s: number
+        `s`.
+
+    sep: number
+        `sep`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

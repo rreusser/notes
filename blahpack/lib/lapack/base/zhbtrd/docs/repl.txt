@@ -1,81 +1,132 @@
+{{alias}}( order, vect, uplo, N, kd, AB, LDAB, d, e, Q, LDQ, WORK )
+    Reduces a complex Hermitian band matrix to real tridiagonal form by
+    unitary similarity transformation.
 
-    zhbtrd.ndarray( vect, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, d, strideD, offsetD, e, strideE, offsetE, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
-        Reduces a complex Hermitian band matrix to real tridiagonal form by unitary similarity transformation.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        vect: string
-            specifies the operation type.
+    vect: string
+        `vect`.
 
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        kd: integer
-            kd.
+    kd: number
+        `kd`.
 
-        AB: Float64Array
-            input matrix.
+    AB: Float64Array
+        `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    d: Float64Array
+        `d`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    e: Float64Array
+        `e`.
 
-        d: Float64Array
-            input array.
+    Q: Float64Array
+        `Q`.
 
-        strideD: integer
-            stride length for `d`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    WORK: Float64Array
+        `WORK`.
 
-        e: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideE: integer
-            stride length for `e`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
 
-        Q: Float64Array
-            input matrix.
+{{alias}}.ndarray( vect, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, d, strideD, offsetD, e, strideE, offsetE, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
+    Reduces a complex Hermitian band matrix to real tridiagonal form by
+    unitary similarity transformation using alternative indexing semantics.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    Parameters
+    ----------
+    vect: string
+        `vect`.
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+    N: integer
+        number of columns.
 
-        WORK: Float64Array
-            output array.
+    kd: number
+        `kd`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    AB: Float64Array
+        `AB`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetAB: integer
+        starting index for `AB`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

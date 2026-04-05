@@ -1,72 +1,122 @@
+{{alias}}( trana, tranb, isgn, M, N, A, LDA, B, LDB, C, LDC, scale )
+    Solves the real Sylvester matrix equation:.
 
-    dtrsyl.ndarray( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale )
-        Solves the real Sylvester matrix equation
+    Parameters
+    ----------
+    trana: number
+        `trana`.
 
-        Parameters
-        ----------
-        trana: string
-            specifies the operation type.
+    tranb: number
+        `tranb`.
 
-        tranb: string
-            specifies the operation type.
+    isgn: number
+        `isgn`.
 
-        isgn: integer
-            isgn.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    C: Float64Array
+        `C`.
 
-        B: Float64Array
-            input matrix.
+    LDC: integer
+        leading dimension of `C`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    scale: number
+        `scale`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        C: Float64Array
-            output matrix.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+{{alias}}.ndarray( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale )
+    Solves the real Sylvester matrix equation: using alternative indexing
+    semantics.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    Parameters
+    ----------
+    trana: number
+        `trana`.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+    tranb: number
+        `tranb`.
 
-        scale: number
-            scale.
+    isgn: number
+        `isgn`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    scale: number
+        `scale`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

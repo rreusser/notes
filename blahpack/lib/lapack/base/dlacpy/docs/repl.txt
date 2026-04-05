@@ -1,7 +1,89 @@
+{{alias}}( order, uplo, M, N, A, LDA, B, LDB )
+    Copies all or part of a matrix `A` to another matrix `B`.
 
-    dlacpy.ndarray( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
-        TODO: Add REPL documentation.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
+
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    LDA: integer
+        leading dimension of `A`.
+
+    B: Float64Array
+        `B`.
+
+    LDB: integer
+        leading dimension of `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+    Copies all or part of a matrix `A` to another matrix `B` using
+    alternative indexing semantics.
+
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

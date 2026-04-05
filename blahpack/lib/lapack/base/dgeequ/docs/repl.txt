@@ -1,63 +1,102 @@
+{{alias}}( M, N, A, LDA, r, strideR, c, strideC )
+    Computes row and column scalings intended to equilibrate an M-by-N
+    matrix A.
 
-    dgeequ.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
-        Computes row and column scalings for equilibrating a general matrix
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    r: Float64Array
+        `r`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideR: integer
+        stride length for `R`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    c: Float64Array
+        `c`.
 
-        r: Float64Array
-            input array.
+    strideC: integer
+        stride length for `C`.
 
-        strideR: integer
-            stride length for `r`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetR: NonNegativeInteger
-            starting index for `r`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        c: Float64Array
-            output array.
 
-        strideC: integer
-            stride length for `c`.
+{{alias}}.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
+    Computes row and column scalings intended to equilibrate an M-by-N
+    matrix A using alternative indexing semantics.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        rowcnd: number
-            rowcnd.
+    N: integer
+        number of columns.
 
-        colcnd: number
-            colcnd.
+    A: Float64Array
+        `A`.
 
-        amax: number
-            amax.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetA: integer
+        starting index for `A`.
+
+    r: Float64Array
+        `r`.
+
+    strideR: integer
+        stride length for `R`.
+
+    offsetR: integer
+        starting index for `R`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    rowcnd: number
+        `rowcnd`.
+
+    colcnd: number
+        `colcnd`.
+
+    amax: number
+        `amax`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,54 +1,96 @@
+{{alias}}( order, N, A, LDA, IPIV, strideIPIV, WORK, strideWORK, lwork )
+    Computes the inverse of a matrix using the LU factorization computed by
+    dgetrf.
 
-    dgetri.ndarray( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork )
-        Compute the inverse of a matrix using the LU factorization from dgetrf
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        IPIV: Int32Array
-            input array.
+    WORK: Float64Array
+        `WORK`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    lwork: integer
+        `lwork`.
 
-        WORK: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
 
-        lwork: integer
-            lwork.
+{{alias}}.ndarray( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork )
+    Computes the inverse of a matrix using the LU factorization computed by
+    dgetrf using alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

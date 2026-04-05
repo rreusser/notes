@@ -1,66 +1,112 @@
+{{alias}}( uplo, N, info, A, LDA, AF, LDAF, IPIV, WORK )
+    Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a
+    complex Hermitian indefinite matrix.
 
-    zla_herpvgrw.ndarray( uplo, N, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
-        Compute the reciprocal pivot growth factor for a complex Hermitian indefinite matrix.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: number
-            uplo.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    info: number
+        `info`.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    AF: Float64Array
+        `AF`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDAF: integer
+        leading dimension of `AF`.
 
-        AF: Float64Array
-            input matrix.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAF1: integer
-            stride of the first dimension of `AF`.
+    WORK: Float64Array
+        `WORK`.
 
-        strideAF2: integer
-            stride of the second dimension of `AF`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetAF: NonNegativeInteger
-            starting index for `AF`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IPIV: Int32Array
-            input array.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+{{alias}}.ndarray( uplo, N, info, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
+    Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a
+    complex Hermitian indefinite matrix using alternative indexing
+    semantics.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        WORK: Float64Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    info: number
+        `info`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    A: Float64Array
+        `A`.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    AF: Float64Array
+        `AF`.
+
+    strideAF1: integer
+        stride of dimension 1 of `AF`.
+
+    strideAF2: integer
+        stride of dimension 2 of `AF`.
+
+    offsetAF: integer
+        starting index for `AF`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

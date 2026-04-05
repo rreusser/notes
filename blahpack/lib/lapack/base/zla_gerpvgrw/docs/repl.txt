@@ -1,48 +1,81 @@
+{{alias}}( N, ncols, A, LDA, AF, LDAF )
+    Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a
+    complex general matrix.
 
-    zla_gerpvgrw.ndarray( N, ncols, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF )
-        Compute the reciprocal pivot growth factor norm(A)/norm(U) for a complex general matrix.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    ncols: number
+        `ncols`.
 
-        ncols: integer
-            ncols.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    AF: Float64Array
+        `AF`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDAF: integer
+        leading dimension of `AF`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        AF: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideAF1: integer
-            stride of the first dimension of `AF`.
 
-        strideAF2: integer
-            stride of the second dimension of `AF`.
+{{alias}}.ndarray( N, ncols, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF )
+    Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a
+    complex general matrix using alternative indexing semantics.
 
-        offsetAF: NonNegativeInteger
-            starting index for `AF`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    ncols: number
+        `ncols`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    AF: Float64Array
+        `AF`.
+
+    strideAF1: integer
+        stride of dimension 1 of `AF`.
+
+    strideAF2: integer
+        stride of dimension 2 of `AF`.
+
+    offsetAF: integer
+        starting index for `AF`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

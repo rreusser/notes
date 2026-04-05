@@ -1,54 +1,96 @@
+{{alias}}( uplo, N, alpha, x, strideX, y, strideY, AP, strideAP )
+    Performs the symmetric rank-2 operation `A := alpha*x*y^T + alpha*y*x^T
+    + A`.
 
-    dspr2.ndarray( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, AP, strideAP, offsetAP )
-        Perform symmetric rank-2 update of a packed matrix
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    alpha: number
+        scalar constant.
 
-        alpha: number
-            scalar constant.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    y: Float64Array
+        `y`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        y: Float64Array
-            input array.
+    AP: Float64Array
+        `AP`.
 
-        strideY: integer
-            stride length for `y`.
+    strideAP: integer
+        stride length for `AP`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        AP: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideAP: integer
-            stride length for `AP`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+{{alias}}.ndarray( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, AP, strideAP, offsetAP )
+    Performs the symmetric rank-2 operation `A := alpha*x*y^T + alpha*y*x^T
+    + A` using alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    alpha: number
+        scalar constant.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

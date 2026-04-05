@@ -1,39 +1,69 @@
+{{alias}}( N, d, strideD, e, strideE )
+    Computes the L_D_L^T factorization of a real symmetric positive definite
+    tridiagonal matrix A.
 
-    dpttrf.ndarray( N, d, strideD, offsetD, e, strideE, offsetE )
-        Computes the LDL^T factorization of a real symmetric positive definite tridiagonal matrix
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideD: integer
-            stride length for `d`.
+    e: Float64Array
+        `e`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideE: integer
-            stride length for `e`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+{{alias}}.ndarray( N, d, strideD, offsetD, e, strideE, offsetE )
+    Computes the L_D_L^T factorization of a real symmetric positive definite
+    tridiagonal matrix A using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

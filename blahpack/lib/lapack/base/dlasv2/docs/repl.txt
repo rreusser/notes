@@ -1,45 +1,50 @@
+{{alias}}( f, g, h )
+    Returns |a| with the sign of b (Fortran SIGN intrinsic).
 
-    dlasv2.ndarray( f, g, h, ssmin, ssmax, snr, csr, snl, csl )
-        Compute SVD of a 2-by-2 triangular matrix
+    Parameters
+    ----------
+    f: number
+        `f`.
 
-        Parameters
-        ----------
-        f: number
-            f.
+    g: number
+        `g`.
 
-        g: number
-            g.
+    h: number
+        `h`.
 
-        h: number
-            h.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        ssmin: number
-            ssmin.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ssmax: number
-            ssmax.
 
-        snr: number
-            snr.
+{{alias}}.ndarray( f, g, h )
+    Returns |a| with the sign of b (Fortran SIGN intrinsic) using
+    alternative indexing semantics.
 
-        csr: number
-            csr.
+    Parameters
+    ----------
+    f: number
+        `f`.
 
-        snl: number
-            snl.
+    g: number
+        `g`.
 
-        csl: number
-            csl.
+    h: number
+        `h`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

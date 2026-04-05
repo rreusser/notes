@@ -1,0 +1,107 @@
+{{alias}}( order, uplo, trans, N, K, alpha, A, LDA, beta, C, LDC )
+    Performs one of the Hermitian rank-k operations:.
+
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
+
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    LDA: integer
+        leading dimension of `A`.
+
+    beta: number
+        scalar constant.
+
+    C: Float64Array
+        `C`.
+
+    LDC: integer
+        leading dimension of `C`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC1, strideC2, offsetC )
+    Performs one of the Hermitian rank-k operations: using alternative
+    indexing semantics.
+
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    beta: number
+        scalar constant.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,30 +1,54 @@
+{{alias}}( N, x, stride )
+    Computes the sum of absolute values of a double-precision floating-point
+    vector.
 
-    dasum.ndarray( N, x, stride, offset )
-        Compute the sum of absolute values of a vector
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: number
+        `x`.
 
-        x: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( N, x, stride, offset )
+    Computes the sum of absolute values of a double-precision floating-point
+    vector using alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    x: number
+        `x`.
+
+    stride: integer
+        `stride`.
+
+    offset: integer
+        `offset`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

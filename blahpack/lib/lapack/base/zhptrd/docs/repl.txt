@@ -1,60 +1,93 @@
+{{alias}}( uplo, N, AP, d, e, TAU )
+    Reduces a complex Hermitian matrix stored in packed form to real
+    symmetric tridiagonal form.
 
-    zhptrd.ndarray( uplo, N, AP, strideAP, offsetAP, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU )
-        Reduces a complex Hermitian matrix stored in packed form to real symmetric tridiagonal form.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideAP: integer
-            stride length for `AP`.
+    e: Float64Array
+        `e`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    TAU: Float64Array
+        `TAU`.
 
-        d: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideD: integer
-            stride length for `d`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
 
-        e: Float64Array
-            input array.
+{{alias}}.ndarray( uplo, N, AP, strideAP, offsetAP, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU )
+    Reduces a complex Hermitian matrix stored in packed form to real
+    symmetric tridiagonal form using alternative indexing semantics.
 
-        strideE: integer
-            stride length for `e`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    N: integer
+        number of columns.
 
-        TAU: Float64Array
-            output array.
+    AP: Float64Array
+        `AP`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    strideAP: integer
+        stride length for `AP`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    offsetAP: integer
+        starting index for `AP`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    d: Float64Array
+        `d`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

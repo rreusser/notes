@@ -1,66 +1,117 @@
+{{alias}}( N, d, strideD, e, strideE, E2, strideE2, spltol, tnrm, nsplit, ISPLIT, strideISPLIT )
+    Computes the splitting points with threshold based on the
+    representation.
 
-    dlarra.ndarray( N, d, strideD, offsetD, e, strideE, offsetE, E2, strideE2, offsetE2, spltol, tnrm, nsplit, ISPLIT, strideISPLIT, offsetISPLIT )
-        Compute the splitting points with threshold based on the representation
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    d: Float64Array
+        `d`.
 
-        d: Float64Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideD: integer
-            stride length for `d`.
+    e: Float64Array
+        `e`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        e: Float64Array
-            input array.
+    E2: Float64Array
+        `E2`.
 
-        strideE: integer
-            stride length for `e`.
+    strideE2: integer
+        stride of dimension 2 of `E`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    spltol: number
+        `spltol`.
 
-        E2: Float64Array
-            input array.
+    tnrm: number
+        `tnrm`.
 
-        strideE2: integer
-            stride length for `E2`.
+    nsplit: number
+        `nsplit`.
 
-        offsetE2: NonNegativeInteger
-            starting index for `E2`.
+    ISPLIT: Int32Array
+        `ISPLIT`.
 
-        spltol: number
-            spltol.
+    strideISPLIT: integer
+        stride length for `ISPLIT`.
 
-        tnrm: number
-            tnrm.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        nsplit: integer
-            nsplit.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ISPLIT: Int32Array
-            output array.
 
-        strideISPLIT: integer
-            stride length for `ISPLIT`.
+{{alias}}.ndarray( N, d, strideD, offsetD, e, strideE, offsetE, E2, strideE2, offsetE2, spltol, tnrm, nsplit, ISPLIT, strideISPLIT, offsetISPLIT )
+    Computes the splitting points with threshold based on the representation
+    using alternative indexing semantics.
 
-        offsetISPLIT: NonNegativeInteger
-            starting index for `ISPLIT`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    d: Float64Array
+        `d`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    E2: Float64Array
+        `E2`.
+
+    strideE2: integer
+        stride of dimension 2 of `E`.
+
+    offsetE2: integer
+        starting index for `E2`.
+
+    spltol: number
+        `spltol`.
+
+    tnrm: number
+        `tnrm`.
+
+    nsplit: number
+        `nsplit`.
+
+    ISPLIT: Int32Array
+        `ISPLIT`.
+
+    strideISPLIT: integer
+        stride length for `ISPLIT`.
+
+    offsetISPLIT: integer
+        starting index for `ISPLIT`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

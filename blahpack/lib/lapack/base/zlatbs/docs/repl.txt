@@ -1,69 +1,88 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    zlatbs.ndarray( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, offsetAB, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
-        Complex triangular banded solve with scaling
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        trans: string
-            specifies the operation type.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        diag: string
-            specifies the operation type.
+    Examples
+    --------
+    // TODO: Add examples
 
-        normin: string
-            specifies the operation type.
 
-        N: NonNegativeInteger
-            number of columns.
+{{alias}}.ndarray( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, offsetAB, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        kd: integer
-            kd.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        AB: Float64Array
-            input matrix.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    normin: string
+        `normin`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    N: integer
+        number of columns.
 
-        x: Float64Array
-            input array.
+    kd: number
+        `kd`.
 
-        strideX: integer
-            stride length for `x`.
+    AB: Float64Array
+        `AB`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
 
-        scale: number
-            scale.
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
 
-        CNORM: Float64Array
-            output array.
+    offsetAB: integer
+        starting index for `AB`.
 
-        strideCNORM: integer
-            stride length for `CNORM`.
+    x: Float64Array
+        `x`.
 
-        offsetCNORM: NonNegativeInteger
-            starting index for `CNORM`.
+    strideX: integer
+        stride length for `X`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetX: integer
+        starting index for `X`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    scale: number
+        `scale`.
+
+    CNORM: Float64Array
+        `CNORM`.
+
+    strideCNORM: integer
+        stride length for `CNORM`.
+
+    offsetCNORM: integer
+        starting index for `CNORM`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

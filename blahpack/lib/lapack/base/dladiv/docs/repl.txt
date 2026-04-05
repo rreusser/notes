@@ -1,36 +1,61 @@
+{{alias}}( a, b, c, d, out )
+    Internal helper: DLADIV2.
 
-    dladiv.ndarray( a, b, c, d, p, q )
-        Perform safe complex division in real arithmetic
+    Parameters
+    ----------
+    a: number
+        `a`.
 
-        Parameters
-        ----------
-        a: number
-            a.
+    b: number
+        `b`.
 
-        b: number
-            b.
+    c: number
+        `c`.
 
-        c: number
-            c.
+    d: number
+        `d`.
 
-        d: number
-            d.
+    out: number
+        `out`.
 
-        p: number
-            p.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        q: number
-            q.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( a, b, c, d, out )
+    Internal helper: DLADIV2 using alternative indexing semantics.
+
+    Parameters
+    ----------
+    a: number
+        `a`.
+
+    b: number
+        `b`.
+
+    c: number
+        `c`.
+
+    d: number
+        `d`.
+
+    out: number
+        `out`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,48 +1,79 @@
+{{alias}}( uplo, N, nrhs, AP, B, LDB )
+    @license Apache-2.0.
 
-    dppsv.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
-        Computes the solution to a real system of linear equations A * X = B where A is symmetric positive definite in packed storage.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideAP: integer
-            stride length for `AP`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        B: Float64Array
-            output matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB1: integer
-            stride of the first dimension of `B`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+{{alias}}.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    nrhs: integer
+        number of right-hand sides.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,72 +1,91 @@
+{{alias}}( v, idx )
+    CABS1(z) = |Re(z)| + |Im(z)|.
 
-    zlahqr.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ )
-        Compute eigenvalues and Schur form of upper Hessenberg matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        wantt: boolean
-            wantt.
+    idx: number
+        `idx`.
 
-        wantz: boolean
-            wantz.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        N: NonNegativeInteger
-            number of columns.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ilo: integer
-            ilo.
 
-        ihi: integer
-            ihi.
+{{alias}}.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, W, strideW, offsetW, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ )
+    CABS1(z) = |Re(z)| + |Im(z)| using alternative indexing semantics.
 
-        H: Float64Array
-            input matrix.
+    Parameters
+    ----------
+    wantt: boolean
+        `wantt`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    wantz: boolean
+        `wantz`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    N: integer
+        number of columns.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    ilo: integer
+        `ilo`.
 
-        w: Float64Array
-            input array.
+    ihi: integer
+        `ihi`.
 
-        strideW: integer
-            stride length for `w`.
+    H: Float64Array
+        `H`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    strideH1: integer
+        stride of dimension 1 of `H`.
 
-        iloz: integer
-            iloz.
+    strideH2: integer
+        stride of dimension 2 of `H`.
 
-        ihiz: integer
-            ihiz.
+    offsetH: integer
+        starting index for `H`.
 
-        Z: Float64Array
-            output matrix.
+    W: Float64Array
+        `W`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    strideW: integer
+        stride length for `W`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    offsetW: integer
+        starting index for `W`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    iloz: number
+        `iloz`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    ihiz: number
+        `ihiz`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

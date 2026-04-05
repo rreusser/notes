@@ -1,66 +1,89 @@
+{{alias}}( i0, n0, z, stride, pp, tau, sigma, ieee, eps )
+    Computes one dqds transform in ping-pong form with a shift.
 
-    dlasq5.ndarray( i0, n0, z, stride, offset, pp, tau, sigma, dmin, dmin1, dmin2, dn, dnm1, dnm2, ieee, eps )
-        Compute one dqds transform with shift
+    Parameters
+    ----------
+    i0: number
+        `i0`.
 
-        Parameters
-        ----------
-        i0: integer
-            i0.
+    n0: number
+        `n0`.
 
-        n0: integer
-            n0.
+    z: number
+        `z`.
 
-        z: Float64Array
-            input array.
+    stride: integer
+        `stride`.
 
-        stride: integer
-            stride length for `z`.
+    pp: number
+        `pp`.
 
-        offset: NonNegativeInteger
-            starting index for `z`.
+    tau: number
+        `tau`.
 
-        pp: integer
-            pp.
+    sigma: number
+        `sigma`.
 
-        tau: number
-            tau.
+    ieee: number
+        `ieee`.
 
-        sigma: number
-            sigma.
+    eps: number
+        `eps`.
 
-        dmin: number
-            dmin.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        dmin1: number
-            dmin1.
+    Examples
+    --------
+    // TODO: Add examples
 
-        dmin2: number
-            dmin2.
 
-        dn: number
-            dn.
+{{alias}}.ndarray( i0, n0, z, stride, offset, pp, tau, sigma, ieee, eps )
+    Computes one dqds transform in ping-pong form with a shift using
+    alternative indexing semantics.
 
-        dnm1: number
-            dnm1.
+    Parameters
+    ----------
+    i0: number
+        `i0`.
 
-        dnm2: number
-            dnm2.
+    n0: number
+        `n0`.
 
-        ieee: boolean
-            ieee.
+    z: number
+        `z`.
 
-        eps: number
-            eps.
+    stride: integer
+        `stride`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    offset: integer
+        `offset`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    pp: number
+        `pp`.
+
+    tau: number
+        `tau`.
+
+    sigma: number
+        `sigma`.
+
+    ieee: number
+        `ieee`.
+
+    eps: number
+        `eps`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

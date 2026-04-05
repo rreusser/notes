@@ -1,93 +1,162 @@
+{{alias}}( norm, N, DL, strideDL, d, strideD, DU, strideDU, DU2, strideDU2, IPIV, strideIPIV, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
+    Estimates the reciprocal of the condition number of a real general
+    tridiagonal.
 
-    dgtcon.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Estimate the reciprocal of the condition number of a real general tridiagonal matrix
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    DL: Float64Array
+        `DL`.
 
-        DL: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDL: integer
-            stride length for `DL`.
+    d: Float64Array
+        `d`.
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    DU: Float64Array
+        `DU`.
 
-        strideD: integer
-            stride length for `d`.
+    strideDU: integer
+        stride length for `DU`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    DU2: Float64Array
+        `DU2`.
 
-        DU: Float64Array
-            input array.
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
 
-        strideDU: integer
-            stride length for `DU`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        DU2: Float64Array
-            input array.
+    anorm: number
+        `anorm`.
 
-        strideDU2: integer
-            stride length for `DU2`.
+    rcond: number
+        `rcond`.
 
-        offsetDU2: NonNegativeInteger
-            starting index for `DU2`.
+    WORK: Float64Array
+        `WORK`.
 
-        IPIV: Int32Array
-            input array.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    IWORK: Int32Array
+        `IWORK`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        anorm: number
-            anorm.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        rcond: number
-            rcond.
+    Examples
+    --------
+    // TODO: Add examples
 
-        WORK: Float64Array
-            input array.
 
-        strideWORK: integer
-            stride length for `WORK`.
+{{alias}}.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates the reciprocal of the condition number of a real general
+    tridiagonal using alternative indexing semantics.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        IWORK: Int32Array
-            output array.
+    N: integer
+        number of columns.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    DL: Float64Array
+        `DL`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    strideDL: integer
+        stride length for `DL`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetDL: integer
+        starting index for `DL`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    DU: Float64Array
+        `DU`.
+
+    strideDU: integer
+        stride length for `DU`.
+
+    offsetDU: integer
+        starting index for `DU`.
+
+    DU2: Float64Array
+        `DU2`.
+
+    strideDU2: integer
+        stride of dimension 2 of `DU`.
+
+    offsetDU2: integer
+        starting index for `DU2`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    anorm: number
+        `anorm`.
+
+    rcond: number
+        `rcond`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

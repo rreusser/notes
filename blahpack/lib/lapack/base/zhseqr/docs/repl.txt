@@ -1,78 +1,134 @@
+{{alias}}( job, compz, N, ilo, ihi, H, LDH, w, strideW, Z, LDZ, WORK, strideWORK, lwork )
+    Computes the eigenvalues of a complex upper Hessenberg matrix H, and.
 
-    zhseqr.ndarray( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
-        Compute eigenvalues and Schur form of complex upper Hessenberg matrix
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    compz: string
+        `compz`.
 
-        compz: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    ilo: integer
+        `ilo`.
 
-        ilo: integer
-            ilo.
+    ihi: integer
+        `ihi`.
 
-        ihi: integer
-            ihi.
+    H: Float64Array
+        `H`.
 
-        H: Float64Array
-            input matrix.
+    LDH: integer
+        leading dimension of `H`.
 
-        strideH1: integer
-            stride of the first dimension of `H`.
+    w: Float64Array
+        `w`.
 
-        strideH2: integer
-            stride of the second dimension of `H`.
+    strideW: integer
+        stride length for `W`.
 
-        offsetH: NonNegativeInteger
-            starting index for `H`.
+    Z: Float64Array
+        `Z`.
 
-        w: Float64Array
-            input array.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        strideW: integer
-            stride length for `w`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        Z: Float64Array
-            input matrix.
+    lwork: integer
+        `lwork`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
 
-        WORK: Float64Array
-            output array.
+{{alias}}.ndarray( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
+    Computes the eigenvalues of a complex upper Hessenberg matrix H, and
+    using alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    compz: string
+        `compz`.
 
-        lwork: integer
-            lwork.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    ilo: integer
+        `ilo`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    ihi: integer
+        `ihi`.
+
+    H: Float64Array
+        `H`.
+
+    strideH1: integer
+        stride of dimension 1 of `H`.
+
+    strideH2: integer
+        stride of dimension 2 of `H`.
+
+    offsetH: integer
+        starting index for `H`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

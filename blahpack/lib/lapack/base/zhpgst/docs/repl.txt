@@ -1,45 +1,73 @@
+{{alias}}( itype, uplo, N, AP, BP )
+    @license Apache-2.0.
 
-    zhpgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
-        Reduces a complex Hermitian-definite generalized eigenproblem to standard form using packed storage.
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Parameters
-        ----------
-        itype: integer
-            itype.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    AP: Float64Array
+        `AP`.
 
-        AP: Float64Array
-            input array.
+    BP: Float64Array
+        `BP`.
 
-        strideAP: integer
-            stride length for `AP`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        BP: Float64Array
-            output array.
 
-        strideBP: integer
-            stride length for `BP`.
+{{alias}}.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        offsetBP: NonNegativeInteger
-            starting index for `BP`.
+    Parameters
+    ----------
+    itype: integer
+        `itype`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    AP: Float64Array
+        `AP`.
+
+    strideAP: integer
+        stride length for `AP`.
+
+    offsetAP: integer
+        starting index for `AP`.
+
+    BP: Float64Array
+        `BP`.
+
+    strideBP: integer
+        stride length for `BP`.
+
+    offsetBP: integer
+        starting index for `BP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

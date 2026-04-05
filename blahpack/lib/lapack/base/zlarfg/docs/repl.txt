@@ -1,36 +1,77 @@
+{{alias}}( N, alpha, offsetAlpha, x, strideX, tau, offsetTau )
+    Generate a complex elementary reflector H of order N, such that.
 
-    zlarfg.ndarray( N, alpha, x, stride, offset, tau )
-        Generate a complex Householder reflector
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    alpha: number
+        scalar constant.
 
-        alpha: Complex128
-            scalar constant.
+    offsetAlpha: integer
+        starting index for `Alpha`.
 
-        x: Float64Array
-            input array.
+    x: Float64Array
+        `x`.
 
-        stride: integer
-            stride length for `x`.
+    strideX: integer
+        stride length for `X`.
 
-        offset: NonNegativeInteger
-            starting index for `x`.
+    tau: number
+        `tau`.
 
-        tau: Complex128
-            tau.
+    offsetTau: integer
+        starting index for `Tau`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
+    Generate a complex elementary reflector H of order N, such that using
+    alternative indexing semantics.
+
+    Parameters
+    ----------
+    N: integer
+        number of columns.
+
+    alpha: number
+        scalar constant.
+
+    offsetAlpha: integer
+        starting index for `Alpha`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    tau: number
+        `tau`.
+
+    offsetTau: integer
+        starting index for `Tau`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

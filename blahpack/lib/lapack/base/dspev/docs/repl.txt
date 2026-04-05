@@ -1,66 +1,108 @@
+{{alias}}( order, jobz, uplo, N, AP, w, Z, LDZ, WORK )
+    Computes all eigenvalues and, optionally, eigenvectors of a real
+    symmetric matrix in packed storage.
 
-    dspev.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
-        Computes all eigenvalues and optionally eigenvectors of a real symmetric matrix in packed storage.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        jobz: string
-            specifies the operation type.
+    jobz: string
+        `jobz`.
 
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        AP: Float64Array
-            input array.
+    AP: Float64Array
+        `AP`.
 
-        strideAP: integer
-            stride length for `AP`.
+    w: Float64Array
+        `w`.
 
-        offsetAP: NonNegativeInteger
-            starting index for `AP`.
+    Z: Float64Array
+        `Z`.
 
-        w: Float64Array
-            input array.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        strideW: integer
-            stride length for `w`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Z: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+{{alias}}.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
+    Computes all eigenvalues and, optionally, eigenvectors of a real
+    symmetric matrix in packed storage using alternative indexing semantics.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    Parameters
+    ----------
+    jobz: string
+        `jobz`.
 
-        WORK: Float64Array
-            output array.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    N: integer
+        number of columns.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    AP: Float64Array
+        `AP`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideAP: integer
+        stride length for `AP`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetAP: integer
+        starting index for `AP`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

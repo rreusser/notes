@@ -1,51 +1,80 @@
+{{alias}}( N, cx, strideX, cy, strideY, c, s )
+    Applies a plane rotation to two complex vectors, where both the cosine.
 
-    zlacrt.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy, c, s )
-        Apply a plane rotation with complex cosine and sine to two complex vectors.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    cx: number
+        `cx`.
 
-        x: Float64Array
-            input array.
+    strideX: integer
+        stride length for `X`.
 
-        strideX: integer
-            stride length for `x`.
+    cy: number
+        `cy`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideY: integer
+        stride length for `Y`.
 
-        incx: integer
-            incx.
+    c: number
+        `c`.
 
-        y: Float64Array
-            output array.
+    s: number
+        `s`.
 
-        strideY: integer
-            stride length for `y`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        incy: integer
-            incy.
 
-        c: Complex128
-            c.
+{{alias}}.ndarray( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s )
+    Applies a plane rotation to two complex vectors, where both the cosine
+    using alternative indexing semantics.
 
-        s: Complex128
-            s.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    cx: number
+        `cx`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    cy: number
+        `cy`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    c: number
+        `c`.
+
+    s: number
+        `s`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,156 +1,239 @@
+{{alias}}( order, NL, NR, SQRE, K, D, Z, ALPHA, BETA, U, LDU, VT, LDVT, DSIGMA, U2, LDU2, VT2, LDVT2, IDXP, IDX, IDXC, IDXQ, COLTYP )
+    Merge two sets of singular values in bidiagonal SVD divide and conquer.
 
-    dlasd2.ndarray( nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, alpha, beta, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, DSIGMA, strideDSIGMA, offsetDSIGMA, U2, strideU21, strideU22, offsetU2, VT2, strideVT21, strideVT22, offsetVT2, IDXP, strideIDXP, offsetIDXP, IDX, strideIDX, offsetIDX, IDXC, strideIDXC, offsetIDXC, IDXQ, strideIDXQ, offsetIDXQ, COLTYP, strideCOLTYP, offsetCOLTYP )
-        Merge two sets of singular values in bidiagonal SVD divide and conquer
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        nl: integer
-            nl.
+    NL: Float64Array
+        `NL`.
 
-        nr: integer
-            nr.
+    NR: Float64Array
+        `NR`.
 
-        sqre: integer
-            sqre.
+    SQRE: Float64Array
+        `SQRE`.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    K: integer
+        inner dimension.
 
-        d: Float64Array
-            input array.
+    D: Float64Array
+        `D`.
 
-        strideD: integer
-            stride length for `d`.
+    Z: Float64Array
+        `Z`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    ALPHA: number
+        `ALPHA`.
 
-        z: Float64Array
-            input array.
+    BETA: number
+        `BETA`.
 
-        strideZ: integer
-            stride length for `z`.
+    U: Float64Array
+        `U`.
 
-        offsetZ: NonNegativeInteger
-            starting index for `z`.
+    LDU: integer
+        leading dimension of `U`.
 
-        alpha: number
-            scalar constant.
+    VT: Float64Array
+        `VT`.
 
-        beta: number
-            scalar constant.
+    LDVT: integer
+        leading dimension of `VT`.
 
-        U: Float64Array
-            input matrix.
+    DSIGMA: Float64Array
+        `DSIGMA`.
 
-        strideU1: integer
-            stride of the first dimension of `U`.
+    U2: Float64Array
+        `U2`.
 
-        strideU2: integer
-            stride of the second dimension of `U`.
+    LDU2: Float64Array
+        `LDU2`.
 
-        offsetU: NonNegativeInteger
-            starting index for `U`.
+    VT2: Float64Array
+        `VT2`.
 
-        VT: Float64Array
-            input matrix.
+    LDVT2: Float64Array
+        `LDVT2`.
 
-        strideVT1: integer
-            stride of the first dimension of `VT`.
+    IDXP: Int32Array
+        `IDXP`.
 
-        strideVT2: integer
-            stride of the second dimension of `VT`.
+    IDX: Int32Array
+        `IDX`.
 
-        offsetVT: NonNegativeInteger
-            starting index for `VT`.
+    IDXC: Float64Array
+        `IDXC`.
 
-        DSIGMA: Float64Array
-            input array.
+    IDXQ: Int32Array
+        `IDXQ`.
 
-        strideDSIGMA: integer
-            stride length for `DSIGMA`.
+    COLTYP: Float64Array
+        `COLTYP`.
 
-        offsetDSIGMA: NonNegativeInteger
-            starting index for `DSIGMA`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        U2: Float64Array
-            input matrix.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideU21: integer
-            stride of the first dimension of `U2`.
 
-        strideU22: integer
-            stride of the second dimension of `U2`.
+{{alias}}.ndarray( nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, alpha, beta, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, DSIGMA, strideDSIGMA, offsetDSIGMA, U2, strideU21, strideU22, offsetU2, VT2, strideVT21, strideVT22, offsetVT2, IDXP, strideIDXP, offsetIDXP, IDX, strideIDX, offsetIDX, IDXC, strideIDXC, offsetIDXC, IDXQ, strideIDXQ, offsetIDXQ, COLTYP, strideCOLTYP, offsetCOLTYP )
+    Merge two sets of singular values in bidiagonal SVD divide and conquer
+    using alternative indexing semantics.
 
-        offsetU2: NonNegativeInteger
-            starting index for `U2`.
+    Parameters
+    ----------
+    nl: number
+        `nl`.
 
-        VT2: Float64Array
-            input matrix.
+    nr: number
+        `nr`.
 
-        strideVT21: integer
-            stride of the first dimension of `VT2`.
+    sqre: number
+        `sqre`.
 
-        strideVT22: integer
-            stride of the second dimension of `VT2`.
+    K: integer
+        inner dimension.
 
-        offsetVT2: NonNegativeInteger
-            starting index for `VT2`.
+    d: Float64Array
+        `d`.
 
-        IDXP: Int32Array
-            input array.
+    strideD: integer
+        stride length for `D`.
 
-        strideIDXP: integer
-            stride length for `IDXP`.
+    offsetD: integer
+        starting index for `D`.
 
-        offsetIDXP: NonNegativeInteger
-            starting index for `IDXP`.
+    z: Float64Array
+        `z`.
 
-        IDX: Int32Array
-            input array.
+    strideZ: integer
+        stride length for `Z`.
 
-        strideIDX: integer
-            stride length for `IDX`.
+    offsetZ: integer
+        starting index for `Z`.
 
-        offsetIDX: NonNegativeInteger
-            starting index for `IDX`.
+    alpha: number
+        scalar constant.
 
-        IDXC: Int32Array
-            input array.
+    beta: number
+        scalar constant.
 
-        strideIDXC: integer
-            stride length for `IDXC`.
+    U: Float64Array
+        `U`.
 
-        offsetIDXC: NonNegativeInteger
-            starting index for `IDXC`.
+    strideU1: integer
+        stride of dimension 1 of `U`.
 
-        IDXQ: Int32Array
-            input array.
+    strideU2: integer
+        stride of dimension 2 of `U`.
 
-        strideIDXQ: integer
-            stride length for `IDXQ`.
+    offsetU: integer
+        starting index for `U`.
 
-        offsetIDXQ: NonNegativeInteger
-            starting index for `IDXQ`.
+    VT: Float64Array
+        `VT`.
 
-        COLTYP: Int32Array
-            output array.
+    strideVT1: integer
+        stride of dimension 1 of `VT`.
 
-        strideCOLTYP: integer
-            stride length for `COLTYP`.
+    strideVT2: integer
+        stride of dimension 2 of `VT`.
 
-        offsetCOLTYP: NonNegativeInteger
-            starting index for `COLTYP`.
+    offsetVT: integer
+        starting index for `VT`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    DSIGMA: Float64Array
+        `DSIGMA`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideDSIGMA: integer
+        stride length for `DSIGMA`.
+
+    offsetDSIGMA: integer
+        starting index for `DSIGMA`.
+
+    U2: Float64Array
+        `U2`.
+
+    strideU21: integer
+        stride of dimension 1 of `U2`.
+
+    strideU22: integer
+        stride of dimension 2 of `U2`.
+
+    offsetU2: integer
+        starting index for `U2`.
+
+    VT2: Float64Array
+        `VT2`.
+
+    strideVT21: integer
+        stride of dimension 1 of `VT2`.
+
+    strideVT22: integer
+        stride of dimension 2 of `VT2`.
+
+    offsetVT2: integer
+        starting index for `VT2`.
+
+    IDXP: Int32Array
+        `IDXP`.
+
+    strideIDXP: integer
+        stride length for `IDXP`.
+
+    offsetIDXP: integer
+        starting index for `IDXP`.
+
+    IDX: Int32Array
+        `IDX`.
+
+    strideIDX: integer
+        stride length for `IDX`.
+
+    offsetIDX: integer
+        starting index for `IDX`.
+
+    IDXC: Float64Array
+        `IDXC`.
+
+    strideIDXC: integer
+        stride length for `IDXC`.
+
+    offsetIDXC: integer
+        starting index for `IDXC`.
+
+    IDXQ: Int32Array
+        `IDXQ`.
+
+    strideIDXQ: integer
+        stride length for `IDXQ`.
+
+    offsetIDXQ: integer
+        starting index for `IDXQ`.
+
+    COLTYP: Float64Array
+        `COLTYP`.
+
+    strideCOLTYP: integer
+        stride length for `COLTYP`.
+
+    offsetCOLTYP: integer
+        starting index for `COLTYP`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

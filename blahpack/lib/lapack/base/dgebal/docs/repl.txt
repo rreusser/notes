@@ -1,51 +1,82 @@
+{{alias}}( job, N, A, LDA, SCALE, strideSCALE )
+    Balances a general real matrix A.
 
-    dgebal.ndarray( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, strideSCALE, offsetSCALE )
-        Balances a general real matrix for eigenvalue computation
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    SCALE: Float64Array
+        `SCALE`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideSCALE: integer
+        stride length for `SCALE`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        ilo: integer
-            ilo.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ihi: integer
-            ihi.
 
-        SCALE: Float64Array
-            output array.
+{{alias}}.ndarray( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, strideSCALE, offsetSCALE )
+    Balances a general real matrix A using alternative indexing semantics.
 
-        strideSCALE: integer
-            stride length for `SCALE`.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        offsetSCALE: NonNegativeInteger
-            starting index for `SCALE`.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    A: Float64Array
+        `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    ilo: integer
+        `ilo`.
+
+    ihi: integer
+        `ihi`.
+
+    SCALE: Float64Array
+        `SCALE`.
+
+    strideSCALE: integer
+        stride length for `SCALE`.
+
+    offsetSCALE: integer
+        starting index for `SCALE`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

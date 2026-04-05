@@ -1,45 +1,79 @@
+{{alias}}( order, M, N, d, X, LDX )
+    Performs reciprocal diagonal scaling on a complex matrix: `X = D^{-1} *
+    X` where `D` is a real diagonal matrix stored as a vector.
 
-    zlarscl2.ndarray( M, N, d, strideD, offsetD, X, strideX1, strideX2, offsetX )
-        Perform reciprocal diagonal scaling on a complex matrix.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        d: Float64Array
-            input array.
+    d: Float64Array
+        `d`.
 
-        strideD: integer
-            stride length for `d`.
+    X: Float64Array
+        `X`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    LDX: integer
+        leading dimension of `X`.
 
-        X: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideX2: integer
-            stride of the second dimension of `X`.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+{{alias}}.ndarray( M, N, d, strideD, offsetD, X, strideX1, strideX2, offsetX )
+    Performs reciprocal diagonal scaling on a complex matrix: `X = D^{-1} *
+    X` where `D` is a real diagonal matrix stored as a vector using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

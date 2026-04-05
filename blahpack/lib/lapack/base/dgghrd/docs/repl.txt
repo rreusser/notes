@@ -1,81 +1,136 @@
+{{alias}}( order, compq, compz, N, ilo, ihi, A, LDA, B, LDB, Q, LDQ, Z, LDZ )
+    @license Apache-2.0.
 
-    dgghrd.ndarray( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ )
-        Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        compq: string
-            specifies the operation type.
+    compq: string
+        `compq`.
 
-        compz: string
-            specifies the operation type.
+    compz: string
+        `compz`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        ilo: integer
-            ilo.
+    ilo: integer
+        `ilo`.
 
-        ihi: integer
-            ihi.
+    ihi: integer
+        `ihi`.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            input matrix.
+    Q: Float64Array
+        `Q`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    LDQ: integer
+        leading dimension of `Q`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Z: Float64Array
+        `Z`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    LDZ: integer
+        leading dimension of `Z`.
 
-        Q: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideQ1: integer
-            stride of the first dimension of `Q`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideQ2: integer
-            stride of the second dimension of `Q`.
 
-        offsetQ: NonNegativeInteger
-            starting index for `Q`.
+{{alias}}.ndarray( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ )
+    @license Apache-2.0 using alternative indexing semantics.
 
-        Z: Float64Array
-            output matrix.
+    Parameters
+    ----------
+    compq: string
+        `compq`.
 
-        strideZ1: integer
-            stride of the first dimension of `Z`.
+    compz: string
+        `compz`.
 
-        strideZ2: integer
-            stride of the second dimension of `Z`.
+    N: integer
+        number of columns.
 
-        offsetZ: NonNegativeInteger
-            starting index for `Z`.
+    ilo: integer
+        `ilo`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    ihi: integer
+        `ihi`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Q: Float64Array
+        `Q`.
+
+    strideQ1: integer
+        stride of dimension 1 of `Q`.
+
+    strideQ2: integer
+        stride of dimension 2 of `Q`.
+
+    offsetQ: integer
+        starting index for `Q`.
+
+    Z: Float64Array
+        `Z`.
+
+    strideZ1: integer
+        stride of dimension 1 of `Z`.
+
+    strideZ2: integer
+        stride of dimension 2 of `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

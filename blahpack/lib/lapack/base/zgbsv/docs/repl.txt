@@ -1,63 +1,108 @@
+{{alias}}( N, kl, ku, nrhs, AB, LDAB, IPIV, strideIPIV, B, LDB )
+    Solves a complex system of linear equations `A * X = B` for a banded
+    matrix.
 
-    zgbsv.ndarray( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-        Solves a complex banded system of linear equations A*X = B using LU factorization
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    kl: integer
+        `kl`.
 
-        kl: integer
-            kl.
+    ku: integer
+        `ku`.
 
-        ku: integer
-            ku.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    B: Float64Array
+        `B`.
 
-        IPIV: Int32Array
-            input array.
+    LDB: integer
+        leading dimension of `B`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        B: Float64Array
-            output matrix.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+{{alias}}.ndarray( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solves a complex system of linear equations `A * X = B` for a banded
+    matrix using alternative indexing semantics.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    kl: integer
+        `kl`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    ku: integer
+        `ku`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    nrhs: integer
+        number of right-hand sides.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    IPIV: Int32Array
+        `IPIV`.
+
+    strideIPIV: integer
+        stride length for `IPIV`.
+
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,81 +1,106 @@
+{{alias}}( A, LDA, B, LDB, alphar, alphai, beta )
+    Computes the Generalized Schur factorization of a real 2-by-2 matrix
+    pencil (A,B) where B is upper triangular.
 
-    dlagv2.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, alphar, strideALPHAR, offsetALPHAR, alphai, strideALPHAI, offsetALPHAI, beta, strideBETA, offsetBETA, csl, snl, csr, snr )
-        Computes the Generalized Schur factorization of a real 2-by-2 matrix pencil (A,B) where B is upper triangular.
+    Parameters
+    ----------
+    A: Float64Array
+        `A`.
 
-        Parameters
-        ----------
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    alphar: Float64Array
+        `alphar`.
 
-        B: Float64Array
-            output matrix.
+    alphai: Float64Array
+        `alphai`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    beta: Float64Array
+        scalar constant.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        alphar: Float64Array
-            input array.
 
-        strideALPHAR: integer
-            stride length for `alphar`.
+{{alias}}.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, alphar, strideALPHAR, offsetALPHAR, alphai, strideALPHAI, offsetALPHAI, beta, strideBETA, offsetBETA )
+    Computes the Generalized Schur factorization of a real 2-by-2 matrix
+    pencil (A,B) where B is upper triangular using alternative indexing
+    semantics.
 
-        offsetALPHAR: NonNegativeInteger
-            starting index for `alphar`.
+    Parameters
+    ----------
+    A: Float64Array
+        `A`.
 
-        alphai: Float64Array
-            input array.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        strideALPHAI: integer
-            stride length for `alphai`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        offsetALPHAI: NonNegativeInteger
-            starting index for `alphai`.
+    offsetA: integer
+        starting index for `A`.
 
-        beta: Float64Array
-            input array.
+    B: Float64Array
+        `B`.
 
-        strideBETA: integer
-            stride length for `beta`.
+    strideB1: integer
+        stride of dimension 1 of `B`.
 
-        offsetBETA: NonNegativeInteger
-            starting index for `beta`.
+    strideB2: integer
+        stride of dimension 2 of `B`.
 
-        csl: number
-            csl.
+    offsetB: integer
+        starting index for `B`.
 
-        snl: number
-            snl.
+    alphar: Float64Array
+        `alphar`.
 
-        csr: number
-            csr.
+    strideALPHAR: integer
+        stride length for `ALPHAR`.
 
-        snr: number
-            snr.
+    offsetALPHAR: integer
+        starting index for `ALPHAR`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    alphai: Float64Array
+        `alphai`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideALPHAI: integer
+        stride length for `ALPHAI`.
+
+    offsetALPHAI: integer
+        starting index for `ALPHAI`.
+
+    beta: Float64Array
+        scalar constant.
+
+    strideBETA: integer
+        stride length for `BETA`.
+
+    offsetBETA: integer
+        starting index for `BETA`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

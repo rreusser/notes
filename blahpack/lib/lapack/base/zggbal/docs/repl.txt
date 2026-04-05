@@ -1,81 +1,128 @@
+{{alias}}( order, job, N, A, LDA, B, LDB, LSCALE, strideLSCALE, RSCALE, strideRSCALE, WORK, strideWORK )
+    CABS1: sum of absolute values of real and imaginary parts.
 
-    zggbal.ndarray( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, WORK, strideWORK, offsetWORK )
-        Balance a pair of complex general matrices for the generalized eigenvalue problem.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        job: string
-            specifies the operation type.
+    job: string
+        `job`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            input matrix.
+    LSCALE: Float64Array
+        `LSCALE`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideLSCALE: integer
+        stride length for `LSCALE`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    RSCALE: Float64Array
+        `RSCALE`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    strideRSCALE: integer
+        stride length for `RSCALE`.
 
-        ilo: integer
-            ilo.
+    WORK: Float64Array
+        `WORK`.
 
-        ihi: integer
-            ihi.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        LSCALE: Float64Array
-            input array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideLSCALE: integer
-            stride length for `LSCALE`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetLSCALE: NonNegativeInteger
-            starting index for `LSCALE`.
 
-        RSCALE: Float64Array
-            input array.
+{{alias}}.ndarray( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, WORK, strideWORK, offsetWORK )
+    CABS1: sum of absolute values of real and imaginary parts using
+    alternative indexing semantics.
 
-        strideRSCALE: integer
-            stride length for `RSCALE`.
+    Parameters
+    ----------
+    job: string
+        `job`.
 
-        offsetRSCALE: NonNegativeInteger
-            starting index for `RSCALE`.
+    N: integer
+        number of columns.
 
-        WORK: Float64Array
-            output array.
+    A: Float64Array
+        `A`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    offsetA: integer
+        starting index for `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    LSCALE: Float64Array
+        `LSCALE`.
+
+    strideLSCALE: integer
+        stride length for `LSCALE`.
+
+    offsetLSCALE: integer
+        starting index for `LSCALE`.
+
+    RSCALE: Float64Array
+        `RSCALE`.
+
+    strideRSCALE: integer
+        stride length for `RSCALE`.
+
+    offsetRSCALE: integer
+        starting index for `RSCALE`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

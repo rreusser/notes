@@ -1,24 +1,44 @@
+{{alias}}( din1, din2 )
+    Tests for NaN by comparing two arguments for inequality.
 
-    dlaisnan.ndarray( din1, din2 )
-        Test for NaN by comparing two arguments for inequality
+    Parameters
+    ----------
+    din1: number
+        `din1`.
 
-        Parameters
-        ----------
-        din1: number
-            din1.
+    din2: number
+        `din2`.
 
-        din2: number
-            din2.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+
+{{alias}}.ndarray( din1, din2 )
+    Tests for NaN by comparing two arguments for inequality using
+    alternative indexing semantics.
+
+    Parameters
+    ----------
+    din1: number
+        `din1`.
+
+    din2: number
+        `din2`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

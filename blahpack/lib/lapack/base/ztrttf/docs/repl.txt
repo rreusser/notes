@@ -1,51 +1,88 @@
+{{alias}}( order, transr, uplo, N, A, LDA, ARF )
+    Copies a complex triangular matrix from standard full format (TR) to
+    Rectangular Full Packed format (TF).
 
-    ztrttf.ndarray( transr, uplo, N, A, strideA1, strideA2, offsetA, lda, ARF, strideARF, offsetARF )
-        Copy a triangular matrix from standard full format (TR) to Rectangular Full Packed format (TF)
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        transr: string
-            specifies the operation type.
+    transr: string
+        `transr`.
 
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    ARF: Float64Array
+        `ARF`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        lda: integer
-            lda.
+    Examples
+    --------
+    // TODO: Add examples
 
-        ARF: Float64Array
-            output array.
 
-        strideARF: integer
-            stride length for `ARF`.
+{{alias}}.ndarray( transr, uplo, N, A, strideA1, strideA2, offsetA, lda, ARF, strideARF, offsetARF )
+    Copies a complex triangular matrix from standard full format (TR) to
+    Rectangular Full Packed format (TF) using alternative indexing
+    semantics.
 
-        offsetARF: NonNegativeInteger
-            starting index for `ARF`.
+    Parameters
+    ----------
+    transr: string
+        `transr`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    lda: number
+        `lda`.
+
+    ARF: Float64Array
+        `ARF`.
+
+    strideARF: integer
+        stride length for `ARF`.
+
+    offsetARF: integer
+        starting index for `ARF`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

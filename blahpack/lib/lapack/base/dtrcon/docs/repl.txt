@@ -1,63 +1,111 @@
+{{alias}}( norm, uplo, diag, N, A, LDA, RCOND, WORK, strideWORK, IWORK, strideIWORK )
+    Estimates the reciprocal of the condition number of a triangular matrix
+    A,.
 
-    dtrcon.ndarray( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Estimates the reciprocal condition number of a triangular matrix
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            specifies the operation type.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        diag: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    RCOND: number
+        `RCOND`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        rcond: number
-            rcond.
+    IWORK: Int32Array
+        `IWORK`.
 
-        WORK: Float64Array
-            input array.
+    strideIWORK: integer
+        stride length for `IWORK`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        IWORK: Int32Array
-            output array.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+{{alias}}.ndarray( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates the reciprocal of the condition number of a triangular matrix
+    A, using alternative indexing semantics.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    diag: string
+        specifies whether the matrix is unit triangular.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    RCOND: number
+        `RCOND`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    IWORK: Int32Array
+        `IWORK`.
+
+    strideIWORK: integer
+        stride length for `IWORK`.
+
+    offsetIWORK: integer
+        starting index for `IWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

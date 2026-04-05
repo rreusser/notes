@@ -1,147 +1,242 @@
+{{alias}}( fact, trans, N, nrhs, A, LDA, AF, LDAF, IPIV, strideIPIV, equed, r, strideR, c, strideC, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, RWORK, strideRWORK )
+    Expert driver for solving a complex system of linear equations A*X = B,.
 
-    zgesvx.ndarray( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, equed, r, strideR, offsetR, c, strideC, offsetC, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-        Expert driver for solving complex general linear systems
+    Parameters
+    ----------
+    fact: string
+        `fact`.
 
-        Parameters
-        ----------
-        fact: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        trans: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    AF: Float64Array
+        `AF`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDAF: integer
+        leading dimension of `AF`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        AF: Float64Array
-            input matrix.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        strideAF1: integer
-            stride of the first dimension of `AF`.
+    equed: string
+        `equed`.
 
-        strideAF2: integer
-            stride of the second dimension of `AF`.
+    r: Float64Array
+        `r`.
 
-        offsetAF: NonNegativeInteger
-            starting index for `AF`.
+    strideR: integer
+        stride length for `R`.
 
-        IPIV: Int32Array
-            input array.
+    c: Float64Array
+        `c`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    strideC: integer
+        stride length for `C`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    B: Float64Array
+        `B`.
 
-        equed: string
-            specifies the operation type.
+    LDB: integer
+        leading dimension of `B`.
 
-        r: Float64Array
-            input array.
+    X: Float64Array
+        `X`.
 
-        strideR: integer
-            stride length for `r`.
+    LDX: integer
+        leading dimension of `X`.
 
-        offsetR: NonNegativeInteger
-            starting index for `r`.
+    FERR: Float64Array
+        `FERR`.
 
-        c: Float64Array
-            input array.
+    strideFERR: integer
+        stride length for `FERR`.
 
-        strideC: integer
-            stride length for `c`.
+    BERR: Float64Array
+        `BERR`.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    strideBERR: integer
+        stride length for `BERR`.
 
-        B: Float64Array
-            input matrix.
+    WORK: Float64Array
+        `WORK`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    RWORK: Float64Array
+        `RWORK`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    strideRWORK: integer
+        stride length for `RWORK`.
 
-        X: Float64Array
-            input matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideX2: integer
-            stride of the second dimension of `X`.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+{{alias}}.ndarray( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, equed, r, strideR, offsetR, c, strideC, offsetC, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    Expert driver for solving a complex system of linear equations A*X = B,
+    using alternative indexing semantics.
 
-        rcond: number
-            rcond.
+    Parameters
+    ----------
+    fact: string
+        `fact`.
 
-        FERR: Float64Array
-            input array.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        strideFERR: integer
-            stride length for `FERR`.
+    N: integer
+        number of columns.
 
-        offsetFERR: NonNegativeInteger
-            starting index for `FERR`.
+    nrhs: integer
+        number of right-hand sides.
 
-        BERR: Float64Array
-            input array.
+    A: Float64Array
+        `A`.
 
-        strideBERR: integer
-            stride length for `BERR`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetBERR: NonNegativeInteger
-            starting index for `BERR`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        WORK: Float64Array
-            input array.
+    offsetA: integer
+        starting index for `A`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    AF: Float64Array
+        `AF`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    strideAF1: integer
+        stride of dimension 1 of `AF`.
 
-        RWORK: Float64Array
-            output array.
+    strideAF2: integer
+        stride of dimension 2 of `AF`.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    offsetAF: integer
+        starting index for `AF`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    offsetIPIV: integer
+        starting index for `IPIV`.
+
+    equed: string
+        `equed`.
+
+    r: Float64Array
+        `r`.
+
+    strideR: integer
+        stride length for `R`.
+
+    offsetR: integer
+        starting index for `R`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    rcond: number
+        `rcond`.
+
+    FERR: Float64Array
+        `FERR`.
+
+    strideFERR: integer
+        stride length for `FERR`.
+
+    offsetFERR: integer
+        starting index for `FERR`.
+
+    BERR: Float64Array
+        `BERR`.
+
+    strideBERR: integer
+        stride length for `BERR`.
+
+    offsetBERR: integer
+        starting index for `BERR`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

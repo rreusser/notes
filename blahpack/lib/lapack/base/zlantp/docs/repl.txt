@@ -1,94 +1,80 @@
+{{alias}}( norm, uplo, diag, N, AP, WORK )
+    Returns the norm of a complex triangular matrix in packed storage.
 
-    zlantp( norm, uplo, diag, N, AP, WORK )
-        Returns the norm of a complex triangular matrix in packed storage.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Parameters
-        ----------
-        norm: string
-            Specifies which norm to compute: 'max', 'one-norm', 'inf-norm', or
-            'frobenius'.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        uplo: string
-            Specifies whether the upper or lower triangle is stored: 'upper' or
-            'lower'.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        diag: string
-            Specifies whether the matrix has a unit diagonal: 'unit' or
-            'non-unit'.
+    N: integer
+        number of columns.
 
-        N: integer
-            Order of the matrix.
+    AP: Float64Array
+        `AP`.
 
-        AP: Complex128Array
-            Packed triangular matrix.
+    WORK: Float64Array
+        `WORK`.
 
-        WORK: Float64Array
-            Workspace array of length >= N.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Returns
-        -------
-        out: number
-            Norm value.
-
-        Examples
-        --------
-        > var AP = new {{alias:@stdlib/array/complex128}}( [ 1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 5.0, 6.0, 9.0, 1.0, 2.0, 3.0 ] );
-        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
-        > zlantp( 'max', 'upper', 'non-unit', 3, AP, WORK )
-        ~10.63
+    Examples
+    --------
+    // TODO: Add examples
 
 
-    zlantp.ndarray( norm, uplo, diag, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
-        Returns the norm of a complex triangular matrix in packed storage
-        using alternative indexing semantics.
+{{alias}}.ndarray( norm, uplo, diag, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
+    Returns the norm of a complex triangular matrix in packed storage using
+    alternative indexing semantics.
 
-        Parameters
-        ----------
-        norm: string
-            Specifies which norm to compute: 'max', 'one-norm', 'inf-norm', or
-            'frobenius'.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        uplo: string
-            Specifies whether the upper or lower triangle is stored: 'upper' or
-            'lower'.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        diag: string
-            Specifies whether the matrix has a unit diagonal: 'unit' or
-            'non-unit'.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        N: integer
-            Order of the matrix.
+    N: integer
+        number of columns.
 
-        AP: Complex128Array
-            Packed triangular matrix.
+    AP: Float64Array
+        `AP`.
 
-        strideAP: integer
-            Stride length for AP (in complex elements).
+    strideAP: integer
+        stride length for `AP`.
 
-        offsetAP: integer
-            Starting index for AP (in complex elements).
+    offsetAP: integer
+        starting index for `AP`.
 
-        WORK: Float64Array
-            Workspace array of length >= N.
+    WORK: Float64Array
+        `WORK`.
 
-        strideWORK: integer
-            Stride length for WORK.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        offsetWORK: integer
-            Starting index for WORK.
+    offsetWORK: integer
+        starting index for `WORK`.
 
-        Returns
-        -------
-        out: number
-            Norm value.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        Examples
-        --------
-        > var AP = new {{alias:@stdlib/array/complex128}}( [ 1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 5.0, 6.0, 9.0, 1.0, 2.0, 3.0 ] );
-        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
-        > zlantp.ndarray( 'max', 'upper', 'non-unit', 3, AP, 1, 0, WORK, 1, 0 )
-        ~10.63
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

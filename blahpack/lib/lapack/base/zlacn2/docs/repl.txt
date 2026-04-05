@@ -1,54 +1,96 @@
+{{alias}}( N, V, strideV, X, strideX, EST, KASE, ISAVE, strideISAVE )
+    Estimates the 1-norm of a square complex matrix A using reverse
+    communication.
 
-    zlacn2.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE )
-        Estimate 1-norm of a square matrix using reverse communication
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    V: Float64Array
+        `V`.
 
-        v: Float64Array
-            input array.
+    strideV: integer
+        stride length for `V`.
 
-        strideV: integer
-            stride length for `v`.
+    X: Float64Array
+        `X`.
 
-        offsetV: NonNegativeInteger
-            starting index for `v`.
+    strideX: integer
+        stride length for `X`.
 
-        x: Float64Array
-            output array.
+    EST: Float64Array
+        `EST`.
 
-        strideX: integer
-            stride length for `x`.
+    KASE: Float64Array
+        `KASE`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    ISAVE: Float64Array
+        `ISAVE`.
 
-        est: number
-            est.
+    strideISAVE: integer
+        stride length for `ISAVE`.
 
-        kase: integer
-            kase.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        isave: Int32Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideISAVE: integer
-            stride length for `isave`.
 
-        offsetISAVE: NonNegativeInteger
-            starting index for `isave`.
+{{alias}}.ndarray( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE, ISAVE, strideISAVE, offsetISAVE )
+    Estimates the 1-norm of a square complex matrix A using reverse
+    communication using alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    V: Float64Array
+        `V`.
+
+    strideV: integer
+        stride length for `V`.
+
+    offsetV: integer
+        starting index for `V`.
+
+    X: Float64Array
+        `X`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    EST: Float64Array
+        `EST`.
+
+    KASE: Float64Array
+        `KASE`.
+
+    ISAVE: Float64Array
+        `ISAVE`.
+
+    strideISAVE: integer
+        stride length for `ISAVE`.
+
+    offsetISAVE: integer
+        starting index for `ISAVE`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

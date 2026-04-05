@@ -1,54 +1,85 @@
+{{alias}}( i, D, Z, DELTA, rho, dlam )
+    Solves the 2-by-2 secular equation.
 
-    dlaed5.ndarray( i, d, strideD, offsetD, z, strideZ, offsetZ, delta, strideDELTA, offsetDELTA, rho, dlam )
-        Solve the 2-by-2 secular equation.
+    Parameters
+    ----------
+    i: number
+        `i`.
 
-        Parameters
-        ----------
-        i: integer
-            i.
+    D: Float64Array
+        `D`.
 
-        d: Float64Array
-            input array.
+    Z: Float64Array
+        `Z`.
 
-        strideD: integer
-            stride length for `d`.
+    DELTA: Float64Array
+        `DELTA`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    rho: number
+        `rho`.
 
-        z: Float64Array
-            input array.
+    dlam: number
+        `dlam`.
 
-        strideZ: integer
-            stride length for `z`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetZ: NonNegativeInteger
-            starting index for `z`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        delta: Float64Array
-            input array.
 
-        strideDELTA: integer
-            stride length for `delta`.
+{{alias}}.ndarray( i, D, strideD, offsetD, Z, strideZ, offsetZ, DELTA, strideDELTA, offsetDELTA, rho, dlam )
+    Solves the 2-by-2 secular equation using alternative indexing semantics.
 
-        offsetDELTA: NonNegativeInteger
-            starting index for `delta`.
+    Parameters
+    ----------
+    i: number
+        `i`.
 
-        rho: number
-            rho.
+    D: Float64Array
+        `D`.
 
-        dlam: number
-            dlam.
+    strideD: integer
+        stride length for `D`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    offsetD: integer
+        starting index for `D`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Z: Float64Array
+        `Z`.
+
+    strideZ: integer
+        stride length for `Z`.
+
+    offsetZ: integer
+        starting index for `Z`.
+
+    DELTA: Float64Array
+        `DELTA`.
+
+    strideDELTA: integer
+        stride length for `DELTA`.
+
+    offsetDELTA: integer
+        starting index for `DELTA`.
+
+    rho: number
+        `rho`.
+
+    dlam: number
+        `dlam`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,99 +1,168 @@
+{{alias}}( order, M, N, nb, A, LDA, d, strideD, e, strideE, TAUQ, strideTAUQ, TAUP, strideTAUP, X, LDX, Y, LDY )
+    Reduces the first NB rows and columns of a complex general M-by-N matrix
+    A.
 
-    zlabrd.ndarray( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, X, strideX1, strideX2, offsetX, Y, strideY1, strideY2, offsetY )
-        Reduce first NB rows/columns to bidiagonal form
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        nb: integer
-            nb.
+    nb: integer
+        `nb`.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    d: Float64Array
+        `d`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    e: Float64Array
+        `e`.
 
-        strideD: integer
-            stride length for `d`.
+    strideE: integer
+        stride length for `E`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    TAUQ: Float64Array
+        `TAUQ`.
 
-        e: Float64Array
-            input array.
+    strideTAUQ: integer
+        stride length for `TAUQ`.
 
-        strideE: integer
-            stride length for `e`.
+    TAUP: Float64Array
+        `TAUP`.
 
-        offsetE: NonNegativeInteger
-            starting index for `e`.
+    strideTAUP: integer
+        stride length for `TAUP`.
 
-        TAUQ: Float64Array
-            input array.
+    X: Float64Array
+        `X`.
 
-        strideTAUQ: integer
-            stride length for `TAUQ`.
+    LDX: integer
+        leading dimension of `X`.
 
-        offsetTAUQ: NonNegativeInteger
-            starting index for `TAUQ`.
+    Y: Float64Array
+        `Y`.
 
-        TAUP: Float64Array
-            input array.
+    LDY: integer
+        leading dimension of `Y`.
 
-        strideTAUP: integer
-            stride length for `TAUP`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetTAUP: NonNegativeInteger
-            starting index for `TAUP`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        X: Float64Array
-            input matrix.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+{{alias}}.ndarray( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, X, strideX1, strideX2, offsetX, Y, strideY1, strideY2, offsetY )
+    Reduces the first NB rows and columns of a complex general M-by-N matrix
+    A using alternative indexing semantics.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    N: integer
+        number of columns.
 
-        Y: Float64Array
-            output matrix.
+    nb: integer
+        `nb`.
 
-        strideY1: integer
-            stride of the first dimension of `Y`.
+    A: Float64Array
+        `A`.
 
-        strideY2: integer
-            stride of the second dimension of `Y`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        offsetY: NonNegativeInteger
-            starting index for `Y`.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    offsetA: integer
+        starting index for `A`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    e: Float64Array
+        `e`.
+
+    strideE: integer
+        stride length for `E`.
+
+    offsetE: integer
+        starting index for `E`.
+
+    TAUQ: Float64Array
+        `TAUQ`.
+
+    strideTAUQ: integer
+        stride length for `TAUQ`.
+
+    offsetTAUQ: integer
+        starting index for `TAUQ`.
+
+    TAUP: Float64Array
+        `TAUP`.
+
+    strideTAUP: integer
+        stride length for `TAUP`.
+
+    offsetTAUP: integer
+        starting index for `TAUP`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    Y: Float64Array
+        `Y`.
+
+    strideY1: integer
+        stride of dimension 1 of `Y`.
+
+    strideY2: integer
+        stride of dimension 2 of `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

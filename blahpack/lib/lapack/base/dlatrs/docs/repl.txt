@@ -1,66 +1,119 @@
+{{alias}}( order, uplo, trans, diag, normin, N, A, LDA, x, strideX, scale, CNORM, strideCNORM )
+    Solves a triangular system with scaling to prevent overflow.
 
-    dlatrs.ndarray( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
-        Solve a triangular system with scaling to prevent overflow
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        trans: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        diag: string
-            specifies the operation type.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        normin: string
-            specifies the operation type.
+    normin: string
+        `normin`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    x: Float64Array
+        `x`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideX: integer
+        stride length for `X`.
 
-        x: Float64Array
-            input array.
+    scale: number
+        `scale`.
 
-        strideX: integer
-            stride length for `x`.
+    CNORM: Float64Array
+        `CNORM`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    strideCNORM: integer
+        stride length for `CNORM`.
 
-        scale: number
-            scale.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        CNORM: Float64Array
-            output array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideCNORM: integer
-            stride length for `CNORM`.
 
-        offsetCNORM: NonNegativeInteger
-            starting index for `CNORM`.
+{{alias}}.ndarray( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
+    Solves a triangular system with scaling to prevent overflow using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    diag: string
+        specifies whether the matrix is unit triangular.
+
+    normin: string
+        `normin`.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    x: Float64Array
+        `x`.
+
+    strideX: integer
+        stride length for `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    scale: number
+        `scale`.
+
+    CNORM: Float64Array
+        `CNORM`.
+
+    strideCNORM: integer
+        stride length for `CNORM`.
+
+    offsetCNORM: integer
+        starting index for `CNORM`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

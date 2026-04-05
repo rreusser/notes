@@ -1,120 +1,168 @@
+{{alias}}( trans, N, nrhs, A, LDA, AF, LDAF, IPIV, strideIPIV, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR )
+    Improves the computed solution to a system of linear equations and
+    provides.
 
-    dgerfs.ndarray( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
-        Improves the solution to A*X = B using iterative refinement
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        Parameters
-        ----------
-        trans: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    AF: Float64Array
+        `AF`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    LDAF: integer
+        leading dimension of `AF`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    IPIV: Int32Array
+        `IPIV`.
 
-        AF: Float64Array
-            input matrix.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        strideAF1: integer
-            stride of the first dimension of `AF`.
+    B: Float64Array
+        `B`.
 
-        strideAF2: integer
-            stride of the second dimension of `AF`.
+    LDB: integer
+        leading dimension of `B`.
 
-        offsetAF: NonNegativeInteger
-            starting index for `AF`.
+    X: Float64Array
+        `X`.
 
-        IPIV: Int32Array
-            input array.
+    LDX: integer
+        leading dimension of `X`.
 
-        strideIPIV: integer
-            stride length for `IPIV`.
+    FERR: Float64Array
+        `FERR`.
 
-        offsetIPIV: NonNegativeInteger
-            starting index for `IPIV`.
+    strideFERR: integer
+        stride length for `FERR`.
 
-        B: Float64Array
-            input matrix.
+    BERR: Float64Array
+        `BERR`.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    strideBERR: integer
+        stride length for `BERR`.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        X: Float64Array
-            input matrix.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+{{alias}}.ndarray( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR )
+    Improves the computed solution to a system of linear equations and
+    provides using alternative indexing semantics.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
+    N: integer
+        number of columns.
 
-        FERR: Float64Array
-            input array.
+    nrhs: integer
+        number of right-hand sides.
 
-        strideFERR: integer
-            stride length for `FERR`.
+    A: Float64Array
+        `A`.
 
-        offsetFERR: NonNegativeInteger
-            starting index for `FERR`.
+    strideA1: integer
+        stride of dimension 1 of `A`.
 
-        BERR: Float64Array
-            input array.
+    strideA2: integer
+        stride of dimension 2 of `A`.
 
-        strideBERR: integer
-            stride length for `BERR`.
+    offsetA: integer
+        starting index for `A`.
 
-        offsetBERR: NonNegativeInteger
-            starting index for `BERR`.
+    AF: Float64Array
+        `AF`.
 
-        WORK: Float64Array
-            input array.
+    strideAF1: integer
+        stride of dimension 1 of `AF`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideAF2: integer
+        stride of dimension 2 of `AF`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    offsetAF: integer
+        starting index for `AF`.
 
-        IWORK: Int32Array
-            output array.
+    IPIV: Int32Array
+        `IPIV`.
 
-        strideIWORK: integer
-            stride length for `IWORK`.
+    strideIPIV: integer
+        stride length for `IPIV`.
 
-        offsetIWORK: NonNegativeInteger
-            starting index for `IWORK`.
+    offsetIPIV: integer
+        starting index for `IPIV`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    B: Float64Array
+        `B`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    FERR: Float64Array
+        `FERR`.
+
+    strideFERR: integer
+        stride length for `FERR`.
+
+    offsetFERR: integer
+        starting index for `FERR`.
+
+    BERR: Float64Array
+        `BERR`.
+
+    strideBERR: integer
+        stride length for `BERR`.
+
+    offsetBERR: integer
+        starting index for `BERR`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

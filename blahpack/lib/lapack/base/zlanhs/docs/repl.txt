@@ -1,45 +1,80 @@
+{{alias}}( order, norm, N, A, LDA, WORK, strideWORK )
+    Returns the value of the one norm, Frobenius norm, infinity norm, or.
 
-    zlanhs.ndarray( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
-        Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        norm: string
-            specifies the operation type.
+    norm: string
+        `norm`.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        WORK: Float64Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
 
-        Returns
-        -------
-        out: number
-            TODO: describe return value.
+{{alias}}.ndarray( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+    Returns the value of the one norm, Frobenius norm, infinity norm, or
+    using alternative indexing semantics.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    Parameters
+    ----------
+    norm: string
+        `norm`.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

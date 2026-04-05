@@ -1,57 +1,101 @@
+{{alias}}( N, lvl, nd, INODE, strideINODE, NDIML, strideNDIML, NDIMR, strideNDIMR, msub )
+    Create a tree of subproblems for bidiagonal divide and conquer.
 
-    dlasdt.ndarray( N, lvl, nd, INODE, strideINODE, offsetINODE, NDIML, strideNDIML, offsetNDIML, NDIMR, strideNDIMR, offsetNDIMR, msub )
-        Create a tree of subproblems for bidiagonal divide and conquer.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    lvl: number
+        `lvl`.
 
-        lvl: integer
-            lvl.
+    nd: number
+        `nd`.
 
-        nd: integer
-            nd.
+    INODE: Float64Array
+        `INODE`.
 
-        INODE: Int32Array
-            input array.
+    strideINODE: integer
+        stride length for `INODE`.
 
-        strideINODE: integer
-            stride length for `INODE`.
+    NDIML: Float64Array
+        `NDIML`.
 
-        offsetINODE: NonNegativeInteger
-            starting index for `INODE`.
+    strideNDIML: integer
+        stride length for `NDIML`.
 
-        NDIML: Int32Array
-            input array.
+    NDIMR: Float64Array
+        `NDIMR`.
 
-        strideNDIML: integer
-            stride length for `NDIML`.
+    strideNDIMR: integer
+        stride length for `NDIMR`.
 
-        offsetNDIML: NonNegativeInteger
-            starting index for `NDIML`.
+    msub: number
+        `msub`.
 
-        NDIMR: Int32Array
-            output array.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideNDIMR: integer
-            stride length for `NDIMR`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetNDIMR: NonNegativeInteger
-            starting index for `NDIMR`.
 
-        msub: integer
-            msub.
+{{alias}}.ndarray( N, lvl, nd, INODE, strideINODE, offsetINODE, NDIML, strideNDIML, offsetNDIML, NDIMR, strideNDIMR, offsetNDIMR, msub )
+    Create a tree of subproblems for bidiagonal divide and conquer using
+    alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    lvl: number
+        `lvl`.
+
+    nd: number
+        `nd`.
+
+    INODE: Float64Array
+        `INODE`.
+
+    strideINODE: integer
+        stride length for `INODE`.
+
+    offsetINODE: integer
+        starting index for `INODE`.
+
+    NDIML: Float64Array
+        `NDIML`.
+
+    strideNDIML: integer
+        stride length for `NDIML`.
+
+    offsetNDIML: integer
+        starting index for `NDIML`.
+
+    NDIMR: Float64Array
+        `NDIMR`.
+
+    strideNDIMR: integer
+        stride length for `NDIMR`.
+
+    offsetNDIMR: integer
+        starting index for `NDIMR`.
+
+    msub: number
+        `msub`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

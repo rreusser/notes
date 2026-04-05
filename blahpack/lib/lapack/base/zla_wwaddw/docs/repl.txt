@@ -1,48 +1,75 @@
+{{alias}}( N, x, y, w )
+    Adds a complex vector W into a doubled-single accumulation vector (X,
+    Y).
 
-    zla_wwaddw.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW )
-        Add a complex vector into a doubled-single accumulation vector.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        Parameters
-        ----------
-        N: NonNegativeInteger
-            number of columns.
+    x: Float64Array
+        `x`.
 
-        x: Float64Array
-            input array.
+    y: Float64Array
+        `y`.
 
-        strideX: integer
-            stride length for `x`.
+    w: Float64Array
+        `w`.
 
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        y: Float64Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideY: integer
-            stride length for `y`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
+{{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW )
+    Adds a complex vector W into a doubled-single accumulation vector (X, Y)
+    using alternative indexing semantics.
 
-        w: Float64Array
-            output array.
+    Parameters
+    ----------
+    N: integer
+        number of columns.
 
-        strideW: integer
-            stride length for `w`.
+    x: Float64Array
+        `x`.
 
-        offsetW: NonNegativeInteger
-            starting index for `w`.
+    strideX: integer
+        stride length for `X`.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    offsetX: integer
+        starting index for `X`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    y: Float64Array
+        `y`.
+
+    strideY: integer
+        stride length for `Y`.
+
+    offsetY: integer
+        starting index for `Y`.
+
+    w: Float64Array
+        `w`.
+
+    strideW: integer
+        stride length for `W`.
+
+    offsetW: integer
+        starting index for `W`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,72 +1,123 @@
+{{alias}}( M, N, kl, ku, AB, LDAB, r, strideR, c, strideC, rowcnd, colcnd, amax )
+    Equilibrates a complex general band matrix using row and column scaling
+    factors.
 
-    zlaqgb.ndarray( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax, equed )
-        Equilibrates a complex general band matrix using row and column scaling factors.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        Parameters
-        ----------
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    kl: integer
+        `kl`.
 
-        kl: integer
-            kl.
+    ku: integer
+        `ku`.
 
-        ku: integer
-            ku.
+    AB: Float64Array
+        `AB`.
 
-        AB: Float64Array
-            input matrix.
+    LDAB: integer
+        leading dimension of `AB`.
 
-        strideAB1: integer
-            stride of the first dimension of `AB`.
+    r: Float64Array
+        `r`.
 
-        strideAB2: integer
-            stride of the second dimension of `AB`.
+    strideR: integer
+        stride length for `R`.
 
-        offsetAB: NonNegativeInteger
-            starting index for `AB`.
+    c: Float64Array
+        `c`.
 
-        r: Float64Array
-            input array.
+    strideC: integer
+        stride length for `C`.
 
-        strideR: integer
-            stride length for `r`.
+    rowcnd: number
+        `rowcnd`.
 
-        offsetR: NonNegativeInteger
-            starting index for `r`.
+    colcnd: number
+        `colcnd`.
 
-        c: Float64Array
-            output array.
+    amax: number
+        `amax`.
 
-        strideC: integer
-            stride length for `c`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetC: NonNegativeInteger
-            starting index for `c`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        rowcnd: number
-            rowcnd.
 
-        colcnd: number
-            colcnd.
+{{alias}}.ndarray( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
+    Equilibrates a complex general band matrix using row and column scaling
+    factors using alternative indexing semantics.
 
-        amax: number
-            amax.
+    Parameters
+    ----------
+    M: integer
+        number of rows.
 
-        equed: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    kl: integer
+        `kl`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    ku: integer
+        `ku`.
+
+    AB: Float64Array
+        `AB`.
+
+    strideAB1: integer
+        stride of dimension 1 of `AB`.
+
+    strideAB2: integer
+        stride of dimension 2 of `AB`.
+
+    offsetAB: integer
+        starting index for `AB`.
+
+    r: Float64Array
+        `r`.
+
+    strideR: integer
+        stride length for `R`.
+
+    offsetR: integer
+        starting index for `R`.
+
+    c: Float64Array
+        `c`.
+
+    strideC: integer
+        stride length for `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    rowcnd: number
+        `rowcnd`.
+
+    colcnd: number
+        `colcnd`.
+
+    amax: number
+        `amax`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

@@ -1,63 +1,113 @@
+{{alias}}( order, side, uplo, transa, diag, M, N, alpha, A, LDA, B, LDB )
+    Performs one of the matrix-matrix operations.
 
-    dtrmm.ndarray( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
-        Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A) where A is a triangular matrix.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    side: string
+        specifies the side of the operation.
 
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        transa: string
-            specifies the operation type.
+    transa: string
+        specifies the operation for matrix `A`.
 
-        diag: string
-            specifies the operation type.
+    diag: string
+        specifies whether the matrix is unit triangular.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        alpha: number
-            scalar constant.
+    alpha: number
+        scalar constant.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    B: Float64Array
+        `B`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    LDB: integer
+        leading dimension of `B`.
 
-        B: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideB2: integer
-            stride of the second dimension of `B`.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+{{alias}}.ndarray( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+    Performs one of the matrix-matrix operations using alternative indexing
+    semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    transa: string
+        specifies the operation for matrix `A`.
+
+    diag: string
+        specifies whether the matrix is unit triangular.
+
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

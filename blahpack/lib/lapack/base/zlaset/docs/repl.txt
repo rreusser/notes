@@ -1,45 +1,83 @@
+{{alias}}( order, uplo, M, N, alpha, beta, A, LDA )
+    Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 
-    zlaset.ndarray( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA )
-        Initialize a complex matrix to given values
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        M: NonNegativeInteger
-            number of rows.
+    M: integer
+        number of rows.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        alpha: Complex128
-            scalar constant.
+    alpha: number
+        scalar constant.
 
-        beta: Complex128
-            scalar constant.
+    beta: number
+        scalar constant.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+{{alias}}.ndarray( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA )
+    Initializes a complex matrix to BETA on the diagonal and ALPHA on the
+    using alternative indexing semantics.
+
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    M: integer
+        number of rows.
+
+    N: integer
+        number of columns.
+
+    alpha: number
+        scalar constant.
+
+    beta: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

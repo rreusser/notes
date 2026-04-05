@@ -1,102 +1,121 @@
+{{alias}}( v, idx )
+    CABS1: |re(z)| + |im(z)|.
 
-    ztrevc3.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, lrwork )
-        Computes eigenvectors of a complex upper triangular matrix
+    Parameters
+    ----------
+    v: number
+        `v`.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    idx: number
+        `idx`.
 
-        howmny: string
-            specifies the operation type.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        SELECT: Float64Array
-            input array.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideSELECT: integer
-            stride length for `SELECT`.
 
-        offsetSELECT: NonNegativeInteger
-            starting index for `SELECT`.
+{{alias}}.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, lrwork )
+    CABS1: |re(z)| + |im(z)| using alternative indexing semantics.
 
-        N: NonNegativeInteger
-            number of columns.
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        T: Float64Array
-            input matrix.
+    howmny: string
+        `howmny`.
 
-        strideT1: integer
-            stride of the first dimension of `T`.
+    SELECT: Int32Array
+        `SELECT`.
 
-        strideT2: integer
-            stride of the second dimension of `T`.
+    strideSELECT: integer
+        stride length for `SELECT`.
 
-        offsetT: NonNegativeInteger
-            starting index for `T`.
+    offsetSELECT: integer
+        starting index for `SELECT`.
 
-        VL: Float64Array
-            input matrix.
+    N: integer
+        number of columns.
 
-        strideVL1: integer
-            stride of the first dimension of `VL`.
+    T: Float64Array
+        `T`.
 
-        strideVL2: integer
-            stride of the second dimension of `VL`.
+    strideT1: integer
+        stride of dimension 1 of `T`.
 
-        offsetVL: NonNegativeInteger
-            starting index for `VL`.
+    strideT2: integer
+        stride of dimension 2 of `T`.
 
-        VR: Float64Array
-            input matrix.
+    offsetT: integer
+        starting index for `T`.
 
-        strideVR1: integer
-            stride of the first dimension of `VR`.
+    VL: Float64Array
+        `VL`.
 
-        strideVR2: integer
-            stride of the second dimension of `VR`.
+    strideVL1: integer
+        stride of dimension 1 of `VL`.
 
-        offsetVR: NonNegativeInteger
-            starting index for `VR`.
+    strideVL2: integer
+        stride of dimension 2 of `VL`.
 
-        mm: integer
-            mm.
+    offsetVL: integer
+        starting index for `VL`.
 
-        M: NonNegativeInteger
-            number of rows.
+    VR: Float64Array
+        `VR`.
 
-        WORK: Float64Array
-            input array.
+    strideVR1: integer
+        stride of dimension 1 of `VR`.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    strideVR2: integer
+        stride of dimension 2 of `VR`.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    offsetVR: integer
+        starting index for `VR`.
 
-        lwork: integer
-            lwork.
+    mm: integer
+        `mm`.
 
-        RWORK: Float64Array
-            output array.
+    M: integer
+        number of rows.
 
-        strideRWORK: integer
-            stride length for `RWORK`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetRWORK: NonNegativeInteger
-            starting index for `RWORK`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        lrwork: integer
-            lrwork.
+    offsetWORK: integer
+        starting index for `WORK`.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    lwork: integer
+        `lwork`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    RWORK: Float64Array
+        `RWORK`.
+
+    strideRWORK: integer
+        stride length for `RWORK`.
+
+    offsetRWORK: integer
+        starting index for `RWORK`.
+
+    lrwork: number
+        `lrwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

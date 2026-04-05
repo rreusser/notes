@@ -1,78 +1,134 @@
+{{alias}}( side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK, lwork )
+    Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,.
 
-    zunmrq.ndarray( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork )
-        Multiplies a general matrix by the unitary matrix Q from an RQ factorization (blocked)
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        Parameters
-        ----------
-        side: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        trans: string
-            specifies the operation type.
+    M: integer
+        number of rows.
 
-        M: NonNegativeInteger
-            number of rows.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    K: integer
+        inner dimension.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    A: Float64Array
+        `A`.
 
-        A: Float64Array
-            input matrix.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    TAU: Float64Array
+        `TAU`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    strideTAU: integer
+        stride length for `TAU`.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    C: Float64Array
+        `C`.
 
-        TAU: Float64Array
-            input array.
+    LDC: integer
+        leading dimension of `C`.
 
-        strideTAU: integer
-            stride length for `TAU`.
+    WORK: Float64Array
+        `WORK`.
 
-        offsetTAU: NonNegativeInteger
-            starting index for `TAU`.
+    strideWORK: integer
+        stride length for `WORK`.
 
-        C: Float64Array
-            input matrix.
+    lwork: integer
+        `lwork`.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideC2: integer
-            stride of the second dimension of `C`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
 
-        WORK: Float64Array
-            output array.
+{{alias}}.ndarray( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork )
+    Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H, using
+    alternative indexing semantics.
 
-        strideWORK: integer
-            stride length for `WORK`.
+    Parameters
+    ----------
+    side: string
+        specifies the side of the operation.
 
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        lwork: integer
-            lwork.
+    M: integer
+        number of rows.
 
-        Returns
-        -------
-        out: integer
-            TODO: describe return value.
+    N: integer
+        number of columns.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    K: integer
+        inner dimension.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    TAU: Float64Array
+        `TAU`.
+
+    strideTAU: integer
+        stride length for `TAU`.
+
+    offsetTAU: integer
+        starting index for `TAU`.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    lwork: integer
+        `lwork`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

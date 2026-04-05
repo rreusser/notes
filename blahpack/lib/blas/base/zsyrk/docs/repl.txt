@@ -1,60 +1,108 @@
+{{alias}}( order, uplo, trans, N, K, alpha, A, LDA, beta, C, LDC )
+    Performs the symmetric rank-k operation `C := alpha*A*A**T + beta*C` or
+    `C := alpha*A**T*A + beta*C`.
 
-    zsyrk.ndarray( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC1, strideC2, offsetC )
-        Perform one of the symmetric rank-k operations C := alpha*A*A**T + beta*C or C := alpha*A**T*A + beta*C.
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
 
-        Parameters
-        ----------
-        uplo: string
-            specifies the operation type.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        trans: string
-            specifies the operation type.
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        N: NonNegativeInteger
-            number of columns.
+    N: integer
+        number of columns.
 
-        K: NonNegativeInteger
-            number of superdiagonals.
+    K: integer
+        inner dimension.
 
-        alpha: Complex128
-            scalar constant.
+    alpha: number
+        scalar constant.
 
-        A: Float64Array
-            input matrix.
+    A: Float64Array
+        `A`.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
+    LDA: integer
+        leading dimension of `A`.
 
-        strideA2: integer
-            stride of the second dimension of `A`.
+    beta: number
+        scalar constant.
 
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+    C: Float64Array
+        `C`.
 
-        beta: Complex128
-            scalar constant.
+    LDC: integer
+        leading dimension of `C`.
 
-        C: Float64Array
-            output matrix.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideC1: integer
-            stride of the first dimension of `C`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideC2: integer
-            stride of the second dimension of `C`.
 
-        offsetC: NonNegativeInteger
-            starting index for `C`.
+{{alias}}.ndarray( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC1, strideC2, offsetC )
+    Performs the symmetric rank-k operation `C := alpha*A*A**T + beta*C` or
+    `C := alpha*A**T*A + beta*C` using alternative indexing semantics.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    Parameters
+    ----------
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    trans: string
+        specifies whether the matrix should be transposed.
+
+    N: integer
+        number of columns.
+
+    K: integer
+        inner dimension.
+
+    alpha: number
+        scalar constant.
+
+    A: Float64Array
+        `A`.
+
+    strideA1: integer
+        stride of dimension 1 of `A`.
+
+    strideA2: integer
+        stride of dimension 2 of `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    beta: number
+        scalar constant.
+
+    C: Float64Array
+        `C`.
+
+    strideC1: integer
+        stride of dimension 1 of `C`.
+
+    strideC2: integer
+        stride of dimension 2 of `C`.
+
+    offsetC: integer
+        starting index for `C`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-

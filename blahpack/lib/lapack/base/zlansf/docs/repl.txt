@@ -1,48 +1,81 @@
-    zlansf.ndarray( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK )
-        Returns the norm of a complex symmetric matrix in RFP format.
+{{alias}}( norm, transr, uplo, N, A, WORK )
+    Returns the value of the one-norm, Frobenius norm, infinity-norm, or
+    the.
 
-        Parameters
-        ----------
-        norm: string
-            Specifies the norm type: 'max', 'one-norm', 'inf-norm', or
-            'frobenius'.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        transr: string
-            Specifies the RFP storage format: 'no-transpose' or
-            'conjugate-transpose'.
+    transr: string
+        `transr`.
 
-        uplo: string
-            Specifies the triangle: 'upper' or 'lower'.
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
 
-        N: NonNegativeInteger
-            Order of the matrix.
+    N: integer
+        number of columns.
 
-        A: Complex128Array
-            RFP array of length N*(N+1)/2.
+    A: Float64Array
+        `A`.
 
-        strideA: integer
-            Stride length for `A` (in complex elements).
+    WORK: Float64Array
+        `WORK`.
 
-        offsetA: NonNegativeInteger
-            Starting index for `A` (in complex elements).
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        WORK: Float64Array
-            Workspace array of length N.
+    Examples
+    --------
+    // TODO: Add examples
 
-        strideWORK: integer
-            Stride length for `WORK`.
 
-        offsetWORK: NonNegativeInteger
-            Starting index for `WORK`.
+{{alias}}.ndarray( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK )
+    Returns the value of the one-norm, Frobenius norm, infinity-norm, or the
+    using alternative indexing semantics.
 
-        Returns
-        -------
-        out: number
-            The norm value.
+    Parameters
+    ----------
+    norm: string
+        `norm`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    transr: string
+        `transr`.
+
+    uplo: string
+        specifies whether the upper or lower triangular part is referenced.
+
+    N: integer
+        number of columns.
+
+    A: Float64Array
+        `A`.
+
+    strideA: integer
+        stride length for `A`.
+
+    offsetA: integer
+        starting index for `A`.
+
+    WORK: Float64Array
+        `WORK`.
+
+    strideWORK: integer
+        stride length for `WORK`.
+
+    offsetWORK: integer
+        starting index for `WORK`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------

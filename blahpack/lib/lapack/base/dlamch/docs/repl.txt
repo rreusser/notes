@@ -1,0 +1,19 @@
+{{alias}}( cmach )
+    @license Apache-2.0.
+
+    Parameters
+    ----------
+    cmach: string
+        `cmach`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

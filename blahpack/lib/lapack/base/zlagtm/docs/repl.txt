@@ -1,84 +1,145 @@
+{{alias}}( trans, N, nrhs, alpha, DL, strideDL, d, strideD, DU, strideDU, X, LDX, beta, B, LDB )
+    Perform a matrix-vector product of the form C := alpha*A*B + beta*C
+    where A is a complex tridiagonal matrix.
 
-    zlagtm.ndarray( trans, N, nrhs, alpha, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, X, strideX1, strideX2, offsetX, beta, B, strideB1, strideB2, offsetB )
-        Perform a matrix-vector product of the form C := alpha*A*B + beta*C where A is a complex tridiagonal matrix.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        Parameters
-        ----------
-        trans: string
-            specifies the operation type.
+    N: integer
+        number of columns.
 
-        N: NonNegativeInteger
-            number of columns.
+    nrhs: integer
+        number of right-hand sides.
 
-        nrhs: integer
-            nrhs.
+    alpha: number
+        scalar constant.
 
-        alpha: number
-            scalar constant.
+    DL: Float64Array
+        `DL`.
 
-        DL: Float64Array
-            input array.
+    strideDL: integer
+        stride length for `DL`.
 
-        strideDL: integer
-            stride length for `DL`.
+    d: Float64Array
+        `d`.
 
-        offsetDL: NonNegativeInteger
-            starting index for `DL`.
+    strideD: integer
+        stride length for `D`.
 
-        d: Float64Array
-            input array.
+    DU: Float64Array
+        `DU`.
 
-        strideD: integer
-            stride length for `d`.
+    strideDU: integer
+        stride length for `DU`.
 
-        offsetD: NonNegativeInteger
-            starting index for `d`.
+    X: Float64Array
+        `X`.
 
-        DU: Float64Array
-            input array.
+    LDX: integer
+        leading dimension of `X`.
 
-        strideDU: integer
-            stride length for `DU`.
+    beta: number
+        scalar constant.
 
-        offsetDU: NonNegativeInteger
-            starting index for `DU`.
+    B: Float64Array
+        `B`.
 
-        X: Float64Array
-            input matrix.
+    LDB: integer
+        leading dimension of `B`.
 
-        strideX1: integer
-            stride of the first dimension of `X`.
+    Returns
+    -------
+    out: Float64Array
+        Result.
 
-        strideX2: integer
-            stride of the second dimension of `X`.
+    Examples
+    --------
+    // TODO: Add examples
 
-        offsetX: NonNegativeInteger
-            starting index for `X`.
 
-        beta: number
-            scalar constant.
+{{alias}}.ndarray( trans, N, nrhs, alpha, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, X, strideX1, strideX2, offsetX, beta, B, strideB1, strideB2, offsetB )
+    Perform a matrix-vector product of the form C := alpha*A*B + beta*C
+    where A is a complex tridiagonal matrix using alternative indexing
+    semantics.
 
-        B: Float64Array
-            output matrix.
+    Parameters
+    ----------
+    trans: string
+        specifies whether the matrix should be transposed.
 
-        strideB1: integer
-            stride of the first dimension of `B`.
+    N: integer
+        number of columns.
 
-        strideB2: integer
-            stride of the second dimension of `B`.
+    nrhs: integer
+        number of right-hand sides.
 
-        offsetB: NonNegativeInteger
-            starting index for `B`.
+    alpha: number
+        scalar constant.
 
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+    DL: Float64Array
+        `DL`.
 
-        Examples
-        --------
-        // TODO: Add REPL examples
+    strideDL: integer
+        stride length for `DL`.
+
+    offsetDL: integer
+        starting index for `DL`.
+
+    d: Float64Array
+        `d`.
+
+    strideD: integer
+        stride length for `D`.
+
+    offsetD: integer
+        starting index for `D`.
+
+    DU: Float64Array
+        `DU`.
+
+    strideDU: integer
+        stride length for `DU`.
+
+    offsetDU: integer
+        starting index for `DU`.
+
+    X: Float64Array
+        `X`.
+
+    strideX1: integer
+        stride of dimension 1 of `X`.
+
+    strideX2: integer
+        stride of dimension 2 of `X`.
+
+    offsetX: integer
+        starting index for `X`.
+
+    beta: number
+        scalar constant.
+
+    B: Float64Array
+        `B`.
+
+    strideB1: integer
+        stride of dimension 1 of `B`.
+
+    strideB2: integer
+        stride of dimension 2 of `B`.
+
+    offsetB: integer
+        starting index for `B`.
+
+    Returns
+    -------
+    out: Float64Array
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
 
     See Also
     --------
-
