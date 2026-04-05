@@ -382,5 +382,13 @@
   "lib/lapack/base/dsfrk": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dsfrk (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dstebz": {
+    "skip": ["conventions.routine-string-validation", "conventions.ndarray-no-order", "conventions.ndarray-string-validation"],
+    "reason": "dstebz 'order' means block/entire eigenvalue ordering, not row/column-major layout"
+  },
+  "lib/lapack/base/dlasd7": {
+    "skip": ["conventions.routine-calls-base"],
+    "reason": "dlasd7.js calls ndarray.js by design — converts flat args to stride/offset form"
   }
 }

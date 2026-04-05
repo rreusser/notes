@@ -3,6 +3,8 @@
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -17,9 +19,13 @@ var base = require( './base.js' );
 * @param {Float64Array} B - input 2-by-2 upper triangular matrix B
 * @param {integer} LDB - leading dimension of B
 * @param {number} safmin - smallest positive number such that `1/safmin` does not overflow
+* @throws {TypeError} first argument must be a valid order
 * @returns {Object} object with fields: scale1, scale2, wr1, wr2, wi
 */
 function dlag2( order, A, LDA, B, LDB, safmin ) {
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
 	if ( order === 'row-major' ) {
 		return base( A, LDA, 1, 0, B, LDB, 1, 0, safmin );
 	}
