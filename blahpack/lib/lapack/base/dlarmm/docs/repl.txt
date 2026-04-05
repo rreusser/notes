@@ -1,0 +1,50 @@
+
+{{alias}}( anorm, bnorm, cnorm )
+    Compute a safe BLAS-style constant for scaling matrix norms
+
+    Parameters
+    ----------
+        anorm: number
+            anorm.
+
+        bnorm: number
+            bnorm.
+
+        cnorm: number
+            cnorm.
+
+    Returns
+    -------
+    out: number
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( anorm, bnorm, cnorm )
+    Compute a safe BLAS-style constant for scaling matrix norms, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        anorm: number
+            anorm.
+
+        bnorm: number
+            bnorm.
+
+        cnorm: number
+            cnorm.
+
+    Returns
+    -------
+    out: number
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------
