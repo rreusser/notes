@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,33 +16,57 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/ztrmv
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { MatrixTriangle, TransposeOperation, DiagonalType, Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `ztrmv`.
 */
 interface Routine {
 	/**
-	* Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x
+	* Perform one of the matrix-vector operations.
+	*
+	* @param order - storage layout
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param trans - specifies whether the matrix should be transposed
+	* @param diag - specifies whether the matrix is unit triangular
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @returns result
 	*/
-	(
-		uplo: string,
-		trans: string,
-		diag: string,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		x: Float64Array,
-		strideX: number,
-		offsetX: number
-	): Float64Array;
+	( order: Layout, uplo: MatrixTriangle, trans: TransposeOperation, diag: DiagonalType, N: number, A: Float64Array, LDA: number, x: Float64Array, strideX: number ): Float64Array;
+
+	/**
+	* Perform one of the matrix-vector operations using alternative indexing semantics.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param trans - specifies whether the matrix should be transposed
+	* @param diag - specifies whether the matrix is unit triangular
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @returns result
+	*/
+	ndarray( uplo: MatrixTriangle, trans: TransposeOperation, diag: DiagonalType, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, x: Float64Array, strideX: number, offsetX: number ): Float64Array;
 }
 
 /**
-* Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x
+* Perform one of the matrix-vector operations.
 */
 declare var ztrmv: Routine;
+
+
+// EXPORTS //
 
 export = ztrmv;

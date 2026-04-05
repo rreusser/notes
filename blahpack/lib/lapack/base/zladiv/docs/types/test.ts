@@ -23,11 +23,21 @@ import zladiv = require( './index' );
 
 // The function returns a number...
 {
-	zladiv( 1.0, 1.0 ); // $ExpectType number
+	zladiv( 10 ); // $ExpectType number
+}
+
+// The compiler throws an error if the function is provided a first argument which is not a number...
+{
+	zladiv( '10' ); // $ExpectError
+	zladiv( true ); // $ExpectError
+	zladiv( false ); // $ExpectError
+	zladiv( null ); // $ExpectError
+	zladiv( undefined ); // $ExpectError
+	zladiv( [] ); // $ExpectError
+	zladiv( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zladiv(); // $ExpectError
-	zladiv( 1.0 ); // $ExpectError
 }

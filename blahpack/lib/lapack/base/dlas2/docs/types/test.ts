@@ -23,66 +23,21 @@ import dlas2 = require( './index' );
 
 // The function returns a void...
 {
-	dlas2( 10, 10, 10, 10, 10 ); // $ExpectType void
+	dlas2( 10 ); // $ExpectType void
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dlas2( '10', 10, 10, 10, 10 ); // $ExpectError
-	dlas2( true, 10, 10, 10, 10 ); // $ExpectError
-	dlas2( false, 10, 10, 10, 10 ); // $ExpectError
-	dlas2( null, 10, 10, 10, 10 ); // $ExpectError
-	dlas2( undefined, 10, 10, 10, 10 ); // $ExpectError
-	dlas2( [], 10, 10, 10, 10 ); // $ExpectError
-	dlas2( {}, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	dlas2( 10, '10', 10, 10, 10 ); // $ExpectError
-	dlas2( 10, true, 10, 10, 10 ); // $ExpectError
-	dlas2( 10, false, 10, 10, 10 ); // $ExpectError
-	dlas2( 10, null, 10, 10, 10 ); // $ExpectError
-	dlas2( 10, undefined, 10, 10, 10 ); // $ExpectError
-	dlas2( 10, [], 10, 10, 10 ); // $ExpectError
-	dlas2( 10, {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dlas2( 10, 10, '10', 10, 10 ); // $ExpectError
-	dlas2( 10, 10, true, 10, 10 ); // $ExpectError
-	dlas2( 10, 10, false, 10, 10 ); // $ExpectError
-	dlas2( 10, 10, null, 10, 10 ); // $ExpectError
-	dlas2( 10, 10, undefined, 10, 10 ); // $ExpectError
-	dlas2( 10, 10, [], 10, 10 ); // $ExpectError
-	dlas2( 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dlas2( 10, 10, 10, '10', 10 ); // $ExpectError
-	dlas2( 10, 10, 10, true, 10 ); // $ExpectError
-	dlas2( 10, 10, 10, false, 10 ); // $ExpectError
-	dlas2( 10, 10, 10, null, 10 ); // $ExpectError
-	dlas2( 10, 10, 10, undefined, 10 ); // $ExpectError
-	dlas2( 10, 10, 10, [], 10 ); // $ExpectError
-	dlas2( 10, 10, 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dlas2( 10, 10, 10, 10, '10' ); // $ExpectError
-	dlas2( 10, 10, 10, 10, true ); // $ExpectError
-	dlas2( 10, 10, 10, 10, false ); // $ExpectError
-	dlas2( 10, 10, 10, 10, null ); // $ExpectError
-	dlas2( 10, 10, 10, 10, undefined ); // $ExpectError
-	dlas2( 10, 10, 10, 10, [] ); // $ExpectError
-	dlas2( 10, 10, 10, 10, {} ); // $ExpectError
+	dlas2( '10' ); // $ExpectError
+	dlas2( true ); // $ExpectError
+	dlas2( false ); // $ExpectError
+	dlas2( null ); // $ExpectError
+	dlas2( undefined ); // $ExpectError
+	dlas2( [] ); // $ExpectError
+	dlas2( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dlas2(); // $ExpectError
-	dlas2( 10 ); // $ExpectError
 }

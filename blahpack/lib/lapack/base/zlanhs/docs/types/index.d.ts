@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,31 +16,53 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlanhs
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlanhs`.
 */
 interface Routine {
 	/**
-	* Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix
+	* Returns the value of the one norm, Frobenius norm, infinity norm, or.
+	*
+	* @param order - storage layout
+	* @param norm - `norm`
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @returns result
 	*/
-	(
-		norm: string,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number
-	): Float64Array;
+	( order: Layout, norm: string, N: number, A: Float64Array, LDA: number, WORK: Float64Array, strideWORK: number ): Float64Array;
+
+	/**
+	* Returns the value of the one norm, Frobenius norm, infinity norm, or using alternative indexing semantics.
+	*
+	* @param norm - `norm`
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @returns result
+	*/
+	ndarray( norm: string, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, WORK: Float64Array, strideWORK: number, offsetWORK: number ): Float64Array;
 }
 
 /**
-* Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix
+* Returns the value of the one norm, Frobenius norm, infinity norm, or.
 */
 declare var zlanhs: Routine;
+
+
+// EXPORTS //
 
 export = zlanhs;

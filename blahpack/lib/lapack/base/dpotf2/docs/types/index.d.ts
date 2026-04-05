@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,8 +16,48 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dpotf2
+// TypeScript Version: 4.1
 
-// TODO: Add type declarations
+/// <reference types="@stdlib/types"/>
+
+import { MatrixTriangle, Layout } from '@stdlib/types/blas';
+
+/**
+* Interface describing `dpotf2`.
+*/
+interface Routine {
+	/**
+	* Computes the Cholesky factorization of a real symmetric positive definite.
+	*
+	* @param order - storage layout
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @returns result
+	*/
+	( order: Layout, uplo: MatrixTriangle, N: number, A: Float64Array, LDA: number ): Float64Array;
+
+	/**
+	* Computes the Cholesky factorization of a real symmetric positive definite using alternative indexing semantics.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @returns result
+	*/
+	ndarray( uplo: MatrixTriangle, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number ): Float64Array;
+}
+
+/**
+* Computes the Cholesky factorization of a real symmetric positive definite.
+*/
+declare var dpotf2: Routine;
+
+
+// EXPORTS //
 
 export = dpotf2;

@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,27 +16,40 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/izamax
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `izamax`.
 */
 interface Routine {
 	/**
-	* Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
+	* Finds the index of the element having the maximum sum of absolute values of.
+	*
+	* @param N - number of columns
+	* @param zx - `zx`
+	* @param strideX - stride of `X`
+	* @returns result
 	*/
-	(
-		N: number,
-		x: Float64Array,
-		stride: number,
-		offset: number,
-		incx: number
-	): Float64Array;
+	( N: number, zx: number, strideX: number ): Float64Array;
+
+	/**
+	* Finds the index of the element having the maximum sum of absolute values of using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param zx - `zx`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @returns result
+	*/
+	ndarray( N: number, zx: number, strideX: number, offsetX: number ): Float64Array;
 }
 
 /**
-* Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
+* Finds the index of the element having the maximum sum of absolute values of.
 */
 declare var izamax: Routine;
+
+
+// EXPORTS //
 
 export = izamax;

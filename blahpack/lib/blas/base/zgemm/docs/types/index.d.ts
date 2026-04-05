@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,41 +16,70 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/zgemm
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { TransposeOperation, Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zgemm`.
 */
 interface Routine {
 	/**
-	* Perform complex matrix-matrix operations
+	* Perform one of the complex matrix-matrix operations:.
+	*
+	* @param order - storage layout
+	* @param transa - specifies the operation for matrix `A`
+	* @param transb - specifies the operation for matrix `B`
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param K - inner dimension
+	* @param alpha - scalar constant
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param B - `B`
+	* @param LDB - leading dimension of `B`
+	* @param beta - scalar constant
+	* @param C - `C`
+	* @param LDC - leading dimension of `C`
+	* @returns result
 	*/
-	(
-		transa: string,
-		transb: string,
-		M: number,
-		N: number,
-		K: number,
-		alpha: any,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		B: Float64Array,
-		strideB1: number,
-		strideB2: number,
-		offsetB: number,
-		beta: any,
-		C: Float64Array,
-		strideC1: number,
-		strideC2: number,
-		offsetC: number
-	): Float64Array;
+	( order: Layout, transa: TransposeOperation, transb: TransposeOperation, M: number, N: number, K: number, alpha: number, A: Float64Array, LDA: number, B: Float64Array, LDB: number, beta: number, C: Float64Array, LDC: number ): Float64Array;
+
+	/**
+	* Perform one of the complex matrix-matrix operations: using alternative indexing semantics.
+	*
+	* @param transa - specifies the operation for matrix `A`
+	* @param transb - specifies the operation for matrix `B`
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param K - inner dimension
+	* @param alpha - scalar constant
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param B - `B`
+	* @param strideB1 - stride of `B`
+	* @param strideB2 - stride of `B`
+	* @param offsetB - starting index for `B`
+	* @param beta - scalar constant
+	* @param C - `C`
+	* @param strideC1 - stride of `C`
+	* @param strideC2 - stride of `C`
+	* @param offsetC - starting index for `C`
+	* @returns result
+	*/
+	ndarray( transa: TransposeOperation, transb: TransposeOperation, M: number, N: number, K: number, alpha: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, B: Float64Array, strideB1: number, strideB2: number, offsetB: number, beta: number, C: Float64Array, strideC1: number, strideC2: number, offsetC: number ): Float64Array;
 }
 
 /**
-* Perform complex matrix-matrix operations
+* Perform one of the complex matrix-matrix operations:.
 */
 declare var zgemm: Routine;
+
+
+// EXPORTS //
 
 export = zgemm;

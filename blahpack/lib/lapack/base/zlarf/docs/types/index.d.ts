@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,36 +16,64 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlarf
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { OperationSide, Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlarf`.
 */
 interface Routine {
 	/**
-	* Apply a complex Householder reflector
+	* Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+	*
+	* @param order - storage layout
+	* @param side - specifies the side of the operation
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param v - `v`
+	* @param strideV - stride of `V`
+	* @param tau - `tau`
+	* @param offsetTau - starting index for `Tau`
+	* @param C - `C`
+	* @param LDC - leading dimension of `C`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @returns result
 	*/
-	(
-		side: string,
-		M: number,
-		N: number,
-		v: Float64Array,
-		strideV: number,
-		offsetV: number,
-		tau: any,
-		C: Float64Array,
-		strideC1: number,
-		strideC2: number,
-		offsetC: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number
-	): Float64Array;
+	( order: Layout, side: OperationSide, M: number, N: number, v: Float64Array, strideV: number, tau: number, offsetTau: number, C: Float64Array, LDC: number, WORK: Float64Array, strideWORK: number ): Float64Array;
+
+	/**
+	* Apply a complex elementary reflector H to a complex M-by-N matrix C, using alternative indexing semantics.
+	*
+	* @param side - specifies the side of the operation
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param v - `v`
+	* @param strideV - stride of `V`
+	* @param offsetV - starting index for `V`
+	* @param tau - `tau`
+	* @param offsetTau - starting index for `Tau`
+	* @param C - `C`
+	* @param strideC1 - stride of `C`
+	* @param strideC2 - stride of `C`
+	* @param offsetC - starting index for `C`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @returns result
+	*/
+	ndarray( side: OperationSide, M: number, N: number, v: Float64Array, strideV: number, offsetV: number, tau: number, offsetTau: number, C: Float64Array, strideC1: number, strideC2: number, offsetC: number, WORK: Float64Array, strideWORK: number, offsetWORK: number ): Float64Array;
 }
 
 /**
-* Apply a complex Householder reflector
+* Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 */
 declare var zlarf: Routine;
+
+
+// EXPORTS //
 
 export = zlarf;

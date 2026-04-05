@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,23 +16,35 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/disnan
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `disnan`.
 */
 interface Routine {
 	/**
-	* Test if input is NaN
+	* Tests whether a double-precision floating-point number is NaN.
+	*
+	* @param din - `din`
+	* @returns result
 	*/
-	(
-		din: number
-	): number;
+	( din: number ): number;
+
+	/**
+	* Tests whether a double-precision floating-point number is NaN using alternative indexing semantics.
+	*
+	* @param din - `din`
+	* @returns result
+	*/
+	ndarray( din: number ): number;
 }
 
 /**
-* Test if input is NaN
+* Tests whether a double-precision floating-point number is NaN.
 */
 declare var disnan: Routine;
+
+
+// EXPORTS //
 
 export = disnan;

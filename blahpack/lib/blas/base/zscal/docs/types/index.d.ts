@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,28 +16,42 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/zscal
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zscal`.
 */
 interface Routine {
 	/**
-	* Scale a complex double-precision vector by a complex constant
+	* Scale a complex double-precision vector by a complex constant.
+	*
+	* @param N - number of columns
+	* @param za - `za`
+	* @param zx - `zx`
+	* @param strideX - stride of `X`
+	* @returns result
 	*/
-	(
-		N: number,
-		za: any,
-		x: Float64Array,
-		stride: number,
-		offset: number,
-		incx: number
-	): Float64Array;
+	( N: number, za: number, zx: number, strideX: number ): Float64Array;
+
+	/**
+	* Scale a complex double-precision vector by a complex constant using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param za - `za`
+	* @param zx - `zx`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @returns result
+	*/
+	ndarray( N: number, za: number, zx: number, strideX: number, offsetX: number ): Float64Array;
 }
 
 /**
-* Scale a complex double-precision vector by a complex constant
+* Scale a complex double-precision vector by a complex constant.
 */
 declare var zscal: Routine;
+
+
+// EXPORTS //
 
 export = zscal;

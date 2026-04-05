@@ -1,61 +1,115 @@
+/*
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-
-// TypeScript declarations for @stdlib/lapack/base/dggsvp3
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dggsvp3`.
 */
 interface Routine {
 	/**
-	* Compute the preprocessing for the generalized SVD of real matrices A and B
+	* Computes orthogonal matrices U, V, and Q such that:.
+	*
+	* @param jobu - `jobu`
+	* @param jobv - `jobv`
+	* @param jobq - `jobq`
+	* @param M - number of rows
+	* @param p - `p`
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param B - `B`
+	* @param LDB - leading dimension of `B`
+	* @param tola - `tola`
+	* @param tolb - `tolb`
+	* @param K - inner dimension
+	* @param l - `l`
+	* @param U - `U`
+	* @param LDU - leading dimension of `U`
+	* @param V - `V`
+	* @param LDV - leading dimension of `V`
+	* @param Q - `Q`
+	* @param LDQ - leading dimension of `Q`
+	* @param IWORK - `IWORK`
+	* @param strideIWORK - stride of `IWORK`
+	* @param TAU - `TAU`
+	* @param strideTAU - stride of `TAU`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param lwork - workspace size
+	* @returns result
 	*/
-	(
-		jobu: string,
-		jobv: string,
-		jobq: string,
-		M: number,
-		p: number,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		B: Float64Array,
-		strideB1: number,
-		strideB2: number,
-		offsetB: number,
-		tola: number,
-		tolb: number,
-		K: number,
-		l: number,
-		U: Float64Array,
-		strideU1: number,
-		strideU2: number,
-		offsetU: number,
-		V: Float64Array,
-		strideV1: number,
-		strideV2: number,
-		offsetV: number,
-		Q: Float64Array,
-		strideQ1: number,
-		strideQ2: number,
-		offsetQ: number,
-		IWORK: Int32Array,
-		strideIWORK: number,
-		offsetIWORK: number,
-		TAU: Float64Array,
-		strideTAU: number,
-		offsetTAU: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number,
-		lwork: number
-	): Float64Array;
+	( jobu: string, jobv: string, jobq: string, M: number, p: number, N: number, A: Float64Array, LDA: number, B: Float64Array, LDB: number, tola: number, tolb: number, K: number, l: number, U: Float64Array, LDU: number, V: Float64Array, LDV: number, Q: Float64Array, LDQ: number, IWORK: Int32Array, strideIWORK: number, TAU: Float64Array, strideTAU: number, WORK: Float64Array, strideWORK: number, lwork: number ): Float64Array;
+
+	/**
+	* Computes orthogonal matrices U, V, and Q such that: using alternative indexing semantics.
+	*
+	* @param jobu - `jobu`
+	* @param jobv - `jobv`
+	* @param jobq - `jobq`
+	* @param M - number of rows
+	* @param p - `p`
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param B - `B`
+	* @param strideB1 - stride of `B`
+	* @param strideB2 - stride of `B`
+	* @param offsetB - starting index for `B`
+	* @param tola - `tola`
+	* @param tolb - `tolb`
+	* @param K - inner dimension
+	* @param l - `l`
+	* @param U - `U`
+	* @param strideU1 - stride of `U`
+	* @param strideU2 - stride of `U`
+	* @param offsetU - starting index for `U`
+	* @param V - `V`
+	* @param strideV1 - stride of `V`
+	* @param strideV2 - stride of `V`
+	* @param offsetV - starting index for `V`
+	* @param Q - `Q`
+	* @param strideQ1 - stride of `Q`
+	* @param strideQ2 - stride of `Q`
+	* @param offsetQ - starting index for `Q`
+	* @param IWORK - `IWORK`
+	* @param strideIWORK - stride of `IWORK`
+	* @param offsetIWORK - starting index for `IWORK`
+	* @param TAU - `TAU`
+	* @param strideTAU - stride of `TAU`
+	* @param offsetTAU - starting index for `TAU`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @param lwork - workspace size
+	* @returns result
+	*/
+	ndarray( jobu: string, jobv: string, jobq: string, M: number, p: number, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, B: Float64Array, strideB1: number, strideB2: number, offsetB: number, tola: number, tolb: number, K: number, l: number, U: Float64Array, strideU1: number, strideU2: number, offsetU: number, V: Float64Array, strideV1: number, strideV2: number, offsetV: number, Q: Float64Array, strideQ1: number, strideQ2: number, offsetQ: number, IWORK: Int32Array, strideIWORK: number, offsetIWORK: number, TAU: Float64Array, strideTAU: number, offsetTAU: number, WORK: Float64Array, strideWORK: number, offsetWORK: number, lwork: number ): Float64Array;
 }
 
 /**
-* Compute the preprocessing for the generalized SVD of real matrices A and B
+* Computes orthogonal matrices U, V, and Q such that:.
 */
 declare var dggsvp3: Routine;
+
+
+// EXPORTS //
 
 export = dggsvp3;

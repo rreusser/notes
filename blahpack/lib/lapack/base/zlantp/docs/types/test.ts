@@ -23,79 +23,21 @@ import zlantp = require( './index' );
 
 // The function returns a number...
 {
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectType number
+	zlantp( 'no-transpose' ); // $ExpectType number
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a string...
 {
-	zlantp( 10, 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( true, 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( false, 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( null, 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( undefined, 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( [], 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( {}, 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a string...
-{
-	zlantp( 'no-transpose', 10, 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', true, 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', false, 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', null, 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', undefined, 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', [], 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', {}, 'no-transpose', 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a string...
-{
-	zlantp( 'no-transpose', 'no-transpose', 10, 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', true, 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', false, 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', null, 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', undefined, 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', [], 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', {}, 10, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', '10', new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', true, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', false, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', null, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', undefined, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', [], new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', {}, new Float64Array( 50 ), new Float64Array( 25 ) ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Complex128Array...
-{
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, '10', new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, true, new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, false, new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, null, new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, undefined, new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, [], new Float64Array( 25 ) ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, {}, new Float64Array( 25 ) ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a Float64Array...
-{
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), '10' ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), true ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), false ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), null ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), undefined ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), [] ); // $ExpectError
-	zlantp( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 50 ), {} ); // $ExpectError
+	zlantp( 10 ); // $ExpectError
+	zlantp( true ); // $ExpectError
+	zlantp( false ); // $ExpectError
+	zlantp( null ); // $ExpectError
+	zlantp( undefined ); // $ExpectError
+	zlantp( [] ); // $ExpectError
+	zlantp( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zlantp(); // $ExpectError
-	zlantp( 'no-transpose' ); // $ExpectError
 }

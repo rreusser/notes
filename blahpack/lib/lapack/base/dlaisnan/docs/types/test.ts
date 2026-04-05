@@ -23,33 +23,21 @@ import dlaisnan = require( './index' );
 
 // The function returns a number...
 {
-	dlaisnan( 10, 10 ); // $ExpectType number
+	dlaisnan( 10 ); // $ExpectType number
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dlaisnan( '10', 10 ); // $ExpectError
-	dlaisnan( true, 10 ); // $ExpectError
-	dlaisnan( false, 10 ); // $ExpectError
-	dlaisnan( null, 10 ); // $ExpectError
-	dlaisnan( undefined, 10 ); // $ExpectError
-	dlaisnan( [], 10 ); // $ExpectError
-	dlaisnan( {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	dlaisnan( 10, '10' ); // $ExpectError
-	dlaisnan( 10, true ); // $ExpectError
-	dlaisnan( 10, false ); // $ExpectError
-	dlaisnan( 10, null ); // $ExpectError
-	dlaisnan( 10, undefined ); // $ExpectError
-	dlaisnan( 10, [] ); // $ExpectError
-	dlaisnan( 10, {} ); // $ExpectError
+	dlaisnan( '10' ); // $ExpectError
+	dlaisnan( true ); // $ExpectError
+	dlaisnan( false ); // $ExpectError
+	dlaisnan( null ); // $ExpectError
+	dlaisnan( undefined ); // $ExpectError
+	dlaisnan( [] ); // $ExpectError
+	dlaisnan( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dlaisnan(); // $ExpectError
-	dlaisnan( 10 ); // $ExpectError
 }

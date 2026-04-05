@@ -23,126 +23,21 @@ import zlartg = require( './index' );
 
 // The function returns a void...
 {
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectType void
+	zlartg( 10 ); // $ExpectType void
 }
 
-// The compiler throws an error if the function is provided a first argument which is not a Complex128Array...
+// The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zlartg( '10', 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( 10, 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( true, 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( false, 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( null, 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( undefined, 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( [], 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( {}, 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	zlartg( new Float64Array( 50 ), '10', new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), true, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), false, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), null, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), undefined, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), [], new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), {}, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Complex128Array...
-{
-	zlartg( new Float64Array( 50 ), 10, '10', 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, 10, 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, true, 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, false, 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, null, 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, undefined, 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, [], 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, {}, 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), '10', new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), true, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), false, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), null, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), undefined, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), [], new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), {}, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Float64Array...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, '10', 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, 10, 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, true, 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, false, 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, null, 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, undefined, 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, [], 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, {}, 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), '10', new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), true, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), false, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), null, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), undefined, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), [], new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), {}, new Float64Array( 50 ), 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a Complex128Array...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, '10', 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, true, 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, false, 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, null, 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, undefined, 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, [], 10, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, {}, 10, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), '10', new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), true, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), false, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), null, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), undefined, new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), [], new Float64Array( 50 ), 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), {}, new Float64Array( 50 ), 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a Complex128Array...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, '10', 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, 10, 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, true, 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, false, 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, null, 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, undefined, 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, [], 10 ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), '10' ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), true ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), false ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), null ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), undefined ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), [] ); // $ExpectError
-	zlartg( new Float64Array( 50 ), 10, new Float64Array( 50 ), 10, new Float64Array( 25 ), 10, new Float64Array( 50 ), 10, new Float64Array( 50 ), {} ); // $ExpectError
+	zlartg( '10' ); // $ExpectError
+	zlartg( true ); // $ExpectError
+	zlartg( false ); // $ExpectError
+	zlartg( null ); // $ExpectError
+	zlartg( undefined ); // $ExpectError
+	zlartg( [] ); // $ExpectError
+	zlartg( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zlartg(); // $ExpectError
-	zlartg( new Float64Array( 50 ) ); // $ExpectError
 }

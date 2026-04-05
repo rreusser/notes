@@ -23,153 +23,20 @@ import dlags2 = require( './index' );
 
 // The function returns a void...
 {
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectType void
+	dlags2( true ); // $ExpectType void
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a boolean...
 {
-	dlags2( '10', 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( null, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( undefined, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( [], 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( {}, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	dlags2( true, '10', 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, false, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, null, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, undefined, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, [], 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, {}, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dlags2( true, 10, '10', 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, false, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, null, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, undefined, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, [], 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, {}, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dlags2( true, 10, 10, '10', 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, true, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, false, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, null, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, undefined, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, [], 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, {}, 10, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, '10', 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, true, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, false, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, null, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, undefined, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, [], 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, {}, 10, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, '10', 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, true, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, false, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, null, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, undefined, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, [], 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, {}, 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, '10', 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, true, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, false, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, null, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, undefined, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, [], 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, {}, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, 10, '10', 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, true, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, false, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, null, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, undefined, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, [], 10, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, {}, 10, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, '10', 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, true, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, false, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, null, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, undefined, 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, [], 10, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, {}, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, '10', 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, true, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, false, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, null, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, undefined, 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, [], 10, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, '10', 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, true, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, false, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, null, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, undefined, 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, [], 10, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, '10', 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, true, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, false, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, null, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, undefined, 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, [], 10 ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not a number...
-{
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, '10' ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, true ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, false ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, null ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, undefined ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, [] ); // $ExpectError
-	dlags2( true, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, {} ); // $ExpectError
+	dlags2( '10' ); // $ExpectError
+	dlags2( 10 ); // $ExpectError
+	dlags2( null ); // $ExpectError
+	dlags2( undefined ); // $ExpectError
+	dlags2( [] ); // $ExpectError
+	dlags2( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dlags2(); // $ExpectError
-	dlags2( true ); // $ExpectError
 }

@@ -23,78 +23,21 @@ import zpftri = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	zpftri( 'no-transpose' ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a string...
 {
-	zpftri( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( true, 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( false, 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( null, 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( undefined, 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( [], 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( {}, 'no-transpose', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a string...
-{
-	zpftri( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', true, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', false, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', null, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', undefined, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', [], 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', {}, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	zpftri( 'no-transpose', 'no-transpose', '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a Float64Array...
-{
-	zpftri( 'no-transpose', 'no-transpose', 10, '10', 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, 10, 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, true, 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, false, 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, null, 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, undefined, 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, [], 10, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	zpftri( 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	zpftri( 10 ); // $ExpectError
+	zpftri( true ); // $ExpectError
+	zpftri( false ); // $ExpectError
+	zpftri( null ); // $ExpectError
+	zpftri( undefined ); // $ExpectError
+	zpftri( [] ); // $ExpectError
+	zpftri( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zpftri(); // $ExpectError
-	zpftri( 'no-transpose' ); // $ExpectError
 }

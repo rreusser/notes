@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,32 +16,55 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlange
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlange`.
 */
 interface Routine {
 	/**
-	* Compute the value of a matrix norm
+	* Computes the value of a matrix norm for a complex matrix.
+	*
+	* @param order - storage layout
+	* @param norm - `norm`
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @returns result
 	*/
-	(
-		norm: string,
-		M: number,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number
-	): Float64Array;
+	( order: Layout, norm: string, M: number, N: number, A: Float64Array, LDA: number, WORK: Float64Array, strideWORK: number ): Float64Array;
+
+	/**
+	* Computes the value of a matrix norm for a complex matrix using alternative indexing semantics.
+	*
+	* @param norm - `norm`
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @returns result
+	*/
+	ndarray( norm: string, M: number, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, WORK: Float64Array, strideWORK: number, offsetWORK: number ): Float64Array;
 }
 
 /**
-* Compute the value of a matrix norm
+* Computes the value of a matrix norm for a complex matrix.
 */
 declare var zlange: Routine;
+
+
+// EXPORTS //
 
 export = zlange;

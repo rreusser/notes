@@ -23,56 +23,21 @@ import dlasq2 = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dlasq2( 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dlasq2( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dlasq2( '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dlasq2( true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dlasq2( false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dlasq2( null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dlasq2( undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dlasq2( [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dlasq2( {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a Float64Array...
-{
-	dlasq2( 10, '10', 10, 10 ); // $ExpectError
-	dlasq2( 10, 10, 10, 10 ); // $ExpectError
-	dlasq2( 10, true, 10, 10 ); // $ExpectError
-	dlasq2( 10, false, 10, 10 ); // $ExpectError
-	dlasq2( 10, null, 10, 10 ); // $ExpectError
-	dlasq2( 10, undefined, 10, 10 ); // $ExpectError
-	dlasq2( 10, [], 10, 10 ); // $ExpectError
-	dlasq2( 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dlasq2( 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dlasq2( 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	dlasq2( 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	dlasq2( '10' ); // $ExpectError
+	dlasq2( true ); // $ExpectError
+	dlasq2( false ); // $ExpectError
+	dlasq2( null ); // $ExpectError
+	dlasq2( undefined ); // $ExpectError
+	dlasq2( [] ); // $ExpectError
+	dlasq2( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dlasq2(); // $ExpectError
-	dlasq2( 10 ); // $ExpectError
 }

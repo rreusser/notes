@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,33 +16,58 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlascl
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlascl`.
 */
 interface Routine {
 	/**
-	* Multiply a matrix by a real scalar CTO/CFROM
+	* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
+	*
+	* @param order - storage layout
+	* @param type - `type`
+	* @param kl - number of subdiagonals
+	* @param ku - number of superdiagonals
+	* @param cfrom - `cfrom`
+	* @param cto - `cto`
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @returns result
 	*/
-	(
-		type: string,
-		kl: number,
-		ku: number,
-		cfrom: number,
-		cto: number,
-		M: number,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number
-	): Float64Array;
+	( order: Layout, type: number, kl: number, ku: number, cfrom: number, cto: number, M: number, N: number, A: Float64Array, LDA: number ): Float64Array;
+
+	/**
+	* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow using alternative indexing semantics.
+	*
+	* @param type - `type`
+	* @param kl - number of subdiagonals
+	* @param ku - number of superdiagonals
+	* @param cfrom - `cfrom`
+	* @param cto - `cto`
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @returns result
+	*/
+	ndarray( type: number, kl: number, ku: number, cfrom: number, cto: number, M: number, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number ): Float64Array;
 }
 
 /**
-* Multiply a matrix by a real scalar CTO/CFROM
+* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 */
 declare var zlascl: Routine;
+
+
+// EXPORTS //
 
 export = zlascl;

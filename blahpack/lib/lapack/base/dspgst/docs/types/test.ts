@@ -23,112 +23,21 @@ import dspgst = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dspgst( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dspgst( '10', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( true, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( false, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( null, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( undefined, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( [], 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( {}, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a string...
-{
-	dspgst( 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, true, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, false, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, null, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, undefined, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, [], 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, {}, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dspgst( 10, 'no-transpose', '10', new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', true, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', false, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', null, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', undefined, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', [], new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', {}, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a Float64Array...
-{
-	dspgst( 10, 'no-transpose', 10, '10', 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, 10, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, true, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, false, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, null, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, [], 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, {}, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a Float64Array...
-{
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	dspgst( 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	dspgst( '10' ); // $ExpectError
+	dspgst( true ); // $ExpectError
+	dspgst( false ); // $ExpectError
+	dspgst( null ); // $ExpectError
+	dspgst( undefined ); // $ExpectError
+	dspgst( [] ); // $ExpectError
+	dspgst( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dspgst(); // $ExpectError
-	dspgst( 10 ); // $ExpectError
 }

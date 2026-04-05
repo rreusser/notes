@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,28 +16,48 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/ilazlc
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `ilazlc`.
 */
 interface Routine {
 	/**
-	* Scan a complex matrix for its last non-zero column
+	* Scans a complex matrix for its last non-zero column.
+	*
+	* @param order - storage layout
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @returns result
 	*/
-	(
-		M: number,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number
-	): Float64Array;
+	( order: Layout, M: number, N: number, A: Float64Array, LDA: number ): Float64Array;
+
+	/**
+	* Scans a complex matrix for its last non-zero column using alternative indexing semantics.
+	*
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @returns result
+	*/
+	ndarray( M: number, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number ): Float64Array;
 }
 
 /**
-* Scan a complex matrix for its last non-zero column
+* Scans a complex matrix for its last non-zero column.
 */
 declare var ilazlc: Routine;
+
+
+// EXPORTS //
 
 export = ilazlc;

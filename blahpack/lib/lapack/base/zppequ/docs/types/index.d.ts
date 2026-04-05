@@ -1,31 +1,64 @@
+/*
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+// TypeScript Version: 4.1
 
-// TypeScript declarations for @stdlib/lapack/base/zppequ
+/// <reference types="@stdlib/types"/>
+
+import { MatrixTriangle } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zppequ`.
 */
 interface Routine {
 	/**
-	* Compute row and column scalings to equilibrate a complex Hermitian positive definite matrix in packed storage
+	* Computes row and column scalings intended to equilibrate a complex Hermitian positive definite matrix in packed storage and reduce its condition number.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param AP - `AP`
+	* @param s - `s`
+	* @returns result
 	*/
-	(
-		uplo: string,
-		N: number,
-		AP: Float64Array,
-		strideAP: number,
-		offsetAP: number,
-		s: Float64Array,
-		strideS: number,
-		offsetS: number,
-		scond: number,
-		amax: number
-	): Float64Array;
+	( uplo: MatrixTriangle, N: number, AP: Float64Array, s: Float64Array ): Float64Array;
+
+	/**
+	* Computes row and column scalings intended to equilibrate a complex Hermitian positive definite matrix in packed storage and reduce its condition number using alternative indexing semantics.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param AP - `AP`
+	* @param strideAP - stride of `AP`
+	* @param offsetAP - starting index for `AP`
+	* @param s - `s`
+	* @param strideS - stride of `S`
+	* @param offsetS - starting index for `S`
+	* @returns result
+	*/
+	ndarray( uplo: MatrixTriangle, N: number, AP: Float64Array, strideAP: number, offsetAP: number, s: Float64Array, strideS: number, offsetS: number ): Float64Array;
 }
 
 /**
-* Compute row and column scalings to equilibrate a complex Hermitian positive definite matrix in packed storage
+* Computes row and column scalings intended to equilibrate a complex Hermitian positive definite matrix in packed storage and reduce its condition number.
 */
 declare var zppequ: Routine;
+
+
+// EXPORTS //
 
 export = zppequ;

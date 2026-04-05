@@ -23,90 +23,21 @@ import dpttrf = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dpttrf( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dpttrf( '10', new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( true, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( false, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( null, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( undefined, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( [], new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( {}, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a Float64Array...
-{
-	dpttrf( 10, '10', 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, 10, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, true, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, false, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, null, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, [], 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, {}, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dpttrf( 10, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dpttrf( 10, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Float64Array...
-{
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	dpttrf( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	dpttrf( '10' ); // $ExpectError
+	dpttrf( true ); // $ExpectError
+	dpttrf( false ); // $ExpectError
+	dpttrf( null ); // $ExpectError
+	dpttrf( undefined ); // $ExpectError
+	dpttrf( [] ); // $ExpectError
+	dpttrf( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dpttrf(); // $ExpectError
-	dpttrf( 10 ); // $ExpectError
 }

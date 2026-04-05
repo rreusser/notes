@@ -23,180 +23,21 @@ import dlacn2 = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dlacn2( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dlacn2( '10', new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( true, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( false, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( null, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( undefined, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( [], new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( {}, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a Float64Array...
-{
-	dlacn2( 10, '10', 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, true, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, false, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, null, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, [], 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, {}, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Float64Array...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, '10', 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, true, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, false, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, null, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, [], 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, {}, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10', new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [], new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {}, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not an Int32Array...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, '10', 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, true, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, false, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, null, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, [], 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, {}, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), '10', 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), true, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), false, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), null, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), undefined, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), [], 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), {}, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, '10', 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, true, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, false, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, null, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, [], 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, {}, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, '10', 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, true, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, false, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, null, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, undefined, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, [], 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, {}, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, '10', new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, true, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, false, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, null, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, undefined, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, [], new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, {}, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not an Int32Array...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, '10', 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, true, 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, false, 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, null, 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, undefined, 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, [], 10, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourteenth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), '10', 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), true, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), false, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), null, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), undefined, 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), [], 10 ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifteenth argument which is not a number...
-{
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, '10' ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, true ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, false ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, null ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, undefined ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, [] ); // $ExpectError
-	dlacn2( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, {} ); // $ExpectError
+	dlacn2( '10' ); // $ExpectError
+	dlacn2( true ); // $ExpectError
+	dlacn2( false ); // $ExpectError
+	dlacn2( null ); // $ExpectError
+	dlacn2( undefined ); // $ExpectError
+	dlacn2( [] ); // $ExpectError
+	dlacn2( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dlacn2(); // $ExpectError
-	dlacn2( 10 ); // $ExpectError
 }

@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,35 +16,60 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/zgerc
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zgerc`.
 */
 interface Routine {
 	/**
-	* Perform the rank 1 operation A := alpha*x*y**H + A
+	* Perform the rank 1 operation A := alpha_x_y**H + A,.
+	*
+	* @param order - storage layout
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @returns result
 	*/
-	(
-		M: number,
-		N: number,
-		alpha: any,
-		x: Float64Array,
-		strideX: number,
-		offsetX: number,
-		y: Float64Array,
-		strideY: number,
-		offsetY: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number
-	): Float64Array;
+	( order: Layout, M: number, N: number, alpha: number, x: Float64Array, strideX: number, y: Float64Array, strideY: number, A: Float64Array, LDA: number ): Float64Array;
+
+	/**
+	* Perform the rank 1 operation A := alpha_x_y**H + A, using alternative indexing semantics.
+	*
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @param offsetY - starting index for `Y`
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @returns result
+	*/
+	ndarray( M: number, N: number, alpha: number, x: Float64Array, strideX: number, offsetX: number, y: Float64Array, strideY: number, offsetY: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number ): Float64Array;
 }
 
 /**
-* Perform the rank 1 operation A := alpha*x*y**H + A
+* Perform the rank 1 operation A := alpha_x_y**H + A,.
 */
 declare var zgerc: Routine;
+
+
+// EXPORTS //
 
 export = zgerc;

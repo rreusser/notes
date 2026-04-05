@@ -23,55 +23,21 @@ import zrotg = require( './index' );
 
 // The function returns a void...
 {
-	zrotg( 10, 10, 10, 10 ); // $ExpectType void
+	zrotg( 10 ); // $ExpectType void
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zrotg( '10', 10, 10, 10 ); // $ExpectError
-	zrotg( true, 10, 10, 10 ); // $ExpectError
-	zrotg( false, 10, 10, 10 ); // $ExpectError
-	zrotg( null, 10, 10, 10 ); // $ExpectError
-	zrotg( undefined, 10, 10, 10 ); // $ExpectError
-	zrotg( [], 10, 10, 10 ); // $ExpectError
-	zrotg( {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	zrotg( 10, '10', 10, 10 ); // $ExpectError
-	zrotg( 10, true, 10, 10 ); // $ExpectError
-	zrotg( 10, false, 10, 10 ); // $ExpectError
-	zrotg( 10, null, 10, 10 ); // $ExpectError
-	zrotg( 10, undefined, 10, 10 ); // $ExpectError
-	zrotg( 10, [], 10, 10 ); // $ExpectError
-	zrotg( 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	zrotg( 10, 10, '10', 10 ); // $ExpectError
-	zrotg( 10, 10, true, 10 ); // $ExpectError
-	zrotg( 10, 10, false, 10 ); // $ExpectError
-	zrotg( 10, 10, null, 10 ); // $ExpectError
-	zrotg( 10, 10, undefined, 10 ); // $ExpectError
-	zrotg( 10, 10, [], 10 ); // $ExpectError
-	zrotg( 10, 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zrotg( 10, 10, 10, '10' ); // $ExpectError
-	zrotg( 10, 10, 10, true ); // $ExpectError
-	zrotg( 10, 10, 10, false ); // $ExpectError
-	zrotg( 10, 10, 10, null ); // $ExpectError
-	zrotg( 10, 10, 10, undefined ); // $ExpectError
-	zrotg( 10, 10, 10, [] ); // $ExpectError
-	zrotg( 10, 10, 10, {} ); // $ExpectError
+	zrotg( '10' ); // $ExpectError
+	zrotg( true ); // $ExpectError
+	zrotg( false ); // $ExpectError
+	zrotg( null ); // $ExpectError
+	zrotg( undefined ); // $ExpectError
+	zrotg( [] ); // $ExpectError
+	zrotg( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zrotg(); // $ExpectError
-	zrotg( 10 ); // $ExpectError
 }

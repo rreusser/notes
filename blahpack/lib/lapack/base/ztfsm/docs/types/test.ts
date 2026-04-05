@@ -23,178 +23,21 @@ import ztfsm = require( './index' );
 
 // The function returns a Float64Array...
 {
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectType Float64Array
+	ztfsm( 'no-transpose' ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a string...
 {
-	ztfsm( 10, 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( true, 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( false, 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( null, 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( undefined, 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( [], 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( {}, 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a string...
-{
-	ztfsm( 'no-transpose', 10, 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', true, 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', false, 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', null, 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', undefined, 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', [], 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', {}, 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a string...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 10, 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', true, 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', false, 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', null, 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', undefined, 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', [], 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', {}, 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a string...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 10, 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', true, 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', false, 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', null, 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', undefined, 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', [], 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', {}, 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a string...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', true, 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', false, 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', null, 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', undefined, 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', [], 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', {}, 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', '10', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', true, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', false, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', null, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', undefined, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', [], 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', {}, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, '10', 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, true, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, false, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, null, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, undefined, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, [], 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, {}, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a Float64Array...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, '10', 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, true, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, false, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, null, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, undefined, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, [], 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, {}, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not a Float64Array...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, '10', 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, true, 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, false, 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, null, 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, undefined, 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, [], 10, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, {}, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourteenth argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10', 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined, 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [], 10, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifteenth argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, '10', 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, true, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, false, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, null, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, [], 10 ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixteenth argument which is not a number...
-{
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, '10' ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, true ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, false ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, null ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, undefined ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, [] ); // $ExpectError
-	ztfsm( 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, {} ); // $ExpectError
+	ztfsm( 10 ); // $ExpectError
+	ztfsm( true ); // $ExpectError
+	ztfsm( false ); // $ExpectError
+	ztfsm( null ); // $ExpectError
+	ztfsm( undefined ); // $ExpectError
+	ztfsm( [] ); // $ExpectError
+	ztfsm( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	ztfsm(); // $ExpectError
-	ztfsm( 'no-transpose' ); // $ExpectError
 }

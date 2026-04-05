@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,8 +16,57 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dlaswp
+// TypeScript Version: 4.1
 
-// TODO: Add type declarations
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
+
+/**
+* Interface describing `dlaswp`.
+*/
+interface Routine {
+	/**
+	* Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`.
+	*
+	* @param order - storage layout
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param k1 - `k1`
+	* @param k2 - `k2`
+	* @param IPIV - `IPIV`
+	* @param strideIPIV - stride of `IPIV`
+	* @param incx - `incx`
+	* @returns result
+	*/
+	( order: Layout, N: number, A: Float64Array, LDA: number, k1: number, k2: number, IPIV: Int32Array, strideIPIV: number, incx: number ): Float64Array;
+
+	/**
+	* Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV` using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param k1 - `k1`
+	* @param k2 - `k2`
+	* @param IPIV - `IPIV`
+	* @param strideIPIV - stride of `IPIV`
+	* @param offsetIPIV - starting index for `IPIV`
+	* @param incx - `incx`
+	* @returns result
+	*/
+	ndarray( N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, k1: number, k2: number, IPIV: Int32Array, strideIPIV: number, offsetIPIV: number, incx: number ): Float64Array;
+}
+
+/**
+* Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`.
+*/
+declare var dlaswp: Routine;
+
+
+// EXPORTS //
 
 export = dlaswp;

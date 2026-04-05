@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,25 +16,39 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dlapy3
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dlapy3`.
 */
 interface Routine {
 	/**
-	* Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+	* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
+	*
+	* @param x - `x`
+	* @param y - `y`
+	* @param z - `z`
+	* @returns result
 	*/
-	(
-		x: number,
-		y: number,
-		z: number
-	): number;
+	( x: number, y: number, z: number ): number;
+
+	/**
+	* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow using alternative indexing semantics.
+	*
+	* @param x - `x`
+	* @param y - `y`
+	* @param z - `z`
+	* @returns result
+	*/
+	ndarray( x: number, y: number, z: number ): number;
 }
 
 /**
-* Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 */
 declare var dlapy3: Routine;
+
+
+// EXPORTS //
 
 export = dlapy3;

@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,24 +16,45 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zladiv
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zladiv`.
 */
 interface Routine {
 	/**
-	* Perform complex division using dladiv
+	* Performs complex division: out = X / Y, where X and Y are complex.
+	*
+	* @param x - `x`
+	* @param offsetX - starting index for `X`
+	* @param y - `y`
+	* @param offsetY - starting index for `Y`
+	* @param out - `out`
+	* @param offsetOut - starting index for `Out`
+	* @returns result
 	*/
-	(
-		x: any,
-		y: any
-	): number;
+	( x: number, offsetX: number, y: number, offsetY: number, out: number, offsetOut: number ): number;
+
+	/**
+	* Performs complex division: out = X / Y, where X and Y are complex using alternative indexing semantics.
+	*
+	* @param x - `x`
+	* @param offsetX - starting index for `X`
+	* @param y - `y`
+	* @param offsetY - starting index for `Y`
+	* @param out - `out`
+	* @param offsetOut - starting index for `Out`
+	* @returns result
+	*/
+	ndarray( x: number, offsetX: number, y: number, offsetY: number, out: number, offsetOut: number ): number;
 }
 
 /**
-* Perform complex division using dladiv
+* Performs complex division: out = X / Y, where X and Y are complex.
 */
 declare var zladiv: Routine;
+
+
+// EXPORTS //
 
 export = zladiv;

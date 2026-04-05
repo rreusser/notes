@@ -23,7 +23,18 @@ import dcabs1 = require( './index' );
 
 // The function returns a number...
 {
-	dcabs1( 1.0 ); // $ExpectType number
+	dcabs1( 10 ); // $ExpectType number
+}
+
+// The compiler throws an error if the function is provided a first argument which is not a number...
+{
+	dcabs1( '10' ); // $ExpectError
+	dcabs1( true ); // $ExpectError
+	dcabs1( false ); // $ExpectError
+	dcabs1( null ); // $ExpectError
+	dcabs1( undefined ); // $ExpectError
+	dcabs1( [] ); // $ExpectError
+	dcabs1( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...

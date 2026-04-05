@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,37 +16,63 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlarft
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlarft`.
 */
 interface Routine {
 	/**
-	* Form the triangular factor T of a block reflector
+	* Form the triangular factor T of a complex block reflector H of order N,.
+	*
+	* @param order - storage layout
+	* @param direct - `direct`
+	* @param storev - `storev`
+	* @param N - number of columns
+	* @param K - inner dimension
+	* @param V - `V`
+	* @param LDV - leading dimension of `V`
+	* @param TAU - `TAU`
+	* @param strideTAU - stride of `TAU`
+	* @param T - `T`
+	* @param LDT - leading dimension of `T`
+	* @returns result
 	*/
-	(
-		direct: string,
-		storev: string,
-		N: number,
-		K: number,
-		V: Float64Array,
-		strideV1: number,
-		strideV2: number,
-		offsetV: number,
-		TAU: Float64Array,
-		strideTAU: number,
-		offsetTAU: number,
-		T: Float64Array,
-		strideT1: number,
-		strideT2: number,
-		offsetT: number
-	): Float64Array;
+	( order: Layout, direct: string, storev: string, N: number, K: number, V: Float64Array, LDV: number, TAU: Float64Array, strideTAU: number, T: Float64Array, LDT: number ): Float64Array;
+
+	/**
+	* Form the triangular factor T of a complex block reflector H of order N, using alternative indexing semantics.
+	*
+	* @param direct - `direct`
+	* @param storev - `storev`
+	* @param N - number of columns
+	* @param K - inner dimension
+	* @param V - `V`
+	* @param strideV1 - stride of `V`
+	* @param strideV2 - stride of `V`
+	* @param offsetV - starting index for `V`
+	* @param TAU - `TAU`
+	* @param strideTAU - stride of `TAU`
+	* @param offsetTAU - starting index for `TAU`
+	* @param T - `T`
+	* @param strideT1 - stride of `T`
+	* @param strideT2 - stride of `T`
+	* @param offsetT - starting index for `T`
+	* @returns result
+	*/
+	ndarray( direct: string, storev: string, N: number, K: number, V: Float64Array, strideV1: number, strideV2: number, offsetV: number, TAU: Float64Array, strideTAU: number, offsetTAU: number, T: Float64Array, strideT1: number, strideT2: number, offsetT: number ): Float64Array;
 }
 
 /**
-* Form the triangular factor T of a block reflector
+* Form the triangular factor T of a complex block reflector H of order N,.
 */
 declare var zlarft: Routine;
+
+
+// EXPORTS //
 
 export = zlarft;

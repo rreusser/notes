@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,28 +16,48 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlarfg
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlarfg`.
 */
 interface Routine {
 	/**
-	* Generate a complex Householder reflector
+	* Generate a complex elementary reflector H of order N, such that.
+	*
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param offsetAlpha - starting index for `Alpha`
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param tau - `tau`
+	* @param offsetTau - starting index for `Tau`
+	* @returns result
 	*/
-	(
-		N: number,
-		alpha: any,
-		x: Float64Array,
-		stride: number,
-		offset: number,
-		tau: any
-	): Float64Array;
+	( N: number, alpha: number, offsetAlpha: number, x: Float64Array, strideX: number, tau: number, offsetTau: number ): Float64Array;
+
+	/**
+	* Generate a complex elementary reflector H of order N, such that using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param offsetAlpha - starting index for `Alpha`
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param tau - `tau`
+	* @param offsetTau - starting index for `Tau`
+	* @returns result
+	*/
+	ndarray( N: number, alpha: number, offsetAlpha: number, x: Float64Array, strideX: number, offsetX: number, tau: number, offsetTau: number ): Float64Array;
 }
 
 /**
-* Generate a complex Householder reflector
+* Generate a complex elementary reflector H of order N, such that.
 */
 declare var zlarfg: Routine;
+
+
+// EXPORTS //
 
 export = zlarfg;

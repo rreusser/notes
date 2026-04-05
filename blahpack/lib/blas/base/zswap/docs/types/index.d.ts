@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,31 +16,45 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/zswap
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zswap`.
 */
 interface Routine {
 	/**
 	* Interchange two complex double-precision vectors.
+	*
+	* @param N - number of columns
+	* @param zx - `zx`
+	* @param strideX - stride of `X`
+	* @param zy - `zy`
+	* @param strideY - stride of `Y`
+	* @returns result
 	*/
-	(
-		N: number,
-		x: Float64Array,
-		strideX: number,
-		offsetX: number,
-		incx: number,
-		y: Float64Array,
-		strideY: number,
-		offsetY: number,
-		incy: number
-	): Float64Array;
+	( N: number, zx: number, strideX: number, zy: number, strideY: number ): Float64Array;
+
+	/**
+	* Interchange two complex double-precision vectors using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param zx - `zx`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param zy - `zy`
+	* @param strideY - stride of `Y`
+	* @param offsetY - starting index for `Y`
+	* @returns result
+	*/
+	ndarray( N: number, zx: number, strideX: number, offsetX: number, zy: number, strideY: number, offsetY: number ): Float64Array;
 }
 
 /**
 * Interchange two complex double-precision vectors.
 */
 declare var zswap: Routine;
+
+
+// EXPORTS //
 
 export = zswap;

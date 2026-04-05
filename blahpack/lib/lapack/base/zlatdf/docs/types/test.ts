@@ -23,202 +23,21 @@ import zlatdf = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	zlatdf( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zlatdf( '10', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( true, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( false, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( null, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( undefined, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( [], 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( {}, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	zlatdf( 10, '10', new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, true, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, false, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, null, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, undefined, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, [], new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, {}, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	zlatdf( 10, 10, '10', 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, true, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, false, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, null, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, undefined, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, [], 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, {}, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), '10', 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), true, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), false, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), null, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), undefined, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), [], 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), {}, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, '10', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, true, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, false, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, null, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, undefined, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, [], 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, {}, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, '10', new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, true, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, false, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, null, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, undefined, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, [], new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, {}, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a Float64Array...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, '10', 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, true, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, false, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, null, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, undefined, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, [], 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, {}, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), '10', 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), true, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), false, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), null, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), undefined, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), [], 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), {}, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, '10', 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, true, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, false, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, null, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, [], 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, {}, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, '10', 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, true, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, false, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, null, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, [], 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, {}, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, '10', new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, true, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, false, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, null, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, undefined, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, [], new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, {}, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not an Int32Array...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, '10', 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, true, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, false, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, null, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, [], 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, {}, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), '10', 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), true, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), false, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), null, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), undefined, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), [], 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), {}, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourteenth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, '10', new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, true, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, false, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, null, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, undefined, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, [], new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, {}, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifteenth argument which is not an Int32Array...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixteenth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), '10', 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), true, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), false, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), null, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), undefined, 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), [], 10 ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventeenth argument which is not a number...
-{
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, '10' ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, true ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, false ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, null ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, undefined ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, [] ); // $ExpectError
-	zlatdf( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, {} ); // $ExpectError
+	zlatdf( '10' ); // $ExpectError
+	zlatdf( true ); // $ExpectError
+	zlatdf( false ); // $ExpectError
+	zlatdf( null ); // $ExpectError
+	zlatdf( undefined ); // $ExpectError
+	zlatdf( [] ); // $ExpectError
+	zlatdf( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zlatdf(); // $ExpectError
-	zlatdf( 10 ); // $ExpectError
 }

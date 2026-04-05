@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,24 +16,37 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dlaisnan
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dlaisnan`.
 */
 interface Routine {
 	/**
-	* Test for NaN by comparing two arguments for inequality
+	* Tests for NaN by comparing two arguments for inequality.
+	*
+	* @param din1 - `din1`
+	* @param din2 - `din2`
+	* @returns result
 	*/
-	(
-		din1: number,
-		din2: number
-	): number;
+	( din1: number, din2: number ): number;
+
+	/**
+	* Tests for NaN by comparing two arguments for inequality using alternative indexing semantics.
+	*
+	* @param din1 - `din1`
+	* @param din2 - `din2`
+	* @returns result
+	*/
+	ndarray( din1: number, din2: number ): number;
 }
 
 /**
-* Test for NaN by comparing two arguments for inequality
+* Tests for NaN by comparing two arguments for inequality.
 */
 declare var dlaisnan: Routine;
+
+
+// EXPORTS //
 
 export = dlaisnan;

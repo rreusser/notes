@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,74 +16,53 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dlanhs
+// TypeScript Version: 4.1
 
-/**
-* Interface describing the ndarray method.
-*/
-interface NdarrayMethod {
-	/**
-	* Returns the value of the one norm, Frobenius norm, infinity norm, or the largest absolute value of a real upper Hessenberg matrix using alternative indexing semantics.
-	*
-	* @param norm - norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'
-	* @param N - order of the matrix
-	* @param A - upper Hessenberg matrix
-	* @param strideA1 - stride of the first dimension of A
-	* @param strideA2 - stride of the second dimension of A
-	* @param offsetA - starting index for A
-	* @param WORK - workspace array
-	* @param strideWORK - stride for WORK
-	* @param offsetWORK - starting index for WORK
-	* @returns matrix norm value
-	*/
-	(
-		norm: string,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number
-	): number;
-}
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
 * Interface describing `dlanhs`.
 */
 interface Routine {
 	/**
-	* Returns the value of the one norm, Frobenius norm, infinity norm, or the largest absolute value of a real upper Hessenberg matrix.
+	* @license Apache-2.0.
 	*
-	* @param order - storage layout ('row-major' or 'column-major')
-	* @param norm - norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'
-	* @param N - order of the matrix
-	* @param A - upper Hessenberg matrix
-	* @param LDA - leading dimension of A
-	* @param WORK - workspace array
-	* @param strideWORK - stride for WORK
-	* @returns matrix norm value
+	* @param order - storage layout
+	* @param norm - `norm`
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @returns result
 	*/
-	(
-		order: string,
-		norm: string,
-		N: number,
-		A: Float64Array,
-		LDA: number,
-		WORK: Float64Array,
-		strideWORK: number
-	): number;
+	( order: Layout, norm: string, N: number, A: Float64Array, LDA: number, WORK: Float64Array, strideWORK: number ): number;
 
 	/**
-	* Returns the value of the one norm, Frobenius norm, infinity norm, or the largest absolute value of a real upper Hessenberg matrix using alternative indexing semantics.
+	* @license Apache-2.0 using alternative indexing semantics.
+	*
+	* @param norm - `norm`
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @returns result
 	*/
-	ndarray: NdarrayMethod;
+	ndarray( norm: string, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, WORK: Float64Array, strideWORK: number, offsetWORK: number ): number;
 }
 
 /**
-* Returns the value of the one norm, Frobenius norm, infinity norm, or the largest absolute value of a real upper Hessenberg matrix.
+* @license Apache-2.0.
 */
 declare var dlanhs: Routine;
+
+
+// EXPORTS //
 
 export = dlanhs;

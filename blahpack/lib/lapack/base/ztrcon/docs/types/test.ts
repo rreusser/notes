@@ -23,179 +23,21 @@ import ztrcon = require( './index' );
 
 // The function returns a Float64Array...
 {
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	ztrcon( 10 ); // $ExpectType Float64Array
 }
 
-// The compiler throws an error if the function is provided a first argument which is not a string...
+// The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	ztrcon( 10, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( true, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( false, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( null, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( undefined, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( [], 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( {}, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a string...
-{
-	ztrcon( 'no-transpose', 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', true, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', false, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', null, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', undefined, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', [], 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', {}, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a string...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', true, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', false, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', null, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', undefined, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', [], 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', {}, 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', '10', new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', true, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', false, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', null, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', undefined, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', [], new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', {}, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Float64Array...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, '10', 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, true, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, false, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, null, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, undefined, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, [], 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, {}, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), '10', 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), true, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), false, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), null, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), undefined, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), [], 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), {}, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, '10', 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, true, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, false, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, null, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, [], 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, {}, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, '10', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, true, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, false, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, null, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, undefined, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, [], 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, {}, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, '10', new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, true, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, false, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, null, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, undefined, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, [], new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, {}, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a Float64Array...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, '10', 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, true, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, false, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, null, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, [], 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, {}, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not a Float64Array...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourteenth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifteenth argument which is not a number...
-{
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	ztrcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	ztrcon( '10' ); // $ExpectError
+	ztrcon( true ); // $ExpectError
+	ztrcon( false ); // $ExpectError
+	ztrcon( null ); // $ExpectError
+	ztrcon( undefined ); // $ExpectError
+	ztrcon( [] ); // $ExpectError
+	ztrcon( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	ztrcon(); // $ExpectError
-	ztrcon( 'no-transpose' ); // $ExpectError
 }

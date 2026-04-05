@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,23 +16,35 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/dcabs1
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dcabs1`.
 */
 interface Routine {
 	/**
-	* Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
+	* Computes the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
+	*
+	* @param z - `z`
+	* @returns result
 	*/
-	(
-		z: any
-	): number;
+	( z: number ): number;
+
+	/**
+	* Computes the sum of the absolute values of the real and imaginary parts of a double-precision complex number using alternative indexing semantics.
+	*
+	* @param z - `z`
+	* @returns result
+	*/
+	ndarray( z: number ): number;
 }
 
 /**
-* Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
+* Computes the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
 */
 declare var dcabs1: Routine;
+
+
+// EXPORTS //
 
 export = dcabs1;

@@ -23,55 +23,22 @@ import drotg = require( './index' );
 
 // The function returns a void...
 {
-	drotg( 10, 10, 10, 10 ); // $ExpectType void
+	drotg( new Float64Array( 25 ) ); // $ExpectType void
 }
 
-// The compiler throws an error if the function is provided a first argument which is not a number...
+// The compiler throws an error if the function is provided a first argument which is not a Float64Array...
 {
-	drotg( '10', 10, 10, 10 ); // $ExpectError
-	drotg( true, 10, 10, 10 ); // $ExpectError
-	drotg( false, 10, 10, 10 ); // $ExpectError
-	drotg( null, 10, 10, 10 ); // $ExpectError
-	drotg( undefined, 10, 10, 10 ); // $ExpectError
-	drotg( [], 10, 10, 10 ); // $ExpectError
-	drotg( {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	drotg( 10, '10', 10, 10 ); // $ExpectError
-	drotg( 10, true, 10, 10 ); // $ExpectError
-	drotg( 10, false, 10, 10 ); // $ExpectError
-	drotg( 10, null, 10, 10 ); // $ExpectError
-	drotg( 10, undefined, 10, 10 ); // $ExpectError
-	drotg( 10, [], 10, 10 ); // $ExpectError
-	drotg( 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	drotg( 10, 10, '10', 10 ); // $ExpectError
-	drotg( 10, 10, true, 10 ); // $ExpectError
-	drotg( 10, 10, false, 10 ); // $ExpectError
-	drotg( 10, 10, null, 10 ); // $ExpectError
-	drotg( 10, 10, undefined, 10 ); // $ExpectError
-	drotg( 10, 10, [], 10 ); // $ExpectError
-	drotg( 10, 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	drotg( 10, 10, 10, '10' ); // $ExpectError
-	drotg( 10, 10, 10, true ); // $ExpectError
-	drotg( 10, 10, 10, false ); // $ExpectError
-	drotg( 10, 10, 10, null ); // $ExpectError
-	drotg( 10, 10, 10, undefined ); // $ExpectError
-	drotg( 10, 10, 10, [] ); // $ExpectError
-	drotg( 10, 10, 10, {} ); // $ExpectError
+	drotg( '10' ); // $ExpectError
+	drotg( 10 ); // $ExpectError
+	drotg( true ); // $ExpectError
+	drotg( false ); // $ExpectError
+	drotg( null ); // $ExpectError
+	drotg( undefined ); // $ExpectError
+	drotg( [] ); // $ExpectError
+	drotg( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	drotg(); // $ExpectError
-	drotg( 10 ); // $ExpectError
 }

@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,37 +16,64 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/zgemv
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { TransposeOperation, Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zgemv`.
 */
 interface Routine {
 	/**
-	* Perform complex matrix-vector multiplication
+	* Perform one of the complex matrix-vector operations:.
+	*
+	* @param order - storage layout
+	* @param trans - specifies whether the matrix should be transposed
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param beta - scalar constant
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @returns result
 	*/
-	(
-		trans: string,
-		M: number,
-		N: number,
-		alpha: any,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		x: Float64Array,
-		strideX: number,
-		offsetX: number,
-		beta: any,
-		y: Float64Array,
-		strideY: number,
-		offsetY: number
-	): Float64Array;
+	( order: Layout, trans: TransposeOperation, M: number, N: number, alpha: number, A: Float64Array, LDA: number, x: Float64Array, strideX: number, beta: number, y: Float64Array, strideY: number ): Float64Array;
+
+	/**
+	* Perform one of the complex matrix-vector operations: using alternative indexing semantics.
+	*
+	* @param trans - specifies whether the matrix should be transposed
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param beta - scalar constant
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @param offsetY - starting index for `Y`
+	* @returns result
+	*/
+	ndarray( trans: TransposeOperation, M: number, N: number, alpha: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, x: Float64Array, strideX: number, offsetX: number, beta: number, y: Float64Array, strideY: number, offsetY: number ): Float64Array;
 }
 
 /**
-* Perform complex matrix-vector multiplication
+* Perform one of the complex matrix-vector operations:.
 */
 declare var zgemv: Routine;
+
+
+// EXPORTS //
 
 export = zgemv;

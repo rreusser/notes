@@ -23,101 +23,10 @@ import zsptrf = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectType Float64Array
-}
-
-// The compiler throws an error if the function is provided a first argument which is not a string...
-{
-	zsptrf( 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( true, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( false, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( null, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( undefined, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( [], 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( {}, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	zsptrf( 'no-transpose', '10', new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', true, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', false, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', null, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', undefined, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', [], new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', {}, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	zsptrf( 'no-transpose', 10, '10', 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, true, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, false, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, null, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, [], 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, {}, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), '10', 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), true, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), false, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), null, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), undefined, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), [], 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), {}, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, '10', new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, true, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, false, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, null, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, undefined, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, [], new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, {}, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not an Int32Array...
-{
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), '10', 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), true, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), false, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), null, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), undefined, 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), [], 10 ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, '10' ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, true ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, false ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, null ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, undefined ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, [] ); // $ExpectError
-	zsptrf( 'no-transpose', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, {} ); // $ExpectError
+	zsptrf( 0 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zsptrf(); // $ExpectError
-	zsptrf( 'no-transpose' ); // $ExpectError
 }

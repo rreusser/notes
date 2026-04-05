@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,34 +16,58 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zgeqr2
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zgeqr2`.
 */
 interface Routine {
 	/**
-	* Compute a QR factorization of a complex matrix (unblocked algorithm).
+	* Computes a QR factorization of a complex M-by-N matrix A = Q * R.
+	*
+	* @param order - storage layout
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param TAU - `TAU`
+	* @param strideTAU - stride of `TAU`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @returns result
 	*/
-	(
-		M: number,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		TAU: Float64Array,
-		strideTAU: number,
-		offsetTAU: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number
-	): Float64Array;
+	( order: Layout, M: number, N: number, A: Float64Array, LDA: number, TAU: Float64Array, strideTAU: number, WORK: Float64Array, strideWORK: number ): Float64Array;
+
+	/**
+	* Computes a QR factorization of a complex M-by-N matrix A = Q * R using alternative indexing semantics.
+	*
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param TAU - `TAU`
+	* @param strideTAU - stride of `TAU`
+	* @param offsetTAU - starting index for `TAU`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @returns result
+	*/
+	ndarray( M: number, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, TAU: Float64Array, strideTAU: number, offsetTAU: number, WORK: Float64Array, strideWORK: number, offsetWORK: number ): Float64Array;
 }
 
 /**
-* Compute a QR factorization of a complex matrix (unblocked algorithm).
+* Computes a QR factorization of a complex M-by-N matrix A = Q * R.
 */
 declare var zgeqr2: Routine;
+
+
+// EXPORTS //
 
 export = zgeqr2;

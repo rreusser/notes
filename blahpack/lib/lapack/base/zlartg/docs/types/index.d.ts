@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,45 +16,53 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlartg
-
-import { Complex128Array } from '@stdlib/types/array';
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlartg`.
 */
 interface Routine {
 	/**
-	* Generate a complex Givens plane rotation.
+	* Compute |re|^2 + |im|^2.
 	*
-	* @param f - first component (input only)
-	* @param offsetF - index offset for f (in complex elements)
-	* @param g - second component (input only)
-	* @param offsetG - index offset for g (in complex elements)
-	* @param c - on exit, the real cosine of the rotation
-	* @param offsetC - index offset for c
-	* @param s - on exit, the complex sine of the rotation
-	* @param offsetS - index offset for s (in complex elements)
-	* @param r - on exit, the complex result
-	* @param offsetR - index offset for r (in complex elements)
+	* @param f - `f`
+	* @param offsetF - starting index for `F`
+	* @param g - `g`
+	* @param offsetG - starting index for `G`
+	* @param c - `c`
+	* @param offsetC - starting index for `C`
+	* @param s - `s`
+	* @param offsetS - starting index for `S`
+	* @param r - `r`
+	* @param offsetR - starting index for `R`
+	* @returns result
 	*/
-	(
-		f: Complex128Array,
-		offsetF: number,
-		g: Complex128Array,
-		offsetG: number,
-		c: Float64Array,
-		offsetC: number,
-		s: Complex128Array,
-		offsetS: number,
-		r: Complex128Array,
-		offsetR: number
-	): void;
+	( f: number, offsetF: number, g: number, offsetG: number, c: number, offsetC: number, s: number, offsetS: number, r: number, offsetR: number ): void;
+
+	/**
+	* Compute |re|^2 + |im|^2 using alternative indexing semantics.
+	*
+	* @param f - `f`
+	* @param offsetF - starting index for `F`
+	* @param g - `g`
+	* @param offsetG - starting index for `G`
+	* @param c - `c`
+	* @param offsetC - starting index for `C`
+	* @param s - `s`
+	* @param offsetS - starting index for `S`
+	* @param r - `r`
+	* @param offsetR - starting index for `R`
+	* @returns result
+	*/
+	ndarray( f: number, offsetF: number, g: number, offsetG: number, c: number, offsetC: number, s: number, offsetS: number, r: number, offsetR: number ): void;
 }
 
 /**
-* Generate a complex Givens plane rotation.
+* Compute |re|^2 + |im|^2.
 */
 declare var zlartg: Routine;
+
+
+// EXPORTS //
 
 export = zlartg;

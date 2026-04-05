@@ -1,26 +1,55 @@
+/*
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-
-// TypeScript declarations for @stdlib/lapack/base/dzsum1
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dzsum1`.
 */
 interface Routine {
 	/**
-	* Sum of absolute values of a complex vector
+	* Takes the sum of the absolute values of a complex vector and returns a.
+	*
+	* @param N - number of columns
+	* @param CX - `CX`
+	* @param strideCX - stride of `CX`
+	* @returns result
 	*/
-	(
-		N: number,
-		x: Float64Array,
-		stride: number,
-		offset: number,
-		incx: number
-	): Float64Array;
+	( N: number, CX: Float64Array, strideCX: number ): Float64Array;
+
+	/**
+	* Takes the sum of the absolute values of a complex vector and returns a using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param CX - `CX`
+	* @param strideCX - stride of `CX`
+	* @param offsetCX - starting index for `CX`
+	* @returns result
+	*/
+	ndarray( N: number, CX: Float64Array, strideCX: number, offsetCX: number ): Float64Array;
 }
 
 /**
-* Sum of absolute values of a complex vector
+* Takes the sum of the absolute values of a complex vector and returns a.
 */
 declare var dzsum1: Routine;
+
+
+// EXPORTS //
 
 export = dzsum1;

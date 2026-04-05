@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,68 +16,55 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dlange
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { Layout } from '@stdlib/types/blas';
 
 /**
 * Interface describing `dlange`.
 */
 interface Routine {
 	/**
-	* Computes the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a real matrix.
+	* @license Apache-2.0.
 	*
 	* @param order - storage layout
-	* @param norm - norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'
+	* @param norm - `norm`
 	* @param M - number of rows
 	* @param N - number of columns
-	* @param A - input matrix
-	* @param LDA - leading dimension of A
-	* @param WORK - workspace array
-	* @param strideWORK - stride length for WORK
-	* @returns norm value
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @returns result
 	*/
-	(
-		order: string,
-		norm: string,
-		M: number,
-		N: number,
-		A: Float64Array,
-		LDA: number,
-		WORK: Float64Array,
-		strideWORK: number
-	): number;
+	( order: Layout, norm: string, M: number, N: number, A: Float64Array, LDA: number, WORK: Float64Array, strideWORK: number ): number;
 
 	/**
-	* Computes the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a real matrix using alternative indexing semantics.
+	* @license Apache-2.0 using alternative indexing semantics.
 	*
-	* @param norm - norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'
+	* @param norm - `norm`
 	* @param M - number of rows
 	* @param N - number of columns
-	* @param A - input matrix
-	* @param strideA1 - stride of the first dimension of A
-	* @param strideA2 - stride of the second dimension of A
-	* @param offsetA - starting index for A
-	* @param WORK - workspace array
-	* @param strideWORK - stride length for WORK
-	* @param offsetWORK - starting index for WORK
-	* @returns norm value
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @returns result
 	*/
-	ndarray(
-		norm: string,
-		M: number,
-		N: number,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number
-	): number;
+	ndarray( norm: string, M: number, N: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, WORK: Float64Array, strideWORK: number, offsetWORK: number ): number;
 }
 
 /**
-* Computes the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a real matrix.
+* @license Apache-2.0.
 */
 declare var dlange: Routine;
+
+
+// EXPORTS //
 
 export = dlange;

@@ -23,123 +23,21 @@ import dla_gerpvgrw = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectType Float64Array
+	dla_gerpvgrw( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dla_gerpvgrw( '10', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( true, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( false, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( null, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( undefined, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( [], 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( {}, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	dla_gerpvgrw( 10, '10', new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, true, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, false, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, null, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, undefined, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, [], new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, {}, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	dla_gerpvgrw( 10, 10, '10', 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, true, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, false, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, null, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, undefined, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, [], 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, {}, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), '10', 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), true, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), false, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), null, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), undefined, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), [], 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), {}, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, '10', 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, true, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, false, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, null, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, undefined, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, [], 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, {}, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, '10', new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, true, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, false, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, null, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, undefined, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, [], new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, {}, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a Float64Array...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, '10', 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, true, 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, false, 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, null, 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, undefined, 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, [], 10, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), '10', 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), true, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), false, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), null, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), undefined, 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), [], 10, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, '10', 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, true, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, false, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, null, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, undefined, 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, [], 10 ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, '10' ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, true ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, false ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, null ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, undefined ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, [] ); // $ExpectError
-	dla_gerpvgrw( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, {} ); // $ExpectError
+	dla_gerpvgrw( '10' ); // $ExpectError
+	dla_gerpvgrw( true ); // $ExpectError
+	dla_gerpvgrw( false ); // $ExpectError
+	dla_gerpvgrw( null ); // $ExpectError
+	dla_gerpvgrw( undefined ); // $ExpectError
+	dla_gerpvgrw( [] ); // $ExpectError
+	dla_gerpvgrw( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dla_gerpvgrw(); // $ExpectError
-	dla_gerpvgrw( 10 ); // $ExpectError
 }

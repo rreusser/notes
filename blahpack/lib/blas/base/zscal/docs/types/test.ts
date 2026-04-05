@@ -23,67 +23,21 @@ import zscal = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectType Float64Array
+	zscal( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zscal( '10', 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	zscal( true, 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	zscal( false, 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	zscal( null, 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	zscal( undefined, 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	zscal( [], 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	zscal( {}, 1.0, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	zscal( 10, 1.0, '10', 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, 10, 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, true, 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, false, 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, null, 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, undefined, 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, [], 10, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zscal( 10, 1.0, new Float64Array( 25 ), '10', 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), true, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), false, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), null, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), undefined, 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), [], 10, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, '10', 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, true, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, false, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, null, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, undefined, 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, [], 10 ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, '10' ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, true ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, false ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, null ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, undefined ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, [] ); // $ExpectError
-	zscal( 10, 1.0, new Float64Array( 25 ), 10, 10, {} ); // $ExpectError
+	zscal( '10' ); // $ExpectError
+	zscal( true ); // $ExpectError
+	zscal( false ); // $ExpectError
+	zscal( null ); // $ExpectError
+	zscal( undefined ); // $ExpectError
+	zscal( [] ); // $ExpectError
+	zscal( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zscal(); // $ExpectError
-	zscal( 10 ); // $ExpectError
 }

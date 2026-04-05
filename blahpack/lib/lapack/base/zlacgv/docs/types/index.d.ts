@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,26 +16,40 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlacgv
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlacgv`.
 */
 interface Routine {
 	/**
-	* Conjugate a complex vector in-place
+	* Conjugate a complex vector in-place.
+	*
+	* @param N - number of columns
+	* @param x - `x`
+	* @param stride - stride of ``
+	* @returns result
 	*/
-	(
-		N: number,
-		x: Float64Array,
-		stride: number,
-		offset: number
-	): Float64Array;
+	( N: number, x: number, stride: number ): Float64Array;
+
+	/**
+	* Conjugate a complex vector in-place using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param x - `x`
+	* @param stride - stride of ``
+	* @param offset - starting index for ``
+	* @returns result
+	*/
+	ndarray( N: number, x: number, stride: number, offset: number ): Float64Array;
 }
 
 /**
-* Conjugate a complex vector in-place
+* Conjugate a complex vector in-place.
 */
 declare var zlacgv: Routine;
+
+
+// EXPORTS //
 
 export = zlacgv;

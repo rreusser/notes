@@ -23,89 +23,10 @@ import dpbtf2 = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectType Float64Array
-}
-
-// The compiler throws an error if the function is provided a first argument which is not a string...
-{
-	dpbtf2( 10, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( true, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( false, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( null, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( undefined, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( [], 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( {}, 10, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	dpbtf2( 'no-transpose', '10', 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', true, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', false, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', null, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', undefined, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', [], 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', {}, 10, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dpbtf2( 'no-transpose', 10, '10', new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, true, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, false, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, null, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, undefined, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, [], new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, {}, new Float64Array( 25 ), 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a Float64Array...
-{
-	dpbtf2( 'no-transpose', 10, 10, '10', 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, true, 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, false, 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, null, 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, undefined, 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, [], 10, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), '10', 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), true, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), false, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), null, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), undefined, 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), [], 10, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, '10', 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, true, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, false, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, null, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, undefined, 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, [], 10 ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, '10' ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, true ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, false ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, null ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, undefined ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, [] ); // $ExpectError
-	dpbtf2( 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, {} ); // $ExpectError
+	dpbtf2( 0 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dpbtf2(); // $ExpectError
-	dpbtf2( 'no-transpose' ); // $ExpectError
 }

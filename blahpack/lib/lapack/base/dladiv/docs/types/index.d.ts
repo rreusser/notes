@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,28 +16,43 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dladiv
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dladiv`.
 */
 interface Routine {
 	/**
-	* Perform safe complex division in real arithmetic
+	* Internal helper: DLADIV2.
+	*
+	* @param a - `a`
+	* @param b - `b`
+	* @param c - `c`
+	* @param d - `d`
+	* @param out - `out`
+	* @returns result
 	*/
-	(
-		a: number,
-		b: number,
-		c: number,
-		d: number,
-		p: number,
-		q: number
-	): void;
+	( a: number, b: number, c: number, d: number, out: number ): void;
+
+	/**
+	* Internal helper: DLADIV2 using alternative indexing semantics.
+	*
+	* @param a - `a`
+	* @param b - `b`
+	* @param c - `c`
+	* @param d - `d`
+	* @param out - `out`
+	* @returns result
+	*/
+	ndarray( a: number, b: number, c: number, d: number, out: number ): void;
 }
 
 /**
-* Perform safe complex division in real arithmetic
+* Internal helper: DLADIV2.
 */
 declare var dladiv: Routine;
+
+
+// EXPORTS //
 
 export = dladiv;

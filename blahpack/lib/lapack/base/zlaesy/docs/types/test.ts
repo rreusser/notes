@@ -23,11 +23,21 @@ import zlaesy = require( './index' );
 
 // The function returns a void...
 {
-	zlaesy( 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 ); // $ExpectType void
+	zlaesy( 10 ); // $ExpectType void
+}
+
+// The compiler throws an error if the function is provided a first argument which is not a number...
+{
+	zlaesy( '10' ); // $ExpectError
+	zlaesy( true ); // $ExpectError
+	zlaesy( false ); // $ExpectError
+	zlaesy( null ); // $ExpectError
+	zlaesy( undefined ); // $ExpectError
+	zlaesy( [] ); // $ExpectError
+	zlaesy( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zlaesy(); // $ExpectError
-	zlaesy( 1.0 ); // $ExpectError
 }

@@ -1,60 +1,54 @@
-
-
-// TypeScript declarations for @stdlib/lapack/base/dlaev2
-
-/**
-* Result of dlaev2.
+/*
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
 */
-interface Dlaev2Result {
-	/**
-	* Eigenvalue of larger absolute value.
-	*/
-	rt1: number;
 
-	/**
-	* Eigenvalue of smaller absolute value.
-	*/
-	rt2: number;
-
-	/**
-	* Cosine of the rotation.
-	*/
-	cs1: number;
-
-	/**
-	* Sine of the rotation.
-	*/
-	sn1: number;
-}
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dlaev2`.
 */
 interface Routine {
 	/**
-	* Computes the eigendecomposition of a 2-by-2 symmetric matrix.
+	* @license Apache-2.0.
 	*
-	* @param a - (1,1) element of the 2-by-2 matrix
-	* @param b - (1,2) element of the 2-by-2 matrix
-	* @param c - (2,2) element of the 2-by-2 matrix
-	* @returns object with rt1, rt2, cs1, and sn1 properties
+	* @param a - `a`
+	* @param b - `b`
+	* @param c - `c`
+	* @returns result
 	*/
 	( a: number, b: number, c: number ): Dlaev2Result;
 
 	/**
-	* Computes the eigendecomposition of a 2-by-2 symmetric matrix (ndarray interface).
+	* @license Apache-2.0 using alternative indexing semantics.
 	*
-	* @param a - (1,1) element of the 2-by-2 matrix
-	* @param b - (1,2) element of the 2-by-2 matrix
-	* @param c - (2,2) element of the 2-by-2 matrix
-	* @returns object with rt1, rt2, cs1, and sn1 properties
+	* @param a - `a`
+	* @param b - `b`
+	* @param c - `c`
+	* @returns result
 	*/
 	ndarray( a: number, b: number, c: number ): Dlaev2Result;
 }
 
 /**
-* Computes the eigendecomposition of a 2-by-2 symmetric matrix.
+* @license Apache-2.0.
 */
 declare var dlaev2: Routine;
+
+
+// EXPORTS //
 
 export = dlaev2;

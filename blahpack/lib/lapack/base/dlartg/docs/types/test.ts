@@ -23,66 +23,21 @@ import dlartg = require( './index' );
 
 // The function returns a void...
 {
-	dlartg( 10, 10, 10, 10, 10 ); // $ExpectType void
+	dlartg( 10 ); // $ExpectType void
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dlartg( '10', 10, 10, 10, 10 ); // $ExpectError
-	dlartg( true, 10, 10, 10, 10 ); // $ExpectError
-	dlartg( false, 10, 10, 10, 10 ); // $ExpectError
-	dlartg( null, 10, 10, 10, 10 ); // $ExpectError
-	dlartg( undefined, 10, 10, 10, 10 ); // $ExpectError
-	dlartg( [], 10, 10, 10, 10 ); // $ExpectError
-	dlartg( {}, 10, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	dlartg( 10, '10', 10, 10, 10 ); // $ExpectError
-	dlartg( 10, true, 10, 10, 10 ); // $ExpectError
-	dlartg( 10, false, 10, 10, 10 ); // $ExpectError
-	dlartg( 10, null, 10, 10, 10 ); // $ExpectError
-	dlartg( 10, undefined, 10, 10, 10 ); // $ExpectError
-	dlartg( 10, [], 10, 10, 10 ); // $ExpectError
-	dlartg( 10, {}, 10, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dlartg( 10, 10, '10', 10, 10 ); // $ExpectError
-	dlartg( 10, 10, true, 10, 10 ); // $ExpectError
-	dlartg( 10, 10, false, 10, 10 ); // $ExpectError
-	dlartg( 10, 10, null, 10, 10 ); // $ExpectError
-	dlartg( 10, 10, undefined, 10, 10 ); // $ExpectError
-	dlartg( 10, 10, [], 10, 10 ); // $ExpectError
-	dlartg( 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dlartg( 10, 10, 10, '10', 10 ); // $ExpectError
-	dlartg( 10, 10, 10, true, 10 ); // $ExpectError
-	dlartg( 10, 10, 10, false, 10 ); // $ExpectError
-	dlartg( 10, 10, 10, null, 10 ); // $ExpectError
-	dlartg( 10, 10, 10, undefined, 10 ); // $ExpectError
-	dlartg( 10, 10, 10, [], 10 ); // $ExpectError
-	dlartg( 10, 10, 10, {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dlartg( 10, 10, 10, 10, '10' ); // $ExpectError
-	dlartg( 10, 10, 10, 10, true ); // $ExpectError
-	dlartg( 10, 10, 10, 10, false ); // $ExpectError
-	dlartg( 10, 10, 10, 10, null ); // $ExpectError
-	dlartg( 10, 10, 10, 10, undefined ); // $ExpectError
-	dlartg( 10, 10, 10, 10, [] ); // $ExpectError
-	dlartg( 10, 10, 10, 10, {} ); // $ExpectError
+	dlartg( '10' ); // $ExpectError
+	dlartg( true ); // $ExpectError
+	dlartg( false ); // $ExpectError
+	dlartg( null ); // $ExpectError
+	dlartg( undefined ); // $ExpectError
+	dlartg( [] ); // $ExpectError
+	dlartg( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dlartg(); // $ExpectError
-	dlartg( 10 ); // $ExpectError
 }

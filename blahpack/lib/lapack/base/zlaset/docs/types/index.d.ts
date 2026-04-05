@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,31 +16,54 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlaset
+// TypeScript Version: 4.1
+
+/// <reference types="@stdlib/types"/>
+
+import { MatrixTriangle, Layout } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlaset`.
 */
 interface Routine {
 	/**
-	* Initialize a complex matrix to given values
+	* Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
+	*
+	* @param order - storage layout
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param beta - scalar constant
+	* @param A - `A`
+	* @param LDA - leading dimension of `A`
+	* @returns result
 	*/
-	(
-		uplo: string,
-		M: number,
-		N: number,
-		alpha: any,
-		beta: any,
-		A: Float64Array,
-		strideA1: number,
-		strideA2: number,
-		offsetA: number
-	): Float64Array;
+	( order: Layout, uplo: MatrixTriangle, M: number, N: number, alpha: number, beta: number, A: Float64Array, LDA: number ): Float64Array;
+
+	/**
+	* Initializes a complex matrix to BETA on the diagonal and ALPHA on the using alternative indexing semantics.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param M - number of rows
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param beta - scalar constant
+	* @param A - `A`
+	* @param strideA1 - stride of `A`
+	* @param strideA2 - stride of `A`
+	* @param offsetA - starting index for `A`
+	* @returns result
+	*/
+	ndarray( uplo: MatrixTriangle, M: number, N: number, alpha: number, beta: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number ): Float64Array;
 }
 
 /**
-* Initialize a complex matrix to given values
+* Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 */
 declare var zlaset: Routine;
+
+
+// EXPORTS //
 
 export = zlaset;

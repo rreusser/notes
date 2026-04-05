@@ -23,135 +23,21 @@ import dgetc2 = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dgetc2( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dgetc2( '10', new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( true, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( false, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( null, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( undefined, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( [], new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( {}, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a Float64Array...
-{
-	dgetc2( 10, '10', 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, true, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, false, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, null, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, undefined, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, [], 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, {}, 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), '10', 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), true, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), false, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), null, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), undefined, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), [], 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), {}, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, '10', 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, true, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, false, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, null, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, undefined, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, [], 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, {}, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, '10', new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, true, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, false, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, null, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, undefined, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, [], new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, {}, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not an Int32Array...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, '10', 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, true, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, false, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, null, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, [], 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, {}, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), '10', 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), true, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), false, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), null, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), undefined, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), [], 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), {}, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, '10', new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, true, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, false, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, null, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, undefined, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, [], new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, {}, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not an Int32Array...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), '10', 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), true, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), false, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), null, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), undefined, 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), [], 10 ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, '10' ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, true ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, false ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, null ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, undefined ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, [] ); // $ExpectError
-	dgetc2( 10, new Float64Array( 25 ), 10, 10, 10, new Int32Array( 25 ), 10, 10, new Int32Array( 25 ), 10, {} ); // $ExpectError
+	dgetc2( '10' ); // $ExpectError
+	dgetc2( true ); // $ExpectError
+	dgetc2( false ); // $ExpectError
+	dgetc2( null ); // $ExpectError
+	dgetc2( undefined ); // $ExpectError
+	dgetc2( [] ); // $ExpectError
+	dgetc2( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dgetc2(); // $ExpectError
-	dgetc2( 10 ); // $ExpectError
 }

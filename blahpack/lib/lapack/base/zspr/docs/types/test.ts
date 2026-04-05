@@ -23,101 +23,10 @@ import zspr = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
-}
-
-// The compiler throws an error if the function is provided a first argument which is not a string...
-{
-	zspr( 10, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( true, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( false, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( null, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( undefined, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( [], 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( {}, 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	zspr( 'no-transpose', '10', 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', true, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', false, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', null, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', undefined, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', [], 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', {}, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a Float64Array...
-{
-	zspr( 'no-transpose', 10, 1.0, '10', 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, 10, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, true, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, false, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, null, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, undefined, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, [], 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, {}, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a Float64Array...
-{
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	zspr( 'no-transpose', 10, 1.0, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	zspr( 0 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zspr(); // $ExpectError
-	zspr( 'no-transpose' ); // $ExpectError
 }

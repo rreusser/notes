@@ -23,190 +23,21 @@ import zlaqge = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectType Float64Array
+	zlaqge( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zlaqge( '10', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( true, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( false, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( null, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( undefined, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( [], 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( {}, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a number...
-{
-	zlaqge( 10, '10', new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, true, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, false, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, null, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, undefined, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, [], new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, {}, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	zlaqge( 10, 10, '10', 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, true, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, false, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, null, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, undefined, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, [], 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, {}, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), '10', 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), true, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), false, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), null, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), undefined, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), [], 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), {}, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, '10', 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, true, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, false, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, null, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, undefined, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, [], 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, {}, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, '10', new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, true, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, false, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, null, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, undefined, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, [], new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, {}, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a Float64Array...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, '10', 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, true, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, false, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, null, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, [], 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, {}, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a Float64Array...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, '10', 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, true, 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, false, 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, null, 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, [], 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, {}, 10, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10', 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined, 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [], 10, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {}, 10, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, '10', 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, true, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, false, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, null, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, [], 10, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, {}, 10, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourteenth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, '10', 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, true, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, false, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, null, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, undefined, 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, [], 10, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, {}, 10, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifteenth argument which is not a number...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, '10', 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, true, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, false, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, null, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, undefined, 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, [], 'no-transpose' ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, {}, 'no-transpose' ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixteenth argument which is not a string...
-{
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10 ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, true ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, false ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, null ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, undefined ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, [] ); // $ExpectError
-	zlaqge( 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, {} ); // $ExpectError
+	zlaqge( '10' ); // $ExpectError
+	zlaqge( true ); // $ExpectError
+	zlaqge( false ); // $ExpectError
+	zlaqge( null ); // $ExpectError
+	zlaqge( undefined ); // $ExpectError
+	zlaqge( [] ); // $ExpectError
+	zlaqge( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zlaqge(); // $ExpectError
-	zlaqge( 10 ); // $ExpectError
 }

@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,28 +16,44 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zlassq
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zlassq`.
 */
 interface Routine {
 	/**
-	* Update a sum of squares represented in scaled form
+	* Updates a sum of squares represented in scaled form.
+	*
+	* @param N - number of columns
+	* @param x - `x`
+	* @param stride - stride of ``
+	* @param scale - `scale`
+	* @param sumsq - `sumsq`
+	* @returns result
 	*/
-	(
-		N: number,
-		x: Float64Array,
-		stride: number,
-		offset: number,
-		scale: number,
-		sumsq: number
-	): Float64Array;
+	( N: number, x: number, stride: number, scale: number, sumsq: number ): Float64Array;
+
+	/**
+	* Updates a sum of squares represented in scaled form using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param x - `x`
+	* @param stride - stride of ``
+	* @param offset - starting index for ``
+	* @param scale - `scale`
+	* @param sumsq - `sumsq`
+	* @returns result
+	*/
+	ndarray( N: number, x: number, stride: number, offset: number, scale: number, sumsq: number ): Float64Array;
 }
 
 /**
-* Update a sum of squares represented in scaled form
+* Updates a sum of squares represented in scaled form.
 */
 declare var zlassq: Routine;
+
+
+// EXPORTS //
 
 export = zlassq;

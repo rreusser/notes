@@ -23,168 +23,21 @@ import dtpcon = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dtpcon( 'no-transpose' ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a string...
 {
-	dtpcon( 10, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( true, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( false, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( null, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( undefined, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( [], 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( {}, 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a string...
-{
-	dtpcon( 'no-transpose', 10, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', true, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', false, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', null, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', undefined, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', [], 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', {}, 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a string...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 10, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', true, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', false, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', null, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', undefined, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', [], 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', {}, 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', '10', new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', true, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', false, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', null, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', undefined, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', [], new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', {}, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Float64Array...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, '10', 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, 10, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, true, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, false, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, null, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, undefined, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, [], 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, {}, 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), '10', 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), true, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), false, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), null, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), undefined, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), [], 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), {}, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, '10', 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, true, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, false, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, null, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, undefined, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, [], 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, {}, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eighth argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, '10', new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, true, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, false, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, null, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, undefined, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, [], new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, {}, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a ninth argument which is not a Float64Array...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, '10', 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, 10, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, true, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, false, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, null, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, undefined, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, [], 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, {}, 10, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a tenth argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), '10', 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), true, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), false, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), null, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), undefined, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), [], 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), {}, 10, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a eleventh argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, '10', new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, true, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, false, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, null, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, undefined, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, [], new Int32Array( 25 ), 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, {}, new Int32Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a twelfth argument which is not an Int32Array...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a thirteenth argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), '10', 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), true, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), false, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), null, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), undefined, 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), [], 10 ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourteenth argument which is not a number...
-{
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, '10' ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, true ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, false ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, null ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, undefined ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, [] ); // $ExpectError
-	dtpcon( 'no-transpose', 'no-transpose', 'no-transpose', 10, new Float64Array( 25 ), 10, 10, 10, new Float64Array( 25 ), 10, 10, new Int32Array( 25 ), 10, {} ); // $ExpectError
+	dtpcon( 10 ); // $ExpectError
+	dtpcon( true ); // $ExpectError
+	dtpcon( false ); // $ExpectError
+	dtpcon( null ); // $ExpectError
+	dtpcon( undefined ); // $ExpectError
+	dtpcon( [] ); // $ExpectError
+	dtpcon( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dtpcon(); // $ExpectError
-	dtpcon( 'no-transpose' ); // $ExpectError
 }

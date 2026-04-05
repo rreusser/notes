@@ -1,37 +1,76 @@
+/*
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+// TypeScript Version: 4.1
 
-// TypeScript declarations for @stdlib/lapack/base/dspcon
+/// <reference types="@stdlib/types"/>
+
+import { MatrixTriangle } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `dspcon`.
 */
 interface Routine {
 	/**
-	* Estimates the reciprocal of the condition number of a real symmetric matrix in packed storage.
+	* Estimates the reciprocal condition number of a real symmetric packed matrix.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param AP - `AP`
+	* @param IPIV - `IPIV`
+	* @param anorm - `anorm`
+	* @param rcond - `rcond`
+	* @param WORK - `WORK`
+	* @param IWORK - `IWORK`
+	* @returns result
 	*/
-	(
-		uplo: string,
-		N: number,
-		AP: Float64Array,
-		strideAP: number,
-		offsetAP: number,
-		IPIV: Int32Array,
-		strideIPIV: number,
-		offsetIPIV: number,
-		anorm: number,
-		rcond: number,
-		WORK: Float64Array,
-		strideWORK: number,
-		offsetWORK: number,
-		IWORK: Int32Array,
-		strideIWORK: number,
-		offsetIWORK: number
-	): Float64Array;
+	( uplo: MatrixTriangle, N: number, AP: Float64Array, IPIV: Int32Array, anorm: number, rcond: number, WORK: Float64Array, IWORK: Int32Array ): Float64Array;
+
+	/**
+	* Estimates the reciprocal condition number of a real symmetric packed matrix using alternative indexing semantics.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param AP - `AP`
+	* @param strideAP - stride of `AP`
+	* @param offsetAP - starting index for `AP`
+	* @param IPIV - `IPIV`
+	* @param strideIPIV - stride of `IPIV`
+	* @param offsetIPIV - starting index for `IPIV`
+	* @param anorm - `anorm`
+	* @param rcond - `rcond`
+	* @param WORK - `WORK`
+	* @param strideWORK - stride of `WORK`
+	* @param offsetWORK - starting index for `WORK`
+	* @param IWORK - `IWORK`
+	* @param strideIWORK - stride of `IWORK`
+	* @param offsetIWORK - starting index for `IWORK`
+	* @returns result
+	*/
+	ndarray( uplo: MatrixTriangle, N: number, AP: Float64Array, strideAP: number, offsetAP: number, IPIV: Int32Array, strideIPIV: number, offsetIPIV: number, anorm: number, rcond: number, WORK: Float64Array, strideWORK: number, offsetWORK: number, IWORK: Int32Array, strideIWORK: number, offsetIWORK: number ): Float64Array;
 }
 
 /**
-* Estimates the reciprocal of the condition number of a real symmetric matrix in packed storage.
+* Estimates the reciprocal condition number of a real symmetric packed matrix.
 */
 declare var dspcon: Routine;
+
+
+// EXPORTS //
 
 export = dspcon;

@@ -1,26 +1,60 @@
+/*
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+// TypeScript Version: 4.1
 
-// TypeScript declarations for @stdlib/lapack/base/zpptri
+/// <reference types="@stdlib/types"/>
+
+import { MatrixTriangle } from '@stdlib/types/blas';
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zpptri`.
 */
 interface Routine {
 	/**
 	* Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param AP - `AP`
+	* @returns result
 	*/
-	(
-		uplo: string,
-		N: number,
-		AP: Float64Array,
-		stride: number,
-		offset: number
-	): Float64Array;
+	( uplo: MatrixTriangle, N: number, AP: number ): Float64Array;
+
+	/**
+	* Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization using alternative indexing semantics.
+	*
+	* @param uplo - specifies whether the upper or lower triangular part is referenced
+	* @param N - number of columns
+	* @param AP - `AP`
+	* @param stride - stride of ``
+	* @param offset - starting index for ``
+	* @returns result
+	*/
+	ndarray( uplo: MatrixTriangle, N: number, AP: number, stride: number, offset: number ): Float64Array;
 }
 
 /**
 * Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization.
 */
 declare var zpptri: Routine;
+
+
+// EXPORTS //
 
 export = zpptri;

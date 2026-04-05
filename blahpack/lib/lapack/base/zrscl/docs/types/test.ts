@@ -23,56 +23,21 @@ import zrscl = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	zrscl( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zrscl( '10', 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zrscl( true, 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zrscl( false, 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zrscl( null, 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zrscl( undefined, 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zrscl( [], 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	zrscl( {}, 1.0, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	zrscl( 10, 1.0, '10', 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, 10, 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, true, 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, false, 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, null, 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, undefined, 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, [], 10, 10 ); // $ExpectError
-	zrscl( 10, 1.0, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zrscl( 10, 1.0, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, true ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, false ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, null ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	zrscl( 10, 1.0, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	zrscl( '10' ); // $ExpectError
+	zrscl( true ); // $ExpectError
+	zrscl( false ); // $ExpectError
+	zrscl( null ); // $ExpectError
+	zrscl( undefined ); // $ExpectError
+	zrscl( [] ); // $ExpectError
+	zrscl( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zrscl(); // $ExpectError
-	zrscl( 10 ); // $ExpectError
 }

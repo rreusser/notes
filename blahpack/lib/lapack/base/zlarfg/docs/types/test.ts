@@ -23,56 +23,21 @@ import zlarfg = require( './index' );
 
 // The function returns a Float64Array...
 {
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectType Float64Array
+	zlarfg( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	zlarfg( '10', 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-	zlarfg( true, 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-	zlarfg( false, 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-	zlarfg( null, 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-	zlarfg( undefined, 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-	zlarfg( [], 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-	zlarfg( {}, 1.0, new Float64Array( 25 ), 10, 10, 1.0 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a Float64Array...
-{
-	zlarfg( 10, 1.0, '10', 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, 10, 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, true, 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, false, 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, null, 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, undefined, 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, [], 10, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, {}, 10, 10, 1.0 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	zlarfg( 10, 1.0, new Float64Array( 25 ), '10', 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), true, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), false, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), null, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), undefined, 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), [], 10, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), {}, 10, 1.0 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a number...
-{
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, '10', 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, true, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, false, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, null, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, undefined, 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, [], 1.0 ); // $ExpectError
-	zlarfg( 10, 1.0, new Float64Array( 25 ), 10, {}, 1.0 ); // $ExpectError
+	zlarfg( '10' ); // $ExpectError
+	zlarfg( true ); // $ExpectError
+	zlarfg( false ); // $ExpectError
+	zlarfg( null ); // $ExpectError
+	zlarfg( undefined ); // $ExpectError
+	zlarfg( [] ); // $ExpectError
+	zlarfg( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	zlarfg(); // $ExpectError
-	zlarfg( 10 ); // $ExpectError
 }

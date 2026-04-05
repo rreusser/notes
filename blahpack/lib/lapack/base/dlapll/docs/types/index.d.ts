@@ -16,43 +16,47 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/dlapll
+// TypeScript Version: 4.1
 
 /**
 * Interface describing `dlapll`.
 */
 interface Routine {
 	/**
-	* Measures the linear dependence of two vectors X and Y by computing the
-	* smallest singular value of the N-by-2 matrix A = ( X Y ).
+	* @license Apache-2.0.
 	*
-	* @param N - length of the vectors
-	* @param x - first input vector (overwritten on exit)
-	* @param strideX - stride for x
-	* @param y - second input vector (overwritten on exit)
-	* @param strideY - stride for y
-	* @param ssmin - output array; on exit, ssmin[0] contains the smallest singular value
+	* @param N - number of columns
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @param ssmin - `ssmin`
+	* @returns result
 	*/
-	( N: number, x: Float64Array, strideX: number, y: Float64Array, strideY: number, ssmin: Float64Array ): void;
+	( N: number, x: Float64Array, strideX: number, y: Float64Array, strideY: number, ssmin: number ): void;
 
 	/**
-	* Measures the linear dependence of two vectors using alternative indexing semantics.
+	* @license Apache-2.0 using alternative indexing semantics.
 	*
-	* @param N - length of the vectors
-	* @param x - first input vector (overwritten on exit)
-	* @param strideX - stride for x
-	* @param offsetX - starting index for x
-	* @param y - second input vector (overwritten on exit)
-	* @param strideY - stride for y
-	* @param offsetY - starting index for y
-	* @param ssmin - output array; on exit, ssmin[0] contains the smallest singular value
+	* @param N - number of columns
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @param offsetY - starting index for `Y`
+	* @param ssmin - `ssmin`
+	* @returns result
 	*/
-	ndarray( N: number, x: Float64Array, strideX: number, offsetX: number, y: Float64Array, strideY: number, offsetY: number, ssmin: Float64Array ): void;
+	ndarray( N: number, x: Float64Array, strideX: number, offsetX: number, y: Float64Array, strideY: number, offsetY: number, ssmin: number ): void;
 }
 
 /**
-* Measures the linear dependence of two vectors.
+* @license Apache-2.0.
 */
 declare var dlapll: Routine;
+
+
+// EXPORTS //
 
 export = dlapll;

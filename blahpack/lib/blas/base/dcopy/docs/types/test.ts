@@ -23,90 +23,21 @@ import dcopy = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectType Float64Array
+	dcopy( 10 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided a first argument which is not a number...
 {
-	dcopy( '10', new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( true, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( false, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( null, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( undefined, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( [], new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( {}, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a second argument which is not a Float64Array...
-{
-	dcopy( 10, '10', 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, 10, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, true, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, false, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, null, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, undefined, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, [], 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, {}, 10, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a third argument which is not a number...
-{
-	dcopy( 10, new Float64Array( 25 ), '10', 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), true, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), false, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), null, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), undefined, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), [], 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), {}, 10, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fourth argument which is not a number...
-{
-	dcopy( 10, new Float64Array( 25 ), 10, '10', new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, true, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, false, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, null, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, undefined, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, [], new Float64Array( 25 ), 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, {}, new Float64Array( 25 ), 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a fifth argument which is not a Float64Array...
-{
-	dcopy( 10, new Float64Array( 25 ), 10, 10, '10', 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, 10, 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, true, 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, false, 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, null, 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, undefined, 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, [], 10, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, {}, 10, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a sixth argument which is not a number...
-{
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), '10', 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), true, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), false, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), null, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), undefined, 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), [], 10 ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), {}, 10 ); // $ExpectError
-}
-
-// The compiler throws an error if the function is provided a seventh argument which is not a number...
-{
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, '10' ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, true ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, false ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, null ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, undefined ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, [] ); // $ExpectError
-	dcopy( 10, new Float64Array( 25 ), 10, 10, new Float64Array( 25 ), 10, {} ); // $ExpectError
+	dcopy( '10' ); // $ExpectError
+	dcopy( true ); // $ExpectError
+	dcopy( false ); // $ExpectError
+	dcopy( null ); // $ExpectError
+	dcopy( undefined ); // $ExpectError
+	dcopy( [] ); // $ExpectError
+	dcopy( {} ); // $ExpectError
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dcopy(); // $ExpectError
-	dcopy( 10 ); // $ExpectError
 }

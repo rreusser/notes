@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,33 +16,49 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/lapack/base/zrot
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `zrot`.
 */
 interface Routine {
 	/**
-	* Apply a complex Givens plane rotation
+	* Applies a plane rotation, where the cos (C) is real and the sin (S) is.
+	*
+	* @param N - number of columns
+	* @param cx - `cx`
+	* @param strideX - stride of `X`
+	* @param cy - `cy`
+	* @param strideY - stride of `Y`
+	* @param c - `c`
+	* @param s - `s`
+	* @returns result
 	*/
-	(
-		N: number,
-		x: Float64Array,
-		strideX: number,
-		offsetX: number,
-		incx: number,
-		y: Float64Array,
-		strideY: number,
-		offsetY: number,
-		incy: number,
-		c: number,
-		s: any
-	): Float64Array;
+	( N: number, cx: number, strideX: number, cy: number, strideY: number, c: number, s: number ): Float64Array;
+
+	/**
+	* Applies a plane rotation, where the cos (C) is real and the sin (S) is using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param cx - `cx`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param cy - `cy`
+	* @param strideY - stride of `Y`
+	* @param offsetY - starting index for `Y`
+	* @param c - `c`
+	* @param s - `s`
+	* @returns result
+	*/
+	ndarray( N: number, cx: number, strideX: number, offsetX: number, cy: number, strideY: number, offsetY: number, c: number, s: number ): Float64Array;
 }
 
 /**
-* Apply a complex Givens plane rotation
+* Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 */
 declare var zrot: Routine;
+
+
+// EXPORTS //
 
 export = zrot;

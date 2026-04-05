@@ -1,4 +1,4 @@
-/**
+/*
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
@@ -16,30 +16,47 @@
 * limitations under the License.
 */
 
-// TypeScript declarations for @stdlib/blas/base/daxpy
+// TypeScript Version: 4.1
 
 /**
-* Interface describing the ndarray API.
+* Interface describing `daxpy`.
 */
 interface Routine {
 	/**
-	* Multiply a vector x by a constant and add the result to y.
+	* Multiplies a vector `x` by a constant `alpha` and adds the result to `y`.
+	*
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @returns result
 	*/
-	(
-		N: number,
-		alpha: number,
-		x: Float64Array,
-		strideX: number,
-		offsetX: number,
-		y: Float64Array,
-		strideY: number,
-		offsetY: number
-	): Float64Array;
+	( N: number, alpha: number, x: Float64Array, strideX: number, y: Float64Array, strideY: number ): Float64Array;
+
+	/**
+	* Multiplies a vector `x` by a constant `alpha` and adds the result to `y` using alternative indexing semantics.
+	*
+	* @param N - number of columns
+	* @param alpha - scalar constant
+	* @param x - `x`
+	* @param strideX - stride of `X`
+	* @param offsetX - starting index for `X`
+	* @param y - `y`
+	* @param strideY - stride of `Y`
+	* @param offsetY - starting index for `Y`
+	* @returns result
+	*/
+	ndarray( N: number, alpha: number, x: Float64Array, strideX: number, offsetX: number, y: Float64Array, strideY: number, offsetY: number ): Float64Array;
 }
 
 /**
-* Multiply a vector x by a constant and add the result to y.
+* Multiplies a vector `x` by a constant `alpha` and adds the result to `y`.
 */
 declare var daxpy: Routine;
+
+
+// EXPORTS //
 
 export = daxpy;
