@@ -138,15 +138,25 @@ python bin/init_routine.py <package> <routine> -d "<one-line description>"
 ```
 
 This single command:
-- Generates the complete stdlib-js module scaffold (package.json, index.js, etc.)
-- ndarray.js is generated WITH validation for string params (uplo, trans, diag, side)
+- Generates the complete stdlib-js module scaffold (16 files):
+  - `lib/base.js` (stub), `lib/ndarray.js` (with stdlib string validation),
+    `lib/<routine>.js` (layout wrapper with isLayout, dimension, LD validation),
+    `lib/main.js`, `lib/index.js`
+  - `test/test.js` (export checks), `test/test.<routine>.js` (layout validation tests),
+    `test/test.ndarray.js` (scaffold for computation tests)
+  - `benchmark/benchmark.js`, `benchmark/benchmark.ndarray.js`
+  - `docs/types/index.d.ts` (dual signatures), `docs/types/test.ts`
+  - `docs/repl.txt`, `README.md`, `examples/index.js`, `package.json` (with keywords)
+  - `LEARNINGS.md`
 - Auto-generates the Fortran deps file from the dependency tree
 - Generates a JS test scaffold if a fixture already exists
 - Prints a summary with the exact commands for remaining steps
 
-After scaffolding, verify that ndarray.js has validation (grep for `throw new TypeError`).
-If the routine has string params not covered by stdlib validators (job, norm, compq, etc.),
-add manual whitelist validation to ndarray.js before proceeding.
+After scaffolding, if the routine has string params not covered by stdlib
+validators (job, norm, compq, vect, range, fact, etc.), add manual whitelist
+validation to **both** `ndarray.js` and `<routine>.js`. Discover accepted
+values from the Fortran source and use descriptive long-form strings (see
+the string convention table below).
 
 ### Step 2: Write the Fortran test
 
@@ -296,11 +306,13 @@ backward `GO TO` → `while`/`do-while`, forward `GO TO` → `if/else`.
 
 ### Step 5: Fill in JS tests and verify
 
-Fill in the test stubs generated in Step 3 with actual input values
-matching the Fortran test. Run:
+Fill in `test/test.ndarray.js` with actual computation tests using fixture
+data from Step 3. The scaffold already has `test/test.js` (export checks) and
+`test/test.<routine>.js` (layout wrapper validation) — those should work
+without modification. Run all three:
 
 ```bash
-node --test lib/<package>/base/<routine>/test/test.js 2>&1 | tail -20
+node --test lib/<package>/base/<routine>/test/test.js lib/<package>/base/<routine>/test/test.<routine>.js lib/<package>/base/<routine>/test/test.ndarray.js 2>&1 | tail -20
 ```
 
 **Testing pitfalls (from experience):**
@@ -344,7 +356,7 @@ scaffold `assert.fail('TODO:...')` remnants automatically during linting.
 ### Step 6: Verify test coverage
 
 ```bash
-node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js 2>&1 | tail -30
+node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js lib/<package>/base/<routine>/test/test.<routine>.js lib/<package>/base/<routine>/test/test.ndarray.js 2>&1 | tail -30
 ```
 
 Target: **≥90% line coverage, ≥85% branch coverage** on `base.js`.

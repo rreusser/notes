@@ -105,19 +105,26 @@ Float64 indexing internally.
 
 ---
 
-## 4. ndarray.js validates string parameters
+## 4. Validation layers (routine.js, ndarray.js)
 
-Every string parameter must be validated using stdlib assertion helpers.
-See [docs/ndarray-conformance.md](ndarray-conformance.md) for the full spec.
+The gate's **conventions** check validates the full call chain:
 
 ```bash
-# Check that validators are imported and used
-grep "isMatrixTriangle\|isTransposeOperation\|isDiagonalType\|isOperationSide" \
-  lib/<pkg>/base/<routine>/lib/ndarray.js
-
-# Check that TypeError is thrown for invalid strings
-grep "throw new TypeError" lib/<pkg>/base/<routine>/lib/ndarray.js
+node bin/gate.js lib/<pkg>/base/<routine> --check conventions
 ```
+
+**`<routine>.js` (layout wrapper) must validate:**
+- `order` (isLayout)
+- String params: uplo, trans, side, diag (stdlib validators), plus nonstandard
+  params like job, norm, compq, vect, range, fact (manual whitelist checks)
+- Dimensions: M, N, K >= 0
+- Leading dimensions: LDA >= max(1, N) etc.
+
+**`ndarray.js` must validate:**
+- String params (same as routine.js, minus order)
+- For BLAS L2/L3: stride != 0 checks
+
+**`base.js` must NOT validate** — it's the hot-path computation kernel.
 
 ---
 
@@ -184,22 +191,31 @@ protection, complex square root.
 
 ---
 
-## 8. Test coverage meets thresholds
+## 8. Test file structure and coverage
+
+Tests must be split into three files:
+- `test/test.js` — export/arity checks (requires `./../lib`)
+- `test/test.<routine>.js` — layout wrapper validation (requires `./../lib/<routine>.js`)
+- `test/test.ndarray.js` — computation tests via base.js (requires `./../lib/base.js`)
 
 ```bash
-node --test --experimental-test-coverage lib/<pkg>/base/<routine>/test/test.js
+# Run all test files
+node --test lib/<pkg>/base/<routine>/test/test.js lib/<pkg>/base/<routine>/test/test.<routine>.js lib/<pkg>/base/<routine>/test/test.ndarray.js
+
+# Coverage
+node --test --experimental-test-coverage lib/<pkg>/base/<routine>/test/test.js lib/<pkg>/base/<routine>/test/test.<routine>.js lib/<pkg>/base/<routine>/test/test.ndarray.js 2>&1 | tail -30
 ```
 
 Targets: **≥90% line coverage, ≥85% branch coverage** on base.js.
 
-Verify the test file has substantive assertions:
+Verify test.ndarray.js has substantive assertions:
 
 ```bash
 # Count real test cases (not just scaffold type checks)
-grep -c "^test(" lib/<pkg>/base/<routine>/test/test.js
+grep -c "^test(" lib/<pkg>/base/<routine>/test/test.ndarray.js
 
 # Verify no scaffold stubs remain
-grep "assert.fail\|TODO.*implement" lib/<pkg>/base/<routine>/test/test.js
+grep "assert.fail\|TODO.*implement" lib/<pkg>/base/<routine>/test/test.ndarray.js
 ```
 
 ---
@@ -312,7 +328,18 @@ helper. Throw `TypeError` with `format()` on invalid values.
 | `diag` | `isDiagonalType` | `'unit'`, `'non-unit'` |
 
 For parameters without a stdlib helper (`direct`, `storev`, `job`, `vect`,
-`norm`, `compz`, etc.), validate manually with a whitelist check.
+`norm`, `compz`, `range`, `fact`, `equed`, `jobz`, `transr`, etc.), validate
+manually with a whitelist check. Discover accepted values from `base.js` and
+use descriptive long-form strings — NEVER single-character Fortran flags.
+
+| Parameter | Example values |
+|-----------|---------------|
+| `norm` | `'max'`, `'one-norm'`, `'inf-norm'`, `'frobenius'` |
+| `job` | `'none'`, `'permute'`, `'scale'`, `'both'`, `'eigenvalues'` |
+| `range` | `'all'`, `'value'`, `'index'` |
+| `jobz` | `'compute-vectors'`, `'no-vectors'` |
+| `vect` | `'apply-Q'`, `'apply-P'` |
+| `transr` | `'no-transpose'`, `'transpose'` |
 
 ### Validation of dimensions
 
