@@ -21,11 +21,11 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetY - starting `y` index
 * @returns {number} dot product
 */
-function dsdot( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy ) { // eslint-disable-line max-len, max-params
+function dsdot( N, x, strideX, offsetX, y, strideY, offsetY ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy ); // eslint-disable-line max-len
+	return base( N, x, strideX, offsetX, y, strideY, offsetY );
 }
 
 

@@ -33,19 +33,19 @@ var base = require( './base.js' );
 * @param {string} uplo - specifies whether the upper (`'upper'`) or lower (`'lower'`) triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix `A`
 * @param {Complex128Array} AP - packed triangular matrix `A`
-* @param {integer} stride - stride length for `AP` (in complex elements)
-* @param {NonNegativeInteger} offset - starting index for `AP` (in complex elements)
+* @param {integer} strideAP - strideAP length for `AP` (in complex elements)
+* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
 * @throws {TypeError} First argument must be a valid matrix triangle
 * @returns {integer} status code (0 = success)
 */
-function zpptrf( uplo, N, AP, stride, offset ) {
+function zpptrf( uplo, N, AP, strideAP, offsetAP ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( uplo, N, AP, stride, offset );
+	return base( uplo, N, AP, strideAP, offsetAP );
 }
 
 

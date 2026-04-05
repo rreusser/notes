@@ -33,19 +33,19 @@ var base = require( './base.js' );
 * @param {string} uplo - specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} AP - packed triangular matrix
-* @param {integer} stride - stride length for `AP`
-* @param {NonNegativeInteger} offset - starting index for `AP`
+* @param {integer} strideAP - strideAP length for `AP`
+* @param {NonNegativeInteger} offsetAP - starting index for `AP`
 * @throws {TypeError} First argument must be a valid matrix triangle.
 * @returns {integer} info - `0` if successful; `k > 0` if the `k`-th diagonal element is zero (1-based)
 */
-function dpptri( uplo, N, AP, stride, offset ) {
+function dpptri( uplo, N, AP, strideAP, offsetAP ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( uplo, N, AP, stride, offset );
+	return base( uplo, N, AP, strideAP, offsetAP );
 }
 
 

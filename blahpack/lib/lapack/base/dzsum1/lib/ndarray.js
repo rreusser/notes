@@ -22,11 +22,11 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetCX - starting index for `CX` (in complex elements)
 * @returns {number} sum of absolute values
 */
-function dzsum1( N, x, stride, offset, incx ) {
+function dzsum1( N, CX, strideCX, offsetCX ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, x, stride, offset, incx );
+	return base( N, CX, strideCX, offsetCX );
 }
 
 

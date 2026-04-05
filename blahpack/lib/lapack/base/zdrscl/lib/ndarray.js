@@ -22,11 +22,11 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
 * @returns {Complex128Array} input array
 */
-function zdrscl( N, sa, x, stride, offset, incx ) {
+function zdrscl( N, sa, x, strideX, offsetX ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, sa, x, stride, offset, incx );
+	return base( N, sa, x, strideX, offsetX );
 }
 
 

@@ -14,15 +14,15 @@ var base = require( './base.js' );
 *
 * @param {NonNegativeInteger} N - number of indexed elements
 * @param {Float64Array} x - input array
-* @param {integer} strideX - stride length for `x`
+* @param {integer} strideX - strideX length for `x`
 * @param {NonNegativeInteger} offsetX - starting index for `x`
 * @returns {integer} 0-based index of the max element, or -1 if N < 1
 */
-function idamax( N, x, stride, offset ) {
+function idamax( N, x, strideX, offsetX ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, x, stride, offset );
+	return base( N, x, strideX, offsetX );
 }
 
 

@@ -13,34 +13,34 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes the inverse of a complex triangular matrix in Rectangular Full Packed format.
+* Computes the inverse of A complex triangular matrix in Rectangular Full Packed format.
 *
 * @param {string} transr - specifies the storage format (`'no-transpose'` or `'conjugate-transpose'`)
 * @param {string} uplo - specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`)
 * @param {string} diag - specifies whether the matrix is unit triangular (`'unit'` or `'non-unit'`)
 * @param {NonNegativeInteger} N - order of the matrix
-* @param {Complex128Array} a - input/output array in RFP format
-* @param {integer} stride - stride length for `A`
-* @param {NonNegativeInteger} offset - starting index for `A`
-* @throws {TypeError} First argument must be a valid transpose operation
-* @throws {TypeError} Second argument must be a valid matrix triangle
-* @throws {TypeError} Third argument must be a valid diagonal type
+* @param {Complex128Array} A - input/output array in RFP format
+* @param {integer} strideA - strideA length for `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @throws {TypeError} First argument must be A valid transpose operation
+* @throws {TypeError} Second argument must be A valid matrix triangle
+* @throws {TypeError} Third argument must be A valid diagonal type
 * @returns {integer} status code (0 = success)
 */
-function ztftri( transr, uplo, diag, N, a, stride, offset ) { // eslint-disable-line max-params
+function ztftri( transr, uplo, diag, N, A, strideA, offsetA ) { // eslint-disable-line max-params
 	if ( !isTransposeOperation( transr ) ) {
-		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', transr ) );
+		throw new TypeError( format( 'invalid argument. First argument must be A valid transpose operation. Value: `%s`.', transr ) );
 	}
 	if ( !isMatrixTriangle( uplo ) ) {
-		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+		throw new TypeError( format( 'invalid argument. Second argument must be A valid matrix triangle. Value: `%s`.', uplo ) );
 	}
 	if ( !isDiagonalType( diag ) ) {
-		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+		throw new TypeError( format( 'invalid argument. Third argument must be A valid diagonal type. Value: `%s`.', diag ) );
 	}
 	if ( N < 0 ) {
-		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+		throw new RangeError( format( 'invalid argument. Fourth argument must be A nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( transr, uplo, diag, N, a, stride, offset );
+	return base( transr, uplo, diag, N, A, strideA, offsetA );
 }
 
 

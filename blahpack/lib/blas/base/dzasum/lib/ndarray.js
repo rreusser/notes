@@ -20,11 +20,11 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetX - starting index (in complex elements)
 * @returns {number} sum of absolute values
 */
-function dzasum( N, x, stride, offset, incx ) {
+function dzasum( N, zx, strideX, offsetX ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, x, stride, offset, incx );
+	return base( N, zx, strideX, offsetX );
 }
 
 
