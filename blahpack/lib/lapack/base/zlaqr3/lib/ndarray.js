@@ -38,12 +38,12 @@ var base = require( './base.js' );
 * @param {integer} strideV1 - stride of the first dimension of `V`
 * @param {integer} strideV2 - stride of the second dimension of `V`
 * @param {NonNegativeInteger} offsetV - starting index for `V`
-* @param {integer} nh - nh
+* @param {integer} nhp - nhp
 * @param {Complex128Array} T - input matrix
 * @param {integer} strideT1 - stride of the first dimension of `T`
 * @param {integer} strideT2 - stride of the second dimension of `T`
 * @param {NonNegativeInteger} offsetT - starting index for `T`
-* @param {integer} nv - nv
+* @param {integer} nvp - nvp
 * @param {Complex128Array} WV - input matrix
 * @param {integer} strideWV1 - stride of the first dimension of `WV`
 * @param {integer} strideWV2 - stride of the second dimension of `WV`
@@ -53,11 +53,11 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
 * @param {integer} lwork - lwork
 */
-function zlaqr3( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function zlaqr3( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nhp, T, strideT1, strideT2, offsetT, nvp, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
+	return base( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nhp, T, strideT1, strideT2, offsetT, nvp, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 
 

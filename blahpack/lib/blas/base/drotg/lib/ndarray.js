@@ -28,8 +28,8 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetCS - starting index for `cs`
 * @returns {void}
 */
-function drotg( a, b, c, s ) {
-	return base( a, b, c, s );
+function drotg( ab, strideAB, offsetAB, cs, strideCS, offsetCS ) {
+	return base( ab, strideAB, offsetAB, cs, strideCS, offsetCS );
 }
 
 

@@ -32,7 +32,19 @@ function extractParams( content ) {
 	if ( !content ) {
 		return null;
 	}
-	var m = content.match( /function\s+\w+\(\s*([^)]+)\)/ );
+	// Find the exported function: look for module.exports to get the name,
+	// then find that function's signature
+	var exportMatch = content.match( /module\.exports\s*=\s*(\w+)/ );
+	var m;
+	if ( exportMatch ) {
+		var fnName = exportMatch[ 1 ];
+		var exportedPattern = new RegExp( 'function\\s+' + fnName + '\\s*\\(\\s*([^)]+)\\)' );
+		m = content.match( exportedPattern );
+	}
+	if ( !m ) {
+		// Fallback: first function
+		m = content.match( /function\s+\w+\(\s*([^)]+)\)/ );
+	}
 	if ( !m ) {
 		return null;
 	}

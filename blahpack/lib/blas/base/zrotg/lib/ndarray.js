@@ -9,14 +9,20 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Returns `re*re + im*im` without complex abs overhead.
+* Computes the parameters for a Givens rotation.
 *
-* @param {number} re - real part
-* @param {number} im - imaginary part
-* @returns {number} sum of squares
+* @param {Float64Array} a - first complex number (real, imag)
+* @param {NonNegativeInteger} offsetA - starting index for `a`
+* @param {Float64Array} b - second complex number (real, imag)
+* @param {NonNegativeInteger} offsetB - starting index for `b`
+* @param {Float64Array} c - output cosine
+* @param {NonNegativeInteger} offsetC - starting index for `c`
+* @param {Float64Array} s - output sine (real, imag)
+* @param {NonNegativeInteger} offsetS - starting index for `s`
+* @returns {void}
 */
-function zrotg( a, b, c, s ) {
-	return base( a, b, c, s );
+function zrotg( a, offsetA, b, offsetB, c, offsetC, s, offsetS ) {
+	return base( a, offsetA, b, offsetB, c, offsetC, s, offsetS );
 }
 
 

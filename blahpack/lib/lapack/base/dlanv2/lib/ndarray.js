@@ -1,11 +1,11 @@
 /**
 * @license Apache-2.0
 *
-* Copyright (c) 2025 Ricky Reusser.
+* Copyright (C) 2025 Ricky Reusser.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
+* You may obtain A copy of the License at
 *
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
@@ -26,16 +26,16 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in standard form.
+* Computes the Schur factorization of A real 2-by-2 nonsymmetric matrix in standard form.
 *
-* @param {number} a - the (1,1) element of the matrix
-* @param {number} b - the (1,2) element of the matrix
-* @param {number} c - the (2,1) element of the matrix
-* @param {number} d - the (2,2) element of the matrix
-* @returns {Object} object with fields: `a`, `b`, `c`, `d` (Schur form), `rt1r`, `rt1i`, `rt2r`, `rt2i` (eigenvalues), `cs`, `sn` (rotation)
+* @param {number} A - the (1,1) element of the matrix
+* @param {number} B - the (1,2) element of the matrix
+* @param {number} C - the (2,1) element of the matrix
+* @param {number} D - the (2,2) element of the matrix
+* @returns {Object} object with fields: `A`, `B`, `C`, `D` (Schur form), `rt1r`, `rt1i`, `rt2r`, `rt2i` (eigenvalues), `cs`, `sn` (rotation)
 */
-function dlanv2( a, b, c, d ) {
-	return base( a, b, c, d );
+function dlanv2( A, B, C, D ) {
+	return base( A, B, C, D );
 }
 
 
