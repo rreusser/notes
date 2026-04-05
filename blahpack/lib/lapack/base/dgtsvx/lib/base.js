@@ -130,7 +130,7 @@ function dgtsvx( fact, trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offse
 	if ( notran ) {
 		normStr = 'one-norm';
 	} else {
-		normStr = 'infinity-norm';
+		normStr = 'inf-norm';
 	}
 	anorm = dlangt( normStr, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU );
 

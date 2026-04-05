@@ -45,7 +45,7 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 * computed by dgbtrf.
 *
 * @private
-* @param {string} norm - 'one-norm' for 1-norm, 'infinity-norm' for infinity-norm
+* @param {string} norm - 'one-norm' for 1-norm, 'inf-norm' for infinity-norm
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} kl - number of subdiagonals
 * @param {NonNegativeInteger} ku - number of superdiagonals

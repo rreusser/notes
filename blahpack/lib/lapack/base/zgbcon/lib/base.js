@@ -65,7 +65,7 @@ function cabs1( v, idx ) {
 * factorization computed by zgbtrf.
 *
 * @private
-* @param {string} norm - 'one-norm' for 1-norm, 'infinity-norm' for infinity-norm
+* @param {string} norm - 'one-norm' for 1-norm, 'inf-norm' for infinity-norm
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} kl - number of subdiagonals
 * @param {NonNegativeInteger} ku - number of superdiagonals

@@ -40,7 +40,7 @@ var zgttrs = require( '../../zgttrs/lib/base.js' );
 * condition number is computed as RCOND = 1 / (ANORM * norm(inv(A))).
 *
 * @private
-* @param {string} norm - 'one-norm' for 1-norm, 'infinity-norm' for infinity-norm
+* @param {string} norm - 'one-norm' for 1-norm, 'inf-norm' for infinity-norm
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} DL - multipliers from zgttrf (length N-1)
 * @param {integer} strideDL - stride for DL (complex elements)

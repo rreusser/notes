@@ -14,7 +14,7 @@ var base = require( './base.js' );
 *
 * The matrix A has sub-diagonal DL, diagonal D, and super-diagonal DU.
 *
-* @param {string} norm - 'max-norm', 'one-norm', 'infinity-norm', or 'frobenius-norm'
+* @param {string} norm - 'max', 'one-norm', 'inf-norm', or 'frobenius'
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} DL - sub-diagonal elements (length N-1)
 * @param {integer} strideDL - stride for DL
