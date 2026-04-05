@@ -74,20 +74,30 @@ actual translation work. Follow these rules strictly:
   conventions, skip reading `docs/complex-numbers.md` etc.
 
 **Running commands:**
-- **NEVER** run `npm test` (full suite) during translation. Only run the
-  module's own test file: `node --test lib/<pkg>/base/<routine>/test/test.js`
-- **NEVER** run `npm run check` — that's for the coordinator, not for you.
-- Pipe verbose commands through `tail`:
+- **NEVER** run `npm test` — it dumps 12,000+ lines and wastes your context.
+- **NEVER** run `npm run check` — same problem.
+- **NEVER** run `node --test` on glob patterns like `lib/**/test/*.js`.
+- **ALWAYS** pipe test/lint commands through `tail` or `grep`:
   ```bash
-  node --test lib/<pkg>/base/<routine>/test/test.js 2>&1 | tail -20
-  node --test --experimental-test-coverage lib/<pkg>/base/<routine>/test/test.js 2>&1 | tail -30
+  # Tests — ALWAYS use tail:
+  node --test lib/<pkg>/base/<routine>/test/test.js lib/<pkg>/base/<routine>/test/test.<routine>.js lib/<pkg>/base/<routine>/test/test.ndarray.js 2>&1 | tail -20
+
+  # If tests fail, use grep to find failures:
+  node --test lib/<pkg>/base/<routine>/test/test.ndarray.js 2>&1 | grep '✖' -A5 | head -20
+
+  # Coverage — ALWAYS use tail:
+  node --test --experimental-test-coverage lib/<pkg>/base/<routine>/test/test.js lib/<pkg>/base/<routine>/test/test.<routine>.js lib/<pkg>/base/<routine>/test/test.ndarray.js 2>&1 | tail -30
+
+  # Lint — ALWAYS use tail:
   bin/lint-fix.sh lib/<pkg>/base/<routine> 2>&1 | tail -20
   ```
-- For the gate, output is already compact — run it directly:
+- The gate is compact (~40 lines) — run directly:
   ```bash
   node bin/gate.js lib/<pkg>/base/<routine>
   ```
 - When a command fails, read only the relevant error lines, not the full output.
+- If you accidentally run a verbose command, DO NOT repeat it. Extract what you
+  need from the output already in context.
 
 **Writing code:**
 - Do not dump entire generated files into your response. Write them with the

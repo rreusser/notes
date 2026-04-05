@@ -50,14 +50,25 @@ gate.config.json               # Per-module gate exceptions (with mandatory reas
 python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
-npm run check                   # MANDATORY: tests + gate (the final gate)
-npm test                        # Run JS tests only (not sufficient for completion)
 node bin/gate.js <module-path>  # Quality gate for one module (all checks)
 node bin/gate.js --all --fast   # Fast gate on all modules (file checks only)
 node bin/gate.js --all          # Full gate on all modules (includes lint)
 npm run report                  # Generate progress.html with conformance checks
 bin/lint-fix.sh <module-path>   # Auto-fix (codemods + eslint + test verify)
 bin/lint.sh lib/<path>/base.js  # Lint a single file
+```
+
+## Context Efficiency
+
+**NEVER run these commands directly** — they produce 12,000+ lines of output:
+- `npm test` — use per-module test runs with `| tail -20` instead
+- `npm run check` — use `node bin/gate.js <module>` instead
+
+**ALWAYS pipe test/lint/coverage through `tail` or `grep`:**
+```bash
+node --test lib/<pkg>/base/<routine>/test/test*.js 2>&1 | tail -20
+npm test 2>&1 | tail -10          # If you MUST run full suite
+npm test 2>&1 | grep '✖' | head -20  # Find specific failures
 ```
 
 ## Skills
