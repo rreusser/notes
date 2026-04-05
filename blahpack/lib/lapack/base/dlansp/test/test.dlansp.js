@@ -20,14 +20,20 @@ test( 'dlansp has expected arity', function t() {
 	assert.strictEqual( dlansp.length, 5, 'has expected arity' );
 });
 
+test( 'dlansp throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dlansp( 'invalid', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+	}, TypeError );
+});
+
 test( 'dlansp throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		dlansp( 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+		dlansp( 'max', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'dlansp throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlansp( 2, 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
+		dlansp( 'max', 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, RangeError );
 });

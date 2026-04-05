@@ -20,14 +20,20 @@ test( 'zlansp has expected arity', function t() {
 	assert.strictEqual( zlansp.length, 5, 'has expected arity' );
 });
 
+test( 'zlansp throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		zlansp( 'invalid', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+	}, TypeError );
+});
+
 test( 'zlansp throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		zlansp( 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+		zlansp( 'max', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'zlansp throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		zlansp( 2, 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
+		zlansp( 'max', 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, RangeError );
 });

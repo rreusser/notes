@@ -20,8 +20,14 @@ test( 'dlangt has expected arity', function t() {
 	assert.strictEqual( dlangt.length, 8, 'has expected arity' );
 });
 
+test( 'dlangt throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dlangt( 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 1, 2, 1, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
 test( 'dlangt throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlangt( 2, -1, new Float64Array( 4 ), 1, 2, 1, new Float64Array( 4 ), 1 );
+		dlangt( 'max', -1, new Float64Array( 4 ), 1, 2, 1, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });

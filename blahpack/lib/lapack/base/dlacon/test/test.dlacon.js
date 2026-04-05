@@ -20,8 +20,9 @@ test( 'dlacon has expected arity', function t() {
 	assert.strictEqual( dlacon.length, 9, 'has expected arity' );
 });
 
+
 test( 'dlacon throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlacon( -1, 2, 1, 2, 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), new Float64Array( 4 ) );
+		dlacon( -1, 2, 1, 2, 1, 1, 1, new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, RangeError );
 });

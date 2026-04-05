@@ -33,7 +33,7 @@ var dlassq = require( '../../dlassq/lib/base.js' );
 * The matrix A has sub-diagonal DL, diagonal D, and super-diagonal DU.
 *
 * @private
-* @param {string} norm - 'max-norm', 'one-norm', 'infinity-norm', or 'frobenius-norm'
+* @param {string} norm - 'max', 'one-norm', 'inf-norm', or 'frobenius'
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} DL - sub-diagonal elements (length N-1)
 * @param {integer} strideDL - stride for DL
@@ -59,7 +59,7 @@ function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 		return 0.0;
 	}
 
-	if ( norm === 'max-norm' ) {
+	if ( norm === 'max' ) {
 		// Max absolute value
 		pd = offsetD + ( ( N - 1 ) * strideD );
 		anorm = Math.abs( d[ pd ] );
@@ -104,7 +104,7 @@ function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 				}
 			}
 		}
-	} else if ( norm === 'infinity-norm' ) {
+	} else if ( norm === 'inf-norm' ) {
 		// Maximum row sum
 		if ( N === 1 ) {
 			anorm = Math.abs( d[ offsetD ] );
@@ -125,7 +125,7 @@ function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 				}
 			}
 		}
-	} else if ( norm === 'frobenius-norm' ) {
+	} else if ( norm === 'frobenius' ) {
 		// Frobenius norm: sqrt( sum of squares )
 		res = dlassq( N, d, strideD, offsetD, 0.0, 1.0 );
 		if ( N > 1 ) {

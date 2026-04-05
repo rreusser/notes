@@ -56,6 +56,9 @@ function dgecon( order, norm, N, A, LDA, anorm, rcond, WORK, strideWORK, IWORK, 
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( norm !== 'one-norm' && norm !== 'inf-norm' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid norm. Value: `%s`.', norm ) );
+	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}

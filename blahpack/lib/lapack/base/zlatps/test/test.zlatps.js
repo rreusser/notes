@@ -22,24 +22,30 @@ test( 'zlatps has expected arity', function t() {
 
 test( 'zlatps throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		zlatps( 'invalid', 'no-transpose', 'non-unit', 2, new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
+		zlatps( 'invalid', 'no-transpose', 'non-unit', 'N', new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'zlatps throws TypeError for invalid trans', function t() {
 	assert.throws( function throws() {
-		zlatps( 'upper', 'invalid', 'non-unit', 2, new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
+		zlatps( 'upper', 'invalid', 'non-unit', 'N', new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'zlatps throws TypeError for invalid diag', function t() {
 	assert.throws( function throws() {
-		zlatps( 'upper', 'no-transpose', 'invalid', 2, new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
+		zlatps( 'upper', 'no-transpose', 'invalid', 'N', new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
+	}, TypeError );
+});
+
+test( 'zlatps throws TypeError for invalid normin', function t() {
+	assert.throws( function throws() {
+		zlatps( 'upper', 'no-transpose', 'non-unit', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'zlatps throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		zlatps( 'upper', 'no-transpose', 'non-unit', 2, -1, new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
+		zlatps( 'upper', 'no-transpose', 'non-unit', 'N', -1, new Float64Array( 4 ), 2, 2, new Float64Array( 4 ) );
 	}, RangeError );
 });

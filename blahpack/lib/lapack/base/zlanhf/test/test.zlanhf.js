@@ -20,14 +20,21 @@ test( 'zlanhf has expected arity', function t() {
 	assert.strictEqual( zlanhf.length, 6, 'has expected arity' );
 });
 
+test( 'zlanhf throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		zlanhf( 'invalid', 'no-transpose', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+	}, TypeError );
+});
+
+
 test( 'zlanhf throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		zlanhf( 2, 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+		zlanhf( 'max', 'no-transpose', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'zlanhf throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		zlanhf( 2, 2, 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
+		zlanhf( 'max', 'no-transpose', 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, RangeError );
 });

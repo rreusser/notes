@@ -42,6 +42,9 @@ function dtrcon( norm, uplo, diag, N, A, LDA, RCOND, WORK, strideWORK, IWORK, st
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( norm !== 'one-norm' && norm !== 'inf-norm' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid norm. Value: `%s`.', norm ) );
+	}
 	if ( !isDiagonalType( diag ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
 	}

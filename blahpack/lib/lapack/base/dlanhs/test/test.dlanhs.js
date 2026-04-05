@@ -22,12 +22,18 @@ test( 'dlanhs has expected arity', function t() {
 
 test( 'dlanhs throws TypeError for invalid order', function t() {
 	assert.throws( function throws() {
-		dlanhs( 'invalid', 2, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		dlanhs( 'invalid', 'max', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
+test( 'dlanhs throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dlanhs( 'row-major', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, TypeError );
 });
 
 test( 'dlanhs throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlanhs( 'row-major', 2, -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		dlanhs( 'row-major', 'max', -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });

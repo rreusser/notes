@@ -20,20 +20,26 @@ test( 'zlanhb has expected arity', function t() {
 	assert.strictEqual( zlanhb.length, 7, 'has expected arity' );
 });
 
+test( 'zlanhb throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		zlanhb( 'invalid', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+	}, TypeError );
+});
+
 test( 'zlanhb throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		zlanhb( 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+		zlanhb( 'max', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'zlanhb throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		zlanhb( 2, 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+		zlanhb( 'max', 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
 	}, RangeError );
 });
 
 test( 'zlanhb throws RangeError for negative K', function t() {
 	assert.throws( function throws() {
-		zlanhb( 2, 'upper', new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+		zlanhb( 'max', 'upper', new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ) );
 	}, RangeError );
 });

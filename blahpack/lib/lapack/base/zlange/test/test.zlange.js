@@ -22,18 +22,24 @@ test( 'zlange has expected arity', function t() {
 
 test( 'zlange throws TypeError for invalid order', function t() {
 	assert.throws( function throws() {
-		zlange( 'invalid', 2, new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		zlange( 'invalid', 'max', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
+test( 'zlange throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		zlange( 'row-major', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, TypeError );
 });
 
 test( 'zlange throws RangeError for negative M', function t() {
 	assert.throws( function throws() {
-		zlange( 'row-major', 2, -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		zlange( 'row-major', 'max', -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });
 
 test( 'zlange throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		zlange( 'row-major', 2, new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		zlange( 'row-major', 'max', new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });

@@ -26,7 +26,7 @@ var STRING_DEFAULTS = {
 	'uplo': '\'upper\'',
 	'side': '\'left\'',
 	'diag': '\'non-unit\'',
-	'norm': '\'1\'',
+	'norm': '\'max\'',
 	'range': '\'all\'',
 	'job': '\'both\'',
 	'jobvs': '\'V\'',

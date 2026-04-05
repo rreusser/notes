@@ -22,18 +22,24 @@ test( 'dlansy has expected arity', function t() {
 
 test( 'dlansy throws TypeError for invalid order', function t() {
 	assert.throws( function throws() {
-		dlansy( 'invalid', 2, 'upper', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		dlansy( 'invalid', 'max', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
+test( 'dlansy throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dlansy( 'row-major', 'invalid', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, TypeError );
 });
 
 test( 'dlansy throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		dlansy( 'row-major', 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		dlansy( 'row-major', 'max', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, TypeError );
 });
 
 test( 'dlansy throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlansy( 'row-major', 2, 'upper', -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+		dlansy( 'row-major', 'max', 'upper', -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });

@@ -20,8 +20,14 @@ test( 'dgbcon has expected arity', function t() {
 	assert.strictEqual( dgbcon.length, 14, 'has expected arity' );
 });
 
+test( 'dgbcon throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dgbcon( 'invalid', new Float64Array( 4 ), 2, 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
 test( 'dgbcon throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dgbcon( 2, -1, 2, 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+		dgbcon( 'one-norm', -1, 2, 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });

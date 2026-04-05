@@ -22,12 +22,18 @@ test( 'dgecon has expected arity', function t() {
 
 test( 'dgecon throws TypeError for invalid order', function t() {
 	assert.throws( function throws() {
-		dgecon( 'invalid', 2, new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+		dgecon( 'invalid', 'one-norm', new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
+test( 'dgecon throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dgecon( 'row-major', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 2, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
 	}, TypeError );
 });
 
 test( 'dgecon throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dgecon( 'row-major', 2, -1, new Float64Array( 4 ), 2, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+		dgecon( 'row-major', 'one-norm', -1, new Float64Array( 4 ), 2, 2, 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
 	}, RangeError );
 });

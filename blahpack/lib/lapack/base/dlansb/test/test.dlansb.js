@@ -20,20 +20,26 @@ test( 'dlansb has expected arity', function t() {
 	assert.strictEqual( dlansb.length, 7, 'has expected arity' );
 });
 
+test( 'dlansb throws TypeError for invalid norm', function t() {
+	assert.throws( function throws() {
+		dlansb( 'invalid', 'upper', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+	}, TypeError );
+});
+
 test( 'dlansb throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		dlansb( 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+		dlansb( 'max', 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'dlansb throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlansb( 2, 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+		dlansb( 'max', 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ) );
 	}, RangeError );
 });
 
 test( 'dlansb throws RangeError for negative K', function t() {
 	assert.throws( function throws() {
-		dlansb( 2, 'upper', new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ) );
+		dlansb( 'max', 'upper', new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ) );
 	}, RangeError );
 });

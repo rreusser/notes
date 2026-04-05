@@ -38,6 +38,9 @@ function dlangb( norm, N, KL, KU, AB, LDAB, WORK, strideWORK ) { // eslint-disab
 	if ( LDAB < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,N). Value: `%d`.', LDAB ) );
 	}
+	if ( norm !== 'max' && norm !== 'one-norm' && norm !== 'inf-norm' && norm !== 'frobenius' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid norm. Value: `%s`.', norm ) );
+	}
 	return base( norm, N, KL, KU, AB, sa1, sa2, 0, WORK, strideWORK, owork ); // eslint-disable-line max-len
 }
 
