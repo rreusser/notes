@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlasr
 
-> Apply a sequence of plane rotations to a complex matrix
+> Applies a sequence of real plane rotations to a complex general matrix.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlasr = require( '@stdlib/lapack/base/zlasr' );
 ```
 
-#### zlasr.ndarray( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA )
+#### zlasr( order, side, pivot, direct, M, N, c, strideC, s, strideS, A, LDA )
 
-Apply a sequence of plane rotations to a complex matrix
+Applies a sequence of real plane rotations to a complex general matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,20 +42,35 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
--   **pivot**: specifies the operation type.
--   **direct**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the side of the operation.
+-   **pivot**: `pivot`.
+-   **direct**: `direct`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **c**: input array.
--   **strideC**: stride length for `c`.
--   **offsetC**: starting index for `c`.
--   **s**: input array.
--   **strideS**: stride length for `s`.
--   **offsetS**: starting index for `s`.
--   **A**: output matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
+-   **s**: `s`.
+-   **strideS**: stride length for `S`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+
+#### zlasr.ndarray( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA )
+
+Applies a sequence of real plane rotations to a complex general matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetC**: starting index for `C`.
+-   **offsetS**: starting index for `S`.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
 
 </section>
@@ -46,7 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlasr()` corresponds to the [LAPACK][lapack] level routine [`zlasr`][lapack-zlasr].
 
 </section>
 
@@ -56,7 +91,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlasr = require( '@stdlib/lapack/base/zlasr' );
+
 // TODO: Add examples
 ```
 
@@ -76,9 +115,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlasr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlasr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

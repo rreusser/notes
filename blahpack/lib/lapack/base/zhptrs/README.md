@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhptrs
 
 > Solves a system of linear equations with a complex Hermitian matrix in packed storage using the factorization computed by zhptrf.
@@ -10,39 +30,45 @@
 var zhptrs = require( '@stdlib/lapack/base/zhptrs' );
 ```
 
-#### zhptrs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+#### zhptrs( order, uplo, N, nrhs, AP, IPIV, B, LDB )
 
 Solves a system of linear equations with a complex Hermitian matrix in packed storage using the factorization computed by zhptrf.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
-var zhptrs = require( '@stdlib/lapack/base/zhptrs' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// Factored 2x2 Hermitian packed matrix (upper triangle) and pivot indices:
-var AP = new Complex128Array( [ 4.0, 0.0, 1.0, -1.0, 5.0, 0.0 ] );
-var IPIV = new Int32Array( [ 0, 1 ] );
-var B = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
-
-var info = zhptrs.ndarray( 'upper', 2, 1, AP, 1, 0, IPIV, 1, 0, B, 1, 2, 0 );
-// info => 0
-// B is overwritten with the solution
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **nrhs**: nrhs.
--   **AP**: input array.
+-   **nrhs**: number of right-hand sides.
+-   **AP**: input array `AP`.
+-   **IPIV**: input array `IPIV`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### zhptrs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+
+Solves a system of linear equations with a complex Hermitian matrix in packed storage using the factorization computed by zhptrf, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **IPIV**: input array.
 -   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **B**: output matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
 
 </section>
@@ -53,9 +79,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The matrix `A` must already be factored by `zhptrf` into `U*D*U**H` or `L*D*L**H` form. The `AP` and `IPIV` arrays are the output of that factorization.
--   The solution matrix `X` overwrites `B` on output.
--   `IPIV` uses 0-based indexing with bitwise NOT convention for 2x2 pivots.
+-   `zhptrs()` corresponds to the [LAPACK][lapack] level routine [`zhptrs`][lapack-zhptrs].
 
 </section>
 
@@ -65,19 +89,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
 var zhptrs = require( '@stdlib/lapack/base/zhptrs' );
 
-// Factored 2x2 Hermitian packed matrix (upper triangle):
-var AP = new Complex128Array( [ 4.0, 0.0, 1.0, -1.0, 5.0, 0.0 ] );
-var IPIV = new Int32Array( [ 0, 1 ] );
-var B = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
-
-var info = zhptrs.ndarray( 'upper', 2, 1, AP, 1, 0, IPIV, 1, 0, B, 1, 2, 0 );
-console.log( 'info:', info );
-// => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -96,9 +113,12 @@ console.log( 'info:', info );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhptrs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhptrs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

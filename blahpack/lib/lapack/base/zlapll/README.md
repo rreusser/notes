@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlapll
 
-> Measures the linear dependence of two vectors.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,43 +32,37 @@ var zlapll = require( '@stdlib/lapack/base/zlapll' );
 
 #### zlapll( N, x, strideX, y, strideY, ssmin )
 
-Measures the linear dependence of two complex vectors X and Y by computing the QR factorization of the N-by-2 matrix `(X Y)` and returning the smallest singular value of the resulting 2-by-2 upper triangular R factor.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-var y = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0 ] );
-var ssmin = new Float64Array( 1 );
-
-zlapll( 4, x, 1, y, 1, ssmin );
-// ssmin[ 0 ] ~ 0.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: length of the vectors.
--   **x**: first complex vector (`Complex128Array`), overwritten on exit.
--   **strideX**: stride for `x` (in complex elements).
--   **y**: second complex vector (`Complex128Array`), overwritten on exit.
--   **strideY**: stride for `y` (in complex elements).
--   **ssmin**: output `Float64Array` of length 1; `ssmin[0]` receives the smallest singular value.
+-   **N**: number of columns.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+-   **ssmin**: `ssmin`.
 
 #### zlapll.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
 
-Measures the linear dependence of two complex vectors with stride and offset parameters.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-var x = new Complex128Array( [ 1.0, 2.0, 3.0, -1.0, 0.5, 4.0 ] );
-var y = new Complex128Array( [ 2.0, -3.0, -1.0, 5.0, 4.0, 0.5 ] );
-var ssmin = new Float64Array( 1 );
-
-zlapll.ndarray( 3, x, 1, 0, y, 1, 0, ssmin );
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -58,8 +72,7 @@ zlapll.ndarray( 3, x, 1, 0, y, 1, 0, ssmin );
 
 ## Notes
 
--   On exit, the input vectors `x` and `y` are overwritten.
--   A small `ssmin` value indicates that the two vectors are nearly linearly dependent.
+-   `zlapll()` corresponds to the [LAPACK][lapack] level routine [`zlapll`][lapack-zlapll].
 
 </section>
 
@@ -69,25 +82,12 @@ zlapll.ndarray( 3, x, 1, 0, y, 1, 0, ssmin );
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlapll = require( '@stdlib/lapack/base/zlapll' );
 
-// Parallel vectors (linearly dependent):
-var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-var y = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0 ] );
-var ssmin = new Float64Array( 1 );
-
-zlapll( 4, x, 1, y, 1, ssmin );
-// ssmin[ 0 ] ~ 0.0 (vectors are linearly dependent)
-
-// Independent vectors:
-x = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
-y = new Complex128Array( [ 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 ] );
-
-zlapll( 3, x, 1, y, 1, ssmin );
-// ssmin[ 0 ] = 1.0 (vectors are orthogonal)
+// TODO: Add examples
 ```
 
 </section>
@@ -105,6 +105,14 @@ zlapll( 3, x, 1, y, 1, ssmin );
 <!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
 
 <section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlapll]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlapll.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

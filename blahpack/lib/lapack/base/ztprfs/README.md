@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztprfs
 
 > Provides error bounds and backward error estimates for the solution to a system of linear equations with a packed complex triangular coefficient matrix.
@@ -10,56 +30,60 @@
 var ztprfs = require( '@stdlib/lapack/base/ztprfs' );
 ```
 
-#### ztprfs.ndarray( uplo, trans, diag, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+#### ztprfs( uplo, trans, diag, N, nrhs, AP, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, RWORK, strideRWORK )
 
 Provides error bounds and backward error estimates for the solution to a system of linear equations with a packed complex triangular coefficient matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 
-// 3x3 upper triangular packed (complex, interleaved re/im):
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 0.5, 4.0, -1.0, 3.0, 2.0, 5.0, 0.0, 6.0, -0.5 ] );
-var B = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
-var X = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztprfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-// returns 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`).
--   **trans**: specifies the form of the system (`'no-transpose'` or `'conjugate-transpose'`).
--   **diag**: specifies whether the matrix is unit triangular (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix A.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
 -   **nrhs**: number of right-hand sides.
--   **AP**: packed triangular matrix A as a [`Complex128Array`][mdn-typed-array].
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
--   **B**: right-hand side matrix B as a [`Complex128Array`][mdn-typed-array].
--   **strideB1**: stride of the first dimension of `B` (in complex elements).
--   **strideB2**: stride of the second dimension of `B` (in complex elements).
--   **offsetB**: starting index for `B` (in complex elements).
--   **X**: solution matrix X as a [`Complex128Array`][mdn-typed-array].
--   **strideX1**: stride of the first dimension of `X` (in complex elements).
--   **strideX2**: stride of the second dimension of `X` (in complex elements).
--   **offsetX**: starting index for `X` (in complex elements).
--   **FERR**: output [`Float64Array`][mdn-float64array] of length `nrhs` for forward error bounds.
+-   **AP**: input array `AP`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
--   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output [`Float64Array`][mdn-float64array] of length `nrhs` for backward errors.
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
--   **offsetBERR**: starting index for `BERR`.
--   **WORK**: complex workspace [`Complex128Array`][mdn-typed-array] of length `2*N`.
--   **strideWORK**: stride length for `WORK` (in complex elements).
--   **offsetWORK**: starting index for `WORK` (in complex elements).
--   **RWORK**: real workspace [`Float64Array`][mdn-float64array] of length `N`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
+
+#### ztprfs.ndarray( uplo, trans, diag, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Provides error bounds and backward error estimates for the solution to a system of linear equations with a packed complex triangular coefficient matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -70,9 +94,7 @@ The function has the following parameters:
 
 ## Notes
 
--   `ztprfs` computes componentwise relative forward error bounds (FERR) and componentwise relative backward errors (BERR) for each right-hand side.
--   The complex workspace array WORK must have at least `2*N` elements and the real workspace RWORK must have at least `N` elements.
--   Uses CABS1 (sum of absolute values of real and imaginary parts) for componentwise error bounds, consistent with the LAPACK reference implementation.
+-   `ztprfs()` corresponds to the [LAPACK][lapack] level routine [`ztprfs`][lapack-ztprfs].
 
 </section>
 
@@ -82,24 +104,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var ztprfs = require( '@stdlib/lapack/base/ztprfs' );
 
-// 3x3 upper triangular packed (complex, interleaved re/im):
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 0.5, 4.0, -1.0, 3.0, 2.0, 5.0, 0.0, 6.0, -0.5 ] );
-var B = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
-var X = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztprfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-console.log( 'info:', info );
-console.log( 'FERR:', FERR );
-console.log( 'BERR:', BERR );
+// TODO: Add examples
 ```
 
 </section>
@@ -118,9 +128,12 @@ console.log( 'BERR:', BERR );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztprfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztprfs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlassq
 
-> Update a sum of squares represented in scaled form
+> Updates a sum of squares represented in scaled form.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlassq = require( '@stdlib/lapack/base/zlassq' );
 ```
 
-#### zlassq.ndarray( N, x, stride, offset, scale, sumsq )
+#### zlassq( N, x, stride, scale, sumsq )
 
-Update a sum of squares represented in scaled form
+Updates a sum of squares represented in scaled form.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -43,11 +43,24 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
--   **scale**: scale.
--   **sumsq**: sumsq.
+-   **x**: `x`.
+-   **stride**: `stride`.
+-   **scale**: `scale`.
+-   **sumsq**: `sumsq`.
+
+#### zlassq.ndarray( N, x, stride, offset, scale, sumsq )
+
+Updates a sum of squares represented in scaled form, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offset**: `offset`.
 
 </section>
 
@@ -57,7 +70,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlassq()` corresponds to the [LAPACK][lapack] level routine [`zlassq`][lapack-zlassq].
 
 </section>
 
@@ -67,7 +80,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlassq = require( '@stdlib/lapack/base/zlassq' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +104,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlassq]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlassq.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

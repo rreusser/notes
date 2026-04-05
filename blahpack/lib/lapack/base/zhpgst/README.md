@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhpgst
 
-> Reduce a complex Hermitian-definite generalized eigenproblem to standard form, using packed storage.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,43 +32,38 @@ var zhpgst = require( '@stdlib/lapack/base/zhpgst' );
 
 #### zhpgst( itype, uplo, N, AP, BP )
 
-Reduces a complex Hermitian-definite generalized eigenproblem to standard form, using packed storage.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Complex128Array( [ 12, 0, 3, 2, 9, 0, 1, -1, 2, 3, 7, 0 ] );
-var BP = new Complex128Array( [ 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0 ] );
-
-var info = zhpgst( 1, 'upper', 3, AP, BP );
-// info => 0
-```
-
-#### zhpgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
-
-Reduces a complex Hermitian-definite generalized eigenproblem to standard form, using packed storage, with alternative indexing semantics.
-
-```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-
-var AP = new Complex128Array( [ 12, 0, 3, 2, 9, 0, 1, -1, 2, 3, 7, 0 ] );
-var BP = new Complex128Array( [ 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0 ] );
-
-var info = zhpgst.ndarray( 1, 'upper', 3, AP, 1, 0, BP, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **itype**: problem type (1, 2, or 3).
--   **uplo**: specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of matrices A and B.
--   **AP**: Hermitian matrix A in packed storage ([`Complex128Array`][mdn-complex128array]).
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
--   **BP**: triangular factor from Cholesky factorization of B in packed storage ([`Complex128Array`][mdn-complex128array]).
--   **strideBP**: stride length for `BP` (in complex elements).
--   **offsetBP**: starting index for `BP` (in complex elements).
+-   **itype**: `itype`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **BP**: input array `BP`.
+
+#### zhpgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideBP**: stride length for `BP`.
+-   **offsetBP**: starting index for `BP`.
 
 </section>
 
@@ -58,10 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   If `itype = 1`, the problem is `A*x = lambda*B*x`, and A is overwritten by `inv(U**H)*A*inv(U)` or `inv(L)*A*inv(L**H)`.
--   If `itype = 2` or `3`, the problem is `A*B*x = lambda*x` or `B*A*x = lambda*x`, and A is overwritten by `U*A*U**H` or `L**H*A*L`.
--   `B` must have been previously factorized as `U**H*U` or `L*L**H` by `zpptrf`.
--   `AP` and `BP` are [`Complex128Array`][mdn-complex128array] instances of length `N*(N+1)/2`.
+-   `zhpgst()` corresponds to the [LAPACK][lapack] level routine [`zhpgst`][lapack-zhpgst].
 
 </section>
 
@@ -71,22 +83,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var zpptrf = require( '@stdlib/lapack/base/zpptrf' );
 var zhpgst = require( '@stdlib/lapack/base/zhpgst' );
 
-// Hermitian positive-definite B (2x2), upper packed:
-var BP = new Complex128Array( [ 4, 0, 1, 2, 10, 0 ] );
-zpptrf( 'upper', 2, BP );
-
-// Hermitian A (2x2), upper packed:
-var AP = new Complex128Array( [ 5, 0, 1, -1, 3, 0 ] );
-
-var info = zhpgst( 1, 'upper', 2, AP, BP );
-// info => 0
-// AP now contains the reduced matrix
+// TODO: Add examples
 ```
 
 </section>
@@ -105,7 +107,13 @@ var info = zhpgst( 1, 'upper', 2, AP, BP );
 
 <section class="links">
 
-[mdn-complex128array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Complex128Array
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhpgst]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhpgst.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

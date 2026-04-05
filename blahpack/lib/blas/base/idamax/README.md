@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # idamax
 
-> Find the index of element with maximum absolute value
+> Finds the index of the first element having the maximum absolute value.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var idamax = require( '@stdlib/blas/base/idamax' );
 ```
 
-#### idamax.ndarray( N, x, stride, offset )
+#### idamax( N, x, strideX )
 
-Find the index of element with maximum absolute value
+Finds the index of the first element having the maximum absolute value.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,9 +43,22 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+
+#### idamax.ndarray( N, x, strideX, offsetX )
+
+Finds the index of the first element having the maximum absolute value, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -35,7 +68,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `idamax()` corresponds to the [LAPACK][lapack] level routine [`idamax`][lapack-idamax].
 
 </section>
 
@@ -45,7 +78,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var idamax = require( '@stdlib/blas/base/idamax' );
+
 // TODO: Add examples
 ```
 
@@ -65,9 +102,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-idamax]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__idamax.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -18,7 +18,12 @@
 
 'use strict';
 
-var zlacgv = require( '@stdlib/lapack/base/zlacgv' );
+var zlacgv = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlacgv );
+// Using the standard interface:
+var out = zlacgv( N, 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlacgv.ndarray( N, 1, 1, 0 );
+console.log( out );

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaev2
 
-> Compute the eigendecomposition of a 2-by-2 symmetric matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,32 +32,32 @@ var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 
 #### dlaev2( a, b, c )
 
-Computes the eigendecomposition of a 2-by-2 symmetric matrix
-
-```text
-[ a  b ]
-[ b  c ]
-```
-
-returning an object with eigenvalues `rt1` (larger absolute value) and `rt2` (smaller absolute value), and the unit right eigenvector components `cs1` and `sn1` for `rt1`.
+@license Apache-2.0.
 
 ```javascript
-var out = dlaev2( 2.0, 1.0, 3.0 );
-// returns { rt1: ~3.618, rt2: ~1.382, cs1: ~-0.526, sn1: ~0.851 }
-```
+var Float64Array = require( '@stdlib/array/float64' );
 
-The rotation matrix `[cs1, sn1; -sn1, cs1]` diagonalizes the input:
-
-```text
-[ cs1  sn1 ] [ a  b ] [ cs1 -sn1 ]   [ rt1  0  ]
-[-sn1  cs1 ] [ b  c ] [ sn1  cs1 ] = [  0  rt2 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **a**: the (1,1) element of the 2-by-2 matrix.
--   **b**: the (1,2) element (and (2,1) element) of the 2-by-2 matrix.
--   **c**: the (2,2) element of the 2-by-2 matrix.
+-   **a**: `a`.
+-   **b**: `b`.
+-   **c**: `c`.
+
+#### dlaev2.ndarray( a, b, c )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -47,9 +67,7 @@ The function has the following parameters:
 
 ## Notes
 
--   `rt1` is accurate to a few ulps barring over/underflow.
--   `rt2` may be inaccurate if there is massive cancellation in the determinant `a*c - b*b`.
--   `cs1` and `sn1` are accurate to a few ulps barring over/underflow.
+-   `dlaev2()` corresponds to the [LAPACK][lapack] level routine [`dlaev2`][lapack-dlaev2].
 
 </section>
 
@@ -59,12 +77,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
 var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 
-var out = dlaev2( 2.0, 1.0, 3.0 );
-console.log( 'rt1:', out.rt1, 'rt2:', out.rt2 );
-console.log( 'cs1:', out.cs1, 'sn1:', out.sn1 );
+// TODO: Add examples
 ```
 
 </section>
@@ -82,6 +100,14 @@ console.log( 'cs1:', out.cs1, 'sn1:', out.sn1 );
 <!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
 
 <section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaev2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaev2.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

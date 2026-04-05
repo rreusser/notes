@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlaqsy
 
-> Equilibrate a symmetric matrix using the scaling factors computed by zpoequ.
+> Equilibrates a symmetric matrix A using the scaling factors in the vector S.
 
 <section class="usage">
 
@@ -10,35 +30,43 @@
 var zlaqsy = require( '@stdlib/lapack/base/zlaqsy' );
 ```
 
-#### zlaqsy.ndarray( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax )
+#### zlaqsy( uplo, N, A, LDA, s, strideS, scond, amax )
 
-Equilibrates a symmetric matrix `A` using the scaling factors in the vector `s`. Sets `A[i,j] = s[i] * A[i,j] * s[j]` when the matrix is poorly scaled. Returns `'yes'` if equilibration was performed, or `'none'` if it was not needed.
+Equilibrates a symmetric matrix A using the scaling factors in the vector S.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 2x2 complex symmetric matrix (column-major):
-var A = new Complex128Array( [ 4.0, 1.0, 1.0, 0.5, 1.0, 0.5, 9.0, 2.0 ] );
-var s = new Float64Array( [ 0.5, 0.25 ] );
-
-var equed = zlaqsy.ndarray( 'upper', 2, A, 1, 2, 0, s, 1, 0, 0.05, 9.0 );
-// returns 'yes'
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether to use the upper or lower triangle (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **A**: input/output N-by-N complex symmetric matrix stored as a `Complex128Array`.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **s**: `s`.
+-   **strideS**: stride length for `S`.
+-   **scond**: `scond`.
+-   **amax**: `amax`.
+
+#### zlaqsy.ndarray( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax )
+
+Equilibrates a symmetric matrix A using the scaling factors in the vector S, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **s**: `Float64Array` of scaling factors, length `N`.
--   **strideS**: stride length for `s`.
--   **offsetS**: starting index for `s`.
--   **scond**: ratio of the smallest to the largest scaling factor. If `scond >= 0.1`, no scaling is done.
--   **amax**: absolute value of the largest matrix element. If `amax` is in the safe range, no scaling is done.
+-   **offsetS**: starting index for `S`.
 
 </section>
 
@@ -48,9 +76,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The routine only modifies the triangle specified by `uplo`. The other triangle is not referenced.
--   The scaling factors `s` are real (not complex) and are typically computed by `zpoequ`.
--   The decision to equilibrate is based on the condition number ratio `scond` and the magnitude `amax` relative to machine precision thresholds.
+-   `zlaqsy()` corresponds to the [LAPACK][lapack] level routine [`zlaqsy`][lapack-zlaqsy].
 
 </section>
 
@@ -60,18 +86,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlaqsy = require( '@stdlib/lapack/base/zlaqsy' );
 
-// 2x2 complex symmetric matrix (column-major):
-var A = new Complex128Array( [ 4.0, 1.0, 1.0, 0.5, 1.0, 0.5, 9.0, 2.0 ] );
-var s = new Float64Array( [ 0.5, 0.25 ] );
-
-var equed = zlaqsy.ndarray( 'upper', 2, A, 1, 2, 0, s, 1, 0, 0.05, 9.0 );
-console.log( 'equed:', equed );
-// => equed: yes
+// TODO: Add examples
 ```
 
 </section>
@@ -90,9 +110,12 @@ console.log( 'equed:', equed );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlaqsy]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlaqsy.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

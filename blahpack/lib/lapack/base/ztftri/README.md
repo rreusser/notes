@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztftri
 
-> Computes the inverse of a complex triangular matrix stored in Rectangular Full Packed (RFP) format.
+> Computes the inverse of A complex triangular matrix in Rectangular Full Packed format.
 
 <section class="usage">
 
@@ -10,28 +30,38 @@
 var ztftri = require( '@stdlib/lapack/base/ztftri' );
 ```
 
-#### ztftri.ndarray( transr, uplo, diag, N, a, stride, offset )
+#### ztftri( transr, uplo, diag, N, A )
 
-Computes the inverse of a complex triangular matrix stored in RFP format.
+Computes the inverse of A complex triangular matrix in Rectangular Full Packed format.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 lower triangular matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var a = new Complex128Array( [ 2, 1, 0.5, -0.3, 1, 0.5, 4, 0, 3, -1, 0.8, 0.2 ] );
-var info = ztftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, a, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **transr**: specifies the RFP storage format (`'no-transpose'` or `'conjugate-transpose'`).
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **diag**: specifies whether the matrix is unit triangular (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix.
--   **a**: input/output [`Complex128Array`][@stdlib/array/complex128] in RFP format of length `N*(N+1)/2`.
--   **stride**: stride length for `a`.
--   **offset**: starting index for `a`.
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+
+#### ztftri.ndarray( transr, uplo, diag, N, A, strideA, offsetA )
+
+Computes the inverse of A complex triangular matrix in Rectangular Full Packed format, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA**: stride length for `A`.
+-   **offsetA**: starting index for `A`.
 
 </section>
 
@@ -41,10 +71,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The RFP (Rectangular Full Packed) format stores a triangular matrix in a rectangular array, enabling efficient use of Level 3 BLAS operations.
--   On successful exit (`info = 0`), the inverse of the triangular matrix overwrites the input in RFP format.
--   If `info = k > 0`, the element `A(k,k)` is exactly zero and the matrix is singular; its inverse cannot be computed.
--   Uses a Level 3 BLAS algorithm by delegating to `ztrtri` and `ztrmm`.
+-   `ztftri()` corresponds to the [LAPACK][lapack] level routine [`ztftri`][lapack-ztftri].
 
 </section>
 
@@ -54,15 +81,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var ztftri = require( '@stdlib/lapack/base/ztftri' );
 
-// 3x3 lower triangular matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var a = new Complex128Array( [ 2, 1, 0.5, -0.3, 1, 0.5, 4, 0, 3, -1, 0.8, 0.2 ] );
-var info = ztftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, a, 1, 0 );
-console.log( 'info:', info );
-// => info: 0
+// TODO: Add examples
 ```
 
 </section>
@@ -81,7 +105,13 @@ console.log( 'info:', info );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/array/complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztftri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztftri.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

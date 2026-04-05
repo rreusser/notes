@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgesv
 
-> Compute the solution to a complex system of linear equations A * X = B
+> Computes the solution to a complex system of linear equations A * X = B,.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zgesv = require( '@stdlib/lapack/base/zgesv' );
 ```
 
-#### zgesv.ndarray( N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+#### zgesv( N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
 
-Compute the solution to a complex system of linear equations A * X = B
+Computes the solution to a complex system of linear equations A * X = B,.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,17 +43,32 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **nrhs**: nrhs.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **IPIV**: input array.
+-   **nrhs**: number of right-hand sides.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### zgesv.ndarray( N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+
+Computes the solution to a complex system of linear equations A * X = B,, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **B**: output matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
 
 </section>
@@ -44,7 +79,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgesv()` corresponds to the [LAPACK][lapack] level routine [`zgesv`][lapack-zgesv].
 
 </section>
 
@@ -54,7 +89,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgesv = require( '@stdlib/lapack/base/zgesv' );
+
 // TODO: Add examples
 ```
 
@@ -74,9 +113,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgesv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgesv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

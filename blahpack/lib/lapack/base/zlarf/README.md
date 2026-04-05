@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlarf
 
-> Apply a complex Householder reflector
+> Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlarf = require( '@stdlib/lapack/base/zlarf' );
 ```
 
-#### zlarf.ndarray( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+#### zlarf( order, side, M, N, v, strideV, tau, offsetTau, C, LDC, WORK, strideWORK )
 
-Apply a complex Householder reflector
+Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,19 +42,35 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the side of the operation.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **v**: input array.
--   **strideV**: stride length for `v`.
--   **offsetV**: starting index for `v`.
--   **tau**: tau.
--   **C**: input matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
--   **offsetC**: starting index for `C`.
--   **WORK**: output array.
+-   **v**: `v`.
+-   **strideV**: stride length for `V`.
+-   **tau**: `tau`.
+-   **offsetTau**: starting index for `Tau`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### zlarf.ndarray( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+Apply a complex elementary reflector H to a complex M-by-N matrix C,, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetV**: starting index for `V`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -65,7 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlarf()` corresponds to the [LAPACK][lapack] level routine [`zlarf`][lapack-zlarf].
 
 </section>
 
@@ -75,7 +91,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlarf = require( '@stdlib/lapack/base/zlarf' );
+
 // TODO: Add examples
 ```
 
@@ -95,9 +115,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlarf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlarf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

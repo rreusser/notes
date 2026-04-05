@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhpgvx
 
-> Computes selected eigenvalues and optionally eigenvectors of a complex Hermitian-definite generalized eigenproblem in packed storage.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,93 +32,61 @@ var zhpgvx = require( '@stdlib/lapack/base/zhpgvx' );
 
 #### zhpgvx( order, itype, jobz, range, uplo, N, AP, BP, vl, vu, il, iu, abstol, out, w, Z, LDZ, WORK, RWORK, IWORK, IFAIL )
 
-Computes selected eigenvalues and, optionally, eigenvectors of a complex Hermitian-definite generalized eigenproblem in packed storage.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// A = [4 1-i; 1+i 5] in upper packed storage (complex interleaved):
-var AP = new Complex128Array( [ 4, 0, 1, -1, 5, 0 ] );
-
-// B = [2 0; 0 3] in upper packed storage:
-var BP = new Complex128Array( [ 2, 0, 0, 0, 3, 0 ] );
-
-var W = new Float64Array( 2 );
-var Z = new Complex128Array( 4 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 20 );
-var IWORK = new Int32Array( 15 );
-var IFAIL = new Int32Array( 2 );
-var out = { 'M': 0 };
-
-var info = zhpgvx( 'column-major', 1, 'compute-vectors', 'all', 'upper', 2, AP, BP, 0, 0, 0, 0, 0, out, W, Z, 2, WORK, RWORK, IWORK, IFAIL );
-// info => 0
-// out.M => 2
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **itype**: problem type (1, 2, or 3).
--   **jobz**: `'no-vectors'` (eigenvalues only) or `'compute-vectors'` (eigenvalues and eigenvectors).
--   **range**: `'all'`, `'value'`, or `'index'`.
--   **uplo**: `'upper'` or `'lower'`, specifying which triangle of A and B is stored.
--   **N**: order of matrices A and B.
--   **AP**: packed Hermitian matrix A (length `N*(N+1)/2`); on exit, overwritten.
--   **BP**: packed Hermitian positive definite matrix B (length `N*(N+1)/2`); on exit, Cholesky factor.
--   **vl**: lower bound of eigenvalue interval (range=`'value'`).
--   **vu**: upper bound of eigenvalue interval (range=`'value'`).
--   **il**: index of smallest eigenvalue to compute (1-based, range=`'index'`).
--   **iu**: index of largest eigenvalue to compute (1-based, range=`'index'`).
--   **abstol**: absolute tolerance for eigenvalues.
--   **out**: output object; `out.M` will be set to the number of eigenvalues found.
--   **w**: output array for eigenvalues (length `N`), in ascending order.
--   **Z**: output eigenvector matrix (complex); referenced only if jobz is `'compute-vectors'`.
--   **LDZ**: leading dimension of `Z` (in complex elements).
--   **WORK**: complex workspace array (length >= `2*N`).
--   **RWORK**: real workspace array (length >= `7*N`).
--   **IWORK**: integer workspace (length >= `5*N`).
--   **IFAIL**: output array for indices of non-converged eigenvectors (length `N`).
+-   **itype**: `itype`.
+-   **jobz**: `jobz`.
+-   **range**: `range`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **BP**: input array `BP`.
+-   **vl**: `vl`.
+-   **vu**: `vu`.
+-   **il**: `il`.
+-   **iu**: `iu`.
+-   **abstol**: `abstol`.
+-   **out**: `out`.
+-   **w**: `w`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
+-   **RWORK**: input array `RWORK`.
+-   **IWORK**: input array `IWORK`.
+-   **IFAIL**: input array `IFAIL`.
 
 #### zhpgvx.ndarray( itype, jobz, range, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
 
-Computes selected eigenvalues and, optionally, eigenvectors with alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-var AP = new Complex128Array( [ 4, 0, 1, -1, 5, 0 ] );
-var BP = new Complex128Array( [ 2, 0, 0, 0, 3, 0 ] );
-var W = new Float64Array( 2 );
-var Z = new Complex128Array( 4 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 20 );
-var IWORK = new Int32Array( 15 );
-var IFAIL = new Int32Array( 2 );
-var out = { 'M': 0 };
-
-var info = zhpgvx.ndarray( 1, 'compute-vectors', 'all', 'upper', 2, AP, 1, 0, BP, 1, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 2, 0, WORK, 1, 0, RWORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-// info => 0
-// out.M => 2
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **strideAP**: stride length for `AP` (complex elements).
--   **offsetAP**: starting index for `AP` (complex elements).
--   **strideBP**: stride length for `BP` (complex elements).
--   **offsetBP**: starting index for `BP` (complex elements).
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **strideZ1**: stride of the first dimension of `Z` (complex elements).
--   **strideZ2**: stride of the second dimension of `Z` (complex elements).
--   **offsetZ**: starting index for `Z` (complex elements).
--   **strideWORK**: stride length for `WORK` (complex elements).
--   **offsetWORK**: starting index for `WORK` (complex elements).
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideBP**: stride length for `BP`.
+-   **offsetBP**: starting index for `BP`.
+-   **strideW**: stride length for `W`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **strideRWORK**: stride length for `RWORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
@@ -114,11 +102,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   `zhpgvx` solves `A*x = lambda*B*x` (itype=1), `A*B*x = lambda*x` (itype=2), or `B*A*x = lambda*x` (itype=3).
--   Both A and B must be Hermitian. B must also be positive definite.
--   On exit, AP is destroyed and BP contains the Cholesky factor of B.
--   The number of eigenvalues found is returned in `out.M`.
--   Eigenvalues are always real for Hermitian-definite problems.
+-   `zhpgvx()` corresponds to the [LAPACK][lapack] level routine [`zhpgvx`][lapack-zhpgvx].
 
 </section>
 
@@ -128,32 +112,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var zhpgvx = require( '@stdlib/lapack/base/zhpgvx' );
 
-// A = [4 1-i; 1+i 5] in upper packed storage:
-var AP = new Complex128Array( [ 4, 0, 1, -1, 5, 0 ] );
-
-// B = [2 0; 0 3] in upper packed storage:
-var BP = new Complex128Array( [ 2, 0, 0, 0, 3, 0 ] );
-
-var W = new Float64Array( 2 );
-var Z = new Complex128Array( 4 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 20 );
-var IWORK = new Int32Array( 15 );
-var IFAIL = new Int32Array( 2 );
-var out = { 'M': 0 };
-
-var info = zhpgvx( 'column-major', 1, 'compute-vectors', 'all', 'upper', 2, AP, BP, 0, 0, 0, 0, 0, out, W, Z, 2, WORK, RWORK, IWORK, IFAIL );
-
-console.log( 'info:', info );
-console.log( 'M (eigenvalues found):', out.M );
-console.log( 'Eigenvalues:', W );
-console.log( 'Eigenvectors:', Z );
+// TODO: Add examples
 ```
 
 </section>
@@ -172,8 +136,13 @@ console.log( 'Eigenvectors:', Z );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhpgvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhpgvx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

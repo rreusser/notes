@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaqsb
 
-> Equilibrate a symmetric band matrix using scaling factors.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,55 +32,43 @@ var dlaqsb = require( '@stdlib/lapack/base/dlaqsb' );
 
 #### dlaqsb( uplo, N, KD, AB, LDAB, S, strideS, scond, amax )
 
-Equilibrates a symmetric band matrix `A` stored in band format using the scaling factors in the vector `S`.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AB = new Float64Array( [ 0.0, 4.0, 1.0, 9.0, 2.0, 16.0, 3.0, 25.0 ] );
-var S = new Float64Array( [ 0.5, 0.25, 0.2, 0.1 ] );
-
-var equed = dlaqsb( 'upper', 4, 1, AB, 2, S, 1, 0.02, 25.0 );
-// returns 'yes'
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **KD**: number of super-diagonals (upper) or sub-diagonals (lower).
--   **AB**: band matrix stored in band format, dimension `(LDAB, N)`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **KD**: input array `KD`.
+-   **AB**: input array `AB`.
 -   **LDAB**: leading dimension of `AB`.
--   **S**: scaling factors, length `N`.
--   **strideS**: stride for `S`.
--   **scond**: ratio of smallest to largest scaling factor.
--   **amax**: absolute value of the largest matrix element.
+-   **S**: input array `S`.
+-   **strideS**: stride length for `S`.
+-   **scond**: `scond`.
+-   **amax**: `amax`.
 
 #### dlaqsb.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, S, strideS, offsetS, scond, amax )
 
-Equilibrates a symmetric band matrix using scaling factors, with alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AB = new Float64Array( [ 0.0, 4.0, 1.0, 9.0, 2.0, 16.0, 3.0, 25.0 ] );
-var S = new Float64Array( [ 0.5, 0.25, 0.2, 0.1 ] );
-
-var equed = dlaqsb.ndarray( 'upper', 4, 1, AB, 1, 2, 0, S, 1, 0, 0.02, 25.0 );
-// returns 'yes'
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **kd**: `kd`.
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
 -   **offsetS**: starting index for `S`.
-
-The function returns a string indicating whether equilibration was performed:
-
--   `'none'`: no equilibration was needed.
--   `'yes'`: equilibration was done (i.e., `A` was replaced by `diag(S) * A * diag(S)`).
 
 </section>
 
@@ -70,8 +78,7 @@ The function returns a string indicating whether equilibration was performed:
 
 ## Notes
 
--   Equilibration is performed when the ratio of scaling factors (`scond`) is below an internal threshold (0.1), or when the largest element (`amax`) is very small or very large relative to machine precision.
--   The routine modifies `AB` in place.
+-   `dlaqsb()` corresponds to the [LAPACK][lapack] level routine [`dlaqsb`][lapack-dlaqsb].
 
 </section>
 
@@ -81,19 +88,12 @@ The function returns a string indicating whether equilibration was performed:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlaqsb = require( '@stdlib/lapack/base/dlaqsb' );
 
-// 4x4 symmetric band matrix (upper, KD=1, LDAB=2):
-var AB = new Float64Array( [ 0.0, 4.0, 1.0, 9.0, 2.0, 16.0, 3.0, 25.0 ] );
-var S = new Float64Array( [ 0.5, 0.25, 0.2, 0.1 ] );
-
-var equed = dlaqsb( 'upper', 4, 1, AB, 2, S, 1, 0.02, 25.0 );
-console.log( 'equed:', equed );
-// => 'yes'
-
-console.log( 'AB:', AB );
+// TODO: Add examples
 ```
 
 </section>
@@ -112,9 +112,12 @@ console.log( 'AB:', AB );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaqsb]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaqsb.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

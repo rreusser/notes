@@ -18,7 +18,12 @@
 
 'use strict';
 
-var zladiv = require( '@stdlib/lapack/base/zladiv' );
+var zladiv = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zladiv );
+// Using the standard interface:
+var out = zladiv( 1, 1, 1, 1, 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zladiv.ndarray( 1, 0, 1, 0, 1, 0 );
+console.log( out );

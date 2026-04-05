@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgtsvx
 
-> Expert driver for solving a general tridiagonal system
+> Uses the LU factorization to compute the solution to a real system of.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dgtsvx = require( '@stdlib/lapack/base/dgtsvx' );
 ```
 
-#### dgtsvx.ndarray( fact, trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dgtsvx( fact, trans, N, nrhs, DL, strideDL, d, strideD, DU, strideDU, DLF, strideDLF, DF, strideDF, DUF, strideDUF, DU2, strideDU2, IPIV, strideIPIV, B, LDB, X, LDX, rcond, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, IWORK, strideIWORK )
 
-Expert driver for solving a general tridiagonal system
+Uses the LU factorization to compute the solution to a real system of.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,54 +42,69 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **fact**: specifies the operation type.
--   **trans**: specifies the operation type.
+-   **fact**: `fact`.
+-   **trans**: specifies whether the matrix should be transposed.
 -   **N**: number of columns.
--   **nrhs**: nrhs.
--   **DL**: input array.
+-   **nrhs**: number of right-hand sides.
+-   **DL**: input array `DL`.
 -   **strideDL**: stride length for `DL`.
--   **offsetDL**: starting index for `DL`.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **DU**: input array.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **DU**: input array `DU`.
 -   **strideDU**: stride length for `DU`.
--   **offsetDU**: starting index for `DU`.
--   **DLF**: input array.
+-   **DLF**: input array `DLF`.
 -   **strideDLF**: stride length for `DLF`.
--   **offsetDLF**: starting index for `DLF`.
--   **DF**: input array.
+-   **DF**: input array `DF`.
 -   **strideDF**: stride length for `DF`.
--   **offsetDF**: starting index for `DF`.
--   **DUF**: input array.
+-   **DUF**: input array `DUF`.
 -   **strideDUF**: stride length for `DUF`.
--   **offsetDUF**: starting index for `DUF`.
--   **DU2**: input array.
--   **strideDU2**: stride length for `DU2`.
--   **offsetDU2**: starting index for `DU2`.
--   **IPIV**: input array.
+-   **DU2**: input array `DU2`.
+-   **strideDU2**: stride of dimension 2 of `DU`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **offsetIPIV**: starting index for `IPIV`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **X**: input matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
--   **offsetX**: starting index for `X`.
--   **rcond**: rcond.
--   **FERR**: input array.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **rcond**: `rcond`.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
--   **offsetFERR**: starting index for `FERR`.
--   **BERR**: input array.
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
--   **offsetBERR**: starting index for `BERR`.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: output array.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+
+#### dgtsvx.ndarray( fact, trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+Uses the LU factorization to compute the solution to a real system of, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetDL**: starting index for `DL`.
+-   **offsetD**: starting index for `D`.
+-   **offsetDU**: starting index for `DU`.
+-   **offsetDLF**: starting index for `DLF`.
+-   **offsetDF**: starting index for `DF`.
+-   **offsetDUF**: starting index for `DUF`.
+-   **offsetDU2**: starting index for `DU2`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -80,7 +115,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dgtsvx()` corresponds to the [LAPACK][lapack] level routine [`dgtsvx`][lapack-dgtsvx].
 
 </section>
 
@@ -90,7 +125,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dgtsvx = require( '@stdlib/lapack/base/dgtsvx' );
+
 // TODO: Add examples
 ```
 
@@ -110,9 +149,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgtsvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgtsvx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

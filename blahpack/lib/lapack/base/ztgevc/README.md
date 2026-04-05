@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztgevc
 
-> Compute eigenvectors of a pair of complex upper triangular matrices
+> ABS1: |re| + |im| (cheap complex absolute value).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
 ```
 
-#### ztgevc.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+#### ztgevc( order, side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, LDS, P, LDP, VL, LDVL, VR, LDVR, mm, M, WORK, strideWORK, RWORK, strideRWORK )
 
-Compute eigenvectors of a pair of complex upper triangular matrices
+ABS1: |re| + |im| (cheap complex absolute value).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,35 +42,53 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
--   **howmny**: specifies the operation type.
--   **SELECT**: input array.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the side of the operation.
+-   **howmny**: `howmny`.
+-   **SELECT**: input array `SELECT`.
 -   **strideSELECT**: stride length for `SELECT`.
 -   **offsetSELECT**: starting index for `SELECT`.
 -   **N**: number of columns.
--   **S**: input matrix.
--   **strideS1**: stride of the first dimension of `S`.
--   **strideS2**: stride of the second dimension of `S`.
--   **offsetS**: starting index for `S`.
--   **P**: input matrix.
--   **strideP1**: stride of the first dimension of `P`.
--   **strideP2**: stride of the second dimension of `P`.
--   **offsetP**: starting index for `P`.
--   **VL**: input matrix.
--   **strideVL1**: stride of the first dimension of `VL`.
--   **strideVL2**: stride of the second dimension of `VL`.
--   **offsetVL**: starting index for `VL`.
--   **VR**: input matrix.
--   **strideVR1**: stride of the first dimension of `VR`.
--   **strideVR2**: stride of the second dimension of `VR`.
--   **offsetVR**: starting index for `VR`.
--   **mm**: mm.
+-   **S**: input array `S`.
+-   **LDS**: leading dimension of `S`.
+-   **P**: input array `P`.
+-   **LDP**: leading dimension of `P`.
+-   **VL**: input array `VL`.
+-   **LDVL**: leading dimension of `VL`.
+-   **VR**: input array `VR`.
+-   **LDVR**: leading dimension of `VR`.
+-   **mm**: `mm`.
 -   **M**: number of rows.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **RWORK**: output array.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
+
+#### ztgevc.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+ABS1: |re| + |im| (cheap complex absolute value), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideS1**: stride of dimension 1 of `S`.
+-   **strideS2**: stride of dimension 2 of `S`.
+-   **offsetS**: starting index for `S`.
+-   **strideP1**: stride of dimension 1 of `P`.
+-   **strideP2**: stride of dimension 2 of `P`.
+-   **offsetP**: starting index for `P`.
+-   **strideVL1**: stride of dimension 1 of `VL`.
+-   **strideVL2**: stride of dimension 2 of `VL`.
+-   **offsetVL**: starting index for `VL`.
+-   **strideVR1**: stride of dimension 1 of `VR`.
+-   **strideVR2**: stride of dimension 2 of `VR`.
+-   **offsetVR**: starting index for `VR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -61,7 +99,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztgevc()` corresponds to the [LAPACK][lapack] level routine [`ztgevc`][lapack-ztgevc].
 
 </section>
 
@@ -71,7 +109,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
+
 // TODO: Add examples
 ```
 
@@ -91,9 +133,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztgevc]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztgevc.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

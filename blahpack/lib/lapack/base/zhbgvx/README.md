@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhbgvx
 
-> Computes selected eigenvalues and optionally eigenvectors of a complex Hermitian-definite banded generalized eigenproblem.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,76 +30,77 @@
 var zhbgvx = require( '@stdlib/lapack/base/zhbgvx' );
 ```
 
-#### zhbgvx.ndarray( jobz, range, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, Q, strideQ1, strideQ2, offsetQ, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+#### zhbgvx( jobz, range, uplo, N, ka, kb, AB, LDAB, BB, LDBB, Q, LDQ, vl, vu, il, iu, abstol, out, w, strideW, Z, LDZ, WORK, strideWORK, RWORK, strideRWORK, IWORK, strideIWORK, IFAIL, strideIFAIL )
 
-Computes selected eigenvalues and optionally eigenvectors of a complex Hermitian-definite banded generalized eigenproblem.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 
-// 5x5 Hermitian band matrix A (KA=2), upper storage:
-var AB = new Complex128Array( [ 0, 0, 0, 0, 10, 0, 0, 0, 1, 0.5, 8, 0, 0.5, 0.1, 2, -0.3, 6, 0, 0.3, -0.2, 1.5, 0.2, 9, 0, 0.4, 0.15, 1, -0.4, 7, 0 ] );
-// 5x5 Hermitian positive definite band matrix B (KB=1), upper storage:
-var BB = new Complex128Array( [ 0, 0, 4, 0, 0.2, 0.1, 5, 0, 0.3, -0.1, 3, 0, 0.1, 0.05, 6, 0, 0.2, -0.1, 4, 0 ] );
-var Q = new Complex128Array( 25 );
-var W = new Float64Array( 5 );
-var Z = new Complex128Array( 25 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 50 );
-var IWORK = new Int32Array( 30 );
-var IFAIL = new Int32Array( 5 );
-var out = { M: 0 };
-
-zhbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, RWORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-// out.M => 5
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **jobz**: `'no-vectors'` or `'compute-vectors'`.
--   **range**: `'all'`, `'value'`, or `'index'`.
--   **uplo**: `'upper'` or `'lower'`.
--   **N**: order of matrices A and B.
--   **ka**: number of super- (or sub-) diagonals of A.
--   **kb**: number of super- (or sub-) diagonals of B.
--   **AB**: [`Complex128Array`][@stdlib/array/complex128] band matrix A in band storage.
--   **strideAB1**: stride of the first dimension of `AB` (complex elements).
--   **strideAB2**: stride of the second dimension of `AB` (complex elements).
--   **offsetAB**: starting index for `AB` (complex elements).
--   **BB**: [`Complex128Array`][@stdlib/array/complex128] band matrix B in band storage.
--   **strideBB1**: stride of the first dimension of `BB` (complex elements).
--   **strideBB2**: stride of the second dimension of `BB` (complex elements).
--   **offsetBB**: starting index for `BB` (complex elements).
--   **Q**: [`Complex128Array`][@stdlib/array/complex128] output transformation matrix (N-by-N).
--   **strideQ1**: stride of the first dimension of `Q` (complex elements).
--   **strideQ2**: stride of the second dimension of `Q` (complex elements).
--   **offsetQ**: starting index for `Q` (complex elements).
--   **vl**: lower bound of eigenvalue interval (range='value').
--   **vu**: upper bound of eigenvalue interval (range='value').
--   **il**: index of smallest eigenvalue to compute (1-based, range='index').
--   **iu**: index of largest eigenvalue to compute (1-based, range='index').
--   **abstol**: absolute tolerance for eigenvalues.
--   **out**: output object; `out.M` will be set to the number of eigenvalues found.
--   **w**: [`Float64Array`][@stdlib/array/float64] output array for eigenvalues (length N).
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **Z**: [`Complex128Array`][@stdlib/array/complex128] output eigenvector matrix (N-by-M).
--   **strideZ1**: stride of the first dimension of `Z` (complex elements).
--   **strideZ2**: stride of the second dimension of `Z` (complex elements).
--   **offsetZ**: starting index for `Z` (complex elements).
--   **WORK**: [`Complex128Array`][@stdlib/array/complex128] complex workspace (length >= N).
--   **strideWORK**: stride length for `WORK` (complex elements).
--   **offsetWORK**: starting index for `WORK` (complex elements).
--   **RWORK**: [`Float64Array`][@stdlib/array/float64] real workspace (length >= 7\*N).
+-   **jobz**: `jobz`.
+-   **range**: `range`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **ka**: `ka`.
+-   **kb**: `kb`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **BB**: input array `BB`.
+-   **LDBB**: leading dimension of `BB`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **vl**: `vl`.
+-   **vu**: `vu`.
+-   **il**: `il`.
+-   **iu**: `iu`.
+-   **abstol**: `abstol`.
+-   **out**: `out`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
--   **offsetRWORK**: starting index for `RWORK`.
--   **IWORK**: [`Int32Array`][@stdlib/array/int32] integer workspace (length >= 5\*N).
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
--   **offsetIWORK**: starting index for `IWORK`.
--   **IFAIL**: [`Int32Array`][@stdlib/array/int32] output failure indices (length N).
+-   **IFAIL**: input array `IFAIL`.
 -   **strideIFAIL**: stride length for `IFAIL`.
+
+#### zhbgvx.ndarray( jobz, range, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, Q, strideQ1, strideQ2, offsetQ, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **strideBB1**: stride of dimension 1 of `BB`.
+-   **strideBB2**: stride of dimension 2 of `BB`.
+-   **offsetBB**: starting index for `BB`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **offsetRWORK**: starting index for `RWORK`.
+-   **offsetIWORK**: starting index for `IWORK`.
 -   **offsetIFAIL**: starting index for `IFAIL`.
 
 </section>
@@ -90,10 +111,7 @@ The function has the following parameters:
 
 ## Notes
 
--   Workspace arrays must be pre-allocated: `WORK` (Complex128Array, length >= N), `RWORK` (Float64Array, length >= 7\*N), `IWORK` (Int32Array, length >= 5\*N), `IFAIL` (Int32Array, length N).
--   The number of eigenvalues found is returned via `out.M`.
--   Eigenvalues are returned in ascending order in `W` (Float64Array).
--   If `jobz` is `'compute-vectors'`, eigenvectors are stored column-wise in `Z` (Complex128Array).
+-   `zhbgvx()` corresponds to the [LAPACK][lapack] level routine [`zhbgvx`][lapack-zhbgvx].
 
 </section>
 
@@ -103,26 +121,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var zhbgvx = require( '@stdlib/lapack/base/zhbgvx' );
 
-var AB = new Complex128Array( [ 0, 0, 0, 0, 10, 0, 0, 0, 1, 0.5, 8, 0, 0.5, 0.1, 2, -0.3, 6, 0, 0.3, -0.2, 1.5, 0.2, 9, 0, 0.4, 0.15, 1, -0.4, 7, 0 ] );
-var BB = new Complex128Array( [ 0, 0, 4, 0, 0.2, 0.1, 5, 0, 0.3, -0.1, 3, 0, 0.1, 0.05, 6, 0, 0.2, -0.1, 4, 0 ] );
-var Q = new Complex128Array( 25 );
-var W = new Float64Array( 5 );
-var Z = new Complex128Array( 25 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 50 );
-var IWORK = new Int32Array( 30 );
-var IFAIL = new Int32Array( 5 );
-var out = { M: 0 };
-
-zhbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, RWORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-console.log( 'Eigenvalues found:', out.M );
-console.log( 'Eigenvalues:', W );
+// TODO: Add examples
 ```
 
 </section>
@@ -141,9 +145,13 @@ console.log( 'Eigenvalues:', W );
 
 <section class="links">
 
-[@stdlib/array/float64]: https://github.com/stdlib-js/array-float64
-[@stdlib/array/int32]: https://github.com/stdlib-js/array-int32
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhbgvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhbgvx.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

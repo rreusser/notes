@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlanhs
 
-> Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix
+> Returns the value of the one norm, Frobenius norm, infinity norm, or.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlanhs = require( '@stdlib/lapack/base/zlanhs' );
 ```
 
-#### zlanhs.ndarray( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+#### zlanhs( order, norm, N, A, LDA, WORK, strideWORK )
 
-Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix
+Returns the value of the one norm, Frobenius norm, infinity norm, or.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,14 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **norm**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **norm**: `norm`.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **WORK**: output array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### zlanhs.ndarray( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+
+Returns the value of the one norm, Frobenius norm, infinity norm, or, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -60,7 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlanhs()` corresponds to the [LAPACK][lapack] level routine [`zlanhs`][lapack-zlanhs].
 
 </section>
 
@@ -70,7 +85,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlanhs = require( '@stdlib/lapack/base/zlanhs' );
+
 // TODO: Add examples
 ```
 
@@ -90,9 +109,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlanhs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlanhs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

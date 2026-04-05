@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztrttf
 
-> Copy a triangular matrix from standard full format (TR) to Rectangular Full Packed format (TF)
+> Copies a complex triangular matrix from standard full format (TR) to Rectangular Full Packed format (TF).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var ztrttf = require( '@stdlib/lapack/base/ztrttf' );
 ```
 
-#### ztrttf.ndarray( transr, uplo, N, A, strideA1, strideA2, offsetA, lda, ARF, strideARF, offsetARF )
+#### ztrttf( order, transr, uplo, N, A, LDA, ARF )
 
-Copy a triangular matrix from standard full format (TR) to Rectangular Full Packed format (TF)
+Copies a complex triangular matrix from standard full format (TR) to Rectangular Full Packed format (TF).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,15 +42,30 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **transr**: specifies the operation type.
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **ARF**: input array `ARF`.
+
+#### ztrttf.ndarray( transr, uplo, N, A, strideA1, strideA2, offsetA, lda, ARF, strideARF, offsetARF )
+
+Copies a complex triangular matrix from standard full format (TR) to Rectangular Full Packed format (TF), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **lda**: lda.
--   **ARF**: output array.
+-   **lda**: `lda`.
 -   **strideARF**: stride length for `ARF`.
 -   **offsetARF**: starting index for `ARF`.
 
@@ -42,7 +77,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztrttf()` corresponds to the [LAPACK][lapack] level routine [`ztrttf`][lapack-ztrttf].
 
 </section>
 
@@ -52,7 +87,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztrttf = require( '@stdlib/lapack/base/ztrttf' );
+
 // TODO: Add examples
 ```
 
@@ -72,9 +111,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztrttf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztrttf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaed2
 
-> Merge eigenvalues and deflate secular equation in divide and conquer
+> Merges the two sets of eigenvalues together into a single sorted set, then tries to deflate the size of the problem.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlaed2 = require( '@stdlib/lapack/base/dlaed2' );
 ```
 
-#### dlaed2.ndarray( K, N, n1, d, strideD, offsetD, Q, strideQ1, strideQ2, offsetQ, INDXQ, strideINDXQ, offsetINDXQ, rho, z, strideZ, offsetZ, DLAMBDA, strideDLAMBDA, offsetDLAMBDA, w, strideW, offsetW, Q2, strideQ2, offsetQ2, INDX, strideINDX, offsetINDX, INDXC, strideINDXC, offsetINDXC, INDXP, strideINDXP, offsetINDXP, COLTYP, strideCOLTYP, offsetCOLTYP )
+#### dlaed2( N, n1, d, Q, LDQ, INDXQ, rho, z, DLAMBDA, w, Q2, INDX, INDXC, INDXP, COLTYP )
 
-Merge eigenvalues and deflate secular equation in divide and conquer
+Merges the two sets of eigenvalues together into a single sorted set, then tries to deflate the size of the problem.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,42 +42,55 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **K**: number of superdiagonals.
 -   **N**: number of columns.
--   **n1**: n1.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
+-   **n1**: `n1`.
+-   **d**: `d`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **INDXQ**: input array `INDXQ`.
+-   **rho**: `rho`.
+-   **z**: `z`.
+-   **DLAMBDA**: input array `DLAMBDA`.
+-   **w**: `w`.
+-   **Q2**: input array `Q2`.
+-   **INDX**: input array `INDX`.
+-   **INDXC**: input array `INDXC`.
+-   **INDXP**: input array `INDXP`.
+-   **COLTYP**: input array `COLTYP`.
+
+#### dlaed2.ndarray( N, n1, d, strideD, offsetD, Q, strideQ1, strideQ2, offsetQ, INDXQ, strideINDXQ, offsetINDXQ, rho, z, strideZ, offsetZ, DLAMBDA, strideDLAMBDA, offsetDLAMBDA, w, strideW, offsetW, Q2, strideQ21, offsetQ2, INDX, strideINDX, offsetINDX, INDXC, strideINDXC, offsetINDXC, INDXP, strideINDXP, offsetINDXP, COLTYP, strideCOLTYP, offsetCOLTYP )
+
+Merges the two sets of eigenvalues together into a single sorted set, then tries to deflate the size of the problem, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideD**: stride length for `D`.
+-   **offsetD**: starting index for `D`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
 -   **offsetQ**: starting index for `Q`.
--   **INDXQ**: input array.
 -   **strideINDXQ**: stride length for `INDXQ`.
 -   **offsetINDXQ**: starting index for `INDXQ`.
--   **rho**: rho.
--   **z**: input array.
--   **strideZ**: stride length for `z`.
--   **offsetZ**: starting index for `z`.
--   **DLAMBDA**: input array.
+-   **strideZ**: stride length for `Z`.
+-   **offsetZ**: starting index for `Z`.
 -   **strideDLAMBDA**: stride length for `DLAMBDA`.
 -   **offsetDLAMBDA**: starting index for `DLAMBDA`.
--   **w**: input array.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **Q2**: input array.
--   **strideQ2**: stride length for `Q2`.
+-   **strideW**: stride length for `W`.
+-   **offsetW**: starting index for `W`.
+-   **strideQ21**: stride of dimension 1 of `Q2`.
 -   **offsetQ2**: starting index for `Q2`.
--   **INDX**: input array.
 -   **strideINDX**: stride length for `INDX`.
 -   **offsetINDX**: starting index for `INDX`.
--   **INDXC**: input array.
 -   **strideINDXC**: stride length for `INDXC`.
 -   **offsetINDXC**: starting index for `INDXC`.
--   **INDXP**: input array.
 -   **strideINDXP**: stride length for `INDXP`.
 -   **offsetINDXP**: starting index for `INDXP`.
--   **COLTYP**: output array.
 -   **strideCOLTYP**: stride length for `COLTYP`.
 -   **offsetCOLTYP**: starting index for `COLTYP`.
 
@@ -69,7 +102,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlaed2()` corresponds to the [LAPACK][lapack] level routine [`dlaed2`][lapack-dlaed2].
 
 </section>
 
@@ -79,7 +112,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlaed2 = require( '@stdlib/lapack/base/dlaed2' );
+
 // TODO: Add examples
 ```
 
@@ -99,9 +136,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaed2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaed2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

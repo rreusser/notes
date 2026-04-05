@@ -18,7 +18,12 @@
 
 'use strict';
 
-var disnan = require( '@stdlib/lapack/base/disnan' );
+var disnan = require( './../lib' );
 
-// TODO: Add example usage
-console.log( disnan );
+// Using the standard interface:
+var out = disnan( 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = disnan.ndarray( 1 );
+console.log( out );

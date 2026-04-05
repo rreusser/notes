@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dggsvd3
 
-> Computes the generalized singular value decomposition of a real matrix pair
+> Computes the generalized singular value decomposition (GSVD) of an M-by-N.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );
 ```
 
-#### dggsvd3.ndarray( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+#### dggsvd3( jobu, jobv, jobq, M, N, p, K, l, A, LDA, B, LDB, ALPHA, strideALPHA, BETA, strideBETA, U, LDU, V, LDV, Q, LDQ, WORK, strideWORK, lwork, IWORK, strideIWORK )
 
-Computes the generalized singular value decomposition of a real matrix pair
+Computes the generalized singular value decomposition (GSVD) of an M-by-N.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,46 +42,64 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobu**: specifies the operation type.
--   **jobv**: specifies the operation type.
--   **jobq**: specifies the operation type.
+-   **jobu**: `jobu`.
+-   **jobv**: `jobv`.
+-   **jobq**: `jobq`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **p**: p.
--   **K**: number of superdiagonals.
--   **l**: l.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **ALPHA**: input array.
+-   **p**: `p`.
+-   **K**: inner dimension.
+-   **l**: `l`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **ALPHA**: input array `ALPHA`.
 -   **strideALPHA**: stride length for `ALPHA`.
--   **offsetALPHA**: starting index for `ALPHA`.
--   **BETA**: input array.
+-   **BETA**: input array `BETA`.
 -   **strideBETA**: stride length for `BETA`.
--   **offsetBETA**: starting index for `BETA`.
--   **U**: input matrix.
--   **strideU1**: stride of the first dimension of `U`.
--   **strideU2**: stride of the second dimension of `U`.
--   **offsetU**: starting index for `U`.
--   **V**: input matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
--   **offsetV**: starting index for `V`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
--   **offsetQ**: starting index for `Q`.
--   **WORK**: input array.
+-   **U**: input array `U`.
+-   **LDU**: leading dimension of `U`.
+-   **V**: input array `V`.
+-   **LDV**: leading dimension of `V`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **IWORK**: output array.
+-   **lwork**: `lwork`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+
+#### dggsvd3.ndarray( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+
+Computes the generalized singular value decomposition (GSVD) of an M-by-N, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **offsetALPHA**: starting index for `ALPHA`.
+-   **offsetBETA**: starting index for `BETA`.
+-   **strideU1**: stride of dimension 1 of `U`.
+-   **strideU2**: stride of dimension 2 of `U`.
+-   **offsetU**: starting index for `U`.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
+-   **offsetV**: starting index for `V`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -72,7 +110,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dggsvd3()` corresponds to the [LAPACK][lapack] level routine [`dggsvd3`][lapack-dggsvd3].
 
 </section>
 
@@ -82,7 +120,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );
+
 // TODO: Add examples
 ```
 
@@ -102,9 +144,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dggsvd3]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dggsvd3.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -18,7 +18,12 @@
 
 'use strict';
 
-var dladiv = require( '@stdlib/lapack/base/dladiv' );
+var dladiv = require( './../lib' );
 
-// TODO: Add example usage
-console.log( dladiv );
+// Using the standard interface:
+var out = dladiv( 1, 1, 1.0, 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = dladiv.ndarray( 1, 1, 1.0, 1, 1 );
+console.log( out );

@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlaset
 
-> Initialize a complex matrix to given values
+> Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlaset = require( '@stdlib/lapack/base/zlaset' );
 ```
 
-#### zlaset.ndarray( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA )
+#### zlaset( order, uplo, M, N, alpha, beta, A, LDA )
 
-Initialize a complex matrix to given values
+Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,14 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **M**: number of rows.
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
 -   **beta**: scalar constant.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+
+#### zlaset.ndarray( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA )
+
+Initializes a complex matrix to BETA on the diagonal and ALPHA on the, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
 
 </section>
@@ -60,7 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlaset()` corresponds to the [LAPACK][lapack] level routine [`zlaset`][lapack-zlaset].
 
 </section>
 
@@ -70,7 +85,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlaset = require( '@stdlib/lapack/base/zlaset' );
+
 // TODO: Add examples
 ```
 
@@ -90,9 +109,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlaset]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlaset.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

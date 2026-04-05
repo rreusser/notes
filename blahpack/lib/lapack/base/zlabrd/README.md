@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlabrd
 
-> Reduce first NB rows/columns to bidiagonal form
+> Reduces the first NB rows and columns of a complex general M-by-N matrix A.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlabrd = require( '@stdlib/lapack/base/zlabrd' );
 ```
 
-#### zlabrd.ndarray( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, X, strideX1, strideX2, offsetX, Y, strideY1, strideY2, offsetY )
+#### zlabrd( order, M, N, nb, A, LDA, d, strideD, e, strideE, TAUQ, strideTAUQ, TAUP, strideTAUP, X, LDX, Y, LDY )
 
-Reduce first NB rows/columns to bidiagonal form
+Reduces the first NB rows and columns of a complex general M-by-N matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,32 +42,49 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **nb**: nb.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **e**: input array.
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **TAUQ**: input array.
+-   **nb**: `nb`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **e**: `e`.
+-   **strideE**: stride length for `E`.
+-   **TAUQ**: input array `TAUQ`.
 -   **strideTAUQ**: stride length for `TAUQ`.
--   **offsetTAUQ**: starting index for `TAUQ`.
--   **TAUP**: input array.
+-   **TAUP**: input array `TAUP`.
 -   **strideTAUP**: stride length for `TAUP`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **Y**: input array `Y`.
+-   **LDY**: leading dimension of `Y`.
+
+#### zlabrd.ndarray( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, X, strideX1, strideX2, offsetX, Y, strideY1, strideY2, offsetY )
+
+Reduces the first NB rows and columns of a complex general M-by-N matrix A, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetD**: starting index for `D`.
+-   **offsetE**: starting index for `E`.
+-   **offsetTAUQ**: starting index for `TAUQ`.
 -   **offsetTAUP**: starting index for `TAUP`.
--   **X**: input matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **Y**: output matrix.
--   **strideY1**: stride of the first dimension of `Y`.
--   **strideY2**: stride of the second dimension of `Y`.
+-   **strideY1**: stride of dimension 1 of `Y`.
+-   **strideY2**: stride of dimension 2 of `Y`.
 -   **offsetY**: starting index for `Y`.
 
 </section>
@@ -58,7 +95,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlabrd()` corresponds to the [LAPACK][lapack] level routine [`zlabrd`][lapack-zlabrd].
 
 </section>
 
@@ -68,7 +105,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlabrd = require( '@stdlib/lapack/base/zlabrd' );
+
 // TODO: Add examples
 ```
 
@@ -88,9 +129,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlabrd]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlabrd.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

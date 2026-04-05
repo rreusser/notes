@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zggev
 
-> Compute the generalized eigenvalues and optionally the eigenvectors of a complex matrix pair (A, B).
+> ABS1: |re| + |im| (cheap complex absolute value).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zggev = require( '@stdlib/lapack/base/zggev' );
 ```
 
-#### zggev.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+#### zggev( order, jobvl, jobvr, N, A, LDA, B, LDB, ALPHA, strideALPHA, BETA, strideBETA, VL, LDVL, VR, LDVR )
 
-Compute the generalized eigenvalues and optionally the eigenvectors of a complex matrix pair (A, B).
+ABS1: |re| + |im| (cheap complex absolute value).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,38 +42,49 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobvl**: specifies the operation type.
--   **jobvr**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **jobvl**: `jobvl`.
+-   **jobvr**: `jobvr`.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **ALPHA**: input array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **ALPHA**: input array `ALPHA`.
 -   **strideALPHA**: stride length for `ALPHA`.
--   **offsetALPHA**: starting index for `ALPHA`.
--   **BETA**: input array.
+-   **BETA**: input array `BETA`.
 -   **strideBETA**: stride length for `BETA`.
+-   **VL**: input array `VL`.
+-   **LDVL**: leading dimension of `VL`.
+-   **VR**: input array `VR`.
+-   **LDVR**: leading dimension of `VR`.
+
+#### zggev.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR )
+
+ABS1: |re| + |im| (cheap complex absolute value), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **offsetALPHA**: starting index for `ALPHA`.
 -   **offsetBETA**: starting index for `BETA`.
--   **VL**: input matrix.
--   **strideVL1**: stride of the first dimension of `VL`.
--   **strideVL2**: stride of the second dimension of `VL`.
+-   **strideVL1**: stride of dimension 1 of `VL`.
+-   **strideVL2**: stride of dimension 2 of `VL`.
 -   **offsetVL**: starting index for `VL`.
--   **VR**: input matrix.
--   **strideVR1**: stride of the first dimension of `VR`.
--   **strideVR2**: stride of the second dimension of `VR`.
+-   **strideVR1**: stride of dimension 1 of `VR`.
+-   **strideVR2**: stride of dimension 2 of `VR`.
 -   **offsetVR**: starting index for `VR`.
--   **WORK**: input array.
--   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **RWORK**: output array.
--   **strideRWORK**: stride length for `RWORK`.
--   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
 
@@ -63,7 +94,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zggev()` corresponds to the [LAPACK][lapack] level routine [`zggev`][lapack-zggev].
 
 </section>
 
@@ -73,7 +104,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zggev = require( '@stdlib/lapack/base/zggev' );
+
 // TODO: Add examples
 ```
 
@@ -93,9 +128,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zggev]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zggev.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlarrj
 
 > Refine eigenvalue approximations using bisection given initial intervals.
@@ -10,7 +30,7 @@
 var dlarrj = require( '@stdlib/lapack/base/dlarrj' );
 ```
 
-#### dlarrj.ndarray( N, d, strideD, offsetD, E2, strideE2, offsetE2, ifirst, ilast, rtol, offset, w, strideW, offsetW, WERR, strideWERR, offsetWERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, pivmin, spdiam )
+#### dlarrj( N, d, strideD, E2, strideE2, ifirst, ilast, rtol, offset, w, strideW, WERR, strideWERR, WORK, strideWORK, IWORK, strideIWORK, pivmin, spdiam )
 
 Refine eigenvalue approximations using bisection given initial intervals.
 
@@ -23,30 +43,43 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **E2**: input array.
--   **strideE2**: stride length for `E2`.
--   **offsetE2**: starting index for `E2`.
--   **ifirst**: ifirst.
--   **ilast**: ilast.
--   **rtol**: rtol.
--   **offset**: offset.
--   **w**: input array.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **WERR**: input array.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **E2**: input array `E2`.
+-   **strideE2**: stride of dimension 2 of `E`.
+-   **ifirst**: `ifirst`.
+-   **ilast**: `ilast`.
+-   **rtol**: `rtol`.
+-   **offset**: `offset`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **WERR**: input array `WERR`.
 -   **strideWERR**: stride length for `WERR`.
--   **offsetWERR**: starting index for `WERR`.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: output array.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+-   **pivmin**: `pivmin`.
+-   **spdiam**: `spdiam`.
+
+#### dlarrj.ndarray( N, d, strideD, offsetD, E2, strideE2, offsetE2, ifirst, ilast, rtol, offset, w, strideW, offsetW, WERR, strideWERR, offsetWERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, pivmin, spdiam )
+
+Refine eigenvalue approximations using bisection given initial intervals, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetD**: starting index for `D`.
+-   **offsetE2**: starting index for `E2`.
+-   **offsetW**: starting index for `W`.
+-   **offsetWERR**: starting index for `WERR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
--   **pivmin**: pivmin.
--   **spdiam**: spdiam.
 
 </section>
 
@@ -56,7 +89,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlarrj()` corresponds to the [LAPACK][lapack] level routine [`dlarrj`][lapack-dlarrj].
 
 </section>
 
@@ -66,7 +99,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlarrj = require( '@stdlib/lapack/base/dlarrj' );
+
 // TODO: Add examples
 ```
 
@@ -86,9 +123,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlarrj]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlarrj.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

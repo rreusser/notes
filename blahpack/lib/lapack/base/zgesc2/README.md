@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgesc2
 
-> Solves a system of linear equations using the LU factorization with complete pivoting computed by zgetc2.
+> Solves a system of linear equations `A * X = scale * RHS` with a general.
 
 <section class="usage">
 
@@ -10,43 +30,47 @@
 var zgesc2 = require( '@stdlib/lapack/base/zgesc2' );
 ```
 
-#### zgesc2.ndarray( N, A, strideA1, strideA2, offsetA, RHS, strideRHS, offsetRHS, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV, scale )
+#### zgesc2( N, A, LDA, RHS, strideRHS, IPIV, strideIPIV, JPIV, strideJPIV, scale )
 
-Solves a system of linear equations `A * X = scale * RHS` with a general N-by-N complex matrix A using the LU factorization with complete pivoting computed by [`zgetc2`][@stdlib/lapack/base/zgetc2].
+Solves a system of linear equations `A * X = scale * RHS` with a general.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// A 2x2 LU-factored complex matrix (column-major):
-var A = new Complex128Array( [ 4.0, 1.0, 0.353, 0.412, 2.0, -1.0, 1.882, 0.029 ] );
-var RHS = new Complex128Array( [ 10.0, 3.0, 7.0, 4.0 ] );
-var IPIV = new Int32Array( [ 0, 1 ] );
-var JPIV = new Int32Array( [ 0, 1 ] );
-var scale = new Float64Array( 1 );
-
-zgesc2.ndarray( 2, A, 1, 2, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, scale );
-// RHS is overwritten with the solution, scale[0] contains the scaling factor
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: order of the matrix A.
--   **A**: [`Complex128Array`][@stdlib/array/complex128] containing the LU-factored N-by-N matrix from zgetc2.
--   **strideA1**: stride of the first dimension of `A` (in complex elements).
--   **strideA2**: stride of the second dimension of `A` (in complex elements).
--   **offsetA**: starting index for `A` (in complex elements).
--   **RHS**: [`Complex128Array`][@stdlib/array/complex128] containing the right-hand side vector (overwritten with the solution).
--   **strideRHS**: stride for `RHS` (in complex elements).
--   **offsetRHS**: starting index for `RHS` (in complex elements).
--   **IPIV**: [`Int32Array`][mdn-int32array] containing row pivot indices from zgetc2 (0-based).
--   **strideIPIV**: stride for `IPIV`.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **RHS**: input array `RHS`.
+-   **strideRHS**: stride length for `RHS`.
+-   **IPIV**: input array `IPIV`.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **JPIV**: input array `JPIV`.
+-   **strideJPIV**: stride length for `JPIV`.
+-   **scale**: `scale`.
+
+#### zgesc2.ndarray( N, A, strideA1, strideA2, offsetA, RHS, strideRHS, offsetRHS, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV, scale )
+
+Solves a system of linear equations `A * X = scale * RHS` with a general, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetRHS**: starting index for `RHS`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **JPIV**: [`Int32Array`][mdn-int32array] containing column pivot indices from zgetc2 (0-based).
--   **strideJPIV**: stride for `JPIV`.
 -   **offsetJPIV**: starting index for `JPIV`.
--   **scale**: [`Float64Array`][mdn-float64array] output where `scale[0]` receives the scaling factor.
 
 </section>
 
@@ -56,9 +80,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The routine solves `A * X = scale * RHS` where A has been LU-factored with complete pivoting by [`zgetc2`][@stdlib/lapack/base/zgetc2]. The scaling factor is chosen to prevent overflow.
--   `IPIV` and `JPIV` are expected to be 0-based in the ndarray interface.
--   `zgesc2` is a complex (double-precision) version of [`dgesc2`][@stdlib/lapack/base/dgesc2].
+-   `zgesc2()` corresponds to the [LAPACK][lapack] level routine [`zgesc2`][lapack-zgesc2].
 
 </section>
 
@@ -68,24 +90,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgesc2 = require( '@stdlib/lapack/base/zgesc2' );
 
-var A = new Complex128Array( [ 4.0, 1.0, 0.353, 0.412, 2.0, -1.0, 1.882, 0.029 ] );
-var RHS = new Complex128Array( [ 10.0, 3.0, 7.0, 4.0 ] );
-var IPIV = new Int32Array( [ 0, 1 ] );
-var JPIV = new Int32Array( [ 0, 1 ] );
-var scale = new Float64Array( 1 );
-
-zgesc2.ndarray( 2, A, 1, 2, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, scale );
-
-var view = reinterpret( RHS, 0 );
-console.log( 'Solution:', Array.from( view ) );
-console.log( 'Scale:', scale[ 0 ] );
+// TODO: Add examples
 ```
 
 </section>
@@ -104,11 +114,12 @@ console.log( 'Scale:', scale[ 0 ] );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
-[@stdlib/lapack/base/zgetc2]: https://github.com/stdlib-js/lapack-base-zgetc2
-[@stdlib/lapack/base/dgesc2]: https://github.com/stdlib-js/lapack-base-dgesc2
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgesc2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgesc2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

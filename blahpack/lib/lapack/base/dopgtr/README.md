@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dopgtr
 
 > Generates a real orthogonal matrix Q from the elementary reflectors returned by dsptrd.
@@ -10,40 +30,46 @@
 var dopgtr = require( '@stdlib/lapack/base/dopgtr' );
 ```
 
-#### dopgtr.ndarray( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
+#### dopgtr( order, uplo, N, AP, TAU, Q, LDQ, WORK )
 
 Generates a real orthogonal matrix Q from the elementary reflectors returned by dsptrd.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var dopgtr = require( '@stdlib/lapack/base/dopgtr' );
 
-// 3x3 symmetric matrix, upper packed after dsptrd:
-var AP = new Float64Array( [ 5.3, -0.1, 1.7, -0.72, 3.16, 4.0 ] );
-var TAU = new Float64Array( [ 0.0, 1.316 ] );
-var Q = new Float64Array( 9 );
-var WORK = new Float64Array( 3 );
-
-var info = dopgtr.ndarray( 'upper', 3, AP, 1, 0, TAU, 1, 0, Q, 1, 3, 0, WORK, 1, 0 );
-// info => 0
-// Q => < Float64Array >
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **AP**: input array.
+-   **AP**: input array `AP`.
+-   **TAU**: input array `TAU`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **WORK**: input array `WORK`.
+
+#### dopgtr.ndarray( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
+
+Generates a real orthogonal matrix Q from the elementary reflectors returned by dsptrd, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **TAU**: input array.
 -   **strideTAU**: stride length for `TAU`.
 -   **offsetTAU**: starting index for `TAU`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
 -   **offsetQ**: starting index for `Q`.
--   **WORK**: output array.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
@@ -55,9 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   DOPGTR generates the orthogonal matrix Q from the elementary reflectors returned by [`dsptrd`][@stdlib/lapack/base/dsptrd] (packed storage tridiagonal reduction).
--   If `uplo` is `'upper'`, the reflectors are applied via [`dorg2l`][@stdlib/lapack/base/dorg2l]. If `uplo` is `'lower'`, they are applied via [`dorg2r`][@stdlib/lapack/base/dorg2r].
--   The output matrix Q is N-by-N and orthogonal (Q^T * Q = I).
+-   `dopgtr()` corresponds to the [LAPACK][lapack] level routine [`dopgtr`][lapack-dopgtr].
 
 </section>
 
@@ -67,22 +91,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dopgtr = require( '@stdlib/lapack/base/dopgtr' );
 
-// 4x4 symmetric matrix, upper packed after dsptrd:
-var N = 4;
-var AP = new Float64Array( [
-    2.26, -0.092, 1.183, -0.580, 0.896, 5.556, -0.4, -0.2, 3.0, -1.0
-] );
-var TAU = new Float64Array( [ 0.0, 1.496, 1.667 ] );
-var Q = new Float64Array( N * N );
-var WORK = new Float64Array( N );
-
-var info = dopgtr.ndarray( 'upper', N, AP, 1, 0, TAU, 1, 0, Q, 1, N, 0, WORK, 1, 0 );
-console.log( 'info:', info );
-console.log( 'Q:', Q );
+// TODO: Add examples
 ```
 
 </section>
@@ -101,9 +115,12 @@ console.log( 'Q:', Q );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dopgtr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dopgtr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

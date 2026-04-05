@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlarft
 
-> Form the triangular factor T of a block reflector
+> Form the triangular factor T of a complex block reflector H of order N,.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlarft = require( '@stdlib/lapack/base/zlarft' );
 ```
 
-#### zlarft.ndarray( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT )
+#### zlarft( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
 
-Form the triangular factor T of a block reflector
+Form the triangular factor T of a complex block reflector H of order N,.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,20 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **direct**: specifies the operation type.
--   **storev**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **direct**: `direct`.
+-   **storev**: `storev`.
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
--   **V**: input matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
--   **offsetV**: starting index for `V`.
--   **TAU**: input array.
+-   **K**: inner dimension.
+-   **V**: input array `V`.
+-   **LDV**: leading dimension of `V`.
+-   **TAU**: input array `TAU`.
 -   **strideTAU**: stride length for `TAU`.
+-   **T**: input array `T`.
+-   **LDT**: leading dimension of `T`.
+
+#### zlarft.ndarray( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT )
+
+Form the triangular factor T of a complex block reflector H of order N,, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
+-   **offsetV**: starting index for `V`.
 -   **offsetTAU**: starting index for `TAU`.
--   **T**: output matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
 -   **offsetT**: starting index for `T`.
 
 </section>
@@ -66,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlarft()` corresponds to the [LAPACK][lapack] level routine [`zlarft`][lapack-zlarft].
 
 </section>
 
@@ -76,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlarft = require( '@stdlib/lapack/base/zlarft' );
+
 // TODO: Add examples
 ```
 
@@ -96,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlarft]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlarft.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

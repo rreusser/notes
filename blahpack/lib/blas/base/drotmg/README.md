@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # drotmg
 
-> Construct a modified Givens plane rotation
+> Constructs a modified Givens plane rotation.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var drotmg = require( '@stdlib/blas/base/drotmg' );
 ```
 
-#### drotmg.ndarray( dd1, dd2, dx1, dy1, dparam, strideDPARAM, offsetDPARAM )
+#### drotmg( D, x1, dy1, param )
 
-Construct a modified Givens plane rotation
+Constructs a modified Givens plane rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,13 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **dd1**: dd1.
--   **dd2**: dd2.
--   **dx1**: dx1.
--   **dy1**: dy1.
--   **dparam**: input array.
--   **strideDPARAM**: stride length for `dparam`.
--   **offsetDPARAM**: starting index for `dparam`.
+-   **D**: input array `D`.
+-   **x1**: `x1`.
+-   **dy1**: `dy1`.
+-   **param**: `param`.
+
+#### drotmg.ndarray( D, strideD, offsetD, x1, strideX1, offsetX1, dy1, param, strideParam, offsetParam )
+
+Constructs a modified Givens plane rotation, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideD**: stride length for `D`.
+-   **offsetD**: starting index for `D`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **offsetX1**: starting index for `X1`.
+-   **strideParam**: stride length for `Param`.
+-   **offsetParam**: starting index for `Param`.
 
 </section>
 
@@ -38,7 +74,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `drotmg()` corresponds to the [LAPACK][lapack] level routine [`drotmg`][lapack-drotmg].
 
 </section>
 
@@ -48,7 +84,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var drotmg = require( '@stdlib/blas/base/drotmg' );
+
 // TODO: Add examples
 ```
 
@@ -68,9 +108,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-drotmg]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__drotmg.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

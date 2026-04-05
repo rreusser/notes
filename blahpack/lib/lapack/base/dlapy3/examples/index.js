@@ -18,7 +18,12 @@
 
 'use strict';
 
-var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
+var dlapy3 = require( './../lib' );
 
-// TODO: Add example usage
-console.log( dlapy3 );
+// Using the standard interface:
+var out = dlapy3( 1, 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = dlapy3.ndarray( 1, 1, 1 );
+console.log( out );

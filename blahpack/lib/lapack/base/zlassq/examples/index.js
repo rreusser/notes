@@ -18,7 +18,12 @@
 
 'use strict';
 
-var zlassq = require( '@stdlib/lapack/base/zlassq' );
+var zlassq = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlassq );
+// Using the standard interface:
+var out = zlassq( N, 1, 1, 1.0, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
+console.log( out );

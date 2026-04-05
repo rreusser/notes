@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlas2
 
-> Compute singular values of a 2-by-2 triangular matrix
+> Computes the singular values of a 2-by-2 triangular matrix:.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlas2 = require( '@stdlib/lapack/base/dlas2' );
 ```
 
-#### dlas2.ndarray( f, g, h, ssmin, ssmax )
+#### dlas2( f, g, h, out )
 
-Compute singular values of a 2-by-2 triangular matrix
+Computes the singular values of a 2-by-2 triangular matrix:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,11 +42,23 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **f**: f.
--   **g**: g.
--   **h**: h.
--   **ssmin**: ssmin.
--   **ssmax**: ssmax.
+-   **f**: `f`.
+-   **g**: `g`.
+-   **h**: `h`.
+-   **out**: `out`.
+
+#### dlas2.ndarray( f, g, h, out )
+
+Computes the singular values of a 2-by-2 triangular matrix:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -36,7 +68,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlas2()` corresponds to the [LAPACK][lapack] level routine [`dlas2`][lapack-dlas2].
 
 </section>
 
@@ -46,7 +78,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlas2 = require( '@stdlib/lapack/base/dlas2' );
+
 // TODO: Add examples
 ```
 
@@ -66,9 +102,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlas2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlas2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

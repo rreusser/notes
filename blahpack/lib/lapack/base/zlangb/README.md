@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlangb
 
 > Returns the norm of a complex general band matrix.
@@ -10,37 +30,43 @@
 var zlangb = require( '@stdlib/lapack/base/zlangb' );
 ```
 
-#### zlangb.ndarray( norm, N, KL, KU, AB, strideAB1, strideAB2, offsetAB, WORK, strideWORK, offsetWORK )
+#### zlangb( norm, N, KL, KU, AB, LDAB, WORK, strideWORK )
 
-Returns the value of the one norm, Frobenius norm, infinity norm, or the largest absolute value of any element of a complex general band matrix.
+Returns the norm of a complex general band matrix.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 diagonal matrix (KL=0, KU=0, LDAB=1):
-var AB = new Complex128Array( [ 3.0, 4.0, 1.0, 1.0, 2.0, 2.0 ] );
-var WORK = new Float64Array( 3 );
-
-var v = zlangb.ndarray( 'max', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
-// returns 5.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: norm type: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`.
--   **N**: order of the matrix.
--   **KL**: number of sub-diagonals.
--   **KU**: number of super-diagonals.
--   **AB**: input band matrix as a [`Complex128Array`][@stdlib/array/complex128].
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
--   **offsetAB**: starting index for `AB`.
--   **WORK**: workspace array as a [`Float64Array`][mdn-float64array] (length >= N for `'inf-norm'`).
+-   **norm**: `norm`.
+-   **N**: number of columns.
+-   **KL**: input array `KL`.
+-   **KU**: input array `KU`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
 
-The band matrix `AB` is stored in LAPACK band format: element `A(i,j)` is stored at `AB(KU+i-j, j)` (0-indexed). The array has `KL+KU+1` band rows and `N` columns.
+#### zlangb.ndarray( norm, N, KL, KU, AB, strideAB1, strideAB2, offsetAB, WORK, strideWORK, offsetWORK )
+
+Returns the norm of a complex general band matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **offsetWORK**: starting index for `WORK`.
 
 </section>
 
@@ -50,8 +76,7 @@ The band matrix `AB` is stored in LAPACK band format: element `A(i,j)` is stored
 
 ## Notes
 
--   `zlangb()` corresponds to the [LAPACK][lapack] routine [`zlangb`][lapack-zlangb].
--   The `WORK` array is only referenced when `norm` is `'inf-norm'`.
+-   `zlangb()` corresponds to the [LAPACK][lapack] level routine [`zlangb`][lapack-zlangb].
 
 </section>
 
@@ -61,25 +86,12 @@ The band matrix `AB` is stored in LAPACK band format: element `A(i,j)` is stored
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlangb = require( '@stdlib/lapack/base/zlangb' );
 
-// 3x3 tridiagonal matrix (KL=1, KU=1, LDAB=3):
-// A = [ (1+1i)  (2+2i)    0   ]
-//     [ (3+3i)  (4+4i)  (5+5i) ]
-//     [    0    (6+6i)  (7+7i) ]
-var AB = new Complex128Array([
-    0, 0, 1, 1, 3, 3,
-    2, 2, 4, 4, 6, 6,
-    5, 5, 7, 7, 0, 0
-]);
-var WORK = new Float64Array( 3 );
-
-var v = zlangb.ndarray( 'one-norm', 3, 1, 1, AB, 1, 3, 0, WORK, 1, 0 );
-console.log( v );
-// => ~19.80
+// TODO: Add examples
 ```
 
 </section>
@@ -100,11 +112,11 @@ console.log( v );
 
 [lapack]: https://www.netlib.org/lapack/explore-html/
 
-[lapack-zlangb]: https://www.netlib.org/lapack/explore-html/d6/d17/zlangb_8f.html
-
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/array/complex128
+[lapack-zlangb]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlangb.html
 
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

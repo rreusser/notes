@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlarnv
 
 > Returns a vector of complex random numbers from a uniform or normal distribution.
@@ -10,31 +30,39 @@
 var zlarnv = require( '@stdlib/lapack/base/zlarnv' );
 ```
 
-#### zlarnv.ndarray( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset )
+#### zlarnv( idist, iseed, strideISEED, N, x, stride )
 
-Returns a vector of `N` complex random numbers from a uniform or normal distribution, controlled by the `idist` parameter.
+Returns a vector of complex random numbers from a uniform or normal distribution.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var iseed = new Int32Array( [ 1, 2, 3, 4 ] );
-var x = new Complex128Array( 5 );
-
-zlarnv.ndarray( 1, iseed, 1, 0, 5, x, 1, 0 );
-// x now contains 5 complex random numbers with real/imag parts uniform in (0,1)
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **idist**: distribution type. `1` = uniform real/imag in (0,1), `2` = uniform real/imag in (-1,1), `3` = normal(0,1) on real and imaginary parts, `4` = uniform on the unit disc, `5` = uniform on the unit circle.
--   **iseed**: `Int32Array` seed array of 4 integers.
--   **strideISEED**: stride length for `iseed`.
--   **offsetISEED**: starting index for `iseed`.
--   **N**: number of complex random numbers to generate.
--   **x**: `Complex128Array` output array.
--   **stride**: stride length for `x` (in complex elements).
--   **offset**: starting index for `x` (in complex elements).
+-   **idist**: `idist`.
+-   **iseed**: `iseed`.
+-   **strideISEED**: stride length for `ISEED`.
+-   **N**: number of columns.
+-   **x**: `x`.
+-   **stride**: `stride`.
+
+#### zlarnv.ndarray( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset )
+
+Returns a vector of complex random numbers from a uniform or normal distribution, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetISEED**: starting index for `ISEED`.
+-   **offset**: `offset`.
 
 </section>
 
@@ -44,9 +72,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The underlying random number generator is `dlaruv`, which generates uniform real numbers in (0,1). These are combined in pairs to form complex numbers according to the chosen distribution.
--   For `idist=3`, the Box-Muller transform is used to generate normal(0,1) variates for both the real and imaginary parts.
--   For `idist=4` and `idist=5`, polar form is used: `sqrt(u1) * exp(i * 2*pi*u2)` and `exp(i * 2*pi*u2)` respectively.
+-   `zlarnv()` corresponds to the [LAPACK][lapack] level routine [`zlarnv`][lapack-zlarnv].
 
 </section>
 
@@ -56,19 +82,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarnv = require( '@stdlib/lapack/base/zlarnv' );
 
-var iseed = new Int32Array( [ 1, 2, 3, 4 ] );
-var x = new Complex128Array( 5 );
-
-zlarnv.ndarray( 1, iseed, 1, 0, 5, x, 1, 0 );
-
-var xv = reinterpret( x, 0 );
-console.log( xv );
+// TODO: Add examples
 ```
 
 </section>
@@ -87,9 +106,12 @@ console.log( xv );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlarnv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlarnv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlange
 
-> Compute the value of a matrix norm
+> Computes the value of a matrix norm for a complex matrix.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlange = require( '@stdlib/lapack/base/zlange' );
 ```
 
-#### zlange.ndarray( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+#### zlange( order, norm, M, N, A, LDA, WORK, strideWORK )
 
-Compute the value of a matrix norm
+Computes the value of a matrix norm for a complex matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,15 +42,30 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **norm**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **norm**: `norm`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **WORK**: output array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### zlange.ndarray( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+
+Computes the value of a matrix norm for a complex matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -61,7 +76,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlange()` corresponds to the [LAPACK][lapack] level routine [`zlange`][lapack-zlange].
 
 </section>
 
@@ -71,7 +86,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlange = require( '@stdlib/lapack/base/zlange' );
+
 // TODO: Add examples
 ```
 
@@ -91,9 +110,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlange]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlange.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

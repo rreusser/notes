@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dstevr
 
-> Compute selected eigenvalues and optionally eigenvectors of a real symmetric tridiagonal matrix
+> Computes selected eigenvalues and, optionally, eigenvectors of a real.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dstevr = require( '@stdlib/lapack/base/dstevr' );
 ```
 
-#### dstevr.ndarray( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, ISUPPZ, strideISUPPZ, offsetISUPPZ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+#### dstevr( jobz, range, N, d, strideD, e, strideE, vl, vu, il, iu, abstol, out, w, strideW, Z, LDZ, ISUPPZ, strideISUPPZ, WORK, strideWORK, lwork, IWORK, strideIWORK, liwork )
 
-Compute selected eigenvalues and optionally eigenvectors of a real symmetric tridiagonal matrix
+Computes selected eigenvalues and, optionally, eigenvectors of a real.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,39 +42,53 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobz**: specifies the operation type.
--   **range**: specifies the operation type.
+-   **jobz**: `jobz`.
+-   **range**: `range`.
 -   **N**: number of columns.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **e**: input array.
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **vl**: vl.
--   **vu**: vu.
--   **il**: il.
--   **iu**: iu.
--   **abstol**: abstol.
--   **M**: number of rows.
--   **w**: input array.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **Z**: input matrix.
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
--   **offsetZ**: starting index for `Z`.
--   **ISUPPZ**: input array.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **e**: `e`.
+-   **strideE**: stride length for `E`.
+-   **vl**: `vl`.
+-   **vu**: `vu`.
+-   **il**: `il`.
+-   **iu**: `iu`.
+-   **abstol**: `abstol`.
+-   **out**: `out`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **ISUPPZ**: input array `ISUPPZ`.
 -   **strideISUPPZ**: stride length for `ISUPPZ`.
--   **offsetISUPPZ**: starting index for `ISUPPZ`.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **IWORK**: output array.
+-   **lwork**: `lwork`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+-   **liwork**: `liwork`.
+
+#### dstevr.ndarray( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, ISUPPZ, strideISUPPZ, offsetISUPPZ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+
+Computes selected eigenvalues and, optionally, eigenvectors of a real, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetD**: starting index for `D`.
+-   **offsetE**: starting index for `E`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **offsetISUPPZ**: starting index for `ISUPPZ`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
--   **liwork**: liwork.
 
 </section>
 
@@ -64,7 +98,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dstevr()` corresponds to the [LAPACK][lapack] level routine [`dstevr`][lapack-dstevr].
 
 </section>
 
@@ -74,7 +108,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dstevr = require( '@stdlib/lapack/base/dstevr' );
+
 // TODO: Add examples
 ```
 
@@ -94,9 +132,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dstevr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dstevr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

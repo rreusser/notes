@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlarrc
 
-> Count eigenvalues of a symmetric tridiagonal matrix in an interval
+> Counts the number of eigenvalues of a symmetric tridiagonal matrix in an interval.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlarrc = require( '@stdlib/lapack/base/dlarrc' );
 ```
 
-#### dlarrc.ndarray( jobt, N, vl, vu, d, strideD, offsetD, e, strideE, offsetE, pivmin, eigcnt, lcnt, rcnt )
+#### dlarrc( jobt, N, vl, vu, D, E, pivmin )
 
-Count eigenvalues of a symmetric tridiagonal matrix in an interval
+Counts the number of eigenvalues of a symmetric tridiagonal matrix in an interval.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,20 +42,30 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobt**: specifies the operation type.
+-   **jobt**: `jobt`.
 -   **N**: number of columns.
--   **vl**: vl.
--   **vu**: vu.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **e**: output array.
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **pivmin**: pivmin.
--   **eigcnt**: eigcnt.
--   **lcnt**: lcnt.
--   **rcnt**: rcnt.
+-   **vl**: `vl`.
+-   **vu**: `vu`.
+-   **D**: input array `D`.
+-   **E**: input array `E`.
+-   **pivmin**: `pivmin`.
+
+#### dlarrc.ndarray( jobt, N, vl, vu, D, strideD, offsetD, E, strideE, offsetE, pivmin )
+
+Counts the number of eigenvalues of a symmetric tridiagonal matrix in an interval, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideD**: stride length for `D`.
+-   **offsetD**: starting index for `D`.
+-   **strideE**: stride length for `E`.
+-   **offsetE**: starting index for `E`.
 
 </section>
 
@@ -45,7 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlarrc()` corresponds to the [LAPACK][lapack] level routine [`dlarrc`][lapack-dlarrc].
 
 </section>
 
@@ -55,7 +85,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlarrc = require( '@stdlib/lapack/base/dlarrc' );
+
 // TODO: Add examples
 ```
 
@@ -75,9 +109,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlarrc]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlarrc.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

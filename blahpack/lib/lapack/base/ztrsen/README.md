@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztrsen
 
-> Reorder Schur factorization and compute condition numbers
+> Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so that a.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var ztrsen = require( '@stdlib/lapack/base/ztrsen' );
 ```
 
-#### ztrsen.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, w, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork )
+#### ztrsen( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, W, strideW, M, s, sep, WORK, strideWORK, lwork )
 
-Reorder Schur factorization and compute condition numbers
+Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so that a.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,30 +42,45 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **job**: specifies the operation type.
--   **compq**: specifies the operation type.
--   **SELECT**: input array.
+-   **job**: `job`.
+-   **compq**: `compq`.
+-   **SELECT**: input array `SELECT`.
 -   **strideSELECT**: stride length for `SELECT`.
--   **offsetSELECT**: starting index for `SELECT`.
 -   **N**: number of columns.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
--   **offsetT**: starting index for `T`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
--   **offsetQ**: starting index for `Q`.
--   **w**: input array.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
+-   **T**: input array `T`.
+-   **LDT**: leading dimension of `T`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **W**: input array `W`.
+-   **strideW**: stride length for `W`.
 -   **M**: number of rows.
--   **s**: s.
--   **sep**: sep.
--   **WORK**: output array.
+-   **s**: `s`.
+-   **sep**: `sep`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+-   **lwork**: `lwork`.
+
+#### ztrsen.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, W, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork )
+
+Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so that a, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetSELECT**: starting index for `SELECT`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **offsetW**: starting index for `W`.
 -   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
 
 </section>
 
@@ -55,7 +90,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztrsen()` corresponds to the [LAPACK][lapack] level routine [`ztrsen`][lapack-ztrsen].
 
 </section>
 
@@ -65,7 +100,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztrsen = require( '@stdlib/lapack/base/ztrsen' );
+
 // TODO: Add examples
 ```
 
@@ -85,9 +124,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztrsen]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztrsen.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

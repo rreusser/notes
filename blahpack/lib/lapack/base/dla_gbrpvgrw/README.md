@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dla_gbrpvgrw
 
 > Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
@@ -10,7 +30,7 @@
 var dla_gbrpvgrw = require( '@stdlib/lapack/base/dla_gbrpvgrw' );
 ```
 
-#### dla_gbrpvgrw.ndarray( N, kl, ku, ncols, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB )
+#### dla_gbrpvgrw( order, N, kl, ku, ncols, AB, LDAB, AFB, LDAFB )
 
 Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
 
@@ -22,17 +42,33 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **N**: number of columns.
--   **kl**: kl.
--   **ku**: ku.
--   **ncols**: ncols.
--   **AB**: input matrix.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **ncols**: `ncols`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input array `AFB`.
+-   **LDAFB**: leading dimension of `AFB`.
+
+#### dla_gbrpvgrw.ndarray( N, kl, ku, ncols, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB )
+
+Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **AFB**: output matrix.
--   **strideAFB1**: stride of the first dimension of `AFB`.
--   **strideAFB2**: stride of the second dimension of `AFB`.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
 -   **offsetAFB**: starting index for `AFB`.
 
 </section>
@@ -43,7 +79,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dla_gbrpvgrw()` corresponds to the [LAPACK][lapack] level routine [`dla_gbrpvgrw`][lapack-dla_gbrpvgrw].
 
 </section>
 
@@ -53,7 +89,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dla_gbrpvgrw = require( '@stdlib/lapack/base/dla_gbrpvgrw' );
+
 // TODO: Add examples
 ```
 
@@ -73,9 +113,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dla_gbrpvgrw]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dla_gbrpvgrw.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

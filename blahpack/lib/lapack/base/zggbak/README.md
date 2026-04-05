@@ -20,7 +20,7 @@ limitations under the License.
 
 # zggbak
 
-> Back-transform eigenvectors of a balanced pair of matrices.
+> Back-transform eigenvectors of a balanced pair of general real matrices.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zggbak = require( '@stdlib/lapack/base/zggbak' );
 ```
 
-#### zggbak.ndarray( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV )
+#### zggbak( order, job, side, N, ilo, ihi, LSCALE, strideLSCALE, RSCALE, strideRSCALE, M, V, LDV )
 
-Back-transform eigenvectors of a balanced pair of matrices.
+Back-transform eigenvectors of a balanced pair of general real matrices.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,21 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **job**: specifies the operation type.
--   **side**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **job**: `job`.
+-   **side**: specifies the side of the operation.
 -   **N**: number of columns.
--   **ilo**: ilo.
--   **ihi**: ihi.
--   **LSCALE**: input array.
+-   **ilo**: `ilo`.
+-   **ihi**: `ihi`.
+-   **LSCALE**: input array `LSCALE`.
 -   **strideLSCALE**: stride length for `LSCALE`.
--   **offsetLSCALE**: starting index for `LSCALE`.
--   **RSCALE**: input array.
+-   **RSCALE**: input array `RSCALE`.
 -   **strideRSCALE**: stride length for `RSCALE`.
--   **offsetRSCALE**: starting index for `RSCALE`.
 -   **M**: number of rows.
--   **V**: output matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
+-   **V**: input array `V`.
+-   **LDV**: leading dimension of `V`.
+
+#### zggbak.ndarray( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV )
+
+Back-transform eigenvectors of a balanced pair of general real matrices, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetLSCALE**: starting index for `LSCALE`.
+-   **offsetRSCALE**: starting index for `RSCALE`.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
 -   **offsetV**: starting index for `V`.
 
 </section>
@@ -67,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zggbak()` corresponds to the [LAPACK][lapack] level routine [`zggbak`][lapack-zggbak].
 
 </section>
 
@@ -77,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zggbak = require( '@stdlib/lapack/base/zggbak' );
+
 // TODO: Add examples
 ```
 
@@ -97,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zggbak]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zggbak.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

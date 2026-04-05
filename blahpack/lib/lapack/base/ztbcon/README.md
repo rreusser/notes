@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztbcon
 
 > Estimates the reciprocal condition number of a complex triangular band matrix.
@@ -10,42 +30,47 @@
 var ztbcon = require( '@stdlib/lapack/base/ztbcon' );
 ```
 
-#### ztbcon.ndarray( norm, uplo, diag, N, kd, AB, strideAB1, strideAB2, offsetAB, RCOND, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+#### ztbcon( norm, uplo, diag, N, kd, AB, LDAB, RCOND, WORK, strideWORK, RWORK, strideRWORK )
 
-Estimates the reciprocal of the condition number of a complex triangular band matrix A, in either the 1-norm or the infinity-norm.
+Estimates the reciprocal condition number of a complex triangular band matrix.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 identity band matrix (KD=0):
-var AB = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
-var RCOND = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztbcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, 0, AB, 1, 1, 0, RCOND, WORK, 1, 0, RWORK, 1, 0 );
-// info => 0
-// RCOND[ 0 ] => 1.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: norm type: `'one-norm'` or `'inf-norm'`.
--   **uplo**: specifies whether the matrix is upper or lower triangular: `'upper'` or `'lower'`.
--   **diag**: specifies whether the matrix has unit diagonal: `'unit'` or `'non-unit'`.
--   **N**: order of the matrix.
--   **kd**: number of super-diagonals (if upper) or sub-diagonals (if lower).
--   **AB**: triangular band matrix in band storage as a [`Complex128Array`][@stdlib/array/complex128].
--   **strideAB1**: stride of the first dimension of `AB` (complex elements).
--   **strideAB2**: stride of the second dimension of `AB` (complex elements).
--   **offsetAB**: starting index for `AB` (complex elements).
--   **RCOND**: output [`Float64Array`][mdn-float64array] of length 1 receiving the reciprocal condition number.
--   **WORK**: workspace [`Complex128Array`][@stdlib/array/complex128] of length `2*N`.
--   **strideWORK**: stride for `WORK` (complex elements).
--   **offsetWORK**: starting index for `WORK` (complex elements).
--   **RWORK**: workspace [`Float64Array`][mdn-float64array] of length `N`.
--   **strideRWORK**: stride for `RWORK`.
+-   **norm**: `norm`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **RCOND**: input array `RCOND`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **RWORK**: input array `RWORK`.
+-   **strideRWORK**: stride length for `RWORK`.
+
+#### ztbcon.ndarray( norm, uplo, diag, N, kd, AB, strideAB1, strideAB2, offsetAB, RCOND, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Estimates the reciprocal condition number of a complex triangular band matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -56,8 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The reciprocal condition number is computed as `RCOND = 1 / ( norm(A) * norm(inv(A)) )`.
--   Uses reverse communication with `zlacn2` to estimate `norm(inv(A))`.
+-   `ztbcon()` corresponds to the [LAPACK][lapack] level routine [`ztbcon`][lapack-ztbcon].
 
 </section>
 
@@ -67,20 +91,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var ztbcon = require( '@stdlib/lapack/base/ztbcon' );
 
-// 3x3 identity band matrix (KD=0):
-var AB = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
-var RCOND = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztbcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, 0, AB, 1, 1, 0, RCOND, WORK, 1, 0, RWORK, 1, 0 );
-console.log( 'info:', info, 'rcond:', RCOND[ 0 ] );
-// => info: 0 rcond: 1
+// TODO: Add examples
 ```
 
 </section>
@@ -99,8 +115,13 @@ console.log( 'info:', info, 'rcond:', RCOND[ 0 ] );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztbcon]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztbcon.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

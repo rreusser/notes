@@ -18,7 +18,12 @@
 
 'use strict';
 
-var zlartg = require( '@stdlib/lapack/base/zlartg' );
+var zlartg = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlartg );
+// Using the standard interface:
+var out = zlartg( 1, 1, 1, 1, 1.0, 1, 1.0, 1, 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlartg.ndarray( 1, 0, 1, 0, 1.0, 0, 1.0, 0, 1, 0 );
+console.log( out );

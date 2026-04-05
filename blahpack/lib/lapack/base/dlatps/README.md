@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlatps
 
-> Solves a triangular system with scaling to prevent overflow, where the matrix is in packed storage.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,51 +32,44 @@ var dlatps = require( '@stdlib/lapack/base/dlatps' );
 
 #### dlatps( uplo, trans, diag, normin, N, AP, x, strideX, scale, CNORM, strideCNORM )
 
-Solves a triangular system with scaling to prevent overflow, where the matrix is in packed storage.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// Upper triangular 3x3 packed: A = [[2, 1, 1], [0, 3, 2], [0, 0, 4]]
-var AP = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 2.0, 4.0 ] );
-var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var scale = new Float64Array( 1 );
-var CNORM = new Float64Array( 3 );
-
-dlatps( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, x, 1, scale, CNORM, 1 );
-// x => <Float64Array>[ ~0.0417, ~0.1667, 0.75 ]
-// scale[ 0 ] => 1.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: `'upper'` or `'lower'` - specifies whether A is upper or lower triangular.
--   **trans**: `'no-transpose'` or `'transpose'` - specifies the operation.
--   **diag**: `'unit'` or `'non-unit'` - specifies whether A is unit triangular.
--   **normin**: `'yes'` or `'no'` - specifies whether CNORM contains column norms on input.
--   **N**: order of the matrix A.
--   **AP**: packed triangular matrix of length `N*(N+1)/2`.
--   **x**: right-hand side vector of length N (overwritten with the solution).
--   **strideX**: stride length for `x`.
--   **scale**: [`Float64Array`][mdn-float64array] of length 1; `scale[0]` returns the scaling factor s.
--   **CNORM**: [`Float64Array`][mdn-float64array] of length N for column norms.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **normin**: `normin`.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **scale**: `scale`.
+-   **CNORM**: input array `CNORM`.
 -   **strideCNORM**: stride length for `CNORM`.
 
 #### dlatps.ndarray( uplo, trans, diag, normin, N, AP, strideAP, offsetAP, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
 
-Solves a triangular system with scaling to prevent overflow (packed storage), using alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 2.0, 4.0 ] );
-var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var scale = new Float64Array( 1 );
-var CNORM = new Float64Array( 3 );
-
-dlatps.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, 1, 0, x, 1, 0, scale, CNORM, 1, 0 );
-// x => <Float64Array>[ ~0.0417, ~0.1667, 0.75 ]
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **offsetX**: starting index for `X`.
+-   **offsetCNORM**: starting index for `CNORM`.
 
 </section>
 
@@ -66,9 +79,7 @@ dlatps.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, 1, 0, x, 1, 0,
 
 ## Notes
 
--   The routine solves `A*x = s*b` or `A^T*x = s*b` where `s` is a scaling factor chosen to prevent overflow.
--   If the matrix is singular (`A(j,j) = 0`), then `s` is set to `0` and a non-trivial solution to `A*x = 0` is returned.
--   When `normin` is `'no'`, the column norms of the off-diagonal part of A are computed and stored in `CNORM`.
+-   `dlatps()` corresponds to the [LAPACK][lapack] level routine [`dlatps`][lapack-dlatps].
 
 </section>
 
@@ -78,20 +89,12 @@ dlatps.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, 1, 0, x, 1, 0,
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlatps = require( '@stdlib/lapack/base/dlatps' );
 
-// Upper triangular 3x3 packed matrix:
-var AP = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 2.0, 4.0 ] );
-var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var scale = new Float64Array( 1 );
-var CNORM = new Float64Array( 3 );
-
-dlatps( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, x, 1, scale, CNORM, 1 );
-
-console.log( 'x:', x );
-console.log( 'scale:', scale[ 0 ] );
+// TODO: Add examples
 ```
 
 </section>
@@ -110,7 +113,13 @@ console.log( 'scale:', scale[ 0 ] );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlatps]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlatps.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

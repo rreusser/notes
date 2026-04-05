@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlanhf
 
-> Returns the norm of a complex Hermitian matrix in Rectangular Full Packed format.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,43 +32,37 @@ var zlanhf = require( '@stdlib/lapack/base/zlanhf' );
 
 #### zlanhf( norm, transr, uplo, N, A, WORK )
 
-Returns the norm of a complex Hermitian matrix in Rectangular Full Packed (RFP) format.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 2x2 Hermitian matrix in RFP format (TRANSR='N', UPLO='U'):
-var A = new Complex128Array( [ 1.0, 2.0, 3.0, 0.0, 5.0, 0.0 ] );
-var WORK = new Float64Array( 2 );
-
-var result = zlanhf( 'max', 'no-transpose', 'upper', 2, A, WORK );
-```
-
-#### zlanhf.ndarray( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK )
-
-Returns the norm using alternative indexing semantics.
-
-```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-
-var A = new Complex128Array( [ 1.0, 2.0, 3.0, 0.0, 5.0, 0.0 ] );
-var WORK = new Float64Array( 2 );
-
-var result = zlanhf.ndarray( 'max', 'no-transpose', 'upper', 2, A, 1, 0, WORK, 1, 0 );
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: specifies the norm type: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`.
--   **transr**: specifies the RFP format: `'no-transpose'` or `'conjugate-transpose'`.
--   **uplo**: specifies which triangle: `'upper'` or `'lower'`.
--   **N**: order of the Hermitian matrix.
--   **A**: input Complex128Array in RFP format, length `N*(N+1)/2`.
--   **strideA**: stride length for `A` (in complex elements).
--   **offsetA**: starting index for `A` (in complex elements).
--   **WORK**: workspace Float64Array (length >= N for one/inf norms).
+-   **norm**: `norm`.
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+-   **WORK**: input array `WORK`.
+
+#### zlanhf.ndarray( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA**: stride length for `A`.
+-   **offsetA**: starting index for `A`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
@@ -60,8 +74,7 @@ The function has the following parameters:
 
 ## Notes
 
--   For a Hermitian matrix, the one-norm equals the infinity-norm.
--   Diagonal elements of a Hermitian matrix are real; only their real part is used.
+-   `zlanhf()` corresponds to the [LAPACK][lapack] level routine [`zlanhf`][lapack-zlanhf].
 
 </section>
 
@@ -71,20 +84,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlanhf = require( '@stdlib/lapack/base/zlanhf' );
 
-// 3x3 Hermitian matrix in RFP format (TRANSR='N', UPLO='U'):
-var A = new Complex128Array( [
-    5.0, -1.0,  0.0, 6.0,  9.0, 0.0,
-    1.0,  0.0,  2.0, 3.0,  4.0, 0.0
-]);
-var WORK = new Float64Array( 3 );
-
-var maxNorm = zlanhf( 'max', 'no-transpose', 'upper', 3, A, WORK );
-// returns <number>
+// TODO: Add examples
 ```
 
 </section>
@@ -103,7 +108,13 @@ var maxNorm = zlanhf( 'max', 'no-transpose', 'upper', 3, A, WORK );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlanhf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlanhf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

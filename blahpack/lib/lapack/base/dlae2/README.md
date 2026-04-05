@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlae2
 
-> Compute the eigenvalues of a 2-by-2 symmetric matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,39 +32,32 @@ var dlae2 = require( '@stdlib/lapack/base/dlae2' );
 
 #### dlae2( a, b, c )
 
-Computes the eigenvalues of a 2-by-2 symmetric matrix
-
-```text
-[ a  b ]
-[ b  c ]
-```
-
-where `rt1` is the eigenvalue of larger absolute value, and `rt2` is the eigenvalue of smaller absolute value.
+@license Apache-2.0.
 
 ```javascript
-var out = dlae2( 1.0, 2.0, 1.0 );
-// returns { 'rt1': 3.0, 'rt2': -1.0 }
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **a**: the (1,1) element of the 2-by-2 matrix.
--   **b**: the (1,2) and (2,1) element of the 2-by-2 matrix.
--   **c**: the (2,2) element of the 2-by-2 matrix.
-
-The function returns an object with the following properties:
-
--   **rt1**: eigenvalue of larger absolute value.
--   **rt2**: eigenvalue of smaller absolute value.
+-   **a**: `a`.
+-   **b**: `b`.
+-   **c**: `c`.
 
 #### dlae2.ndarray( a, b, c )
 
-Computes the eigenvalues of a 2-by-2 symmetric matrix (same as `dlae2`; provided for API consistency).
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var out = dlae2.ndarray( 1.0, 2.0, 1.0 );
-// returns { 'rt1': 3.0, 'rt2': -1.0 }
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -54,8 +67,7 @@ var out = dlae2.ndarray( 1.0, 2.0, 1.0 );
 
 ## Notes
 
--   `dlae2` computes eigenvalues only (no eigenvectors). For eigenvalues _and_ eigenvectors of a 2-by-2 symmetric matrix, use [`dlaev2`][@stdlib/lapack/base/dlaev2].
--   `rt1` is accurate to a few ulps barring over/underflow. `rt2` may be inaccurate if there is massive cancellation in the determinant `a*c - b*b`.
+-   `dlae2()` corresponds to the [LAPACK][lapack] level routine [`dlae2`][lapack-dlae2].
 
 </section>
 
@@ -65,18 +77,12 @@ var out = dlae2.ndarray( 1.0, 2.0, 1.0 );
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
 var dlae2 = require( '@stdlib/lapack/base/dlae2' );
 
-// Identity matrix eigenvalues (both 1.0):
-var out = dlae2( 1.0, 0.0, 1.0 );
-console.log( out );
-// => { 'rt1': 1.0, 'rt2': 1.0 }
-
-// Symmetric matrix with off-diagonal:
-out = dlae2( 2.0, 1.0, 2.0 );
-console.log( out );
-// => { 'rt1': 3.0, 'rt2': 1.0 }
+// TODO: Add examples
 ```
 
 </section>
@@ -95,7 +101,13 @@ console.log( out );
 
 <section class="links">
 
-[@stdlib/lapack/base/dlaev2]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/lapack/base/dlaev2
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlae2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlae2.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

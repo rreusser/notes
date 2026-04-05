@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dspev
 
-> Computes all eigenvalues and optionally eigenvectors of a real symmetric matrix in packed storage.
+> Computes all eigenvalues and, optionally, eigenvectors of a real symmetric matrix in packed storage.
 
 <section class="usage">
 
@@ -12,49 +32,47 @@ var dspev = require( '@stdlib/lapack/base/dspev' );
 
 #### dspev( order, jobz, uplo, N, AP, w, Z, LDZ, WORK )
 
-Computes all eigenvalues and optionally eigenvectors of a real symmetric matrix A stored in packed format.
+Computes all eigenvalues and, optionally, eigenvectors of a real symmetric matrix in packed storage.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 2x2 symmetric [[1,2],[2,3]] upper packed: [1, 2, 3]
-var AP = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var w = new Float64Array( 2 );
-var Z = new Float64Array( 4 );
-var WORK = new Float64Array( 6 );
-
-var info = dspev( 'column-major', 'compute', 'upper', 2, AP, w, Z, 2, WORK );
-// returns 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **jobz**: `'none'` to compute eigenvalues only, or `'compute'` to also compute eigenvectors.
--   **uplo**: `'upper'` or `'lower'`, specifying which triangle of A is stored in AP.
--   **N**: order of the symmetric matrix A (N >= 0).
--   **AP**: packed symmetric matrix as a [`Float64Array`][mdn-float64array] of length N*(N+1)/2.
--   **w**: output [`Float64Array`][mdn-float64array] of length N for eigenvalues in ascending order.
--   **Z**: output [`Float64Array`][mdn-float64array] of size N*N for eigenvectors (referenced only when jobz = `'compute'`).
--   **LDZ**: leading dimension of Z (must be >= max(1,N) when jobz = `'compute'`).
--   **WORK**: workspace [`Float64Array`][mdn-float64array] of length >= 3*N.
+-   **jobz**: `jobz`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **w**: `w`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
 
 #### dspev.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
 
-Computes all eigenvalues and optionally eigenvectors using alternative indexing semantics.
+Computes all eigenvalues and, optionally, eigenvectors of a real symmetric matrix in packed storage, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 2x2 symmetric [[1,2],[2,3]] upper packed: [1, 2, 3]
-var AP = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var w = new Float64Array( 2 );
-var Z = new Float64Array( 4 );
-var WORK = new Float64Array( 6 );
-
-var info = dspev.ndarray( 'compute', 'upper', 2, AP, 1, 0, w, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
-// returns 0
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideW**: stride length for `W`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
 
 </section>
 
@@ -64,11 +82,7 @@ var info = dspev.ndarray( 'compute', 'upper', 2, AP, 1, 0, w, 1, 0, Z, 1, 2, 0, 
 
 ## Notes
 
--   The packed storage format stores the upper or lower triangle of the symmetric matrix column-wise in a one-dimensional array of length N*(N+1)/2.
--   On exit, AP is overwritten with the tridiagonal reduction data from `dsptrd`.
--   The eigenvalues are returned in ascending order in `w`.
--   If jobz = `'compute'`, the eigenvector matrix Z satisfies `A * Z = Z * diag(w)` and `Z^T * Z = I`.
--   WORK must have length at least 3*N.
+-   `dspev()` corresponds to the [LAPACK][lapack] level routine [`dspev`][lapack-dspev].
 
 </section>
 
@@ -78,19 +92,12 @@ var info = dspev.ndarray( 'compute', 'upper', 2, AP, 1, 0, w, 1, 0, Z, 1, 2, 0, 
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dspev = require( '@stdlib/lapack/base/dspev' );
 
-// 3x3 symmetric [[5,1,2],[1,4,1],[2,1,6]] in lower packed storage:
-var AP = new Float64Array( [ 5.0, 1.0, 2.0, 4.0, 1.0, 6.0 ] );
-var w = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dspev.ndarray( 'compute', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
-// info => 0
-// w => [ ~3.31, ~3.64, ~8.05 ] (eigenvalues in ascending order)
+// TODO: Add examples
 ```
 
 </section>
@@ -109,7 +116,13 @@ var info = dspev.ndarray( 'compute', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, 
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dspev]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dspev.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

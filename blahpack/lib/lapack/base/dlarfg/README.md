@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlarfg
 
-> Generate a real elementary reflector (Householder matrix).
+> Generates a real elementary reflector H of order N, such that.
 
 <section class="usage">
 
@@ -30,48 +30,39 @@ limitations under the License.
 var dlarfg = require( '@stdlib/lapack/base/dlarfg' );
 ```
 
-#### dlarfg.ndarray( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
+#### dlarfg( N, alpha, offsetAlpha, x, strideX, tau, offsetTau )
 
-Generates a real elementary reflector H of order `N`, such that
-
-```text
-H * ( alpha ) = ( beta ),   H^T * H = I.
-    (   x   )   (   0  )
-```
-
-where `alpha` and `beta` are scalars and `x` is an `(N-1)`-element real
-vector. `H` is represented in the form
-
-```text
-H = I - tau * ( 1 ) * ( 1  v^T ),
-              ( v )
-```
-
-where `tau` is a real scalar and `v` is a real `(N-1)`-element vector.
+Generates a real elementary reflector H of order N, such that.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var alpha = new Float64Array( [ 3.0 ] );
-var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
-var tau = new Float64Array( 1 );
-
-dlarfg.ndarray( 4, alpha, 0, x, 1, 0, tau, 0 );
-// alpha[0] => -5.0
-// tau[0] => 1.6
-// x => [ -0.8, 0.0, 0.0 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: order of the elementary reflector.
--   **alpha**: on entry, the value alpha; on exit, overwritten with beta. Passed as a `Float64Array` with an offset.
--   **offsetAlpha**: index into `alpha` array.
--   **x**: input vector of length `(N-1)`. On exit, overwritten with the vector `v`.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **tau**: output scalar. Passed as a `Float64Array` with an offset.
--   **offsetTau**: index into `tau` array.
+-   **N**: number of columns.
+-   **alpha**: scalar constant.
+-   **offsetAlpha**: starting index for `Alpha`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **tau**: `tau`.
+-   **offsetTau**: starting index for `Tau`.
+
+#### dlarfg.ndarray( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
+
+Generates a real elementary reflector H of order N, such that, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -81,9 +72,7 @@ The function has the following parameters:
 
 ## Notes
 
--   If the elements of `x` are all zero, then `tau = 0` and `H` is taken to be the unit matrix.
--   Otherwise `1 <= tau <= 2`.
--   `alpha` is passed as an array (not a scalar) because it is modified in place (overwritten with `beta` on exit).
+-   `dlarfg()` corresponds to the [LAPACK][lapack] level routine [`dlarfg`][lapack-dlarfg].
 
 </section>
 
@@ -93,22 +82,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlarfg = require( '@stdlib/lapack/base/dlarfg' );
 
-var alpha = new Float64Array( [ 3.0 ] );
-var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
-var tau = new Float64Array( 1 );
-
-dlarfg.ndarray( 4, alpha, 0, x, 1, 0, tau, 0 );
-
-console.log( 'alpha (beta):', alpha[ 0 ] );
-// => alpha (beta): -5
-console.log( 'tau:', tau[ 0 ] );
-// => tau: 1.6
-console.log( 'v:', x );
-// => v: Float64Array [ -0.8, 0, 0 ]
+// TODO: Add examples
 ```
 
 </section>
@@ -127,7 +106,13 @@ console.log( 'v:', x );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlarfg]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlarfg.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dtptri
 
-> Compute the inverse of a real upper or lower triangular matrix in packed storage.
+> Computes the inverse of a real upper or lower triangular matrix in packed storage.
 
 <section class="usage">
 
@@ -12,40 +32,29 @@ var dtptri = require( '@stdlib/lapack/base/dtptri' );
 
 #### dtptri( uplo, diag, N, AP )
 
-Computes the inverse of a real upper or lower triangular matrix stored in packed format.
+Computes the inverse of a real upper or lower triangular matrix in packed storage.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 upper triangular: A = [2 1 3; 0 4 5; 0 0 6]
-var AP = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
-
-var info = dtptri( 'upper', 'non-unit', 3, AP );
-// info => 0
-// AP is overwritten with the inverse in packed format
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`).
--   **diag**: specifies whether the matrix is unit or non-unit triangular (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix.
--   **AP**: packed triangular matrix of dimension `N*(N+1)/2`.
-
-The function returns an integer status code: `0` for success, `k > 0` if `A(k,k)` is exactly zero (the matrix is singular).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
 
 #### dtptri.ndarray( uplo, diag, N, AP, strideAP, offsetAP )
 
-Computes the inverse using alternative indexing semantics.
+Computes the inverse of a real upper or lower triangular matrix in packed storage, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 upper triangular: A = [2 1 3; 0 4 5; 0 0 6]
-var AP = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
-
-var info = dtptri.ndarray( 'upper', 'non-unit', 3, AP, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
@@ -61,11 +70,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   The packed triangular matrix `AP` is stored column-wise in a linear array of length `N*(N+1)/2`.
--   For upper triangular storage, `AP(i + j*(j+1)/2) = A(i,j)` for `0 <= i <= j`.
--   For lower triangular storage, `AP(i-j + j*(2*N-j-1)/2) = A(i,j)` for `j <= i < N`.
--   On exit, `AP` is overwritten with the inverse of the original matrix in the same packed format.
--   If the matrix is singular (a diagonal element is zero), the function returns early with `info > 0` indicating the position of the zero diagonal.
+-   `dtptri()` corresponds to the [LAPACK][lapack] level routine [`dtptri`][lapack-dtptri].
 
 </section>
 
@@ -75,16 +80,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dtptri = require( '@stdlib/lapack/base/dtptri' );
 
-// 3x3 upper triangular packed: A = [2 1 3; 0 4 5; 0 0 6]
-var AP = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
-
-var info = dtptri( 'upper', 'non-unit', 3, AP );
-console.log( 'info:', info );
-console.log( 'inverse (packed):', AP );
+// TODO: Add examples
 ```
 
 </section>
@@ -103,9 +104,12 @@ console.log( 'inverse (packed):', AP );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dtptri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dtptri.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

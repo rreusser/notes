@@ -20,7 +20,7 @@ limitations under the License.
 
 # disnan
 
-> Test if input is NaN
+> Tests whether a double-precision floating-point number is NaN.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var disnan = require( '@stdlib/lapack/base/disnan' );
 ```
 
-#### disnan.ndarray( din )
+#### disnan( din )
 
-Test if input is NaN
+Tests whether a double-precision floating-point number is NaN.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,7 +42,20 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **din**: din.
+-   **din**: `din`.
+
+#### disnan.ndarray( din )
+
+Tests whether a double-precision floating-point number is NaN, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -52,7 +65,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `disnan()` corresponds to the [LAPACK][lapack] level routine [`disnan`][lapack-disnan].
 
 </section>
 
@@ -62,7 +75,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var disnan = require( '@stdlib/lapack/base/disnan' );
+
 // TODO: Add examples
 ```
 
@@ -82,9 +99,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-disnan]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__disnan.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

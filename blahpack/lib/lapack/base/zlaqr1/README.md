@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlaqr1
 
-> Set initial vector for Francis QR step
+> CABS1 = |Re(z)| + |Im(z)|.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlaqr1 = require( '@stdlib/lapack/base/zlaqr1' );
 ```
 
-#### zlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, s1, s2, v, strideV, offsetV )
+#### zlaqr1( v, idx )
 
-Set initial vector for Francis QR step
+CABS1 = |Re(z)| + |Im(z)|.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,16 +42,30 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **v**: `v`.
+-   **idx**: `idx`.
+
+#### zlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, s1, s2, v, strideV, offsetV )
+
+CABS1 = |Re(z)| + |Im(z)|, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **N**: number of columns.
--   **H**: input matrix.
--   **strideH1**: stride of the first dimension of `H`.
--   **strideH2**: stride of the second dimension of `H`.
+-   **H**: input array `H`.
+-   **strideH1**: stride of dimension 1 of `H`.
+-   **strideH2**: stride of dimension 2 of `H`.
 -   **offsetH**: starting index for `H`.
--   **s1**: s1.
--   **s2**: s2.
--   **v**: output array.
--   **strideV**: stride length for `v`.
--   **offsetV**: starting index for `v`.
+-   **s1**: `s1`.
+-   **s2**: `s2`.
+-   **strideV**: stride length for `V`.
+-   **offsetV**: starting index for `V`.
 
 </section>
 
@@ -41,7 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlaqr1()` corresponds to the [LAPACK][lapack] level routine [`zlaqr1`][lapack-zlaqr1].
 
 </section>
 
@@ -51,7 +85,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlaqr1 = require( '@stdlib/lapack/base/zlaqr1' );
+
 // TODO: Add examples
 ```
 
@@ -71,9 +109,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlaqr1]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlaqr1.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

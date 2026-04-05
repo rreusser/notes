@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlarfb
 
-> Apply a real block Householder reflector to a matrix.
+> Applies a real block reflector H or its transpose H**T to a.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlarfb = require( '@stdlib/lapack/base/dlarfb' );
 ```
 
-#### dlarfb.ndarray( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK )
+#### dlarfb( order, side, trans, direct, storev, M, N, K, V, LDV, T, LDT, C, LDC, WORK, LDWORK )
 
-Apply a real block Householder reflector to a matrix.
+Applies a real block reflector H or its transpose H**T to a.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,28 +42,46 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
--   **trans**: specifies the operation type.
--   **direct**: specifies the operation type.
--   **storev**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the side of the operation.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **direct**: `direct`.
+-   **storev**: `storev`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
--   **V**: input matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
+-   **K**: inner dimension.
+-   **V**: input array `V`.
+-   **LDV**: leading dimension of `V`.
+-   **T**: input array `T`.
+-   **LDT**: leading dimension of `T`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: input array `WORK`.
+-   **LDWORK**: leading dimension of `WORK`.
+
+#### dlarfb.ndarray( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK )
+
+Applies a real block reflector H or its transpose H**T to a, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
 -   **offsetV**: starting index for `V`.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
 -   **offsetT**: starting index for `T`.
--   **C**: input matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
 -   **offsetC**: starting index for `C`.
--   **WORK**: output matrix.
--   **strideWORK1**: stride of the first dimension of `WORK`.
--   **strideWORK2**: stride of the second dimension of `WORK`.
+-   **strideWORK1**: stride of dimension 1 of `WORK`.
+-   **strideWORK2**: stride of dimension 2 of `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -54,7 +92,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlarfb()` corresponds to the [LAPACK][lapack] level routine [`dlarfb`][lapack-dlarfb].
 
 </section>
 
@@ -64,7 +102,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlarfb = require( '@stdlib/lapack/base/dlarfb' );
+
 // TODO: Add examples
 ```
 
@@ -84,9 +126,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlarfb]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlarfb.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

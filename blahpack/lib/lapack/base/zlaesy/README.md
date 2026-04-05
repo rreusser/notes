@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlaesy
 
 > Compute the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
@@ -10,7 +30,7 @@
 var zlaesy = require( '@stdlib/lapack/base/zlaesy' );
 ```
 
-#### zlaesy.ndarray( a, b, c, rt1, rt2, evscal, cs1, sn1 )
+#### zlaesy( a, b, c )
 
 Compute the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
 
@@ -22,14 +42,22 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **a**: a.
--   **b**: b.
--   **c**: c.
--   **rt1**: rt1.
--   **rt2**: rt2.
--   **evscal**: evscal.
--   **cs1**: cs1.
--   **sn1**: sn1.
+-   **a**: `a`.
+-   **b**: `b`.
+-   **c**: `c`.
+
+#### zlaesy.ndarray( a, b, c )
+
+Compute the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -39,7 +67,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlaesy()` corresponds to the [LAPACK][lapack] level routine [`zlaesy`][lapack-zlaesy].
 
 </section>
 
@@ -49,7 +77,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlaesy = require( '@stdlib/lapack/base/zlaesy' );
+
 // TODO: Add examples
 ```
 
@@ -69,9 +101,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlaesy]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlaesy.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

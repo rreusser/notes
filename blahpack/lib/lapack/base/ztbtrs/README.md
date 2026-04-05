@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztbtrs
 
-> Solve a triangular banded system of equations with a complex triangular band matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,45 +32,46 @@ var ztbtrs = require( '@stdlib/lapack/base/ztbtrs' );
 
 #### ztbtrs( order, uplo, trans, diag, N, kd, nrhs, AB, LDAB, B, LDB )
 
-Solves a triangular banded system of the form `A*X = B` or `A**H*X = B` where A is a complex triangular band matrix of order N with kd super- or sub-diagonals, and B is an N-by-NRHS matrix.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 0, 2, 0, 5, 0 ] );
-var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
-
-var info = ztbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **uplo**: specifies whether A is upper or lower triangular (`'upper'` or `'lower'`).
--   **trans**: specifies the form of the system (`'no-transpose'` or `'conjugate-transpose'`).
--   **diag**: specifies whether A is unit or non-unit triangular (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix A.
--   **kd**: number of super- or sub-diagonals of A.
--   **nrhs**: number of right-hand side columns.
--   **AB**: band matrix A in band storage as a [`Complex128Array`][@stdlib/array/complex128].
--   **LDAB**: leading dimension of `AB` (must be at least `kd+1`).
--   **B**: right-hand side matrix, overwritten with the solution on exit, as a [`Complex128Array`][@stdlib/array/complex128].
--   **LDB**: leading dimension of `B` (must be at least `max(1, N)`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
 
 #### ztbtrs.ndarray( uplo, trans, diag, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB )
 
-Solves a triangular banded system using alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 0, 2, 0, 5, 0 ] );
-var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
-
-var info = ztbtrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 2, 0, B, 1, 3, 0 );
-// info => 0
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
 
 </section>
 
@@ -60,8 +81,7 @@ var info = ztbtrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 
 
 ## Notes
 
--   A check is made to verify that A is nonsingular. If a zero is found on the diagonal (for non-unit triangular matrices), the function returns the 1-based index of the zero diagonal element without solving the system.
--   The matrix A is stored in band format. For upper triangular matrices, the diagonal is stored in the last row of the band array. For lower triangular matrices, the diagonal is stored in the first row.
+-   `ztbtrs()` corresponds to the [LAPACK][lapack] level routine [`ztbtrs`][lapack-ztbtrs].
 
 </section>
 
@@ -71,18 +91,12 @@ var info = ztbtrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztbtrs = require( '@stdlib/lapack/base/ztbtrs' );
 
-// Upper triangular band matrix with KD=1, N=3:
-var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 0, 2, 0, 5, 0 ] );
-var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
-
-var info = ztbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
-// info => 0
-// B now contains the solution
+// TODO: Add examples
 ```
 
 </section>
@@ -101,7 +115,13 @@ var info = ztbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1,
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/array/complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztbtrs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztbtrs.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

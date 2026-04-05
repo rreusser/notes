@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaqr1
 
-> Sets a scalar multiple of the first column of H - shift product
+> Sets a scalar multiple of the first column of the product.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlaqr1 = require( '@stdlib/lapack/base/dlaqr1' );
 ```
 
-#### dlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, sr1, si1, sr2, si2, v, strideV, offsetV )
+#### dlaqr1( N, H, LDH, sr1, si1, sr2, si2, v, strideV )
 
-Sets a scalar multiple of the first column of H - shift product
+Sets a scalar multiple of the first column of the product.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,17 +43,31 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **H**: input matrix.
--   **strideH1**: stride of the first dimension of `H`.
--   **strideH2**: stride of the second dimension of `H`.
+-   **H**: input array `H`.
+-   **LDH**: leading dimension of `H`.
+-   **sr1**: `sr1`.
+-   **si1**: `si1`.
+-   **sr2**: `sr2`.
+-   **si2**: `si2`.
+-   **v**: `v`.
+-   **strideV**: stride length for `V`.
+
+#### dlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, sr1, si1, sr2, si2, v, strideV, offsetV )
+
+Sets a scalar multiple of the first column of the product, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideH1**: stride of dimension 1 of `H`.
+-   **strideH2**: stride of dimension 2 of `H`.
 -   **offsetH**: starting index for `H`.
--   **sr1**: sr1.
--   **si1**: si1.
--   **sr2**: sr2.
--   **si2**: si2.
--   **v**: output array.
--   **strideV**: stride length for `v`.
--   **offsetV**: starting index for `v`.
+-   **offsetV**: starting index for `V`.
 
 </section>
 
@@ -43,7 +77,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlaqr1()` corresponds to the [LAPACK][lapack] level routine [`dlaqr1`][lapack-dlaqr1].
 
 </section>
 
@@ -53,7 +87,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlaqr1 = require( '@stdlib/lapack/base/dlaqr1' );
+
 // TODO: Add examples
 ```
 
@@ -73,9 +111,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaqr1]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaqr1.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

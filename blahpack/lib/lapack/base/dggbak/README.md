@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dggbak
 
-> Forms the right or left eigenvectors of a real generalized eigenvalue problem by backward transformation on the computed eigenvectors of the balanced matrix output by DGGBAL.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,49 +32,47 @@ var dggbak = require( '@stdlib/lapack/base/dggbak' );
 
 #### dggbak( order, job, side, N, ilo, ihi, LSCALE, strideLSCALE, RSCALE, strideRSCALE, M, V, LDV )
 
-Forms the right or left eigenvectors of a real generalized eigenvalue problem by backward transformation on the computed eigenvectors of the balanced matrix.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
-var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
-
-var info = dggbak( 'column-major', 'scale', 'right', 3, 1, 3, LSCALE, 1, RSCALE, 1, 2, V, 3 );
-// V => [ 2.0, 6.0, 1.5, 8.0, 15.0, 3.0 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **job**: specifies the type of backward transformation: `'none'`, `'permute'`, `'scale'`, or `'both'`.
--   **side**: `'right'` for right eigenvectors, `'left'` for left eigenvectors.
--   **N**: number of rows of `V`.
--   **ilo**: index of the first balanced row (1-based, from DGGBAL).
--   **ihi**: index of the last balanced row (1-based, from DGGBAL).
--   **LSCALE**: left scaling/permutation factors from DGGBAL.
--   **strideLSCALE**: stride for `LSCALE`.
--   **RSCALE**: right scaling/permutation factors from DGGBAL.
--   **strideRSCALE**: stride for `RSCALE`.
--   **M**: number of columns of `V`.
--   **V**: eigenvector matrix (modified in-place).
+-   **job**: `job`.
+-   **side**: specifies the side of the operation.
+-   **N**: number of columns.
+-   **ilo**: `ilo`.
+-   **ihi**: `ihi`.
+-   **LSCALE**: input array `LSCALE`.
+-   **strideLSCALE**: stride length for `LSCALE`.
+-   **RSCALE**: input array `RSCALE`.
+-   **strideRSCALE**: stride length for `RSCALE`.
+-   **M**: number of rows.
+-   **V**: input array `V`.
 -   **LDV**: leading dimension of `V`.
 
 #### dggbak.ndarray( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV )
 
-Forms the right or left eigenvectors using alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
-var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
-
-var info = dggbak.ndarray( 'scale', 'right', 3, 1, 3, LSCALE, 1, 0, RSCALE, 1, 0, 2, V, 1, 3, 0 );
-// V => [ 2.0, 6.0, 1.5, 8.0, 15.0, 3.0 ]
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **offsetLSCALE**: starting index for `LSCALE`.
+-   **offsetRSCALE**: starting index for `RSCALE`.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
+-   **offsetV**: starting index for `V`.
 
 </section>
 
@@ -64,8 +82,7 @@ var info = dggbak.ndarray( 'scale', 'right', 3, 1, 3, LSCALE, 1, 0, RSCALE, 1, 0
 
 ## Notes
 
--   `dggbak` is typically called after `dggbal` balances a matrix pair and eigenvalues/eigenvectors have been computed from the balanced pair. It reverses the balancing to recover eigenvectors of the original pair.
--   The `ilo` and `ihi` parameters are 1-based indices matching the Fortran convention used by DGGBAL.
+-   `dggbak()` corresponds to the [LAPACK][lapack] level routine [`dggbak`][lapack-dggbak].
 
 </section>
 
@@ -75,20 +92,12 @@ var info = dggbak.ndarray( 'scale', 'right', 3, 1, 3, LSCALE, 1, 0, RSCALE, 1, 0
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dggbak = require( '@stdlib/lapack/base/dggbak' );
 
-// Scale right eigenvectors of a 3x2 matrix:
-var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
-var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
-
-var info = dggbak( 'column-major', 'scale', 'right', 3, 1, 3, LSCALE, 1, RSCALE, 1, 2, V, 3 );
-// returns 0
-
-console.log( V );
-// => Float64Array [ 2.0, 6.0, 1.5, 8.0, 15.0, 3.0 ]
+// TODO: Add examples
 ```
 
 </section>
@@ -107,7 +116,12 @@ console.log( V );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dggbak]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dggbak.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

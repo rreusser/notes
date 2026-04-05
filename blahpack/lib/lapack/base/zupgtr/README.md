@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zupgtr
 
 > Generates an orthogonal matrix Q which is defined as the product of n-1 elementary reflectors of order n, as returned by zhptrd.
@@ -10,39 +30,46 @@
 var zupgtr = require( '@stdlib/lapack/base/zupgtr' );
 ```
 
-#### zupgtr.ndarray( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
+#### zupgtr( order, uplo, N, AP, TAU, Q, LDQ, WORK )
 
 Generates an orthogonal matrix Q which is defined as the product of n-1 elementary reflectors of order n, as returned by zhptrd.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var Complex128Array = require( '@stdlib/array/complex128' );
-
-// After calling zhptrd on a 2x2 Hermitian matrix:
-var AP = new Complex128Array( 3 );
-var TAU = new Complex128Array( 1 );
-var Q = new Complex128Array( 4 );
-var WORK = new Complex128Array( 4 );
-
-zupgtr.ndarray( 'upper', 2, AP, 1, 0, TAU, 1, 0, Q, 1, 2, 0, WORK, 1, 0 );
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **AP**: input array.
+-   **AP**: input array `AP`.
+-   **TAU**: input array `TAU`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **WORK**: input array `WORK`.
+
+#### zupgtr.ndarray( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK )
+
+Generates an orthogonal matrix Q which is defined as the product of n-1 elementary reflectors of order n, as returned by zhptrd, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **TAU**: input array.
 -   **strideTAU**: stride length for `TAU`.
 -   **offsetTAU**: starting index for `TAU`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
 -   **offsetQ**: starting index for `Q`.
--   **WORK**: output array.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
@@ -54,8 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   AP, TAU, Q, and WORK are Complex128Array with complex-element strides.
--   Q is an N-by-N unitary matrix on output.
+-   `zupgtr()` corresponds to the [LAPACK][lapack] level routine [`zupgtr`][lapack-zupgtr].
 
 </section>
 
@@ -65,17 +91,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var zupgtr = require( '@stdlib/lapack/base/zupgtr' );
 
-var AP = new Complex128Array( 3 );
-var TAU = new Complex128Array( 1 );
-var Q = new Complex128Array( 4 );
-var WORK = new Complex128Array( 4 );
-
-zupgtr( 'column-major', 'upper', 2, AP, TAU, Q, 2, WORK );
-console.log( 'Q:', Q );
+// TODO: Add examples
 ```
 
 </section>
@@ -94,9 +115,12 @@ console.log( 'Q:', Q );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zupgtr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zupgtr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

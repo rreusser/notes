@@ -20,7 +20,7 @@ limitations under the License.
 
 # ztrmv
 
-> Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x
+> Perform one of the matrix-vector operations.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var ztrmv = require( '@stdlib/blas/base/ztrmv' );
 ```
 
-#### ztrmv.ndarray( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX )
+#### ztrmv( order, uplo, trans, diag, N, A, LDA, x, strideX )
 
-Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x
+Perform one of the matrix-vector operations.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,17 +42,32 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
--   **trans**: specifies the operation type.
--   **diag**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+
+#### ztrmv.ndarray( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX )
+
+Perform one of the matrix-vector operations, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **x**: output array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -62,7 +77,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztrmv()` corresponds to the [LAPACK][lapack] level routine [`ztrmv`][lapack-ztrmv].
 
 </section>
 
@@ -72,7 +87,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztrmv = require( '@stdlib/blas/base/ztrmv' );
+
 // TODO: Add examples
 ```
 
@@ -92,9 +111,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztrmv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztrmv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

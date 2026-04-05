@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlasrt
 
-> Sort an array of doubles in increasing or decreasing order
+> Sort an array of doubles in increasing or decreasing order using quicksort.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
 ```
 
-#### dlasrt.ndarray( id, N, d, stride, offset )
+#### dlasrt( id, N, d, stride )
 
-Sort an array of doubles in increasing or decreasing order
+Sort an array of doubles in increasing or decreasing order using quicksort.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,11 +42,24 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **id**: specifies the operation type.
+-   **id**: `id`.
 -   **N**: number of columns.
--   **d**: input array.
--   **stride**: stride length for `d`.
--   **offset**: starting index for `d`.
+-   **d**: `d`.
+-   **stride**: `stride`.
+
+#### dlasrt.ndarray( id, N, d, stride, offset )
+
+Sort an array of doubles in increasing or decreasing order using quicksort, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offset**: `offset`.
 
 </section>
 
@@ -36,7 +69,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlasrt()` corresponds to the [LAPACK][lapack] level routine [`dlasrt`][lapack-dlasrt].
 
 </section>
 
@@ -46,7 +79,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
+
 // TODO: Add examples
 ```
 
@@ -66,9 +103,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlasrt]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlasrt.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

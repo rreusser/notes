@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlargv
 
 > Generates a vector of complex plane rotations with real cosines and complex sines.
@@ -10,34 +30,41 @@
 var zlargv = require( '@stdlib/lapack/base/zlargv' );
 ```
 
-#### zlargv.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC )
+#### zlargv( N, x, strideX, y, strideY, c, strideC )
 
 Generates a vector of complex plane rotations with real cosines and complex sines.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-var x = new Complex128Array( [ 3.0, 1.0, 0.0, 0.0 ] );
-var y = new Complex128Array( [ 4.0, 0.0, 5.0, 0.0 ] );
-var c = new Float64Array( 2 );
-
-zlargv.ndarray( 2, x, 1, 0, y, 1, 0, c, 1, 0 );
-// x and y are modified in-place, c contains cosines
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: number of plane rotations to generate.
--   **x**: input/output `Complex128Array` vector (overwritten by `r` on exit).
--   **strideX**: stride for `x` (in complex elements).
--   **offsetX**: starting index for `x` (in complex elements).
--   **y**: input/output `Complex128Array` vector (overwritten by complex sines on exit).
--   **strideY**: stride for `y` (in complex elements).
--   **offsetY**: starting index for `y` (in complex elements).
--   **c**: output `Float64Array` for real cosines.
--   **strideC**: stride for `c`.
--   **offsetC**: starting index for `c`.
+-   **N**: number of columns.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
+
+#### zlargv.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC )
+
+Generates a vector of complex plane rotations with real cosines and complex sines, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
+-   **offsetC**: starting index for `C`.
 
 </section>
 
@@ -47,7 +74,7 @@ The function has the following parameters:
 
 ## Notes
 
--   For each pair `(x(i), y(i))`, the routine computes a plane rotation with real cosine `c(i)` and complex sine `s(i)` such that the rotation zeros out `y(i)`.
+-   `zlargv()` corresponds to the [LAPACK][lapack] level routine [`zlargv`][lapack-zlargv].
 
 </section>
 
@@ -57,21 +84,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlargv = require( '@stdlib/lapack/base/zlargv' );
 
-var x = new Complex128Array( [ 3.0, 1.0, 1.0, 2.0 ] );
-var y = new Complex128Array( [ 4.0, 0.0, 3.0, 1.0 ] );
-var c = new Float64Array( 2 );
-
-zlargv.ndarray( 2, x, 1, 0, y, 1, 0, c, 1, 0 );
-
-console.log( 'cosines:', c );
-console.log( 'x (r):', reinterpret( x, 0 ) );
-console.log( 'y (sines):', reinterpret( y, 0 ) );
+// TODO: Add examples
 ```
 
 </section>
@@ -90,9 +108,12 @@ console.log( 'y (sines):', reinterpret( y, 0 ) );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlargv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlargv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

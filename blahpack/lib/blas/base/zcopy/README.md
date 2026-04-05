@@ -20,7 +20,7 @@ limitations under the License.
 
 # zcopy
 
-> Copy a complex double-precision vector
+> Copy a complex double-precision vector.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zcopy = require( '@stdlib/blas/base/zcopy' );
 ```
 
-#### zcopy.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
+#### zcopy( N, zx, strideX, zy, strideY )
 
-Copy a complex double-precision vector
+Copy a complex double-precision vector.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -43,14 +43,25 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **incx**: incx.
--   **y**: output array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **incy**: incy.
+-   **zx**: `zx`.
+-   **strideX**: stride length for `X`.
+-   **zy**: `zy`.
+-   **strideY**: stride length for `Y`.
+
+#### zcopy.ndarray( N, zx, strideX, offsetX, zy, strideY, offsetY )
+
+Copy a complex double-precision vector, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -60,7 +71,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zcopy()` corresponds to the [LAPACK][lapack] level routine [`zcopy`][lapack-zcopy].
 
 </section>
 
@@ -70,7 +81,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zcopy = require( '@stdlib/blas/base/zcopy' );
+
 // TODO: Add examples
 ```
 
@@ -90,9 +105,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zcopy]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zcopy.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

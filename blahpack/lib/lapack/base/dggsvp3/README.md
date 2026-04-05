@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dggsvp3
 
-> Compute the preprocessing for the generalized SVD of real matrices A and B
+> Computes orthogonal matrices U, V, and Q such that:.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dggsvp3 = require( '@stdlib/lapack/base/dggsvp3' );
 ```
 
-#### dggsvp3.ndarray( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
+#### dggsvp3( jobu, jobv, jobq, M, p, N, A, LDA, B, LDB, tola, tolb, K, l, U, LDU, V, LDV, Q, LDQ, IWORK, strideIWORK, TAU, strideTAU, WORK, strideWORK, lwork )
 
-Compute the preprocessing for the generalized SVD of real matrices A and B
+Computes orthogonal matrices U, V, and Q such that:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,46 +42,64 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobu**: specifies the operation type.
--   **jobv**: specifies the operation type.
--   **jobq**: specifies the operation type.
+-   **jobu**: `jobu`.
+-   **jobv**: `jobv`.
+-   **jobq**: `jobq`.
 -   **M**: number of rows.
--   **p**: p.
+-   **p**: `p`.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **tola**: tola.
--   **tolb**: tolb.
--   **K**: number of superdiagonals.
--   **l**: l.
--   **U**: input matrix.
--   **strideU1**: stride of the first dimension of `U`.
--   **strideU2**: stride of the second dimension of `U`.
--   **offsetU**: starting index for `U`.
--   **V**: input matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
--   **offsetV**: starting index for `V`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
--   **offsetQ**: starting index for `Q`.
--   **IWORK**: input array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **tola**: `tola`.
+-   **tolb**: `tolb`.
+-   **K**: inner dimension.
+-   **l**: `l`.
+-   **U**: input array `U`.
+-   **LDU**: leading dimension of `U`.
+-   **V**: input array `V`.
+-   **LDV**: leading dimension of `V`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
--   **offsetIWORK**: starting index for `IWORK`.
--   **TAU**: input array.
+-   **TAU**: input array `TAU`.
 -   **strideTAU**: stride length for `TAU`.
--   **offsetTAU**: starting index for `TAU`.
--   **WORK**: output array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+-   **lwork**: `lwork`.
+
+#### dggsvp3.ndarray( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
+
+Computes orthogonal matrices U, V, and Q such that:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideU1**: stride of dimension 1 of `U`.
+-   **strideU2**: stride of dimension 2 of `U`.
+-   **offsetU**: starting index for `U`.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
+-   **offsetV**: starting index for `V`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **offsetIWORK**: starting index for `IWORK`.
+-   **offsetTAU**: starting index for `TAU`.
 -   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
 
 </section>
 
@@ -71,7 +109,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dggsvp3()` corresponds to the [LAPACK][lapack] level routine [`dggsvp3`][lapack-dggsvp3].
 
 </section>
 
@@ -81,7 +119,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dggsvp3 = require( '@stdlib/lapack/base/dggsvp3' );
+
 // TODO: Add examples
 ```
 
@@ -101,9 +143,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dggsvp3]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dggsvp3.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

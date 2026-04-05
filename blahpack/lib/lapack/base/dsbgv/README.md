@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsbgv
 
-> Computes all eigenvalues and optionally eigenvectors of a real symmetric-definite banded generalized eigenproblem A\*x = lambda\*B\*x.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,58 +32,56 @@ var dsbgv = require( '@stdlib/lapack/base/dsbgv' );
 
 #### dsbgv( order, jobz, uplo, N, ka, kb, AB, LDAB, BB, LDBB, w, strideW, Z, LDZ, WORK, strideWORK )
 
-Computes all eigenvalues and optionally eigenvectors of a real symmetric-definite banded generalized eigenproblem.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 diagonal matrices (KA=KB=0), column-major:
-var AB = new Float64Array( [ 5.0, 6.0, 7.0 ] );
-var BB = new Float64Array( [ 2.0, 3.0, 4.0 ] );
-var W = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dsbgv( 'column-major', 'compute-vectors', 'upper', 3, 0, 0, AB, 1, BB, 1, W, 1, Z, 3, WORK, 1 );
-// info => 0
-// W => [ 1.75, 2.0, 2.5 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **jobz**: `'no-vectors'` to compute eigenvalues only, `'compute-vectors'` to also compute eigenvectors.
--   **uplo**: `'upper'` or `'lower'` triangles of A and B are stored.
--   **N**: order of matrices A and B.
--   **ka**: number of super- (or sub-) diagonals of A.
--   **kb**: number of super- (or sub-) diagonals of B.
--   **AB**: band matrix A in band storage, dimension (LDAB, N).
--   **LDAB**: leading dimension of `AB` (>= ka+1).
--   **BB**: band matrix B in band storage, dimension (LDBB, N).
--   **LDBB**: leading dimension of `BB` (>= kb+1).
--   **w**: output array for eigenvalues (length N).
--   **strideW**: stride for `w`.
--   **Z**: output matrix for eigenvectors (LDZ, N), referenced only if jobz = `'compute-vectors'`.
+-   **jobz**: `jobz`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **ka**: `ka`.
+-   **kb**: `kb`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **BB**: input array `BB`.
+-   **LDBB**: leading dimension of `BB`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **Z**: input array `Z`.
 -   **LDZ**: leading dimension of `Z`.
--   **WORK**: workspace array (length >= 3\*N).
--   **strideWORK**: stride for `WORK`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
 
 #### dsbgv.ndarray( jobz, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
 
-Computes all eigenvalues and optionally eigenvectors using alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AB = new Float64Array( [ 5.0, 6.0, 7.0 ] );
-var BB = new Float64Array( [ 2.0, 3.0, 4.0 ] );
-var W = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dsbgv.ndarray( 'compute-vectors', 'upper', 3, 0, 0, AB, 1, 1, 0, BB, 1, 1, 0, W, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **strideBB1**: stride of dimension 1 of `BB`.
+-   **strideBB2**: stride of dimension 2 of `BB`.
+-   **offsetBB**: starting index for `BB`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **offsetWORK**: starting index for `WORK`.
 
 </section>
 
@@ -73,11 +91,7 @@ var info = dsbgv.ndarray( 'compute-vectors', 'upper', 3, 0, 0, AB, 1, 1, 0, BB, 
 
 ## Notes
 
--   A and B are assumed to be symmetric and banded. B must also be positive definite.
--   On exit, AB is destroyed. BB contains the split Cholesky factor from `dpbstf`.
--   If `info > 0` and `info <= N`, dsteqr/dsterf did not converge. If `info > N`, B is not positive definite (`info - N` is the return value from `dpbstf`).
--   The eigenvalues are returned in ascending order in `w`.
--   If jobz = `'compute-vectors'`, the eigenvectors are normalized so that Z^T\*B\*Z = I.
+-   `dsbgv()` corresponds to the [LAPACK][lapack] level routine [`dsbgv`][lapack-dsbgv].
 
 </section>
 
@@ -87,20 +101,12 @@ var info = dsbgv.ndarray( 'compute-vectors', 'upper', 3, 0, 0, AB, 1, 1, 0, BB, 
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dsbgv = require( '@stdlib/lapack/base/dsbgv' );
 
-// 3x3 diagonal matrices (KA=KB=0), column-major:
-var AB = new Float64Array( [ 5.0, 6.0, 7.0 ] );
-var BB = new Float64Array( [ 2.0, 3.0, 4.0 ] );
-var W = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dsbgv( 'column-major', 'compute-vectors', 'upper', 3, 0, 0, AB, 1, BB, 1, W, 1, Z, 3, WORK, 1 );
-console.log( 'info:', info );
-console.log( 'Eigenvalues:', W );
+// TODO: Add examples
 ```
 
 </section>
@@ -119,7 +125,12 @@ console.log( 'Eigenvalues:', W );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsbgv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsbgv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

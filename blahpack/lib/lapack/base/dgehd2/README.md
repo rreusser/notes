@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgehd2
 
-> Reduce a general matrix to upper Hessenberg form (unblocked)
+> Reduce a general matrix to upper Hessenberg form (unblocked).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dgehd2 = require( '@stdlib/lapack/base/dgehd2' );
 ```
 
-#### dgehd2.ndarray( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+#### dgehd2( order, N, ilo, ihi, A, LDA, TAU, strideTAU, WORK, strideWORK )
 
-Reduce a general matrix to upper Hessenberg form (unblocked)
+Reduce a general matrix to upper Hessenberg form (unblocked).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,18 +42,33 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **N**: number of columns.
--   **ilo**: ilo.
--   **ihi**: ihi.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **TAU**: input array.
+-   **ilo**: `ilo`.
+-   **ihi**: `ihi`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: input array `TAU`.
 -   **strideTAU**: stride length for `TAU`.
--   **offsetTAU**: starting index for `TAU`.
--   **WORK**: output array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### dgehd2.ndarray( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+
+Reduce a general matrix to upper Hessenberg form (unblocked), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetTAU**: starting index for `TAU`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -44,7 +79,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dgehd2()` corresponds to the [LAPACK][lapack] level routine [`dgehd2`][lapack-dgehd2].
 
 </section>
 
@@ -54,7 +89,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dgehd2 = require( '@stdlib/lapack/base/dgehd2' );
+
 // TODO: Add examples
 ```
 
@@ -74,9 +113,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgehd2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgehd2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

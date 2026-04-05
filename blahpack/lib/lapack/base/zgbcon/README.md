@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgbcon
 
-> Estimate reciprocal condition number of complex general band matrix
+> CABS1: |re(z)| + |im(z)|.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zgbcon = require( '@stdlib/lapack/base/zgbcon' );
 ```
 
-#### zgbcon.ndarray( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+#### zgbcon( v, idx )
 
-Estimate reciprocal condition number of complex general band matrix
+CABS1: |re(z)| + |im(z)|.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,23 +42,38 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **norm**: specifies the operation type.
+-   **v**: `v`.
+-   **idx**: `idx`.
+
+#### zgbcon.ndarray( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+CABS1: |re(z)| + |im(z)|, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **norm**: `norm`.
 -   **N**: number of columns.
--   **kl**: kl.
--   **ku**: ku.
--   **AB**: input matrix.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **AB**: input array `AB`.
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **IPIV**: input array.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **anorm**: anorm.
--   **rcond**: rcond.
--   **WORK**: input array.
+-   **anorm**: `anorm`.
+-   **rcond**: `rcond`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **RWORK**: output array.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
@@ -50,7 +85,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgbcon()` corresponds to the [LAPACK][lapack] level routine [`zgbcon`][lapack-zgbcon].
 
 </section>
 
@@ -60,7 +95,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgbcon = require( '@stdlib/lapack/base/zgbcon' );
+
 // TODO: Add examples
 ```
 
@@ -80,9 +119,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgbcon]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgbcon.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

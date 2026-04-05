@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgees
 
-> Compute eigenvalues and Schur decomposition of a complex matrix
+> Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zgees = require( '@stdlib/lapack/base/zgees' );
 ```
 
-#### zgees.ndarray( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK )
+#### zgees( jobvs, sort, select, N, A, LDA, sdim, W, strideW, VS, LDVS, WORK, strideWORK, lwork, RWORK, strideRWORK, BWORK, strideBWORK )
 
-Compute eigenvalues and Schur decomposition of a complex matrix
+Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,31 +42,46 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobvs**: specifies the operation type.
--   **sort**: specifies the operation type.
--   **select**: select.
+-   **jobvs**: `jobvs`.
+-   **sort**: `sort`.
+-   **select**: `select`.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **sdim**: sdim.
--   **w**: input array.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **VS**: input matrix.
--   **strideVS1**: stride of the first dimension of `VS`.
--   **strideVS2**: stride of the second dimension of `VS`.
--   **offsetVS**: starting index for `VS`.
--   **WORK**: input array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **sdim**: `sdim`.
+-   **W**: input array `W`.
+-   **strideW**: stride length for `W`.
+-   **VS**: input array `VS`.
+-   **LDVS**: leading dimension of `VS`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **RWORK**: input array.
+-   **lwork**: `lwork`.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
--   **offsetRWORK**: starting index for `RWORK`.
--   **BWORK**: output array.
+-   **BWORK**: input array `BWORK`.
 -   **strideBWORK**: stride length for `BWORK`.
+
+#### zgees.ndarray( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK )
+
+Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetW**: starting index for `W`.
+-   **strideVS1**: stride of dimension 1 of `VS`.
+-   **strideVS2**: stride of dimension 2 of `VS`.
+-   **offsetVS**: starting index for `VS`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **offsetRWORK**: starting index for `RWORK`.
 -   **offsetBWORK**: starting index for `BWORK`.
 
 </section>
@@ -57,7 +92,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgees()` corresponds to the [LAPACK][lapack] level routine [`zgees`][lapack-zgees].
 
 </section>
 
@@ -67,7 +102,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgees = require( '@stdlib/lapack/base/zgees' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +126,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgees]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgees.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

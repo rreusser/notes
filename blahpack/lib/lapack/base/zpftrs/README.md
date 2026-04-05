@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpftrs
 
-> Solves a complex system A * X = B where A is Hermitian positive definite in Rectangular Full Packed (RFP) format.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,37 +30,42 @@
 var zpftrs = require( '@stdlib/lapack/base/zpftrs' );
 ```
 
-#### zpftrs.ndarray( transr, uplo, N, nrhs, A, strideA, offsetA, B, strideB1, strideB2, offsetB )
+#### zpftrs( transr, uplo, N, nrhs, A, B )
 
-Solves a system of linear equations `A * X = B` with a Hermitian positive definite matrix `A` in RFP format, using the Cholesky factorization computed by `zpftrf`.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var zpftrf = require( '@stdlib/lapack/base/zpftrf' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 HPD matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Complex128Array( [ 10, 0, 3, -1, 1, 2, 6, 0, 8, 0, 2, -1 ] );
-zpftrf.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-
-// Right-hand side B (3x1):
-var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
-var info = zpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **transr**: specifies the RFP storage format (`'no-transpose'` or `'conjugate-transpose'`).
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of matrix A.
--   **nrhs**: number of right-hand side columns.
--   **A**: [`Complex128Array`][@stdlib/array/complex128] containing the Cholesky factor in RFP format of length `N*(N+1)/2`.
--   **strideA**: stride length for `A` (in complex elements).
--   **offsetA**: starting index for `A` (in complex elements).
--   **B**: [`Complex128Array`][@stdlib/array/complex128] containing the N-by-NRHS right-hand side matrix.
--   **strideB1**: stride of the first dimension of `B` (in complex elements).
--   **strideB2**: stride of the second dimension of `B` (in complex elements).
--   **offsetB**: starting index for `B` (in complex elements).
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **nrhs**: number of right-hand sides.
+-   **A**: input array `A`.
+-   **B**: input array `B`.
+
+#### zpftrs.ndarray( transr, uplo, N, nrhs, A, strideA, offsetA, B, strideB1, strideB2, offsetB )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA**: stride length for `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
 
 </section>
 
@@ -50,10 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The matrix `A` must contain the Cholesky factorization computed by [`zpftrf`][@stdlib/lapack/base/zpftrf] in RFP format.
--   If `uplo = 'lower'`, the routine solves `L * L^H * X = B` using forward and back substitution.
--   If `uplo = 'upper'`, the routine solves `U^H * U * X = B` using forward and back substitution.
--   The solution `X` overwrites `B` on exit.
+-   `zpftrs()` corresponds to the [LAPACK][lapack] level routine [`zpftrs`][lapack-zpftrs].
 
 </section>
 
@@ -63,23 +85,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var zpftrf = require( '@stdlib/lapack/base/zpftrf' );
 var zpftrs = require( '@stdlib/lapack/base/zpftrs' );
 
-// 3x3 HPD matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Complex128Array( [ 10, 0, 3, -1, 1, 2, 6, 0, 8, 0, 2, -1 ] );
-zpftrf.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-
-// Right-hand side B (3x1):
-var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
-var info = zpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
-console.log( 'info:', info );
-// => info: 0
-
-console.log( 'Solution:', reinterpret( B, 0 ) );
+// TODO: Add examples
 ```
 
 </section>
@@ -98,8 +109,13 @@ console.log( 'Solution:', reinterpret( B, 0 ) );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/array/complex128
-[@stdlib/lapack/base/zpftrf]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/lapack/base/zpftrf
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpftrs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpftrs.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

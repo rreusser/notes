@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaqge
 
-> Equilibrates a general matrix using row and column scaling factors
+> Equilibrates a general M-by-N matrix A using the row and column scaling.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlaqge = require( '@stdlib/lapack/base/dlaqge' );
 ```
 
-#### dlaqge.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax, equed )
+#### dlaqge( M, N, A, LDA, r, strideR, c, strideC, rowcnd, colcnd, amax )
 
-Equilibrates a general matrix using row and column scaling factors
+Equilibrates a general M-by-N matrix A using the row and column scaling.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -24,20 +44,34 @@ The function has the following parameters:
 
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **r**: `r`.
+-   **strideR**: stride length for `R`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
+-   **rowcnd**: `rowcnd`.
+-   **colcnd**: `colcnd`.
+-   **amax**: `amax`.
+
+#### dlaqge.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax, equed )
+
+Equilibrates a general M-by-N matrix A using the row and column scaling, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **r**: input array.
--   **strideR**: stride length for `r`.
--   **offsetR**: starting index for `r`.
--   **c**: output array.
--   **strideC**: stride length for `c`.
--   **offsetC**: starting index for `c`.
--   **rowcnd**: rowcnd.
--   **colcnd**: colcnd.
--   **amax**: amax.
--   **equed**: specifies the operation type.
+-   **offsetR**: starting index for `R`.
+-   **offsetC**: starting index for `C`.
+-   **equed**: `equed`.
 
 </section>
 
@@ -47,7 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlaqge()` corresponds to the [LAPACK][lapack] level routine [`dlaqge`][lapack-dlaqge].
 
 </section>
 
@@ -57,7 +91,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlaqge = require( '@stdlib/lapack/base/dlaqge' );
+
 // TODO: Add examples
 ```
 
@@ -77,9 +115,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaqge]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaqge.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

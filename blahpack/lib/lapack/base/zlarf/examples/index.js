@@ -18,7 +18,21 @@
 
 'use strict';
 
-var zlarf = require( '@stdlib/lapack/base/zlarf' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zlarf = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlarf );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var C = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zlarf( 'row-major', 'left', N, N, v, 1, 1.0, 1, C, N, WORK, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlarf.ndarray( 'left', N, N, v, 1, 0, 1.0, 0, C, N, 1, 0, WORK, 1, 0 );
+console.log( out );

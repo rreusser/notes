@@ -18,7 +18,19 @@
 
 'use strict';
 
-var ilazlr = require( '@stdlib/lapack/base/ilazlr' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var ilazlr = require( './../lib' );
 
-// TODO: Add example usage
-console.log( ilazlr );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+// Using the standard interface:
+var out = ilazlr( 'row-major', N, N, A, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = ilazlr.ndarray( N, N, A, N, 1, 0 );
+console.log( out );

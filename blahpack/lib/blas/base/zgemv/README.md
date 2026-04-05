@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgemv
 
-> Perform complex matrix-vector multiplication
+> Perform one of the complex matrix-vector operations:.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zgemv = require( '@stdlib/blas/base/zgemv' );
 ```
 
-#### zgemv.ndarray( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+#### zgemv( order, trans, M, N, alpha, A, LDA, x, strideX, beta, y, strideY )
 
-Perform complex matrix-vector multiplication
+Perform one of the complex matrix-vector operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,21 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **trans**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **trans**: specifies whether the matrix should be transposed.
 -   **M**: number of rows.
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
 -   **beta**: scalar constant.
--   **y**: output array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+
+#### zgemv.ndarray( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+
+Perform one of the complex matrix-vector operations:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -66,7 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgemv()` corresponds to the [LAPACK][lapack] level routine [`zgemv`][lapack-zgemv].
 
 </section>
 
@@ -76,7 +91,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgemv = require( '@stdlib/blas/base/zgemv' );
+
 // TODO: Add examples
 ```
 
@@ -96,9 +115,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgemv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgemv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

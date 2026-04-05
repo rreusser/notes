@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zrscl
 
-> Multiplies a complex vector by the reciprocal of a complex scalar.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,28 +30,36 @@
 var zrscl = require( '@stdlib/lapack/base/zrscl' );
 ```
 
-#### zrscl.ndarray( N, a, x, strideX, offsetX )
+#### zrscl( N, a, x, strideX )
 
-Multiplies an n-element complex vector `x` by the complex scalar `1/a`, performing the scaling carefully to avoid overflow or underflow.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var x = new Complex128Array( [ 6.0, 8.0, 12.0, 16.0 ] );
-var a = new Complex128( 2.0, 0.0 );
-
-zrscl.ndarray( 2, a, x, 1, 0 );
-// x => < 3.0, 4.0, 6.0, 8.0 >
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: number of elements in `x`.
--   **a**: complex scalar divisor (`Complex128`).
--   **x**: input/output complex vector (`Complex128Array`).
--   **strideX**: stride for `x` (in complex elements).
--   **offsetX**: starting index for `x` (in complex elements).
+-   **N**: number of columns.
+-   **a**: `a`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+
+#### zrscl.ndarray( N, a, x, strideX, offsetX )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -41,8 +69,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The routine handles all combinations of real, imaginary, and general complex divisors with separate overflow/underflow protection for each case.
--   When `a` is purely real, the computation delegates to `zdrscl`. When `a` is purely imaginary or general complex, safe scaling via `zdscal` and `zscal` is applied.
+-   `zrscl()` corresponds to the [LAPACK][lapack] level routine [`zrscl`][lapack-zrscl].
 
 </section>
 
@@ -52,20 +79,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zrscl = require( '@stdlib/lapack/base/zrscl' );
 
-var x = new Complex128Array( [ 6.0, 8.0, 12.0, 16.0 ] );
-var a = new Complex128( 2.0, 0.0 );
-
-zrscl.ndarray( 2, a, x, 1, 0 );
-
-var view = reinterpret( x, 0 );
-console.log( view );
-// => Float64Array [ 3.0, 4.0, 6.0, 8.0 ]
+// TODO: Add examples
 ```
 
 </section>
@@ -84,9 +103,12 @@ console.log( view );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zrscl]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zrscl.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

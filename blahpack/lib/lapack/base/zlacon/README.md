@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlacon
 
-> Estimates the 1-norm of a square complex matrix using reverse communication.
+> Estimates the 1-norm of a square complex matrix A using reverse communication.
 
 <section class="usage">
 
@@ -10,36 +30,40 @@
 var zlacon = require( '@stdlib/lapack/base/zlacon' );
 ```
 
-#### zlacon.ndarray( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE )
+#### zlacon( N, V, strideV, X, strideX, EST, KASE )
 
-Estimates the 1-norm of a square complex matrix A using reverse communication. This is the older version of `zlacn2` -- same algorithm but with module-level persistent state instead of an explicit ISAVE array.
+Estimates the 1-norm of a square complex matrix A using reverse communication.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-var N = 3;
-var V = new Complex128Array( N );
-var X = new Complex128Array( N );
-var EST = new Float64Array( 1 );
-var KASE = new Int32Array( 1 );
-
-KASE[ 0 ] = 0;
-zlacon.ndarray( N, V, 1, 0, X, 1, 0, EST, KASE );
-// KASE[ 0 ] => 1 (caller should compute X = A*X and call again)
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: order of the matrix (N >= 1).
--   **V**: [`Complex128Array`][@stdlib/array/complex128] workspace vector of length N.
--   **strideV**: stride for V (in complex elements).
--   **offsetV**: starting index for V (in complex elements).
--   **X**: [`Complex128Array`][@stdlib/array/complex128] input/output vector of length N.
--   **strideX**: stride for X (in complex elements).
--   **offsetX**: starting index for X (in complex elements).
--   **EST**: [`Float64Array`][mdn-float64array] of length 1. On exit, `EST[0]` holds the estimated 1-norm.
--   **KASE**: [`Int32Array`][mdn-int32array] of length 1. Set to 0 on first call; on intermediate returns, 1 means compute `X = A*X`, 2 means compute `X = A**H * X`; on final return, 0 means the estimate is complete.
+-   **N**: number of columns.
+-   **V**: input array `V`.
+-   **strideV**: stride length for `V`.
+-   **X**: input array `X`.
+-   **strideX**: stride length for `X`.
+-   **EST**: input array `EST`.
+-   **KASE**: input array `KASE`.
+
+#### zlacon.ndarray( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE )
+
+Estimates the 1-norm of a square complex matrix A using reverse communication, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetV**: starting index for `V`.
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -49,8 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   Unlike `zlacn2`, this routine uses module-level persistent state (equivalent to Fortran SAVE) instead of an explicit ISAVE array. This means it is **not** safe for concurrent or interleaved use with multiple matrices. Prefer `zlacn2` for new code.
--   The routine implements the algorithm of Higham (1988) for estimating the 1-norm of a square complex matrix using reverse communication.
+-   `zlacon()` corresponds to the [LAPACK][lapack] level routine [`zlacon`][lapack-zlacon].
 
 </section>
 
@@ -60,22 +83,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlacon = require( '@stdlib/lapack/base/zlacon' );
 
-var N = 3;
-var V = new Complex128Array( N );
-var X = new Complex128Array( N );
-var EST = new Float64Array( 1 );
-var KASE = new Int32Array( 1 );
-
-KASE[ 0 ] = 0;
-
-// First call initializes X and requests A*X (KASE=1):
-zlacon.ndarray( N, V, 1, 0, X, 1, 0, EST, KASE );
-console.log( 'After init: KASE =', KASE[ 0 ] ); // 1
+// TODO: Add examples
 ```
 
 </section>
@@ -94,11 +107,12 @@ console.log( 'After init: KASE =', KASE[ 0 ] ); // 1
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlacon]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlacon.html
 
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

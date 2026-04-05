@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dpptri
 
-> Compute the inverse of a real symmetric positive definite matrix in packed storage using the Cholesky factorization.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,30 +30,36 @@
 var dpptri = require( '@stdlib/lapack/base/dpptri' );
 ```
 
-#### dpptri.ndarray( uplo, N, AP, stride, offset )
+#### dpptri( uplo, N, AP )
 
-Computes the inverse of a real symmetric positive definite matrix `A` using the Cholesky factorization `A = U^T * U` or `A = L * L^T` computed by `dpptrf`. The matrix is stored in packed format.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// Upper packed Cholesky factor of a 2x2 SPD matrix (pre-factored):
-var AP = new Float64Array( [ 2.0, 0.5, 1.3228756555322954 ] );
-
-var info = dpptri.ndarray( 'upper', 2, AP, 1, 0 );
-// info => 0
-// AP now contains the upper triangle of the inverse in packed format
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper (`'upper'`) or lower (`'lower'`) triangle is stored.
--   **N**: order of the matrix `A`.
--   **AP**: packed triangular matrix of length `N*(N+1)/2`.
--   **stride**: stride length for `AP`.
--   **offset**: starting index for `AP`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
 
-The function returns an integer `info` status code: `0` indicates success; `k > 0` indicates the `k`-th diagonal element of the triangular factor is zero and the matrix is singular.
+#### dpptri.ndarray( uplo, N, AP, strideAP, offsetAP )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
 
 </section>
 
@@ -43,9 +69,7 @@ The function returns an integer `info` status code: `0` indicates success; `k > 
 
 ## Notes
 
--   `AP` must contain the Cholesky factor computed by [`dpptrf`][@stdlib/lapack/base/dpptrf] before calling `dpptri`.
--   On exit, `AP` is overwritten with the upper or lower triangle of the inverse of `A`.
--   The routine supports non-unit strides and offsets for operating on sub-arrays.
+-   `dpptri()` corresponds to the [LAPACK][lapack] level routine [`dpptri`][lapack-dpptri].
 
 </section>
 
@@ -55,22 +79,12 @@ The function returns an integer `info` status code: `0` indicates success; `k > 
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var dpptrf = require( '@stdlib/lapack/base/dpptrf' );
 var dpptri = require( '@stdlib/lapack/base/dpptri' );
 
-// 3x3 SPD matrix in upper packed format:
-// A = [25 5 -5; 5 10 2; -5 2 6]
-var AP = new Float64Array( [ 25.0, 5.0, 10.0, -5.0, 2.0, 6.0 ] );
-
-// Factor:
-dpptrf.ndarray( 'upper', 3, AP, 1, 0 );
-
-// Invert:
-var info = dpptri.ndarray( 'upper', 3, AP, 1, 0 );
-// info => 0
-// AP now contains the upper triangle of inv(A)
+// TODO: Add examples
 ```
 
 </section>
@@ -89,9 +103,12 @@ var info = dpptri.ndarray( 'upper', 3, AP, 1, 0 );
 
 <section class="links">
 
-[@stdlib/lapack/base/dpptrf]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/lapack/base/dpptrf
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dpptri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dpptri.html
 
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

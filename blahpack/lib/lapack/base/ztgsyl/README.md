@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztgsyl
 
 > Solves the generalized Sylvester equation using a level-3 blocked algorithm.
@@ -10,67 +30,73 @@
 var ztgsyl = require( '@stdlib/lapack/base/ztgsyl' );
 ```
 
-#### ztgsyl.ndarray( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, D, strideD1, strideD2, offsetD, E, strideE1, strideE2, offsetE, F, strideF1, strideF2, offsetF, scale, dif, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+#### ztgsyl( trans, ijob, M, N, A, LDA, B, LDB, C, LDC, D, LDD, E, LDE, F, LDF, scale, dif, WORK, strideWORK, lwork, IWORK, strideIWORK )
 
 Solves the generalized Sylvester equation using a level-3 blocked algorithm.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-var A = new Complex128Array( [ 1.0, 0.5, 0.0, 0.0, 0.5, 0.2, 2.0, -0.3 ] );
-var B = new Complex128Array( [ 3.0, 0.1, 0.0, 0.0, 0.3, -0.1, 4.0, 0.2 ] );
-var C = new Complex128Array( [ 1.0, 0.5, 3.0, 1.0, 2.0, -0.5, 4.0, 0.3 ] );
-var D = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 0.2, 0.1, 1.5, -0.1 ] );
-var E = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 0.1, 0.05, 2.0, 0.1 ] );
-var F = new Complex128Array( [ 5.0, 1.0, 7.0, 0.5, 6.0, -1.0, 8.0, 0.2 ] );
-var scale = new Float64Array( 1 );
-var dif = new Float64Array( 1 );
-var IWORK = new Int32Array( 10 );
-
-var info = ztgsyl.ndarray( 'no-transpose', 0, 2, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, D, 1, 2, 0, E, 1, 2, 0, F, 1, 2, 0, scale, dif, null, 1, 0, -1, IWORK, 1, 0 );
-// info => 0, C and F are overwritten with the solution
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **trans**: specifies the operation type (`'no-transpose'` or `'conjugate-transpose'`).
--   **ijob**: job selector (0-4). Controls whether to solve only (0) or also estimate DIF (1-4).
--   **M**: number of rows of C and F, and order of matrices A and D.
--   **N**: number of columns of C and F, and order of matrices B and E.
--   **A**: `Complex128Array` containing the M-by-M upper triangular matrix A.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **B**: `Complex128Array` containing the N-by-N upper triangular matrix B.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **C**: `Complex128Array` containing the M-by-N right-hand side / solution matrix C.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
--   **offsetC**: starting index for `C`.
--   **D**: `Complex128Array` containing the M-by-M upper triangular matrix D.
--   **strideD1**: stride of the first dimension of `D`.
--   **strideD2**: stride of the second dimension of `D`.
--   **offsetD**: starting index for `D`.
--   **E**: `Complex128Array` containing the N-by-N upper triangular matrix E.
--   **strideE1**: stride of the first dimension of `E`.
--   **strideE2**: stride of the second dimension of `E`.
--   **offsetE**: starting index for `E`.
--   **F**: `Complex128Array` containing the M-by-N right-hand side / solution matrix F.
--   **strideF1**: stride of the first dimension of `F`.
--   **strideF2**: stride of the second dimension of `F`.
--   **offsetF**: starting index for `F`.
--   **scale**: `Float64Array` of length 1 for the output scaling factor.
--   **dif**: `Float64Array` of length 1 for the DIF estimate (when ijob >= 1).
--   **WORK**: `Complex128Array` workspace (needed for ijob 1-2; can be null for ijob 0).
+-   **trans**: specifies whether the matrix should be transposed.
+-   **ijob**: `ijob`.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **D**: input array `D`.
+-   **LDD**: leading dimension of `D`.
+-   **E**: input array `E`.
+-   **LDE**: leading dimension of `E`.
+-   **F**: input array `F`.
+-   **LDF**: leading dimension of `F`.
+-   **scale**: `scale`.
+-   **dif**: `dif`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: workspace size (ignored; auto-allocated internally if needed).
--   **IWORK**: `Int32Array` workspace of length M+N+6.
+-   **lwork**: `lwork`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+
+#### ztgsyl.ndarray( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, D, strideD1, strideD2, offsetD, E, strideE1, strideE2, offsetE, F, strideF1, strideF2, offsetF, scale, dif, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+
+Solves the generalized Sylvester equation using a level-3 blocked algorithm, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
+-   **strideD1**: stride of dimension 1 of `D`.
+-   **strideD2**: stride of dimension 2 of `D`.
+-   **offsetD**: starting index for `D`.
+-   **strideE1**: stride of dimension 1 of `E`.
+-   **strideE2**: stride of dimension 2 of `E`.
+-   **offsetE**: starting index for `E`.
+-   **strideF1**: stride of dimension 1 of `F`.
+-   **strideF2**: stride of dimension 2 of `F`.
+-   **offsetF**: starting index for `F`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -81,10 +107,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The matrices (A,D) and (B,E) must be in generalized complex Schur form (upper triangular).
--   When `trans` is `'no-transpose'`, the routine solves A*R - L*B = scale*C, D*R - L*E = scale*F.
--   When `trans` is `'conjugate-transpose'`, the routine solves A^H*R + D^H*L = scale*C, -R*B^H - L*E^H = scale*F.
--   The block size is hardcoded to 32 (equivalent to ILAENV defaults).
+-   `ztgsyl()` corresponds to the [LAPACK][lapack] level routine [`ztgsyl`][lapack-ztgsyl].
 
 </section>
 
@@ -94,29 +117,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztgsyl = require( '@stdlib/lapack/base/ztgsyl' );
 
-var A = new Complex128Array( [ 1.0, 0.5, 0.0, 0.0, 0.5, 0.2, 2.0, -0.3 ] );
-var B = new Complex128Array( [ 3.0, 0.1, 0.0, 0.0, 0.3, -0.1, 4.0, 0.2 ] );
-var C = new Complex128Array( [ 1.0, 0.5, 3.0, 1.0, 2.0, -0.5, 4.0, 0.3 ] );
-var D = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 0.2, 0.1, 1.5, -0.1 ] );
-var E = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 0.1, 0.05, 2.0, 0.1 ] );
-var F = new Complex128Array( [ 5.0, 1.0, 7.0, 0.5, 6.0, -1.0, 8.0, 0.2 ] );
-var scale = new Float64Array( 1 );
-var dif = new Float64Array( 1 );
-var IWORK = new Int32Array( 10 );
-
-var info = ztgsyl.ndarray( 'no-transpose', 0, 2, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, D, 1, 2, 0, E, 1, 2, 0, F, 1, 2, 0, scale, dif, null, 1, 0, -1, IWORK, 1, 0 );
-
-var Cv = reinterpret( C, 0 );
-console.log( 'info:', info );
-console.log( 'scale:', scale[ 0 ] );
-console.log( 'C (re/im):', Array.prototype.slice.call( Cv ) );
+// TODO: Add examples
 ```
 
 </section>
@@ -135,9 +141,12 @@ console.log( 'C (re/im):', Array.prototype.slice.call( Cv ) );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztgsyl]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztgsyl.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

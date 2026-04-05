@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgbrfs
 
-> Improves the computed solution to a complex system A \* X = B where A is a general band matrix and provides error bounds.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,84 +30,70 @@
 var zgbrfs = require( '@stdlib/lapack/base/zgbrfs' );
 ```
 
-#### zgbrfs.ndarray( trans, N, kl, ku, nrhs, AB, sAB1, sAB2, oAB, AFB, sAFB1, sAFB2, oAFB, IPIV, sIPIV, oIPIV, B, sB1, sB2, oB, X, sX1, sX2, oX, FERR, sFERR, oFERR, BERR, sBERR, oBERR, WORK, sWORK, oWORK, RWORK, sRWORK, oRWORK )
+#### zgbrfs( trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, B, LDB, X, LDX, FERR, BERR, WORK, RWORK )
 
-Improves the computed solution to a complex system of linear equations and provides error bounds and backward error estimates for the solution.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 1x1 system: (3+2i)*x = (5+i)
-var AB = new Complex128Array( 1 );
-var abv = new Float64Array( AB.buffer );
-abv[ 0 ] = 3.0;
-abv[ 1 ] = 2.0;
-
-var AFB = new Complex128Array( 1 );
-var afbv = new Float64Array( AFB.buffer );
-afbv[ 0 ] = 3.0;
-afbv[ 1 ] = 2.0;
-
-var IPIV = new Int32Array( [ 0 ] );
-
-var B = new Complex128Array( 1 );
-var bv = new Float64Array( B.buffer );
-bv[ 0 ] = 5.0;
-bv[ 1 ] = 1.0;
-
-var X = new Complex128Array( 1 );
-var xv = new Float64Array( X.buffer );
-xv[ 0 ] = 1.307692;
-xv[ 1 ] = -0.538462;
-
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Complex128Array( 2 );
-var RWORK = new Float64Array( 1 );
-
-var info = zgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, AB, 1, 1, 0, AFB, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **trans**: specifies the transpose operation: `'no-transpose'` or `'conjugate-transpose'`.
--   **N**: order of the matrix A.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **N**: number of columns.
 -   **kl**: number of subdiagonals.
 -   **ku**: number of superdiagonals.
--   **nrhs**: number of right-hand side columns.
--   **AB**: original band matrix in band storage (`Complex128Array`).
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input array `AFB`.
+-   **LDAFB**: leading dimension of `AFB`.
+-   **IPIV**: input array `IPIV`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
+-   **BERR**: input array `BERR`.
+-   **WORK**: input array `WORK`.
+-   **RWORK**: input array `RWORK`.
+
+#### zgbrfs.ndarray( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **AFB**: LU-factored band matrix from `zgbtrf` (`Complex128Array`).
--   **strideAFB1**: stride of the first dimension of `AFB`.
--   **strideAFB2**: stride of the second dimension of `AFB`.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
 -   **offsetAFB**: starting index for `AFB`.
--   **IPIV**: pivot indices from `zgbtrf` (0-based, `Int32Array`).
--   **strideIPIV**: stride for `IPIV`.
+-   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **B**: right-hand side matrix (`Complex128Array`).
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **X**: solution matrix, improved on exit (`Complex128Array`).
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **FERR**: output forward error bounds (`Float64Array`).
--   **strideFERR**: stride for `FERR`.
+-   **strideFERR**: stride length for `FERR`.
 -   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output backward error bounds (`Float64Array`).
--   **strideBERR**: stride for `BERR`.
+-   **strideBERR**: stride length for `BERR`.
 -   **offsetBERR**: starting index for `BERR`.
--   **WORK**: complex workspace of length >= 2\*N (`Complex128Array`).
--   **strideWORK**: stride for `WORK`.
+-   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **RWORK**: real workspace of length >= N (`Float64Array`).
--   **strideRWORK**: stride for `RWORK`.
+-   **strideRWORK**: stride length for `RWORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -98,9 +104,7 @@ The function has the following parameters:
 
 ## Notes
 
--   IPIV must contain 0-based pivot indices (as produced by `zgbtrf`).
--   AB uses standard BLAS band storage with `KL+KU+1` rows, diagonal at row `KU` (0-based).
--   AFB uses the factored band storage from `zgbtrf` with `2*KL+KU+1` rows.
+-   `zgbrfs()` corresponds to the [LAPACK][lapack] level routine [`zgbrfs`][lapack-zgbrfs].
 
 </section>
 
@@ -110,25 +114,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var zgbrfs = require( '@stdlib/lapack/base/zgbrfs' );
 
-var AB = new Complex128Array( 1 );
-var AFB = new Complex128Array( 1 );
-var IPIV = new Int32Array( [ 0 ] );
-var B = new Complex128Array( 1 );
-var X = new Complex128Array( 1 );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Complex128Array( 2 );
-var RWORK = new Float64Array( 1 );
-
-var info = zgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, AB, 1, 1, 0, AFB, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-console.log( info );
-// => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -146,6 +137,14 @@ console.log( info );
 <!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
 
 <section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgbrfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgbrfs.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

@@ -30,7 +30,7 @@ limitations under the License.
 var zdscal = require( '@stdlib/blas/base/zdscal' );
 ```
 
-#### zdscal.ndarray( N, alpha, x, stride, offset, incx )
+#### zdscal( N, da, zx, strideX )
 
 Scale a complex double-precision vector by a double-precision constant.
 
@@ -43,11 +43,23 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **alpha**: scalar constant.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
--   **incx**: incx.
+-   **da**: `da`.
+-   **zx**: `zx`.
+-   **strideX**: stride length for `X`.
+
+#### zdscal.ndarray( N, da, zx, strideX, offsetX )
+
+Scale a complex double-precision vector by a double-precision constant, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -57,7 +69,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zdscal()` corresponds to the [LAPACK][lapack] level routine [`zdscal`][lapack-zdscal].
 
 </section>
 
@@ -67,7 +79,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zdscal = require( '@stdlib/blas/base/zdscal' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +103,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zdscal]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zdscal.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

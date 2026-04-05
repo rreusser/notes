@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dorm2l
 
-> Multiply a matrix by the orthogonal matrix Q from QL factorization (unblocked)
+> Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dorm2l = require( '@stdlib/lapack/base/dorm2l' );
 ```
 
-#### dorm2l.ndarray( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+#### dorm2l( side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK )
 
-Multiply a matrix by the orthogonal matrix Q from QL factorization (unblocked)
+Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,24 +42,39 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
--   **trans**: specifies the operation type.
+-   **side**: specifies the side of the operation.
+-   **trans**: specifies whether the matrix should be transposed.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **TAU**: input array.
+-   **K**: inner dimension.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: input array `TAU`.
 -   **strideTAU**: stride length for `TAU`.
--   **offsetTAU**: starting index for `TAU`.
--   **C**: input matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
--   **offsetC**: starting index for `C`.
--   **WORK**: output array.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### dorm2l.ndarray( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -50,7 +85,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dorm2l()` corresponds to the [LAPACK][lapack] level routine [`dorm2l`][lapack-dorm2l].
 
 </section>
 
@@ -60,7 +95,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dorm2l = require( '@stdlib/lapack/base/dorm2l' );
+
 // TODO: Add examples
 ```
 
@@ -80,9 +119,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dorm2l]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dorm2l.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlahr2
 
-> Reduce NB columns of a complex matrix in Hessenberg form
+> Reduces the first nb columns of a complex general rectangular matrix to upper trapezoidal form.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlahr2 = require( '@stdlib/lapack/base/zlahr2' );
 ```
 
-#### zlahr2.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, t, strideT, offsetT, ldt, y, strideY, offsetY, ldy )
+#### zlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT, Y, strideY1, strideY2, offsetY )
 
-Reduce NB columns of a complex matrix in Hessenberg form
+Reduces the first nb columns of a complex general rectangular matrix to upper trapezoidal form.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,23 +43,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
--   **nb**: nb.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **K**: inner dimension.
+-   **nb**: `nb`.
+-   **A**: input array `A`.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **tau**: input array.
--   **strideTAU**: stride length for `tau`.
--   **offsetTAU**: starting index for `tau`.
--   **t**: input array.
--   **strideT**: stride length for `t`.
--   **offsetT**: starting index for `t`.
--   **ldt**: ldt.
--   **y**: input array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **ldy**: ldy.
+-   **tau**: `tau`.
+-   **strideTAU**: stride length for `TAU`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **T**: input array `T`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **Y**: input array `Y`.
+-   **strideY1**: stride of dimension 1 of `Y`.
+-   **strideY2**: stride of dimension 2 of `Y`.
+-   **offsetY**: starting index for `Y`.
+
+#### zlahr2.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT, Y, strideY1, strideY2, offsetY )
+
+Reduces the first nb columns of a complex general rectangular matrix to upper trapezoidal form, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -49,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlahr2()` corresponds to the [LAPACK][lapack] level routine [`zlahr2`][lapack-zlahr2].
 
 </section>
 
@@ -59,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlahr2 = require( '@stdlib/lapack/base/zlahr2' );
+
 // TODO: Add examples
 ```
 
@@ -79,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlahr2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlahr2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

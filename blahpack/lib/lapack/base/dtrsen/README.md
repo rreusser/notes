@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dtrsen
 
-> Reorders the Schur factorization and computes condition numbers
+> Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
 ```
 
-#### dtrsen.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+#### dtrsen( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, WR, strideWR, WI, strideWI, M, s, sep, WORK, strideWORK, lwork, IWORK, strideIWORK, liwork )
 
-Reorders the Schur factorization and computes condition numbers
+Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,37 +42,52 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **job**: specifies the operation type.
--   **compq**: specifies the operation type.
--   **SELECT**: input array.
+-   **job**: `job`.
+-   **compq**: `compq`.
+-   **SELECT**: input array `SELECT`.
 -   **strideSELECT**: stride length for `SELECT`.
--   **offsetSELECT**: starting index for `SELECT`.
 -   **N**: number of columns.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
--   **offsetT**: starting index for `T`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
--   **offsetQ**: starting index for `Q`.
--   **WR**: input array.
+-   **T**: input array `T`.
+-   **LDT**: leading dimension of `T`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **WR**: input array `WR`.
 -   **strideWR**: stride length for `WR`.
--   **offsetWR**: starting index for `WR`.
--   **WI**: input array.
+-   **WI**: input array `WI`.
 -   **strideWI**: stride length for `WI`.
--   **offsetWI**: starting index for `WI`.
 -   **M**: number of rows.
--   **s**: s.
--   **sep**: sep.
--   **WORK**: input array.
+-   **s**: `s`.
+-   **sep**: `sep`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **IWORK**: output array.
+-   **lwork**: `lwork`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+-   **liwork**: `liwork`.
+
+#### dtrsen.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+
+Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetSELECT**: starting index for `SELECT`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **offsetWR**: starting index for `WR`.
+-   **offsetWI**: starting index for `WI`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
--   **liwork**: liwork.
 
 </section>
 
@@ -62,7 +97,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dtrsen()` corresponds to the [LAPACK][lapack] level routine [`dtrsen`][lapack-dtrsen].
 
 </section>
 
@@ -72,7 +107,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
+
 // TODO: Add examples
 ```
 
@@ -92,9 +131,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dtrsen]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dtrsen.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

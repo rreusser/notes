@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlascl
 
-> Scale a matrix by CTO/CFROM with overflow protection
+> Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlascl = require( '@stdlib/lapack/base/dlascl' );
 ```
 
-#### dlascl.ndarray( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA )
+#### dlascl( order, type, kl, ku, cfrom, cto, M, N, A, LDA )
 
-Scale a matrix by CTO/CFROM with overflow protection
+Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,16 +42,31 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **type**: specifies the operation type.
--   **kl**: kl.
--   **ku**: ku.
--   **cfrom**: cfrom.
--   **cto**: cto.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **type**: `type`.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **cfrom**: `cfrom`.
+-   **cto**: `cto`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+
+#### dlascl.ndarray( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA )
+
+Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
 
 </section>
@@ -42,7 +77,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlascl()` corresponds to the [LAPACK][lapack] level routine [`dlascl`][lapack-dlascl].
 
 </section>
 
@@ -52,7 +87,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlascl = require( '@stdlib/lapack/base/dlascl' );
+
 // TODO: Add examples
 ```
 
@@ -72,9 +111,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlascl]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlascl.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

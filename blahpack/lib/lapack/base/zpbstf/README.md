@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpbstf
 
-> Computes a split Cholesky factorization of a complex Hermitian positive definite band matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,34 +30,40 @@
 var zpbstf = require( '@stdlib/lapack/base/zpbstf' );
 ```
 
-#### zpbstf.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB )
+#### zpbstf( order, uplo, N, kd, AB, LDAB )
 
-Computes a split Cholesky factorization of a complex Hermitian positive definite band matrix.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 4x4 HPD tridiagonal (KD=1), upper band storage (LDAB=2):
-var ab = new Complex128Array([
-    0.0, 0.0, 4.0, 0.0,
-    -1.0, 0.5, 4.0, 0.0,
-    -1.0, 0.5, 4.0, 0.0,
-    -1.0, 0.5, 4.0, 0.0
-]);
-
-var info = zpbstf.ndarray( 'upper', 4, 1, ab, 1, 2, 0 );
-// returns 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper (`'upper'`) or lower (`'lower'`) triangle is stored.
--   **N**: order of the matrix A.
--   **kd**: number of super/sub-diagonals.
--   **AB**: input/output band matrix in band storage as a [`Complex128Array`][@stdlib/array/complex128].
--   **strideAB1**: stride of the first dimension of `AB` (in complex elements).
--   **strideAB2**: stride of the second dimension of `AB` (in complex elements).
--   **offsetAB**: starting index for `AB` (in complex elements).
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+
+#### zpbstf.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
 
 </section>
 
@@ -47,8 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The factorization has the form `A = S**H * S` where S is a band matrix of the same bandwidth as A with structure `S = [ U; M L ]`, where U is upper triangular of order `m = floor((n+kd)/2)` and L is lower triangular of order `n-m`.
--   This routine is designed to be used in conjunction with `zhbgst`.
+-   `zpbstf()` corresponds to the [LAPACK][lapack] level routine [`zpbstf`][lapack-zpbstf].
 
 </section>
 
@@ -58,22 +83,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbstf = require( '@stdlib/lapack/base/zpbstf' );
 
-// 4x4 HPD band matrix with KD=1, upper storage (LDAB=2):
-var ab = new Complex128Array([
-    0.0, 0.0, 4.0, 0.0,
-    -1.0, 0.5, 4.0, 0.0,
-    -1.0, 0.5, 4.0, 0.0,
-    -1.0, 0.5, 4.0, 0.0
-]);
-
-var info = zpbstf.ndarray( 'upper', 4, 1, ab, 1, 2, 0 );
-console.log( 'info:', info );
-console.log( 'S (band storage):', reinterpret( ab, 0 ) );
+// TODO: Add examples
 ```
 
 </section>
@@ -92,7 +107,13 @@ console.log( 'S (band storage):', reinterpret( ab, 0 ) );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpbstf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpbstf.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

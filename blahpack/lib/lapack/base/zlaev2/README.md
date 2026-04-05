@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlaev2
 
-> Computes the eigendecomposition of a 2-by-2 Hermitian matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,32 +32,32 @@ var zlaev2 = require( '@stdlib/lapack/base/zlaev2' );
 
 #### zlaev2( a, b, c )
 
-Computes the eigendecomposition of a 2-by-2 Hermitian matrix `[[A, B], [conj(B), C]]` where A and C are real (imaginary parts ignored) and B is complex.
+@license Apache-2.0.
 
 ```javascript
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var a = new Complex128( 5.0, 0.0 );
-var b = new Complex128( 1.0, 2.0 );
-var c = new Complex128( 3.0, 0.0 );
-
-var out = zlaev2( a, b, c );
-// returns { rt1: ~6.449, rt2: ~1.551, cs1: ~-0.839, sn1r: ~-0.243, sn1i: ~0.487 }
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **a**: `Complex128` - the (1,1) element of the 2-by-2 Hermitian matrix (only real part used).
--   **b**: `Complex128` - the (1,2) element of the 2-by-2 Hermitian matrix.
--   **c**: `Complex128` - the (2,2) element of the 2-by-2 Hermitian matrix (only real part used).
+-   **a**: `a`.
+-   **b**: `b`.
+-   **c**: `c`.
 
-The function returns an object with the following fields:
+#### zlaev2.ndarray( a, b, c )
 
--   **rt1**: eigenvalue of larger absolute value.
--   **rt2**: eigenvalue of smaller absolute value.
--   **cs1**: cosine of the rotation (real).
--   **sn1r**: real part of the sine of the rotation.
--   **sn1i**: imaginary part of the sine of the rotation.
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -47,9 +67,7 @@ The function returns an object with the following fields:
 
 ## Notes
 
--   `zlaev2` is the complex analog of [`dlaev2`][@stdlib/lapack/base/dlaev2]. It handles the case where the off-diagonal element B is complex by computing a phase factor `W = conj(B)/|B|`, calling the real `dlaev2` with `(real(A), |B|, real(C))`, and rotating the sine component by W.
--   RT1 always satisfies `|RT1| >= |RT2|`.
--   The eigenvector `(CS1, SN1)` is a unit vector: `CS1^2 + |SN1|^2 = 1`.
+-   `zlaev2()` corresponds to the [LAPACK][lapack] level routine [`zlaev2`][lapack-zlaev2].
 
 </section>
 
@@ -59,19 +77,12 @@ The function returns an object with the following fields:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var zlaev2 = require( '@stdlib/lapack/base/zlaev2' );
 
-var a = new Complex128( 5.0, 0.0 );
-var b = new Complex128( 1.0, 2.0 );
-var c = new Complex128( 3.0, 0.0 );
-
-var out = zlaev2( a, b, c );
-console.log( 'rt1:', out.rt1 );
-console.log( 'rt2:', out.rt2 );
-console.log( 'cs1:', out.cs1 );
-console.log( 'sn1:', out.sn1r, '+', out.sn1i, 'i' );
+// TODO: Add examples
 ```
 
 </section>
@@ -90,7 +101,13 @@ console.log( 'sn1:', out.sn1r, '+', out.sn1i, 'i' );
 
 <section class="links">
 
-[@stdlib/lapack/base/dlaev2]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/lapack/base/dlaev2
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlaev2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlaev2.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

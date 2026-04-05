@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dspevx
 
-> Computes selected eigenvalues and optionally eigenvectors of a real symmetric matrix in packed storage.
+> Computes selected eigenvalues and, optionally, eigenvectors of a real.
 
 <section class="usage">
 
@@ -10,57 +30,60 @@
 var dspevx = require( '@stdlib/lapack/base/dspevx' );
 ```
 
-#### dspevx.ndarray( jobz, range, uplo, N, AP, strideAP, offsetAP, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+#### dspevx( order, jobz, range, uplo, N, AP, vl, vu, il, iu, abstol, out, w, Z, LDZ, WORK, IWORK, IFAIL )
 
-Computes selected eigenvalues and optionally eigenvectors of a real symmetric matrix in packed storage.
+Computes selected eigenvalues and, optionally, eigenvectors of a real.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 2x2 symmetric [[1,2],[2,3]] upper packed: [1, 2, 3]
-var AP = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var w = new Float64Array( 2 );
-var Z = new Float64Array( 4 );
-var WORK = new Float64Array( 16 );
-var IWORK = new Int32Array( 10 );
-var IFAIL = new Int32Array( 2 );
-var out = { 'M': 0 };
-
-dspevx.ndarray( 'compute-vectors', 'all', 'upper', 2, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, 2, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-// out.M => 2
-// w => [ ~-0.236, ~4.236 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **jobz**: `'no-vectors'` (eigenvalues only) or `'compute-vectors'` (eigenvalues + eigenvectors).
--   **range**: `'all'`, `'value'`, or `'index'`.
--   **uplo**: `'upper'` or `'lower'`.
--   **N**: order of the matrix A.
--   **AP**: packed symmetric matrix (length N\*(N+1)/2).
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **jobz**: `jobz`.
+-   **range**: `range`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **vl**: `vl`.
+-   **vu**: `vu`.
+-   **il**: `il`.
+-   **iu**: `iu`.
+-   **abstol**: `abstol`.
+-   **out**: `out`.
+-   **w**: `w`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
+-   **IWORK**: input array `IWORK`.
+-   **IFAIL**: input array `IFAIL`.
+
+#### dspevx.ndarray( jobz, range, uplo, N, AP, strideAP, offsetAP, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+
+Computes selected eigenvalues and, optionally, eigenvectors of a real, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **vl**: lower bound of eigenvalue interval (RANGE='value').
--   **vu**: upper bound of eigenvalue interval (RANGE='value').
--   **il**: index of smallest eigenvalue to compute (1-based, RANGE='index').
--   **iu**: index of largest eigenvalue to compute (1-based, RANGE='index').
--   **abstol**: absolute tolerance for eigenvalues.
--   **out**: output object; `out.M` will be set to number of eigenvalues found.
--   **w**: output array for eigenvalues (length N).
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **Z**: output eigenvector matrix (N x M).
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
+-   **strideW**: stride length for `W`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
 -   **offsetZ**: starting index for `Z`.
--   **WORK**: workspace array (length >= 8\*N).
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace array (length >= 5\*N).
 -   **strideIWORK**: stride length for `IWORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
--   **IFAIL**: output integer array for non-converged eigenvector indices (length N).
 -   **strideIFAIL**: stride length for `IFAIL`.
 -   **offsetIFAIL**: starting index for `IFAIL`.
 
@@ -72,8 +95,7 @@ The function has the following parameters:
 
 ## Notes
 
--   `dspevx` is the packed-storage analog of `dsyevx`. It operates on symmetric matrices stored in packed form (upper or lower triangle packed column-wise into a linear array), rather than full two-dimensional storage.
--   The workspace WORK needs at least 8\*N elements and IWORK needs at least 5\*N elements.
+-   `dspevx()` corresponds to the [LAPACK][lapack] level routine [`dspevx`][lapack-dspevx].
 
 </section>
 
@@ -83,24 +105,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dspevx = require( '@stdlib/lapack/base/dspevx' );
 
-// 3x3 symmetric [[2,1,0],[1,3,1],[0,1,4]] upper packed: [2, 1, 3, 0, 1, 4]
-var AP = new Float64Array( [ 2.0, 1.0, 3.0, 0.0, 1.0, 4.0 ] );
-var w = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 24 );
-var IWORK = new Int32Array( 15 );
-var IFAIL = new Int32Array( 3 );
-var out = { 'M': 0 };
-
-dspevx.ndarray( 'compute-vectors', 'all', 'upper', 3, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-
-console.log( 'Number of eigenvalues found:', out.M );
-console.log( 'Eigenvalues:', w );
+// TODO: Add examples
 ```
 
 </section>
@@ -119,9 +129,12 @@ console.log( 'Eigenvalues:', w );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dspevx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dspevx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

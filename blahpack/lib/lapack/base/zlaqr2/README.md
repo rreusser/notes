@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlaqr2
 
-> Complex aggressive early deflation (non-recursive)
+> Complex aggressive early deflation (non-recursive).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlaqr2 = require( '@stdlib/lapack/base/zlaqr2' );
 ```
 
-#### zlaqr2.ndarray( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork )
+#### zlaqr2( v, idx )
 
-Complex aggressive early deflation (non-recursive)
+Complex aggressive early deflation (non-recursive).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,45 +42,60 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **wantt**: wantt.
--   **wantz**: wantz.
+-   **v**: `v`.
+-   **idx**: `idx`.
+
+#### zlaqr2.ndarray( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nhp, T, strideT1, strideT2, offsetT, nvp, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork )
+
+Complex aggressive early deflation (non-recursive), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **wantt**: `wantt`.
+-   **wantz**: `wantz`.
 -   **N**: number of columns.
--   **ktop**: ktop.
--   **kbot**: kbot.
--   **nw**: nw.
--   **H**: input matrix.
--   **strideH1**: stride of the first dimension of `H`.
--   **strideH2**: stride of the second dimension of `H`.
+-   **ktop**: `ktop`.
+-   **kbot**: `kbot`.
+-   **nw**: `nw`.
+-   **H**: input array `H`.
+-   **strideH1**: stride of dimension 1 of `H`.
+-   **strideH2**: stride of dimension 2 of `H`.
 -   **offsetH**: starting index for `H`.
--   **iloz**: iloz.
--   **ihiz**: ihiz.
--   **Z**: input matrix.
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
+-   **iloz**: `iloz`.
+-   **ihiz**: `ihiz`.
+-   **Z**: input array `Z`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
 -   **offsetZ**: starting index for `Z`.
--   **ns**: ns.
--   **nd**: nd.
--   **SH**: input array.
+-   **ns**: `ns`.
+-   **nd**: `nd`.
+-   **SH**: input array `SH`.
 -   **strideSH**: stride length for `SH`.
 -   **offsetSH**: starting index for `SH`.
--   **V**: input matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
+-   **V**: input array `V`.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
 -   **offsetV**: starting index for `V`.
--   **nh**: nh.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
+-   **nhp**: `nhp`.
+-   **T**: input array `T`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
 -   **offsetT**: starting index for `T`.
--   **nv**: nv.
--   **WV**: input matrix.
--   **strideWV1**: stride of the first dimension of `WV`.
--   **strideWV2**: stride of the second dimension of `WV`.
+-   **nvp**: `nvp`.
+-   **WV**: input array `WV`.
+-   **strideWV1**: stride of dimension 1 of `WV`.
+-   **strideWV2**: stride of dimension 2 of `WV`.
 -   **offsetWV**: starting index for `WV`.
--   **WORK**: output array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
+-   **lwork**: `lwork`.
 
 </section>
 
@@ -70,7 +105,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlaqr2()` corresponds to the [LAPACK][lapack] level routine [`zlaqr2`][lapack-zlaqr2].
 
 </section>
 
@@ -80,7 +115,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlaqr2 = require( '@stdlib/lapack/base/zlaqr2' );
+
 // TODO: Add examples
 ```
 
@@ -100,9 +139,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlaqr2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlaqr2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dpbstf
 
-> Computes a split Cholesky factorization of a real symmetric positive definite band matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,31 +30,40 @@
 var dpbstf = require( '@stdlib/lapack/base/dpbstf' );
 ```
 
-#### dpbstf.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB )
+#### dpbstf( order, uplo, N, kd, AB, LDAB )
 
-Computes a split Cholesky factorization of a real symmetric positive definite band matrix `A`, stored in band format. The factorization has the form `A = S**T * S` where `S` is a band matrix of the same bandwidth.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 4x4 SPD tridiagonal matrix (KD=1), upper band storage (LDAB=2):
-var ab = new Float64Array( [ 0.0, 2.0, -1.0, 2.0, -1.0, 2.0, -1.0, 2.0 ] );
-
-var info = dpbstf.ndarray( 'upper', 4, 1, ab, 1, 2, 0 );
-// returns 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper (`'upper'`) or lower (`'lower'`) triangle of the band matrix is stored.
--   **N**: order of the matrix `A` (number of rows and columns).
--   **kd**: number of super-diagonals (if `uplo` is `'upper'`) or sub-diagonals (if `uplo` is `'lower'`).
--   **AB**: input/output band matrix in band storage format as a [`Float64Array`][mdn-float64array].
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
--   **offsetAB**: starting index for `AB`.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
 
-The function returns an integer `info` status code: `0` indicates success; a positive value `j` indicates that the factorization could not be completed because element `a(j,j)` was not positive.
+#### dpbstf.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
 
 </section>
 
@@ -44,8 +73,7 @@ The function returns an integer `info` status code: `0` indicates success; a pos
 
 ## Notes
 
--   `dpbstf` is designed to be used as a preprocessing step for `dsbgst` (generalized symmetric band eigenproblem).
--   The routine modifies `AB` in place, overwriting it with the split Cholesky factor `S`.
+-   `dpbstf()` corresponds to the [LAPACK][lapack] level routine [`dpbstf`][lapack-dpbstf].
 
 </section>
 
@@ -55,23 +83,12 @@ The function returns an integer `info` status code: `0` indicates success; a pos
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dpbstf = require( '@stdlib/lapack/base/dpbstf' );
 
-// 5x5 SPD tridiagonal matrix with upper band storage (LDAB=2):
-var ab = new Float64Array( [
-    0.0, 2.0,
-    -1.0, 2.0,
-    -1.0, 2.0,
-    -1.0, 2.0,
-    -1.0, 2.0
-] );
-
-var info = dpbstf.ndarray( 'upper', 5, 1, ab, 1, 2, 0 );
-console.log( 'info:', info );
-// => 0
-console.log( 'S (band storage):', ab );
+// TODO: Add examples
 ```
 
 </section>
@@ -90,9 +107,12 @@ console.log( 'S (band storage):', ab );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dpbstf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dpbstf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

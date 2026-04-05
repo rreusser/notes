@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztptrs
 
-> Solve a triangular system of equations with a complex triangular matrix stored in packed format.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,35 +30,45 @@
 var ztptrs = require( '@stdlib/lapack/base/ztptrs' );
 ```
 
-#### ztptrs.ndarray( uplo, trans, diag, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
+#### ztptrs( order, uplo, trans, diag, N, nrhs, AP, B, LDB )
 
-Solves a triangular system of the form `A*X = B` or `A**H*X = B` where `A` is a complex triangular matrix of order `N` stored in packed format.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 upper triangular packed matrix:
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] );
-var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
-
-ztptrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0 );
-// B is overwritten with the solution X
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`).
--   **trans**: specifies the operation (`'no-transpose'` or `'conjugate-transpose'`).
--   **diag**: specifies whether the matrix is unit triangular (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix `A`.
--   **nrhs**: number of right-hand side columns.
--   **AP**: packed triangular matrix `A` (`Complex128Array`).
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
--   **B**: right-hand side matrix, overwritten with solution on exit (`Complex128Array`).
--   **strideB1**: stride of the first dimension of `B` (in complex elements).
--   **strideB2**: stride of the second dimension of `B` (in complex elements).
--   **offsetB**: starting index for `B` (in complex elements).
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **nrhs**: number of right-hand sides.
+-   **AP**: input array `AP`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### ztptrs.ndarray( uplo, trans, diag, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
 
 </section>
 
@@ -48,10 +78,7 @@ The function has the following parameters:
 
 ## Notes
 
--   A check is made to verify that `A` is nonsingular. If a zero diagonal element is found, the routine returns the 1-based index of the zero element and does not solve the system.
--   The routine overwrites `B` with the solution matrix `X`.
--   For `'no-transpose'`, the routine solves `A * X = B` by calling `ztpsv` for each right-hand side column.
--   For `'conjugate-transpose'`, the routine solves `A**H * X = B` by calling `ztpsv` for each right-hand side column.
+-   `ztptrs()` corresponds to the [LAPACK][lapack] level routine [`ztptrs`][lapack-ztptrs].
 
 </section>
 
@@ -61,16 +88,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var ztptrs = require( '@stdlib/lapack/base/ztptrs' );
 
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] );
-var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
-
-var info = ztptrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0 );
-console.log( 'info:', info );
-// => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -89,9 +112,12 @@ console.log( 'info:', info );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztptrs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztptrs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dtftri
 
-> Computes the inverse of a real triangular matrix stored in Rectangular Full Packed (RFP) format.
+> Computes the inverse of a real triangular matrix in Rectangular Full Packed format.
 
 <section class="usage">
 
@@ -10,26 +30,36 @@
 var dtftri = require( '@stdlib/lapack/base/dtftri' );
 ```
 
-#### dtftri.ndarray( transr, uplo, diag, N, A, strideA, offsetA )
+#### dtftri( transr, uplo, diag, N, A )
 
-Computes the inverse of a real triangular matrix stored in RFP format.
+Computes the inverse of a real triangular matrix in Rectangular Full Packed format.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 lower triangular matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Float64Array( [ 4, 1, 1.5, 9, 7, 2.5 ] );
-var info = dtftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, A, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **transr**: specifies the RFP storage format (`'no-transpose'` or `'transpose'`).
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **diag**: specifies whether the matrix is unit triangular (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix.
--   **A**: input/output [`Float64Array`][mdn-float64array] in RFP format of length `N*(N+1)/2`.
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+
+#### dtftri.ndarray( transr, uplo, diag, N, A, strideA, offsetA )
+
+Computes the inverse of a real triangular matrix in Rectangular Full Packed format, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideA**: stride length for `A`.
 -   **offsetA**: starting index for `A`.
 
@@ -41,10 +71,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The RFP (Rectangular Full Packed) format stores a triangular matrix in a rectangular array, enabling efficient use of Level 3 BLAS operations.
--   On successful exit (`info = 0`), the inverse of the triangular matrix overwrites the input in RFP format.
--   If `info = k > 0`, `A(k,k)` is exactly zero and the matrix is singular; the inverse cannot be computed.
--   For unit triangular matrices (`diag = 'unit'`), the diagonal elements are not referenced and are assumed to be one.
+-   `dtftri()` corresponds to the [LAPACK][lapack] level routine [`dtftri`][lapack-dtftri].
 
 </section>
 
@@ -54,15 +81,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dtftri = require( '@stdlib/lapack/base/dtftri' );
 
-// 3x3 lower triangular matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Float64Array( [ 4, 1, 1.5, 9, 7, 2.5 ] );
-var info = dtftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, A, 1, 0 );
-console.log( 'info:', info );
-// => info: 0
+// TODO: Add examples
 ```
 
 </section>
@@ -81,7 +105,13 @@ console.log( 'info:', info );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dtftri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dtftri.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

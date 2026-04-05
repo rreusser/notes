@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dspgv
 
-> Computes all eigenvalues and optionally eigenvectors of a real symmetric-definite generalized eigenproblem in packed storage.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,54 +32,36 @@ var dspgv = require( '@stdlib/lapack/base/dspgv' );
 
 #### dspgv( order, itype, jobz, uplo, N, AP, BP, w, Z, LDZ, WORK )
 
-Computes all eigenvalues and, optionally, eigenvectors of a real generalized symmetric-definite eigenproblem in packed storage.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// A = [4 2 1; 2 5 3; 1 3 6] in upper packed storage:
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-
-// B = [4 2 0; 2 5 1; 0 1 3] in upper packed storage:
-var BP = new Float64Array( [ 4.0, 2.0, 5.0, 0.0, 1.0, 3.0 ] );
-
-var W = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dspgv( 'column-major', 1, 'compute-vectors', 'upper', 3, AP, BP, W, Z, 3, WORK );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **itype**: problem type (1, 2, or 3).
--   **jobz**: `'no-vectors'` (eigenvalues only) or `'compute-vectors'` (eigenvalues and eigenvectors).
--   **uplo**: `'upper'` or `'lower'`, specifying which triangle of A and B is stored.
--   **N**: order of matrices A and B.
--   **AP**: packed symmetric matrix A (length `N*(N+1)/2`); on exit, overwritten.
--   **BP**: packed symmetric positive definite matrix B (length `N*(N+1)/2`); on exit, Cholesky factor.
--   **w**: output array for eigenvalues (length `N`), in ascending order.
--   **Z**: output eigenvector matrix (`N x N`); referenced only if jobz is `'compute-vectors'`.
+-   **itype**: `itype`.
+-   **jobz**: `jobz`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **BP**: input array `BP`.
+-   **w**: `w`.
+-   **Z**: input array `Z`.
 -   **LDZ**: leading dimension of `Z`.
--   **WORK**: workspace array (length >= `3*N`).
+-   **WORK**: input array `WORK`.
 
 #### dspgv.ndarray( itype, jobz, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
 
-Computes all eigenvalues and, optionally, eigenvectors with alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var BP = new Float64Array( [ 4.0, 2.0, 5.0, 0.0, 1.0, 3.0 ] );
-var W = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dspgv.ndarray( 1, 'compute-vectors', 'upper', 3, AP, 1, 0, BP, 1, 0, W, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
@@ -68,10 +70,10 @@ The function has the following additional parameters:
 -   **offsetAP**: starting index for `AP`.
 -   **strideBP**: stride length for `BP`.
 -   **offsetBP**: starting index for `BP`.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
+-   **strideW**: stride length for `W`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
 -   **offsetZ**: starting index for `Z`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
@@ -84,9 +86,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   `dspgv` solves `A*x = lambda*B*x` (itype=1), `A*B*x = lambda*x` (itype=2), or `B*A*x = lambda*x` (itype=3).
--   Both A and B must be symmetric. B must also be positive definite.
--   On exit, AP is destroyed and BP contains the Cholesky factor of B.
+-   `dspgv()` corresponds to the [LAPACK][lapack] level routine [`dspgv`][lapack-dspgv].
 
 </section>
 
@@ -96,25 +96,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dspgv = require( '@stdlib/lapack/base/dspgv' );
 
-// A = [4 2 1; 2 5 3; 1 3 6] in upper packed storage:
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-
-// B = [4 2 0; 2 5 1; 0 1 3] in upper packed storage:
-var BP = new Float64Array( [ 4.0, 2.0, 5.0, 0.0, 1.0, 3.0 ] );
-
-var W = new Float64Array( 3 );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 9 );
-
-var info = dspgv( 'column-major', 1, 'compute-vectors', 'upper', 3, AP, BP, W, Z, 3, WORK );
-
-console.log( 'info:', info );
-console.log( 'Eigenvalues:', W );
-console.log( 'Eigenvectors:', Z );
+// TODO: Add examples
 ```
 
 </section>
@@ -133,7 +120,13 @@ console.log( 'Eigenvectors:', Z );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dspgv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dspgv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

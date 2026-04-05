@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # drotg
 
-> Construct a Givens plane rotation
+> Constructs a Givens plane rotation.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var drotg = require( '@stdlib/blas/base/drotg' );
 ```
 
-#### drotg.ndarray( a, b, c, s )
+#### drotg( ab, strideAB, cs, strideCS )
 
-Construct a Givens plane rotation
+Constructs a Givens plane rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,10 +42,25 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **a**: a.
--   **b**: b.
--   **c**: c.
--   **s**: s.
+-   **ab**: `ab`.
+-   **strideAB**: stride length for `AB`.
+-   **cs**: `cs`.
+-   **strideCS**: stride length for `CS`.
+
+#### drotg.ndarray( ab, strideAB, offsetAB, cs, strideCS, offsetCS )
+
+Constructs a Givens plane rotation, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetAB**: starting index for `AB`.
+-   **offsetCS**: starting index for `CS`.
 
 </section>
 
@@ -35,7 +70,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `drotg()` corresponds to the [LAPACK][lapack] level routine [`drotg`][lapack-drotg].
 
 </section>
 
@@ -45,7 +80,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var drotg = require( '@stdlib/blas/base/drotg' );
+
 // TODO: Add examples
 ```
 
@@ -65,9 +104,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-drotg]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__drotg.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

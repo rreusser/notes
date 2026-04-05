@@ -20,7 +20,7 @@ limitations under the License.
 
 # izamax
 
-> Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
+> Finds the index of the element having the maximum sum of absolute values of.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var izamax = require( '@stdlib/blas/base/izamax' );
 ```
 
-#### izamax.ndarray( N, x, stride, offset, incx )
+#### izamax( N, zx, strideX )
 
-Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
+Finds the index of the element having the maximum sum of absolute values of.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -43,10 +43,22 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
--   **incx**: incx.
+-   **zx**: `zx`.
+-   **strideX**: stride length for `X`.
+
+#### izamax.ndarray( N, zx, strideX, offsetX )
+
+Finds the index of the element having the maximum sum of absolute values of, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -56,7 +68,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `izamax()` corresponds to the [LAPACK][lapack] level routine [`izamax`][lapack-izamax].
 
 </section>
 
@@ -66,7 +78,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var izamax = require( '@stdlib/blas/base/izamax' );
+
 // TODO: Add examples
 ```
 
@@ -86,9 +102,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-izamax]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__izamax.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

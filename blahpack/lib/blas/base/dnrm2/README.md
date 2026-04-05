@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dnrm2
 
-> Compute the Euclidean norm of a real vector.
+> Computes the Euclidean norm of a real double-precision vector.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
 ```
 
-#### dnrm2.ndarray( N, x, stride, offset )
+#### dnrm2( N, x, stride )
 
-Compute the Euclidean norm of a real vector.
+Computes the Euclidean norm of a real double-precision vector.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,9 +43,22 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
+-   **x**: `x`.
+-   **stride**: `stride`.
+
+#### dnrm2.ndarray( N, x, stride, offset )
+
+Computes the Euclidean norm of a real double-precision vector, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offset**: `offset`.
 
 </section>
 
@@ -35,7 +68,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dnrm2()` corresponds to the [LAPACK][lapack] level routine [`dnrm2`][lapack-dnrm2].
 
 </section>
 
@@ -45,7 +78,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
+
 // TODO: Add examples
 ```
 
@@ -65,9 +102,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dnrm2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dnrm2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

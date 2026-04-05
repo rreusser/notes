@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlartg
 
-> Generate a complex Givens plane rotation
+> Compute |re|^2 + |im|^2.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlartg = require( '@stdlib/lapack/base/zlartg' );
 ```
 
-#### zlartg.ndarray( f, g, c, s, r )
+#### zlartg( f, offsetF, g, offsetG, c, offsetC, s, offsetS, r, offsetR )
 
-Generate a complex Givens plane rotation
+Compute |re|^2 + |im|^2.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,11 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **f**: f.
--   **g**: g.
--   **c**: c.
--   **s**: s.
--   **r**: r.
+-   **f**: `f`.
+-   **offsetF**: starting index for `F`.
+-   **g**: `g`.
+-   **offsetG**: starting index for `G`.
+-   **c**: `c`.
+-   **offsetC**: starting index for `C`.
+-   **s**: `s`.
+-   **offsetS**: starting index for `S`.
+-   **r**: `r`.
+-   **offsetR**: starting index for `R`.
+
+#### zlartg.ndarray( f, offsetF, g, offsetG, c, offsetC, s, offsetS, r, offsetR )
+
+Compute |re|^2 + |im|^2, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -56,7 +74,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlartg()` corresponds to the [LAPACK][lapack] level routine [`zlartg`][lapack-zlartg].
 
 </section>
 
@@ -66,7 +84,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlartg = require( '@stdlib/lapack/base/zlartg' );
+
 // TODO: Add examples
 ```
 
@@ -86,9 +108,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlartg]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlartg.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

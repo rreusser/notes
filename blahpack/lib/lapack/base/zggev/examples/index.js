@@ -1,7 +1,41 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
-var zggev = require( '@stdlib/lapack/base/zggev' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zggev = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zggev );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zggev( 'row-major', 'V', 'V', N, A, N, B, N, ALPHA, 1, BETA, 1, VL, N, VR, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = zggev.ndarray( 'V', 'V', N, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, VL, N, 1, 0, VR, N, 1, 0 );
+console.log( out );

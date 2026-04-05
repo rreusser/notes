@@ -18,7 +18,20 @@
 
 'use strict';
 
-var zlanhs = require( '@stdlib/lapack/base/zlanhs' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zlanhs = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlanhs );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zlanhs( 'row-major', '1', N, A, N, WORK, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlanhs.ndarray( '1', N, A, N, 1, 0, WORK, 1, 0 );
+console.log( out );

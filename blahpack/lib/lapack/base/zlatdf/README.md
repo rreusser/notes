@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlatdf
 
 > Computes a contribution to the reciprocal Dif-estimate using the LU factorization computed by zgetc2.
@@ -10,41 +30,48 @@
 var zlatdf = require( '@stdlib/lapack/base/zlatdf' );
 ```
 
-#### zlatdf.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+#### zlatdf( ijob, N, Z, LDZ, RHS, strideRHS, rdsum, rdscal, IPIV, strideIPIV, JPIV, strideJPIV )
 
 Computes a contribution to the reciprocal Dif-estimate using the LU factorization computed by zgetc2.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var Z = new Complex128Array( [ 4.0, 1.0, 2.0, 0.5, 3.0, -1.0, 1.0, 2.0 ] );
-var RHS = new Complex128Array( [ 1.0, 0.5, -1.0, 1.0 ] );
-var IPIV = new Int32Array( [ 0, 1 ] );
-var JPIV = new Int32Array( [ 0, 1 ] );
-
-var out = zlatdf.ndarray( 2, 2, Z, 1, 2, 0, RHS, 1, 0, 0.0, 1.0, IPIV, 1, 0, JPIV, 1, 0 );
-// returns { rdsum: ..., rdscal: ... }
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **ijob**: ijob.
+-   **ijob**: `ijob`.
 -   **N**: number of columns.
--   **Z**: input matrix.
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
--   **offsetZ**: starting index for `Z`.
--   **RHS**: input array.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **RHS**: input array `RHS`.
 -   **strideRHS**: stride length for `RHS`.
--   **offsetRHS**: starting index for `RHS`.
--   **rdsum**: rdsum.
--   **rdscal**: rdscal.
--   **IPIV**: input array.
+-   **rdsum**: `rdsum`.
+-   **rdscal**: `rdscal`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **offsetIPIV**: starting index for `IPIV`.
--   **JPIV**: output array.
+-   **JPIV**: input array `JPIV`.
 -   **strideJPIV**: stride length for `JPIV`.
+
+#### zlatdf.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+
+Computes a contribution to the reciprocal Dif-estimate using the LU factorization computed by zgetc2, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **offsetRHS**: starting index for `RHS`.
+-   **offsetIPIV**: starting index for `IPIV`.
 -   **offsetJPIV**: starting index for `JPIV`.
 
 </section>
@@ -55,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The reference Fortran ZLATDF uses `MAXDIM=2`, which causes buffer overflows in the IJOB=2 path for N>2. This JS implementation allocates workspace dynamically and handles all N correctly.
+-   `zlatdf()` corresponds to the [LAPACK][lapack] level routine [`zlatdf`][lapack-zlatdf].
 
 </section>
 
@@ -65,20 +92,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
-var zgetc2 = require( '@stdlib/lapack/base/zgetc2' );
 var zlatdf = require( '@stdlib/lapack/base/zlatdf' );
 
-var Z = new Complex128Array( [ 4.0, 1.0, 2.0, 0.5, 3.0, -1.0, 1.0, 2.0 ] );
-var IPIV = new Int32Array( 2 );
-var JPIV = new Int32Array( 2 );
-zgetc2.ndarray( 2, Z, 1, 2, 0, IPIV, 1, 0, JPIV, 1, 0 );
-
-var RHS = new Complex128Array( [ 1.0, 0.5, -1.0, 1.0 ] );
-var out = zlatdf.ndarray( 2, 2, Z, 1, 2, 0, RHS, 1, 0, 0.0, 1.0, IPIV, 1, 0, JPIV, 1, 0 );
-// out => { rdsum: ..., rdscal: ... }
+// TODO: Add examples
 ```
 
 </section>
@@ -97,9 +116,12 @@ var out = zlatdf.ndarray( 2, 2, Z, 1, 2, 0, RHS, 1, 0, 0.0, 1.0, IPIV, 1, 0, JPI
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlatdf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlatdf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpftri
 
-> Computes the inverse of a complex Hermitian positive definite matrix stored in Rectangular Full Packed (RFP) format.
+> Computes the inverse of a complex Hermitian positive definite matrix.
 
 <section class="usage">
 
@@ -10,31 +30,35 @@
 var zpftri = require( '@stdlib/lapack/base/zpftri' );
 ```
 
-#### zpftri.ndarray( transr, uplo, N, A, strideA, offsetA )
+#### zpftri( transr, uplo, N, A )
 
-Computes the inverse of a complex Hermitian positive definite matrix stored in RFP format, using the Cholesky factorization computed by `zpftrf`.
+Computes the inverse of a complex Hermitian positive definite matrix.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var zpftrf = require( '@stdlib/lapack/base/zpftrf' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 HPD matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Complex128Array( [ 10, 0, 3, -1, 1, 2, 6, 0, 8, 0, 2, -1 ] );
-
-// First factorize:
-zpftrf.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-
-// Then invert:
-var info = zpftri.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **transr**: specifies the RFP storage format (`'no-transpose'` or `'conjugate-transpose'`).
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix.
--   **A**: input/output [`Complex128Array`][@stdlib/array/complex128] in RFP format of length `N*(N+1)/2`.
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+
+#### zpftri.ndarray( transr, uplo, N, A, strideA, offsetA )
+
+Computes the inverse of a complex Hermitian positive definite matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideA**: stride length for `A`.
 -   **offsetA**: starting index for `A`.
 
@@ -46,9 +70,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The RFP (Rectangular Full Packed) format stores a triangular matrix in a rectangular array, enabling efficient use of Level 3 BLAS operations.
--   The input matrix `A` must contain the Cholesky factorization as computed by `zpftrf`. On exit, `A` is overwritten with the inverse in the same RFP format.
--   If `info = k > 0`, the `(k,k)` element of the Cholesky factor is zero and the inverse could not be computed.
+-   `zpftri()` corresponds to the [LAPACK][lapack] level routine [`zpftri`][lapack-zpftri].
 
 </section>
 
@@ -58,21 +80,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var zpftrf = require( '@stdlib/lapack/base/zpftrf' );
 var zpftri = require( '@stdlib/lapack/base/zpftri' );
 
-// 3x3 HPD matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Complex128Array( [ 10, 0, 3, -1, 1, 2, 6, 0, 8, 0, 2, -1 ] );
-
-// Factorize, then invert:
-zpftrf.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-var info = zpftri.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-console.log( 'info:', info );
-// => info: 0
-console.log( 'A (inverse in RFP):', reinterpret( A, 0 ) );
+// TODO: Add examples
 ```
 
 </section>
@@ -91,7 +104,13 @@ console.log( 'A (inverse in RFP):', reinterpret( A, 0 ) );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/array/complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpftri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpftri.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

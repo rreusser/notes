@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlags2
 
 > Computes 2-by-2 unitary matrices U, V, and Q for the generalized upper (lower) triangular form.
@@ -12,38 +32,36 @@ var zlags2 = require( '@stdlib/lapack/base/zlags2' );
 
 #### zlags2( upper, a1, a2, a3, b1, b2, b3 )
 
-Computes 2-by-2 unitary matrices U, V, and Q such that if `upper` is `true`:
-
-```text
-  U**H * A * Q = ( x  0 )    V**H * B * Q = ( x  0 )
-                 ( x  x )                    ( x  x )
-```
-
-or if `upper` is `false`:
-
-```text
-  U**H * A * Q = ( x  x )    V**H * B * Q = ( x  x )
-                 ( 0  x )                    ( 0  x )
-```
+Computes 2-by-2 unitary matrices U, V, and Q for the generalized upper (lower) triangular form.
 
 ```javascript
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var out = zlags2( true, 4.0, new Complex128( 2.0, 1.0 ), 3.0, 1.0, new Complex128( 0.5, 0.25 ), 2.0 );
-// returns { csu: ~1.0, snuR: ~0.0, snuI: ~0.0, csv: ~1.0, snvR: ~0.0, snvI: ~0.0, csq: ~0.873, snqR: ~-0.436, snqI: ~-0.218 }
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **upper**: `boolean` indicating whether the input matrices are upper triangular.
--   **a1**: real (1,1) element of matrix A.
--   **a2**: complex off-diagonal element of matrix A (`Complex128`).
--   **a3**: real (2,2) element of matrix A.
--   **b1**: real (1,1) element of matrix B.
--   **b2**: complex off-diagonal element of matrix B (`Complex128`).
--   **b3**: real (2,2) element of matrix B.
+-   **upper**: `upper`.
+-   **a1**: `a1`.
+-   **a2**: `a2`.
+-   **a3**: `a3`.
+-   **b1**: `b1`.
+-   **b2**: `b2`.
+-   **b3**: `b3`.
 
-The function returns an object with properties `csu`, `snuR`, `snuI`, `csv`, `snvR`, `snvI`, `csq`, `snqR`, `snqI` defining the unitary matrices U, V, and Q.
+#### zlags2.ndarray( upper, a1, a2, a3, b1, b2, b3 )
+
+Computes 2-by-2 unitary matrices U, V, and Q for the generalized upper (lower) triangular form, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -53,8 +71,7 @@ The function returns an object with properties `csu`, `snuR`, `snuI`, `csv`, `sn
 
 ## Notes
 
--   `csu` and `csv` and `csq` are real cosines; `snuR`+`snuI`, `snvR`+`snvI`, `snqR`+`snqI` are real and imaginary parts of complex sines.
--   The unitary matrices have the form `U = ( csu, snu; -conj(snu), csu )`.
+-   `zlags2()` corresponds to the [LAPACK][lapack] level routine [`zlags2`][lapack-zlags2].
 
 </section>
 
@@ -64,12 +81,12 @@ The function returns an object with properties `csu`, `snuR`, `snuI`, `csv`, `sn
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var zlags2 = require( '@stdlib/lapack/base/zlags2' );
 
-var out = zlags2( true, 4.0, new Complex128( 2.0, 1.0 ), 3.0, 1.0, new Complex128( 0.5, 0.25 ), 2.0 );
-console.log( out );
+// TODO: Add examples
 ```
 
 </section>
@@ -88,9 +105,12 @@ console.log( out );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlags2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlags2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

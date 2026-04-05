@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsbgvx
 
-> Computes selected eigenvalues and optionally eigenvectors of a real symmetric-definite banded generalized eigenproblem.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,73 +30,74 @@
 var dsbgvx = require( '@stdlib/lapack/base/dsbgvx' );
 ```
 
-#### dsbgvx.ndarray( jobz, range, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, Q, strideQ1, strideQ2, offsetQ, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+#### dsbgvx( jobz, range, uplo, N, ka, kb, AB, LDAB, BB, LDBB, Q, LDQ, vl, vu, il, iu, abstol, out, w, strideW, Z, LDZ, WORK, strideWORK, IWORK, strideIWORK, IFAIL, strideIFAIL )
 
-Computes selected eigenvalues and optionally eigenvectors of a real generalized symmetric-definite banded eigenproblem A\_x = lambda\_B\_x.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 5x5 symmetric band matrix A (KA=2), upper band storage:
-var AB = new Float64Array( [ 0, 0, 10, 0, 1, 8, 0.5, 2, 6, 0.3, 1.5, 9, 0.4, 1, 7 ] );
-// 5x5 positive definite band matrix B (KB=1), upper storage:
-var BB = new Float64Array( [ 0, 4, 0.2, 5, 0.3, 3, 0.1, 6, 0.2, 4 ] );
-var Q = new Float64Array( 25 );
-var W = new Float64Array( 5 );
-var Z = new Float64Array( 25 );
-var WORK = new Float64Array( 50 );
-var IWORK = new Int32Array( 30 );
-var IFAIL = new Int32Array( 5 );
-var out = { M: 0 };
-
-var info = dsbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-// returns 0
-
-// out.M => 5
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **jobz**: `'no-vectors'` (eigenvalues only) or `'compute-vectors'` (eigenvalues and eigenvectors).
--   **range**: `'all'` (all eigenvalues), `'value'` (eigenvalues in interval (vl, vu]), or `'index'` (eigenvalues il through iu).
--   **uplo**: `'upper'` or `'lower'`, specifying which triangle of the band matrices is stored.
--   **N**: order of the matrices A and B.
--   **ka**: number of super- (upper) or sub- (lower) diagonals of A.
--   **kb**: number of super- (upper) or sub- (lower) diagonals of B.
--   **AB**: band matrix A in band storage ((ka+1)-by-N).
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **jobz**: `jobz`.
+-   **range**: `range`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **ka**: `ka`.
+-   **kb**: `kb`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **BB**: input array `BB`.
+-   **LDBB**: leading dimension of `BB`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **vl**: `vl`.
+-   **vu**: `vu`.
+-   **il**: `il`.
+-   **iu**: `iu`.
+-   **abstol**: `abstol`.
+-   **out**: `out`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **IWORK**: input array `IWORK`.
+-   **strideIWORK**: stride length for `IWORK`.
+-   **IFAIL**: input array `IFAIL`.
+-   **strideIFAIL**: stride length for `IFAIL`.
+
+#### dsbgvx.ndarray( jobz, range, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, Q, strideQ1, strideQ2, offsetQ, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **BB**: band matrix B in band storage ((kb+1)-by-N).
--   **strideBB1**: stride of the first dimension of `BB`.
--   **strideBB2**: stride of the second dimension of `BB`.
+-   **strideBB1**: stride of dimension 1 of `BB`.
+-   **strideBB2**: stride of dimension 2 of `BB`.
 -   **offsetBB**: starting index for `BB`.
--   **Q**: output transformation matrix (N-by-N).
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
 -   **offsetQ**: starting index for `Q`.
--   **vl**: lower bound of eigenvalue interval (used when range='value').
--   **vu**: upper bound of eigenvalue interval (used when range='value').
--   **il**: index of smallest eigenvalue to compute, 1-based (used when range='index').
--   **iu**: index of largest eigenvalue to compute, 1-based (used when range='index').
--   **abstol**: absolute tolerance for eigenvalues.
--   **out**: output object; `out.M` is set to the number of eigenvalues found.
--   **w**: output array for eigenvalues (length N).
--   **strideW**: stride for `w`.
--   **offsetW**: starting index for `w`.
--   **Z**: output eigenvector matrix (N-by-M).
--   **strideZ1**: stride of first dimension of `Z`.
--   **strideZ2**: stride of second dimension of `Z`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
 -   **offsetZ**: starting index for `Z`.
--   **WORK**: workspace (length >= 7\*N).
--   **strideWORK**: stride for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace (length >= 5\*N).
--   **strideIWORK**: stride for `IWORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
--   **IFAIL**: output array for non-converged eigenvector indices (length N).
--   **strideIFAIL**: stride for `IFAIL`.
 -   **offsetIFAIL**: starting index for `IFAIL`.
 
 </section>
@@ -87,9 +108,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The routine first factorizes B via `dpbstf`, then transforms to standard form via `dsbgst`, reduces to tridiagonal form via `dsbtrd`, and computes eigenvalues using bisection and inverse iteration.
--   When `range` is `'all'` and `abstol <= 0`, a fast path using `dsterf`/`dsteqr` is used.
--   The `out.M` field indicates how many eigenvalues were found.
+-   `dsbgvx()` corresponds to the [LAPACK][lapack] level routine [`dsbgvx`][lapack-dsbgvx].
 
 </section>
 
@@ -99,25 +118,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dsbgvx = require( '@stdlib/lapack/base/dsbgvx' );
 
-var AB = new Float64Array( [ 0, 0, 10, 0, 1, 8, 0.5, 2, 6, 0.3, 1.5, 9, 0.4, 1, 7 ] );
-var BB = new Float64Array( [ 0, 4, 0.2, 5, 0.3, 3, 0.1, 6, 0.2, 4 ] );
-var Q = new Float64Array( 25 );
-var W = new Float64Array( 5 );
-var Z = new Float64Array( 25 );
-var WORK = new Float64Array( 50 );
-var IWORK = new Int32Array( 30 );
-var IFAIL = new Int32Array( 5 );
-var out = { M: 0 };
-
-var info = dsbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
-console.log( 'info:', info );
-console.log( 'M:', out.M );
-console.log( 'W:', W );
+// TODO: Add examples
 ```
 
 </section>
@@ -136,9 +142,12 @@ console.log( 'W:', W );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsbgvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsbgvx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

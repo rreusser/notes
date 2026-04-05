@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztbrfs
 
 > Provides error bounds for the solution to a system with a complex triangular band matrix.
@@ -10,58 +30,60 @@
 var ztbrfs = require( '@stdlib/lapack/base/ztbrfs' );
 ```
 
-#### ztbrfs.ndarray( uplo, trans, diag, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+#### ztbrfs( args )
 
 Provides error bounds for the solution to a system with a complex triangular band matrix.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// Upper triangular band matrix, N=3, KD=1, NRHS=1:
-var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 1, 2, -1, 5, -1 ] );
-var B = new Complex128Array( [ 4, 1, 6, 0, 5, -1 ] );
-var X = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] ); // pre-computed solution
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-// info => 0
-// BERR[ 0 ] => 0.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
--   **trans**: specifies the operation type.
--   **diag**: specifies the operation type.
+-   **args**: `args`.
+
+#### ztbrfs.ndarray( uplo, trans, diag, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Provides error bounds for the solution to a system with a complex triangular band matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
 -   **N**: number of columns.
--   **kd**: kd.
--   **nrhs**: nrhs.
--   **AB**: input matrix.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **kd**: `kd`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **B**: input array `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **X**: input matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **X**: input array `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **FERR**: input array.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
 -   **offsetFERR**: starting index for `FERR`.
--   **BERR**: input array.
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
 -   **offsetBERR**: starting index for `BERR`.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **RWORK**: output array.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
@@ -73,9 +95,7 @@ The function has the following parameters:
 
 ## Notes
 
--   WORK must be a `Complex128Array` of length at least `2*N`.
--   RWORK must be a `Float64Array` of length at least `N`.
--   The solution matrix X must be computed before calling this routine (e.g., by `ztbtrs`).
+-   `ztbrfs()` corresponds to the [LAPACK][lapack] level routine [`ztbrfs`][lapack-ztbrfs].
 
 </section>
 
@@ -85,24 +105,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var ztbrfs = require( '@stdlib/lapack/base/ztbrfs' );
 
-// Upper triangular band matrix, N=3, KD=1:
-var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 1, 2, -1, 5, -1 ] );
-var B = new Complex128Array( [ 4, 1, 6, 0, 5, -1 ] );
-var X = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-console.log( 'info:', info );
-console.log( 'FERR:', FERR[ 0 ] );
-console.log( 'BERR:', BERR[ 0 ] );
+// TODO: Add examples
 ```
 
 </section>
@@ -121,9 +129,12 @@ console.log( 'BERR:', BERR[ 0 ] );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztbrfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztbrfs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

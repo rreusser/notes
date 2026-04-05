@@ -18,7 +18,12 @@
 
 'use strict';
 
-var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
+var dlaisnan = require( './../lib' );
 
-// TODO: Add example usage
-console.log( dlaisnan );
+// Using the standard interface:
+var out = dlaisnan( 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = dlaisnan.ndarray( 1, 1 );
+console.log( out );

@@ -20,7 +20,7 @@ limitations under the License.
 
 # ztrmm
 
-> Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A)
+> Perform one of the matrix-matrix operations.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var ztrmm = require( '@stdlib/blas/base/ztrmm' );
 ```
 
-#### ztrmm.ndarray( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+#### ztrmm( order, side, uplo, transa, diag, M, N, alpha, A, LDA, B, LDB )
 
-Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A)
+Perform one of the matrix-matrix operations.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,20 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
--   **uplo**: specifies the operation type.
--   **transa**: specifies the operation type.
--   **diag**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the side of the operation.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **transa**: specifies the operation for matrix `A`.
+-   **diag**: specifies whether the matrix is unit triangular.
 -   **M**: number of rows.
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### ztrmm.ndarray( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+
+Perform one of the matrix-matrix operations, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **B**: output matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
 
 </section>
@@ -66,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztrmm()` corresponds to the [LAPACK][lapack] level routine [`ztrmm`][lapack-ztrmm].
 
 </section>
 
@@ -76,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztrmm = require( '@stdlib/blas/base/ztrmm' );
+
 // TODO: Add examples
 ```
 
@@ -96,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztrmm]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztrmm.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

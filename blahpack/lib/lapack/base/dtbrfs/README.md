@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dtbrfs
 
-> Provides error bounds and backward error estimates for the solution to a system of linear equations with a triangular band coefficient matrix.
+> Provides error bounds for the solution to a system with a real triangular band matrix.
 
 <section class="usage">
 
@@ -10,60 +30,63 @@
 var dtbrfs = require( '@stdlib/lapack/base/dtbrfs' );
 ```
 
-#### dtbrfs.ndarray( uplo, trans, diag, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dtbrfs( uplo, trans, diag, N, kd, nrhs, AB, LDAB, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, IWORK, strideIWORK )
 
 Provides error bounds for the solution to a system with a real triangular band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 4x4 upper triangular band matrix (kd=2) in band storage (col-major):
-var AB = new Float64Array( [ 0, 0, 2, 0, 1, 4, 3, 5, 6, 2, 1, 3 ] );
-var B = new Float64Array( [ 13.0, 31.0, 22.0, 12.0 ] );
-var X = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 12 );
-var IWORK = new Int32Array( 4 );
-
-var info = dtbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 4, 2, 1,
-    AB, 1, 3, 0, B, 1, 4, 0, X, 1, 4, 0,
-    FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`).
--   **trans**: specifies the form of the system (`'no-transpose'` or `'transpose'`).
--   **diag**: specifies whether the matrix has unit diagonal (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix A.
--   **kd**: number of super- or sub-diagonals of the triangular band matrix A.
--   **nrhs**: number of right-hand sides (columns of B and X).
--   **AB**: triangular band matrix A in band storage format.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
--   **offsetAB**: starting index for `AB`.
--   **B**: right-hand side matrix B.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **X**: solution matrix X.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
--   **offsetX**: starting index for `X`.
--   **FERR**: output array for forward error bounds (length nrhs).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
--   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output array for backward errors (length nrhs).
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
--   **offsetBERR**: starting index for `BERR`.
--   **WORK**: workspace array of length `3*N`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace array of length `N`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+
+#### dtbrfs.ndarray( uplo, trans, diag, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+Provides error bounds for the solution to a system with a real triangular band matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -74,8 +97,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The solution matrix `X` must be computed beforehand (e.g., by `dtbtrs`). This routine does not perform iterative refinement.
--   The band storage format stores the triangular band matrix A in a `(kd+1) x N` array where, for upper triangular, `AB(kd+i-j, j) = A(i,j)` and for lower triangular, `AB(i-j, j) = A(i,j)`.
+-   `dtbrfs()` corresponds to the [LAPACK][lapack] level routine [`dtbrfs`][lapack-dtbrfs].
 
 </section>
 
@@ -85,25 +107,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dtbrfs = require( '@stdlib/lapack/base/dtbrfs' );
 
-var AB = new Float64Array( [ 0, 0, 2, 0, 1, 4, 3, 5, 6, 2, 1, 3 ] );
-var B = new Float64Array( [ 13.0, 31.0, 22.0, 12.0 ] );
-var X = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 12 );
-var IWORK = new Int32Array( 4 );
-
-var info = dtbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 4, 2, 1,
-    AB, 1, 3, 0, B, 1, 4, 0, X, 1, 4, 0,
-    FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-console.log( 'info:', info );
-console.log( 'FERR:', FERR );
-console.log( 'BERR:', BERR );
+// TODO: Add examples
 ```
 
 </section>
@@ -122,9 +131,12 @@ console.log( 'BERR:', BERR );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dtbrfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dtbrfs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

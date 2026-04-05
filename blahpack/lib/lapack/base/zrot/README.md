@@ -20,7 +20,7 @@ limitations under the License.
 
 # zrot
 
-> Apply a complex Givens plane rotation
+> Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zrot = require( '@stdlib/lapack/base/zrot' );
 ```
 
-#### zrot.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy, c, s )
+#### zrot( N, cx, strideX, cy, strideY, c, s )
 
-Apply a complex Givens plane rotation
+Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -43,16 +43,27 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **incx**: incx.
--   **y**: output array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **incy**: incy.
--   **c**: c.
--   **s**: s.
+-   **cx**: `cx`.
+-   **strideX**: stride length for `X`.
+-   **cy**: `cy`.
+-   **strideY**: stride length for `Y`.
+-   **c**: `c`.
+-   **s**: `s`.
+
+#### zrot.ndarray( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s )
+
+Applies a plane rotation, where the cos (C) is real and the sin (S) is, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -62,7 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zrot()` corresponds to the [LAPACK][lapack] level routine [`zrot`][lapack-zrot].
 
 </section>
 
@@ -72,7 +83,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zrot = require( '@stdlib/lapack/base/zrot' );
+
 // TODO: Add examples
 ```
 
@@ -92,9 +107,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zrot]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zrot.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

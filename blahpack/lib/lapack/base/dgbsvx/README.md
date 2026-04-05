@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgbsvx
 
-> Solves a real system A * X = B where A is general band, with equilibration, condition estimation, and error bounds.
+> Solves a real system of linear equations `A * X = B` where A is a general band matrix, with equilibration, condition estimation, and error bounds.
 
 <section class="usage">
 
@@ -10,80 +30,79 @@
 var dgbsvx = require( '@stdlib/lapack/base/dgbsvx' );
 ```
 
-#### dgbsvx.ndarray( fact, trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, IPIV, strideIPIV, offsetIPIV, equed, r, strideR, offsetR, c, strideC, offsetC, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dgbsvx( fact, trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, strideIPIV, equed, r, strideR, c, strideC, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, IWORK, strideIWORK )
 
-Solves a real system A * X = B where A is general band, with equilibration, condition estimation, and error bounds.
+Solves a real system of linear equations `A * X = B` where A is a general band matrix, with equilibration, condition estimation, and error bounds.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 3x3 tridiagonal: A = [4 1 0; 1 3 1; 0 1 2], b = [5, 5, 3]
-var AB = new Float64Array( [ 0, 1, 1, 4, 3, 2, 1, 1, 0 ] );
-var AFB = new Float64Array( 12 );
-var IPIV = new Int32Array( 3 );
-var r = new Float64Array( 3 );
-var c = new Float64Array( 3 );
-var B = new Float64Array( [ 5, 5, 3 ] );
-var X = new Float64Array( 3 );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var out = dgbsvx.ndarray( 'not-factored', 'no-transpose', 3, 1, 1, 1, AB, 1, 3, 0, AFB, 1, 4, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-// out.info => 0
-// X => [ 1.0, 1.0, 1.0 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **fact**: `'not-factored'`, `'equilibrate'`, or `'factored'`.
--   **trans**: `'no-transpose'` or `'transpose'`.
--   **N**: order of matrix A.
+-   **fact**: `fact`.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **N**: number of columns.
 -   **kl**: number of subdiagonals.
 -   **ku**: number of superdiagonals.
--   **nrhs**: number of right-hand side columns.
--   **AB**: band matrix in band storage (`Float64Array`).
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
--   **offsetAB**: starting index for `AB`.
--   **AFB**: factored band matrix output (`Float64Array`).
--   **strideAFB1**: stride of the first dimension of `AFB`.
--   **strideAFB2**: stride of the second dimension of `AFB`.
--   **offsetAFB**: starting index for `AFB`.
--   **IPIV**: pivot indices output (`Int32Array`).
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input array `AFB`.
+-   **LDAFB**: leading dimension of `AFB`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **offsetIPIV**: starting index for `IPIV`.
--   **equed**: equilibration type (`'none'`, `'row'`, `'column'`, `'both'`).
--   **r**: row scale factors (`Float64Array`).
--   **strideR**: stride length for `r`.
--   **offsetR**: starting index for `r`.
--   **c**: column scale factors (`Float64Array`).
--   **strideC**: stride length for `c`.
--   **offsetC**: starting index for `c`.
--   **B**: right-hand side matrix (`Float64Array`).
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **X**: solution matrix output (`Float64Array`).
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
--   **offsetX**: starting index for `X`.
--   **FERR**: forward error bounds output (`Float64Array`).
+-   **equed**: `equed`.
+-   **r**: `r`.
+-   **strideR**: stride length for `R`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
--   **offsetFERR**: starting index for `FERR`.
--   **BERR**: backward error bounds output (`Float64Array`).
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
--   **offsetBERR**: starting index for `BERR`.
--   **WORK**: workspace array (`Float64Array`, length >= 3\*N).
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace (`Int32Array`, length >= N).
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
--   **offsetIWORK**: starting index for `IWORK`.
 
-The function returns an object with properties `info`, `equed`, `rcond`, and `rpvgrw`.
+#### dgbsvx.ndarray( fact, trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, IPIV, strideIPIV, offsetIPIV, equed, r, strideR, offsetR, c, strideC, offsetC, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+Solves a real system of linear equations `A * X = B` where A is a general band matrix, with equilibration, condition estimation, and error bounds, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
+-   **offsetAFB**: starting index for `AFB`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **offsetR**: starting index for `R`.
+-   **offsetC**: starting index for `C`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
 
@@ -93,8 +112,7 @@ The function returns an object with properties `info`, `equed`, `rcond`, and `rp
 
 ## Notes
 
--   `WORK[0]` contains the reciprocal pivot growth factor on output.
--   IPIV uses 0-based indexing.
+-   `dgbsvx()` corresponds to the [LAPACK][lapack] level routine [`dgbsvx`][lapack-dgbsvx].
 
 </section>
 
@@ -104,26 +122,12 @@ The function returns an object with properties `info`, `equed`, `rcond`, and `rp
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dgbsvx = require( '@stdlib/lapack/base/dgbsvx' );
 
-var AB = new Float64Array( [ 0, 1, 1, 4, 3, 2, 1, 1, 0 ] );
-var AFB = new Float64Array( 12 );
-var IPIV = new Int32Array( 3 );
-var r = new Float64Array( 3 );
-var c = new Float64Array( 3 );
-var B = new Float64Array( [ 5, 5, 3 ] );
-var X = new Float64Array( 3 );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var out = dgbsvx.ndarray( 'not-factored', 'no-transpose', 3, 1, 1, 1, AB, 1, 3, 0, AFB, 1, 4, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-console.log( 'info:', out.info );
-console.log( 'X:', X );
+// TODO: Add examples
 ```
 
 </section>
@@ -142,9 +146,12 @@ console.log( 'X:', X );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgbsvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgbsvx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

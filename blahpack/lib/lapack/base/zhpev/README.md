@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhpev
 
 > Computes all eigenvalues and optionally eigenvectors of a complex Hermitian matrix in packed storage.
@@ -10,46 +30,51 @@
 var zhpev = require( '@stdlib/lapack/base/zhpev' );
 ```
 
-#### zhpev.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+#### zhpev( order, jobz, uplo, N, AP, w, Z, LDZ, WORK, RWORK )
 
 Computes all eigenvalues and optionally eigenvectors of a complex Hermitian matrix in packed storage.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 Hermitian [[5,1-i,2+i],[1+i,4,1],[2-i,1,6]] lower packed:
-var AP = new Complex128Array( [ 5, 0, 1, 1, 2, -1, 4, 0, 1, 0, 6, 0 ] );
-var w = new Float64Array( 3 );
-var Z = new Complex128Array( 9 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 10 );
-
-var info = zhpev.ndarray( 'compute-vectors', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, RWORK, 1, 0 );
-// info => 0
-// w contains eigenvalues in ascending order
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **jobz**: `'no-vectors'` (eigenvalues only) or `'compute-vectors'` (eigenvalues + eigenvectors).
--   **uplo**: `'upper'` or `'lower'`.
--   **N**: order of the matrix A.
--   **AP**: packed Hermitian matrix (`Complex128Array`).
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
--   **w**: output array for eigenvalues (`Float64Array`, length N).
--   **strideW**: stride for `w`.
--   **offsetW**: starting index for `w`.
--   **Z**: output eigenvector matrix (`Complex128Array`, N x N).
--   **strideZ1**: stride of the first dimension of `Z` (in complex elements).
--   **strideZ2**: stride of the second dimension of `Z` (in complex elements).
--   **offsetZ**: starting index for `Z` (in complex elements).
--   **WORK**: complex workspace array (`Complex128Array`, length >= max(1, 2\*N-1)).
--   **strideWORK**: stride for `WORK` (in complex elements).
--   **offsetWORK**: starting index for `WORK` (in complex elements).
--   **RWORK**: real workspace array (`Float64Array`, length >= max(1, 3\*N-2)).
--   **strideRWORK**: stride for `RWORK`.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **jobz**: `jobz`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **w**: `w`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
+-   **RWORK**: input array `RWORK`.
+
+#### zhpev.ndarray( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Computes all eigenvalues and optionally eigenvectors of a complex Hermitian matrix in packed storage, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideW**: stride length for `W`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **strideRWORK**: stride length for `RWORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -60,9 +85,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The eigenvalues of a Hermitian matrix are always real and returned in ascending order in `w`.
--   On exit, `AP` is overwritten by the tridiagonal reduction.
--   `WORK` is a complex workspace and `RWORK` is a real workspace.
+-   `zhpev()` corresponds to the [LAPACK][lapack] level routine [`zhpev`][lapack-zhpev].
 
 </section>
 
@@ -72,20 +95,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zhpev = require( '@stdlib/lapack/base/zhpev' );
 
-var AP = new Complex128Array( [ 5, 0, 1, 1, 2, -1, 4, 0, 1, 0, 6, 0 ] );
-var w = new Float64Array( 3 );
-var Z = new Complex128Array( 9 );
-var WORK = new Complex128Array( 10 );
-var RWORK = new Float64Array( 10 );
-
-zhpev.ndarray( 'compute-vectors', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, RWORK, 1, 0 );
-
-console.log( 'eigenvalues:', w );
+// TODO: Add examples
 ```
 
 </section>
@@ -104,9 +119,12 @@ console.log( 'eigenvalues:', w );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhpev]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhpev.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

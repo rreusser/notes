@@ -18,7 +18,20 @@
 
 'use strict';
 
-var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var dlaswp = require( './../lib' );
 
-// TODO: Add example usage
-console.log( dlaswp );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = dlaswp( 'row-major', N, A, N, 1, 1, IPIV, 1, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = dlaswp.ndarray( N, A, N, 1, 0, 1, 1, IPIV, 1, 0, 1 );
+console.log( out );

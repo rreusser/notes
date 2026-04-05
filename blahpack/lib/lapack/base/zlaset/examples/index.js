@@ -18,7 +18,19 @@
 
 'use strict';
 
-var zlaset = require( '@stdlib/lapack/base/zlaset' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zlaset = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlaset );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zlaset( 'row-major', 'upper', N, N, 1.0, 1.0, A, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlaset.ndarray( 'upper', N, N, 1.0, 1.0, A, N, 1, 0 );
+console.log( out );

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsyrk
 
-> Perform symmetric rank-k update.
+> Performs one of the symmetric rank-k operations:.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dsyrk = require( '@stdlib/blas/base/dsyrk' );
 ```
 
-#### dsyrk.ndarray( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC1, strideC2, offsetC )
+#### dsyrk( order, uplo, trans, N, K, alpha, A, LDA, beta, C, LDC )
 
-Perform symmetric rank-k update.
+Performs one of the symmetric rank-k operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,19 +42,35 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
--   **trans**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
+-   **K**: inner dimension.
 -   **alpha**: scalar constant.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
 -   **beta**: scalar constant.
--   **C**: output matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+
+#### dsyrk.ndarray( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC1, strideC2, offsetC )
+
+Performs one of the symmetric rank-k operations:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
 -   **offsetC**: starting index for `C`.
 
 </section>
@@ -45,7 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dsyrk()` corresponds to the [LAPACK][lapack] level routine [`dsyrk`][lapack-dsyrk].
 
 </section>
 
@@ -55,7 +91,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dsyrk = require( '@stdlib/blas/base/dsyrk' );
+
 // TODO: Add examples
 ```
 
@@ -75,9 +115,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsyrk]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsyrk.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

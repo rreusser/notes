@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlantr
 
-> Computes the norm of a real triangular matrix
+> Returns the minimum of two values.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlantr = require( '@stdlib/lapack/base/dlantr' );
 ```
 
-#### dlantr.ndarray( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+#### dlantr( a, b )
 
-Computes the norm of a real triangular matrix
+Returns the minimum of two values.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,16 +42,31 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **norm**: specifies the operation type.
--   **uplo**: specifies the operation type.
--   **diag**: specifies the operation type.
+-   **a**: `a`.
+-   **b**: `b`.
+
+#### dlantr.ndarray( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+
+Returns the minimum of two values, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **norm**: `norm`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **WORK**: output array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
@@ -43,7 +78,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlantr()` corresponds to the [LAPACK][lapack] level routine [`dlantr`][lapack-dlantr].
 
 </section>
 
@@ -53,7 +88,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlantr = require( '@stdlib/lapack/base/dlantr' );
+
 // TODO: Add examples
 ```
 
@@ -73,9 +112,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlantr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlantr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

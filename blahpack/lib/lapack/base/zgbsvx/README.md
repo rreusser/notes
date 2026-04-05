@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgbsvx
 
-> Expert driver for solving a complex system of linear equations A\*X = B where A is a general band matrix, with equilibration, condition estimation, and error bounds.
+> Expert driver for solving a complex system of linear equations A*X = B.
 
 <section class="usage">
 
@@ -10,85 +30,79 @@
 var zgbsvx = require( '@stdlib/lapack/base/zgbsvx' );
 ```
 
-#### zgbsvx.ndarray( fact, trans, N, kl, ku, nrhs, AB, sAB1, sAB2, oAB, AFB, sAFB1, sAFB2, oAFB, IPIV, sIPIV, oIPIV, equed, r, sR, oR, c, sC, oC, B, sB1, sB2, oB, X, sX1, sX2, oX, FERR, sFERR, oFERR, BERR, sBERR, oBERR, WORK, sWORK, oWORK, RWORK, sRWORK, oRWORK )
+#### zgbsvx( fact, trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, strideIPIV, equed, r, strideR, c, strideC, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, RWORK, strideRWORK )
 
-Expert driver for solving a complex system of linear equations A\*X = B where A is a general band matrix with KL subdiagonals and KU superdiagonals.
+Expert driver for solving a complex system of linear equations A*X = B.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-var N = 3;
-var KL = 1;
-var KU = 1;
-var nrhs = 1;
-var nRows = KL + KU + 1;
-
-var AB = new Complex128Array( [ 0,0, 1,0, 1,0, 4,0, 3,0, 2,0, 1,0, 1,0, 0,0 ] );
-var AFB = new Complex128Array( ((2*KL)+KU+1) * N );
-var IPIV = new Int32Array( N );
-var r = new Float64Array( N );
-var c = new Float64Array( N );
-var B = new Complex128Array( [ 5,0, 5,0, 3,0 ] );
-var X = new Complex128Array( N );
-var FERR = new Float64Array( nrhs );
-var BERR = new Float64Array( nrhs );
-var WORK = new Complex128Array( 2*N );
-var RWORK = new Float64Array( N );
-
-var out = zgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2*KL)+KU+1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-// out.info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **fact**: `'not-factored'`, `'equilibrate'`, or `'factored'`.
--   **trans**: `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`.
--   **N**: order of the matrix A (N >= 0).
--   **kl**: number of subdiagonals (kl >= 0).
--   **ku**: number of superdiagonals (ku >= 0).
--   **nrhs**: number of right-hand side columns.
--   **AB**: [`Complex128Array`][@stdlib/array/complex128] band matrix in band storage ((KL+KU+1) x N).
--   **sAB1**: stride of the first dimension of `AB`.
--   **sAB2**: stride of the second dimension of `AB`.
--   **oAB**: starting index for `AB`.
--   **AFB**: [`Complex128Array`][@stdlib/array/complex128] factored band matrix ((2\*KL+KU+1) x N, output).
--   **sAFB1**: stride of the first dimension of `AFB`.
--   **sAFB2**: stride of the second dimension of `AFB`.
--   **oAFB**: starting index for `AFB`.
--   **IPIV**: [`Int32Array`][@stdlib/array/int32] pivot indices (0-based, output).
--   **sIPIV**: stride for `IPIV`.
--   **oIPIV**: starting index for `IPIV`.
--   **equed**: equilibration type (`'none'`, `'row'`, `'column'`, `'both'`). Input if fact=`'factored'`.
--   **r**: [`Float64Array`][@stdlib/array/float64] row scale factors.
--   **sR**: stride for `r`.
--   **oR**: index offset for `r`.
--   **c**: [`Float64Array`][@stdlib/array/float64] column scale factors.
--   **sC**: stride for `c`.
--   **oC**: index offset for `c`.
--   **B**: [`Complex128Array`][@stdlib/array/complex128] N-by-NRHS right-hand side.
--   **sB1**: stride of the first dimension of `B`.
--   **sB2**: stride of the second dimension of `B`.
--   **oB**: starting index for `B`.
--   **X**: [`Complex128Array`][@stdlib/array/complex128] N-by-NRHS solution matrix (output).
--   **sX1**: stride of the first dimension of `X`.
--   **sX2**: stride of the second dimension of `X`.
--   **oX**: starting index for `X`.
--   **FERR**: [`Float64Array`][@stdlib/array/float64] forward error bounds (output).
--   **sFERR**: stride for `FERR`.
--   **oFERR**: starting index for `FERR`.
--   **BERR**: [`Float64Array`][@stdlib/array/float64] backward error bounds (output).
--   **sBERR**: stride for `BERR`.
--   **oBERR**: starting index for `BERR`.
--   **WORK**: [`Complex128Array`][@stdlib/array/complex128] workspace (length >= 2\*N).
--   **sWORK**: stride for `WORK`.
--   **oWORK**: starting index for `WORK`.
--   **RWORK**: [`Float64Array`][@stdlib/array/float64] real workspace (length >= N).
--   **sRWORK**: stride for `RWORK`.
--   **oRWORK**: starting index for `RWORK`.
+-   **fact**: `fact`.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **N**: number of columns.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input array `AFB`.
+-   **LDAFB**: leading dimension of `AFB`.
+-   **IPIV**: input array `IPIV`.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **equed**: `equed`.
+-   **r**: `r`.
+-   **strideR**: stride length for `R`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
+-   **strideFERR**: stride length for `FERR`.
+-   **BERR**: input array `BERR`.
+-   **strideBERR**: stride length for `BERR`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **RWORK**: input array `RWORK`.
+-   **strideRWORK**: stride length for `RWORK`.
 
-The function returns an object `{ info, equed, rcond, rpvgrw }`.
+#### zgbsvx.ndarray( fact, trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, IPIV, strideIPIV, offsetIPIV, equed, r, strideR, offsetR, c, strideC, offsetC, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Expert driver for solving a complex system of linear equations A*X = B, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
+-   **offsetAFB**: starting index for `AFB`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **offsetR**: starting index for `R`.
+-   **offsetC**: starting index for `C`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
 
@@ -98,8 +112,7 @@ The function returns an object `{ info, equed, rcond, rpvgrw }`.
 
 ## Notes
 
--   `zgbsvx` performs the following steps: (1) optionally equilibrate the matrix using `zgbequ`/`zlaqgb`, (2) compute the LU factorization via `zgbtrf`, (3) estimate the condition number via `zgbcon`, (4) solve the system via `zgbtrs`, (5) compute error bounds via `zgbrfs`, and (6) transform the solution back if equilibration was used.
--   When `info > 0` and `info <= N`, `U(info, info)` is exactly zero and the factorization is incomplete. When `info = N+1`, the matrix is nonsingular but ill-conditioned (rcond < machine epsilon).
+-   `zgbsvx()` corresponds to the [LAPACK][lapack] level routine [`zgbsvx`][lapack-zgbsvx].
 
 </section>
 
@@ -109,32 +122,12 @@ The function returns an object `{ info, equed, rcond, rpvgrw }`.
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var zgbsvx = require( '@stdlib/lapack/base/zgbsvx' );
 
-var N = 3;
-var KL = 1;
-var KU = 1;
-var nrhs = 1;
-var nRows = KL + KU + 1;
-
-var AB = new Complex128Array( [ 0,0, 1,0, 1,0, 4,0, 3,0, 2,0, 1,0, 1,0, 0,0 ] );
-var AFB = new Complex128Array( ((2*KL)+KU+1) * N );
-var IPIV = new Int32Array( N );
-var r = new Float64Array( N );
-var c = new Float64Array( N );
-var B = new Complex128Array( [ 5,0, 5,0, 3,0 ] );
-var X = new Complex128Array( N );
-var FERR = new Float64Array( nrhs );
-var BERR = new Float64Array( nrhs );
-var WORK = new Complex128Array( 2*N );
-var RWORK = new Float64Array( N );
-
-var result = zgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2*KL)+KU+1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
-// result.info => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -153,9 +146,13 @@ var result = zgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib
-[@stdlib/array/float64]: https://github.com/stdlib-js/stdlib
-[@stdlib/array/int32]: https://github.com/stdlib-js/stdlib
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgbsvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgbsvx.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

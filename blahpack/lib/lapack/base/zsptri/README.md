@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zsptri
 
-> Computes the inverse of a complex symmetric matrix in packed storage using the factorization `A = U * D * U^T` or `A = L * D * L^T` computed by [`zsptrf`][@stdlib/lapack/base/zsptrf].
+> Computes the inverse of a complex symmetric matrix in packed storage using the factorization `A = U * D * U^T` or `A = L * D * L^T` computed by `zsptrf`.
 
 <section class="usage">
 
@@ -12,52 +32,40 @@ var zsptri = require( '@stdlib/lapack/base/zsptri' );
 
 #### zsptri( uplo, N, AP, IPIV, WORK )
 
-Computes the inverse of a complex symmetric matrix in packed storage.
+Computes the inverse of a complex symmetric matrix in packed storage using the factorization `A = U * D * U^T` or `A = L * D * L^T` computed by `zsptrf`.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Complex128Array( [ 4.0, 2.0 ] );
-var IPIV = new Int32Array( [ 0 ] );
-var WORK = new Complex128Array( 1 );
-
-var info = zsptri( 'upper', 1, AP, IPIV, WORK );
-// returns 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix.
--   **AP**: packed symmetric matrix as a [`Complex128Array`][@stdlib/array/complex128] of length `N*(N+1)/2` (overwritten with inverse).
--   **IPIV**: pivot indices from `zsptrf` as an [`Int32Array`][mdn-int32array].
--   **WORK**: workspace [`Complex128Array`][@stdlib/array/complex128] of length `N`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **IPIV**: input array `IPIV`.
+-   **WORK**: input array `WORK`.
 
 #### zsptri.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
 
-Computes the inverse with alternative indexing semantics.
+Computes the inverse of a complex symmetric matrix in packed storage using the factorization `A = U * D * U^T` or `A = L * D * L^T` computed by `zsptrf`, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Complex128Array( [ 4.0, 2.0 ] );
-var IPIV = new Int32Array( [ 0 ] );
-var WORK = new Complex128Array( 1 );
-
-var info = zsptri.ndarray( 'upper', 1, AP, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
-// returns 0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
 -   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **strideWORK**: stride length for `WORK` (in complex elements).
--   **offsetWORK**: starting index for `WORK` (in complex elements).
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
 
 </section>
 
@@ -67,10 +75,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   The matrix `A` must first be factored by [`zsptrf`][@stdlib/lapack/base/zsptrf] before calling `zsptri`.
--   `AP` is a packed representation of a complex symmetric (NOT Hermitian) matrix. For symmetric matrices, `A[i,j] = A[j,i]` (no conjugation).
--   IPIV is 0-based. Negative values encode 2x2 pivot blocks via bitwise NOT.
--   Returns `info`: 0 on success, `k > 0` if `D(k,k)` is zero (1-based).
+-   `zsptri()` corresponds to the [LAPACK][lapack] level routine [`zsptri`][lapack-zsptri].
 
 </section>
 
@@ -80,29 +85,19 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var zsptrf = require( '@stdlib/lapack/base/zsptrf' );
 var zsptri = require( '@stdlib/lapack/base/zsptri' );
 
-// 2x2 complex symmetric matrix (upper packed): A = [ 2+i, 1+2i; 1+2i, 3+i ]
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 2.0, 3.0, 1.0 ] );
-var IPIV = new Int32Array( 2 );
-var WORK = new Complex128Array( 2 );
-
-// Factor and invert
-zsptrf.ndarray( 'upper', 2, AP, 1, 0, IPIV, 1, 0 );
-var info = zsptri.ndarray( 'upper', 2, AP, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
-
-var view = reinterpret( AP, 0 );
-console.log( 'inv(A) packed:', Array.from( view ) );
+// TODO: Add examples
 ```
 
 </section>
 
 <!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
 
 <section class="related">
 
@@ -110,11 +105,17 @@ console.log( 'inv(A) packed:', Array.from( view ) );
 
 <!-- /.related -->
 
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
 <section class="links">
 
-[@stdlib/lapack/base/zsptrf]: https://github.com/stdlib-js/stdlib
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zsptri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zsptri.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zrotg
 
-> Construct a Givens plane rotation with real cosine and complex sine.
+> Computes the parameters for a Givens rotation.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zrotg = require( '@stdlib/blas/base/zrotg' );
 ```
 
-#### zrotg.ndarray( a, b, c, s )
+#### zrotg( re, im )
 
-Construct a Givens plane rotation with real cosine and complex sine.
+Computes the parameters for a Givens rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,10 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **a**: a.
--   **b**: b.
--   **c**: c.
--   **s**: s.
+-   **re**: `re`.
+-   **im**: `im`.
+
+#### zrotg.ndarray( a, offsetA, b, offsetB, c, offsetC, s, offsetS )
+
+Computes the parameters for a Givens rotation, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **a**: `a`.
+-   **offsetA**: starting index for `A`.
+-   **b**: `b`.
+-   **offsetB**: starting index for `B`.
+-   **c**: `c`.
+-   **offsetC**: starting index for `C`.
+-   **s**: `s`.
+-   **offsetS**: starting index for `S`.
 
 </section>
 
@@ -35,7 +74,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zrotg()` corresponds to the [LAPACK][lapack] level routine [`zrotg`][lapack-zrotg].
 
 </section>
 
@@ -45,7 +84,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zrotg = require( '@stdlib/blas/base/zrotg' );
+
 // TODO: Add examples
 ```
 
@@ -65,9 +108,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zrotg]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zrotg.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

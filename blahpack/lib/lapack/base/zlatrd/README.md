@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlatrd
 
-> Reduce NB rows and columns of a Hermitian matrix to tridiagonal form
+> Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlatrd = require( '@stdlib/lapack/base/zlatrd' );
 ```
 
-#### zlatrd.ndarray( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW )
+#### zlatrd( order, uplo, N, nb, A, LDA, e, strideE, TAU, strideTAU, W, LDW )
 
-Reduce NB rows and columns of a Hermitian matrix to tridiagonal form
+Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,22 +42,38 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **nb**: nb.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **e**: input array.
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **TAU**: input array.
+-   **nb**: `nb`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **e**: `e`.
+-   **strideE**: stride length for `E`.
+-   **TAU**: input array `TAU`.
 -   **strideTAU**: stride length for `TAU`.
+-   **W**: input array `W`.
+-   **LDW**: leading dimension of `W`.
+
+#### zlatrd.ndarray( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW )
+
+Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetE**: starting index for `E`.
 -   **offsetTAU**: starting index for `TAU`.
--   **W**: output matrix.
--   **strideW1**: stride of the first dimension of `W`.
--   **strideW2**: stride of the second dimension of `W`.
+-   **strideW1**: stride of dimension 1 of `W`.
+-   **strideW2**: stride of dimension 2 of `W`.
 -   **offsetW**: starting index for `W`.
 
 </section>
@@ -48,7 +84,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlatrd()` corresponds to the [LAPACK][lapack] level routine [`zlatrd`][lapack-zlatrd].
 
 </section>
 
@@ -58,7 +94,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlatrd = require( '@stdlib/lapack/base/zlatrd' );
+
 // TODO: Add examples
 ```
 
@@ -78,9 +118,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlatrd]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlatrd.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

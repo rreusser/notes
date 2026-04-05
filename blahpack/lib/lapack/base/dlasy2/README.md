@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlasy2
 
-> Solves the real Sylvester matrix equation for 1-by-1 or 2-by-2 matrices
+> Solves for the N1-by-N2 matrix X in:.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlasy2 = require( '@stdlib/lapack/base/dlasy2' );
 ```
 
-#### dlasy2.ndarray( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm )
+#### dlasy2( ltranl, ltranr, isgn, n1, n2, TL, LDTL, TR, LDTR, B, LDB, scale, X, LDX, xnorm )
 
-Solves the real Sylvester matrix equation for 1-by-1 or 2-by-2 matrices
+Solves for the N1-by-N2 matrix X in:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,29 +42,46 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **ltranl**: ltranl.
--   **ltranr**: ltranr.
--   **isgn**: isgn.
--   **n1**: n1.
--   **n2**: n2.
--   **TL**: input matrix.
--   **strideTL1**: stride of the first dimension of `TL`.
--   **strideTL2**: stride of the second dimension of `TL`.
+-   **ltranl**: `ltranl`.
+-   **ltranr**: `ltranr`.
+-   **isgn**: `isgn`.
+-   **n1**: `n1`.
+-   **n2**: `n2`.
+-   **TL**: input array `TL`.
+-   **LDTL**: leading dimension of `TL`.
+-   **TR**: input array `TR`.
+-   **LDTR**: leading dimension of `TR`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **scale**: `scale`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **xnorm**: `xnorm`.
+
+#### dlasy2.ndarray( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm )
+
+Solves for the N1-by-N2 matrix X in:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideTL1**: stride of dimension 1 of `TL`.
+-   **strideTL2**: stride of dimension 2 of `TL`.
 -   **offsetTL**: starting index for `TL`.
--   **TR**: input matrix.
--   **strideTR1**: stride of the first dimension of `TR`.
--   **strideTR2**: stride of the second dimension of `TR`.
+-   **strideTR1**: stride of dimension 1 of `TR`.
+-   **strideTR2**: stride of dimension 2 of `TR`.
 -   **offsetTR**: starting index for `TR`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **scale**: scale.
--   **X**: output matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **xnorm**: xnorm.
 
 </section>
 
@@ -54,7 +91,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlasy2()` corresponds to the [LAPACK][lapack] level routine [`dlasy2`][lapack-dlasy2].
 
 </section>
 
@@ -64,7 +101,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlasy2 = require( '@stdlib/lapack/base/dlasy2' );
+
 // TODO: Add examples
 ```
 
@@ -84,9 +125,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlasy2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlasy2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

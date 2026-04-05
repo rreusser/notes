@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dpteqr
 
-> Computes all eigenvalues and optionally eigenvectors of a real symmetric positive definite tridiagonal matrix.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,70 +32,45 @@ var dpteqr = require( '@stdlib/lapack/base/dpteqr' );
 
 #### dpteqr( order, compz, N, d, strideD, e, strideE, Z, LDZ, WORK, strideWORK )
 
-Computes all eigenvalues and, optionally, eigenvectors of a real symmetric positive definite tridiagonal matrix by first factoring using `dpttrf` and then calling `dbdsqr`.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 SPD tridiagonal matrix:
-// [ 4  1  0 ]
-// [ 1  4  1 ]
-// [ 0  1  4 ]
-var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
-var e = new Float64Array( [ 1.0, 1.0 ] );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 12 );
-
-var info = dpteqr( 'column-major', 'initialize', 3, d, 1, e, 1, Z, 3, WORK, 1 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **order**: storage layout ('row-major' or 'column-major').
--   **compz**: specifies whether eigenvectors are computed ('none', 'initialize', or 'update').
--   **N**: order of the matrix.
--   **d**: diagonal elements as a [`Float64Array`][mdn-float64array] (length N).
--   **strideD**: stride length for `d`.
--   **e**: subdiagonal elements as a [`Float64Array`][mdn-float64array] (length N-1).
--   **strideE**: stride length for `e`.
--   **Z**: eigenvector matrix as a [`Float64Array`][mdn-float64array] (N-by-N).
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **compz**: `compz`.
+-   **N**: number of columns.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **e**: `e`.
+-   **strideE**: stride length for `E`.
+-   **Z**: input array `Z`.
 -   **LDZ**: leading dimension of `Z`.
--   **WORK**: workspace as a [`Float64Array`][mdn-float64array] (length >= 4\*N).
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 
 #### dpteqr.ndarray( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
 
-Computes all eigenvalues and, optionally, eigenvectors using an alternative interface with stride and offset parameters.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
-var e = new Float64Array( [ 1.0, 1.0 ] );
-var Z = new Float64Array( 9 );
-var WORK = new Float64Array( 12 );
-
-var info = dpteqr.ndarray( 'initialize', 3, d, 1, 0, e, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
-The function has the following parameters:
+The function has the following additional parameters:
 
--   **compz**: specifies whether eigenvectors are computed ('none', 'initialize', or 'update').
--   **N**: order of the matrix.
--   **d**: diagonal elements as a [`Float64Array`][mdn-float64array].
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **e**: subdiagonal elements as a [`Float64Array`][mdn-float64array].
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **Z**: eigenvector matrix as a [`Float64Array`][mdn-float64array].
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
+-   **offsetD**: starting index for `D`.
+-   **offsetE**: starting index for `E`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
 -   **offsetZ**: starting index for `Z`.
--   **WORK**: workspace as a [`Float64Array`][mdn-float64array].
--   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -86,10 +81,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The eigenvalues are returned in descending order in `d`.
--   When `compz` is `'initialize'`, Z is initialized to the identity matrix internally and eigenvectors of the tridiagonal matrix are computed.
--   When `compz` is `'update'`, Z must contain an orthogonal matrix on entry; eigenvectors of the original symmetric matrix are computed.
--   When `compz` is `'none'`, only eigenvalues are computed and Z is not referenced.
+-   `dpteqr()` corresponds to the [LAPACK][lapack] level routine [`dpteqr`][lapack-dpteqr].
 
 </section>
 
@@ -99,18 +91,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dpteqr = require( '@stdlib/lapack/base/dpteqr' );
 
-var d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0 ] );
-var e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-var Z = new Float64Array( 16 );
-var WORK = new Float64Array( 16 );
-
-var info = dpteqr( 'column-major', 'initialize', 4, d, 1, e, 1, Z, 4, WORK, 1 );
-console.log( 'info:', info );
-console.log( 'eigenvalues:', d );
+// TODO: Add examples
 ```
 
 </section>
@@ -129,9 +115,12 @@ console.log( 'eigenvalues:', d );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dpteqr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dpteqr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

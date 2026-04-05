@@ -18,7 +18,22 @@
 
 'use strict';
 
-var zgghrd = require( '@stdlib/lapack/base/zgghrd' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zgghrd = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zgghrd );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zgghrd( 'row-major', 'V', 'V', N, N, N, A, N, B, N, Q, N, Z, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = zgghrd.ndarray( 'V', 'V', N, N, N, A, N, 1, 0, B, N, 1, 0, Q, N, 1, 0, Z, N, 1, 0 );
+console.log( out );

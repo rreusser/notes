@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlacon
 
-> Estimate the 1-norm of a square real matrix using reverse communication.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,52 +32,41 @@ var dlacon = require( '@stdlib/lapack/base/dlacon' );
 
 #### dlacon( N, v, strideV, x, strideX, ISGN, strideISGN, EST, KASE )
 
-Estimates the 1-norm of a square real matrix using reverse communication (strided interface).
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-var v = new Float64Array( 2 );
-var x = new Float64Array( 2 );
-var ISGN = new Int32Array( 2 );
-var EST = new Float64Array( 1 );
-var KASE = new Int32Array( 1 );
-
-dlacon( 2, v, 1, x, 1, ISGN, 1, EST, KASE );
-```
-
-#### dlacon.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, EST, KASE )
-
-Estimates the 1-norm of a square real matrix using reverse communication (ndarray interface).
-
-```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-
-var v = new Float64Array( 2 );
-var x = new Float64Array( 2 );
-var ISGN = new Int32Array( 2 );
-var EST = new Float64Array( 1 );
-var KASE = new Int32Array( 1 );
-
-dlacon.ndarray( 2, v, 1, 0, x, 1, 0, ISGN, 1, 0, EST, KASE );
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: order of the matrix (N >= 1).
--   **v**: [`Float64Array`][mdn-float64array] workspace array of length N.
--   **strideV**: stride length for `v`.
--   **offsetV**: starting index for `v` (ndarray only).
--   **x**: [`Float64Array`][mdn-float64array] input/output vector of length N.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x` (ndarray only).
--   **ISGN**: [`Int32Array`][mdn-int32array] sign array of length N.
+-   **N**: number of columns.
+-   **v**: `v`.
+-   **strideV**: stride length for `V`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **ISGN**: input array `ISGN`.
 -   **strideISGN**: stride length for `ISGN`.
--   **offsetISGN**: starting index for `ISGN` (ndarray only).
--   **EST**: [`Float64Array`][mdn-float64array] single-element array. On exit, `EST[0]` holds the estimated 1-norm.
--   **KASE**: [`Int32Array`][mdn-int32array] single-element array. Set `KASE[0] = 0` on the first call. On return, `KASE[0] = 1` means compute `x = A*x`; `KASE[0] = 2` means compute `x = A^T*x`; `KASE[0] = 0` means the estimate is complete.
+-   **EST**: input array `EST`.
+-   **KASE**: input array `KASE`.
+
+#### dlacon.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, EST, KASE )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetV**: starting index for `V`.
+-   **offsetX**: starting index for `X`.
+-   **offsetISGN**: starting index for `ISGN`.
 
 </section>
 
@@ -67,9 +76,7 @@ The function has the following parameters:
 
 ## Notes
 
--   This routine uses a reverse communication interface. The caller must repeatedly call `dlacon` in a loop, performing the matrix-vector product indicated by `KASE[0]` between calls.
--   Unlike [`dlacn2`][@stdlib/lapack/base/dlacn2], this routine uses module-level persistent state (equivalent to Fortran `SAVE`) instead of an `ISAVE` array. This means the routine is **not reentrant** -- only one norm estimation can be in progress at a time.
--   This is the older interface; prefer [`dlacn2`][@stdlib/lapack/base/dlacn2] for new code.
+-   `dlacon()` corresponds to the [LAPACK][lapack] level routine [`dlacon`][lapack-dlacon].
 
 </section>
 
@@ -79,27 +86,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dlacon = require( '@stdlib/lapack/base/dlacon' );
 
-// Estimate 1-norm of a 3x3 identity matrix:
-var n = 3;
-var v = new Float64Array( n );
-var x = new Float64Array( n );
-var ISGN = new Int32Array( n );
-var EST = new Float64Array( 1 );
-var KASE = new Int32Array( 1 );
-
-KASE[ 0 ] = 0;
-while ( true ) {
-    dlacon.ndarray( n, v, 1, 0, x, 1, 0, ISGN, 1, 0, EST, KASE );
-    if ( KASE[ 0 ] === 0 ) break;
-    // Identity: A*x = x, so x is unchanged
-}
-console.log( 'Estimated 1-norm:', EST[ 0 ] );
-// => 'Estimated 1-norm: 1'
+// TODO: Add examples
 ```
 
 </section>
@@ -118,9 +110,13 @@ console.log( 'Estimated 1-norm:', EST[ 0 ] );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlacon]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlacon.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
-[@stdlib/lapack/base/dlacn2]: https://github.com/stdlib-js/stdlib
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

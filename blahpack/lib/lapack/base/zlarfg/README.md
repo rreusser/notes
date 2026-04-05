@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlarfg
 
-> Generate a complex Householder reflector
+> Generate a complex elementary reflector H of order N, such that.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
 ```
 
-#### zlarfg.ndarray( N, alpha, x, stride, offset, tau )
+#### zlarfg( N, alpha, offsetAlpha, x, strideX, tau, offsetTau )
 
-Generate a complex Householder reflector
+Generate a complex elementary reflector H of order N, such that.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -44,10 +44,25 @@ The function has the following parameters:
 
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
--   **tau**: tau.
+-   **offsetAlpha**: starting index for `Alpha`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **tau**: `tau`.
+-   **offsetTau**: starting index for `Tau`.
+
+#### zlarfg.ndarray( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
+
+Generate a complex elementary reflector H of order N, such that, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -57,7 +72,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlarfg()` corresponds to the [LAPACK][lapack] level routine [`zlarfg`][lapack-zlarfg].
 
 </section>
 
@@ -67,7 +82,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +106,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlarfg]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlarfg.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

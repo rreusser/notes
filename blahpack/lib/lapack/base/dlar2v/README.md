@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlar2v
 
-> Apply a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices.
+> Applies a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlar2v = require( '@stdlib/lapack/base/dlar2v' );
 ```
 
-#### dlar2v.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, z, strideZ, offsetZ, c, strideC, offsetC, s, strideS, offsetS )
+#### dlar2v( N, x, y, z, strideXYZ, c, s, strideCS )
 
-Apply a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices.
+Applies a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,21 +43,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **y**: input array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **z**: input array.
--   **strideZ**: stride length for `z`.
--   **offsetZ**: starting index for `z`.
--   **c**: input array.
--   **strideC**: stride length for `c`.
--   **offsetC**: starting index for `c`.
--   **s**: output array.
--   **strideS**: stride length for `s`.
--   **offsetS**: starting index for `s`.
+-   **x**: `x`.
+-   **y**: `y`.
+-   **z**: `z`.
+-   **strideXYZ**: stride length for `XYZ`.
+-   **c**: `c`.
+-   **s**: `s`.
+-   **strideCS**: stride length for `CS`.
+
+#### dlar2v.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, z, strideZ, offsetZ, c, strideC, offsetC, s, strideS, offsetS )
+
+Applies a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideX**: stride length for `X`.
+-   **offsetX**: starting index for `X`.
+-   **strideY**: stride length for `Y`.
+-   **offsetY**: starting index for `Y`.
+-   **strideZ**: stride length for `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **strideC**: stride length for `C`.
+-   **offsetC**: starting index for `C`.
+-   **strideS**: stride length for `S`.
+-   **offsetS**: starting index for `S`.
 
 </section>
 
@@ -47,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlar2v()` corresponds to the [LAPACK][lapack] level routine [`dlar2v`][lapack-dlar2v].
 
 </section>
 
@@ -57,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlar2v = require( '@stdlib/lapack/base/dlar2v' );
+
 // TODO: Add examples
 ```
 
@@ -77,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlar2v]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlar2v.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlarscl2
 
-> Perform reciprocal diagonal scaling on a complex matrix.
+> Performs reciprocal diagonal scaling on a complex matrix: `X = D^{-1} * X` where `D` is a real diagonal matrix stored as a vector.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlarscl2 = require( '@stdlib/lapack/base/zlarscl2' );
 ```
 
-#### zlarscl2.ndarray( M, N, d, strideD, offsetD, X, strideX1, strideX2, offsetX )
+#### zlarscl2( order, M, N, d, X, LDX )
 
-Perform reciprocal diagonal scaling on a complex matrix.
+Performs reciprocal diagonal scaling on a complex matrix: `X = D^{-1} * X` where `D` is a real diagonal matrix stored as a vector.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,14 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **X**: output matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **d**: `d`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+
+#### zlarscl2.ndarray( M, N, d, strideD, offsetD, X, strideX1, strideX2, offsetX )
+
+Performs reciprocal diagonal scaling on a complex matrix: `X = D^{-1} * X` where `D` is a real diagonal matrix stored as a vector, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideD**: stride length for `D`.
+-   **offsetD**: starting index for `D`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
 
 </section>
@@ -40,7 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlarscl2()` corresponds to the [LAPACK][lapack] level routine [`zlarscl2`][lapack-zlarscl2].
 
 </section>
 
@@ -50,7 +85,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlarscl2 = require( '@stdlib/lapack/base/zlarscl2' );
+
 // TODO: Add examples
 ```
 
@@ -70,9 +109,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlarscl2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlarscl2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

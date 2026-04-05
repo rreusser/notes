@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dspgst
 
-> Reduce a real symmetric-definite generalized eigenproblem to standard form, using packed storage.
+> Reduces a real symmetric-definite generalized eigenproblem to standard form using packed storage.
 
 <section class="usage">
 
@@ -12,38 +32,30 @@ var dspgst = require( '@stdlib/lapack/base/dspgst' );
 
 #### dspgst( itype, uplo, N, AP, BP )
 
-Reduces a real symmetric-definite generalized eigenproblem to standard form, using packed storage.
+Reduces a real symmetric-definite generalized eigenproblem to standard form using packed storage.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var BP = new Float64Array( [ 2.0, 0.0, 2.0, 0.0, 0.0, 1.5 ] ); // already Cholesky-factored
-
-var info = dspgst( 1, 'upper', 3, AP, BP );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **itype**: problem type (1, 2, or 3).
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of matrices A and B.
--   **AP**: symmetric matrix A in packed storage ([`Float64Array`][mdn-float64array]).
--   **BP**: triangular factor from Cholesky factorization of B in packed storage ([`Float64Array`][mdn-float64array]).
+-   **itype**: `itype`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **BP**: input array `BP`.
 
 #### dspgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
 
-Reduces a real symmetric-definite generalized eigenproblem to standard form, using packed storage and alternative indexing semantics.
+Reduces a real symmetric-definite generalized eigenproblem to standard form using packed storage, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 0.0, 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var BP = new Float64Array( [ 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 1.5 ] );
-
-var info = dspgst.ndarray( 1, 'upper', 3, AP, 1, 1, BP, 1, 1 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
@@ -61,10 +73,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   `AP` and `BP` are stored in packed format with `N*(N+1)/2` elements.
--   `BP` must contain the triangular factor from a Cholesky factorization of B, as computed by `dpptrf`.
--   For `itype = 1`: A is overwritten by `inv(U^T)*A*inv(U)` (upper) or `inv(L)*A*inv(L^T)` (lower).
--   For `itype = 2` or `3`: A is overwritten by `U*A*U^T` (upper) or `L^T*A*L` (lower).
+-   `dspgst()` corresponds to the [LAPACK][lapack] level routine [`dspgst`][lapack-dspgst].
 
 </section>
 
@@ -74,21 +83,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var dpptrf = require( '@stdlib/lapack/base/dpptrf' );
 var dspgst = require( '@stdlib/lapack/base/dspgst' );
 
-// 3x3 SPD matrix B in upper packed format:
-var BP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 1.0, 3.0 ] );
-dpptrf( 'upper', 3, BP );
-
-// 3x3 symmetric matrix A in upper packed format:
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-
-var info = dspgst( 1, 'upper', 3, AP, BP );
-console.log( 'info:', info );
-console.log( 'AP:', AP );
+// TODO: Add examples
 ```
 
 </section>
@@ -107,7 +107,13 @@ console.log( 'AP:', AP );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dspgst]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dspgst.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

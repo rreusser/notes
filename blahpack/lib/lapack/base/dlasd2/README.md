@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlasd2
 
-> Merge two sets of singular values in bidiagonal SVD divide and conquer
+> Merge two sets of singular values in bidiagonal SVD divide and conquer.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlasd2 = require( '@stdlib/lapack/base/dlasd2' );
 ```
 
-#### dlasd2.ndarray( nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, alpha, beta, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, DSIGMA, strideDSIGMA, offsetDSIGMA, U2, strideU21, strideU22, offsetU2, VT2, strideVT21, strideVT22, offsetVT2, IDXP, strideIDXP, offsetIDXP, IDX, strideIDX, offsetIDX, IDXC, strideIDXC, offsetIDXC, IDXQ, strideIDXQ, offsetIDXQ, COLTYP, strideCOLTYP, offsetCOLTYP )
+#### dlasd2( order, NL, NR, SQRE, K, D, Z, ALPHA, BETA, U, LDU, VT, LDVT, DSIGMA, U2, LDU2, VT2, LDVT2, IDXP, IDX, IDXC, IDXQ, COLTYP )
 
-Merge two sets of singular values in bidiagonal SVD divide and conquer
+Merge two sets of singular values in bidiagonal SVD divide and conquer.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,50 +42,75 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **nl**: nl.
--   **nr**: nr.
--   **sqre**: sqre.
--   **K**: number of superdiagonals.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **z**: input array.
--   **strideZ**: stride length for `z`.
--   **offsetZ**: starting index for `z`.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **NL**: input array `NL`.
+-   **NR**: input array `NR`.
+-   **SQRE**: input array `SQRE`.
+-   **K**: inner dimension.
+-   **D**: input array `D`.
+-   **Z**: input array `Z`.
+-   **ALPHA**: input array `ALPHA`.
+-   **BETA**: input array `BETA`.
+-   **U**: input array `U`.
+-   **LDU**: leading dimension of `U`.
+-   **VT**: input array `VT`.
+-   **LDVT**: leading dimension of `VT`.
+-   **DSIGMA**: input array `DSIGMA`.
+-   **U2**: input array `U2`.
+-   **LDU2**: input array `LDU2`.
+-   **VT2**: input array `VT2`.
+-   **LDVT2**: input array `LDVT2`.
+-   **IDXP**: input array `IDXP`.
+-   **IDX**: input array `IDX`.
+-   **IDXC**: input array `IDXC`.
+-   **IDXQ**: input array `IDXQ`.
+-   **COLTYP**: input array `COLTYP`.
+
+#### dlasd2.ndarray( nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, alpha, beta, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, DSIGMA, strideDSIGMA, offsetDSIGMA, U2, strideU21, strideU22, offsetU2, VT2, strideVT21, strideVT22, offsetVT2, IDXP, strideIDXP, offsetIDXP, IDX, strideIDX, offsetIDX, IDXC, strideIDXC, offsetIDXC, IDXQ, strideIDXQ, offsetIDXQ, COLTYP, strideCOLTYP, offsetCOLTYP )
+
+Merge two sets of singular values in bidiagonal SVD divide and conquer, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **nl**: `nl`.
+-   **nr**: `nr`.
+-   **sqre**: `sqre`.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **offsetD**: starting index for `D`.
+-   **z**: `z`.
+-   **strideZ**: stride length for `Z`.
+-   **offsetZ**: starting index for `Z`.
 -   **alpha**: scalar constant.
 -   **beta**: scalar constant.
--   **U**: input matrix.
--   **strideU1**: stride of the first dimension of `U`.
--   **strideU2**: stride of the second dimension of `U`.
+-   **strideU1**: stride of dimension 1 of `U`.
+-   **strideU2**: stride of dimension 2 of `U`.
 -   **offsetU**: starting index for `U`.
--   **VT**: input matrix.
--   **strideVT1**: stride of the first dimension of `VT`.
--   **strideVT2**: stride of the second dimension of `VT`.
+-   **strideVT1**: stride of dimension 1 of `VT`.
+-   **strideVT2**: stride of dimension 2 of `VT`.
 -   **offsetVT**: starting index for `VT`.
--   **DSIGMA**: input array.
 -   **strideDSIGMA**: stride length for `DSIGMA`.
 -   **offsetDSIGMA**: starting index for `DSIGMA`.
--   **U2**: input matrix.
--   **strideU21**: stride of the first dimension of `U2`.
--   **strideU22**: stride of the second dimension of `U2`.
+-   **strideU21**: stride of dimension 1 of `U2`.
+-   **strideU22**: stride of dimension 2 of `U2`.
 -   **offsetU2**: starting index for `U2`.
--   **VT2**: input matrix.
--   **strideVT21**: stride of the first dimension of `VT2`.
--   **strideVT22**: stride of the second dimension of `VT2`.
+-   **strideVT21**: stride of dimension 1 of `VT2`.
+-   **strideVT22**: stride of dimension 2 of `VT2`.
 -   **offsetVT2**: starting index for `VT2`.
--   **IDXP**: input array.
 -   **strideIDXP**: stride length for `IDXP`.
 -   **offsetIDXP**: starting index for `IDXP`.
--   **IDX**: input array.
 -   **strideIDX**: stride length for `IDX`.
 -   **offsetIDX**: starting index for `IDX`.
--   **IDXC**: input array.
 -   **strideIDXC**: stride length for `IDXC`.
 -   **offsetIDXC**: starting index for `IDXC`.
--   **IDXQ**: input array.
 -   **strideIDXQ**: stride length for `IDXQ`.
 -   **offsetIDXQ**: starting index for `IDXQ`.
--   **COLTYP**: output array.
 -   **strideCOLTYP**: stride length for `COLTYP`.
 -   **offsetCOLTYP**: starting index for `COLTYP`.
 
@@ -77,7 +122,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlasd2()` corresponds to the [LAPACK][lapack] level routine [`dlasd2`][lapack-dlasd2].
 
 </section>
 
@@ -87,7 +132,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlasd2 = require( '@stdlib/lapack/base/dlasd2' );
+
 // TODO: Add examples
 ```
 
@@ -107,9 +156,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlasd2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlasd2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

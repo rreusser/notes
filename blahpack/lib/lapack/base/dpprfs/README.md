@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dpprfs
 
 > Improves the computed solution to a real system A * X = B where A is symmetric positive definite in packed storage and provides error bounds.
@@ -10,57 +30,60 @@
 var dpprfs = require( '@stdlib/lapack/base/dpprfs' );
 ```
 
-#### dpprfs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dpprfs( uplo, N, nrhs, AP, AFP, B, LDB, X, LDX, FERR, BERR, WORK, IWORK )
 
 Improves the computed solution to a real system A * X = B where A is symmetric positive definite in packed storage and provides error bounds.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 3x3 SPD matrix in upper packed storage: [ 4 2 1; 2 5 3; 1 3 6 ]
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var AFP = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.0 ] ); // factored
-var B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-var X = new Float64Array( [ 0.194, 0.0597, 0.1045 ] ); // initial solve
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var info = dpprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether `'upper'` or `'lower'` triangle is stored.
--   **N**: order of matrix `A`.
--   **nrhs**: number of right-hand side columns.
--   **AP**: original symmetric matrix in packed storage.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **nrhs**: number of right-hand sides.
+-   **AP**: input array `AP`.
+-   **AFP**: input array `AFP`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
+-   **BERR**: input array `BERR`.
+-   **WORK**: input array `WORK`.
+-   **IWORK**: input array `IWORK`.
+
+#### dpprfs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+Improves the computed solution to a real system A * X = B where A is symmetric positive definite in packed storage and provides error bounds, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **AFP**: Cholesky-factored matrix in packed storage (from `dpptrf`).
 -   **strideAFP**: stride length for `AFP`.
 -   **offsetAFP**: starting index for `AFP`.
--   **B**: right-hand side matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **X**: solution matrix (improved on exit).
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **FERR**: output forward error bounds (length `nrhs`).
 -   **strideFERR**: stride length for `FERR`.
 -   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output backward error bounds (length `nrhs`).
 -   **strideBERR**: stride length for `BERR`.
 -   **offsetBERR**: starting index for `BERR`.
--   **WORK**: workspace array (length >= `3*N`).
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace array (length >= `N`).
 -   **strideIWORK**: stride length for `IWORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
@@ -72,9 +95,7 @@ The function has the following parameters:
 
 ## Notes
 
--   `AP` and `AFP` are packed symmetric matrices of length `N*(N+1)/2`.
--   `WORK` must have length at least `3*N` and `IWORK` at least `N`.
--   On exit, `FERR` contains componentwise forward error bounds and `BERR` contains componentwise backward error bounds for each right-hand side.
+-   `dpprfs()` corresponds to the [LAPACK][lapack] level routine [`dpprfs`][lapack-dpprfs].
 
 </section>
 
@@ -84,25 +105,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dpprfs = require( '@stdlib/lapack/base/dpprfs' );
 
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var AFP = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.0 ] );
-var B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-var X = new Float64Array( [ 0.194, 0.0597, 0.1045 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var info = dpprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-console.log( 'info:', info );
-console.log( 'X:', X );
-console.log( 'FERR:', FERR );
-console.log( 'BERR:', BERR );
+// TODO: Add examples
 ```
 
 </section>
@@ -121,9 +129,12 @@ console.log( 'BERR:', BERR );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dpprfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dpprfs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

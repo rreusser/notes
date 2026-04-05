@@ -20,7 +20,7 @@ limitations under the License.
 
 # daxpy
 
-> Multiply a vector x by a constant and add the result to y.
+> Multiplies a vector `x` by a constant `alpha` and adds the result to `y`.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var daxpy = require( '@stdlib/blas/base/daxpy' );
 ```
 
-#### daxpy.ndarray( N, alpha, x, strideX, offsetX, y, strideY, offsetY )
+#### daxpy( N, alpha, x, strideX, y, strideY )
 
-Multiply a vector x by a constant and add the result to y.
+Multiplies a vector `x` by a constant `alpha` and adds the result to `y`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -44,12 +44,25 @@ The function has the following parameters:
 
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **y**: output array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+
+#### daxpy.ndarray( N, alpha, x, strideX, offsetX, y, strideY, offsetY )
+
+Multiplies a vector `x` by a constant `alpha` and adds the result to `y`, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -59,7 +72,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `daxpy()` corresponds to the [LAPACK][lapack] level routine [`daxpy`][lapack-daxpy].
 
 </section>
 
@@ -69,7 +82,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var daxpy = require( '@stdlib/blas/base/daxpy' );
+
 // TODO: Add examples
 ```
 
@@ -89,9 +106,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-daxpy]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__daxpy.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

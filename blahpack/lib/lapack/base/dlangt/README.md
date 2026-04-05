@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlangt
 
-> Compute the norm of a general tridiagonal matrix
+> Computes the norm of a real general tridiagonal matrix A.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlangt = require( '@stdlib/lapack/base/dlangt' );
 ```
 
-#### dlangt.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU )
+#### dlangt( norm, N, DL, strideDL, d, strideD, DU, strideDU )
 
-Compute the norm of a general tridiagonal matrix
+Computes the norm of a real general tridiagonal matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,16 +42,29 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **norm**: specifies the operation type.
+-   **norm**: `norm`.
 -   **N**: number of columns.
--   **DL**: input array.
+-   **DL**: input array `DL`.
 -   **strideDL**: stride length for `DL`.
--   **offsetDL**: starting index for `DL`.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **DU**: output array.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **DU**: input array `DU`.
 -   **strideDU**: stride length for `DU`.
+
+#### dlangt.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU )
+
+Computes the norm of a real general tridiagonal matrix A, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetDL**: starting index for `DL`.
+-   **offsetD**: starting index for `D`.
 -   **offsetDU**: starting index for `DU`.
 
 </section>
@@ -42,7 +75,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlangt()` corresponds to the [LAPACK][lapack] level routine [`dlangt`][lapack-dlangt].
 
 </section>
 
@@ -52,7 +85,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlangt = require( '@stdlib/lapack/base/dlangt' );
+
 // TODO: Add examples
 ```
 
@@ -72,9 +109,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlangt]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlangt.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

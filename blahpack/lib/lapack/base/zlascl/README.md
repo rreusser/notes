@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlascl
 
-> Multiply a matrix by a real scalar CTO/CFROM
+> Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zlascl = require( '@stdlib/lapack/base/zlascl' );
 ```
 
-#### zlascl.ndarray( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA )
+#### zlascl( order, type, kl, ku, cfrom, cto, M, N, A, LDA )
 
-Multiply a matrix by a real scalar CTO/CFROM
+Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,16 +42,31 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **type**: specifies the operation type.
--   **kl**: kl.
--   **ku**: ku.
--   **cfrom**: cfrom.
--   **cto**: cto.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **type**: `type`.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **cfrom**: `cfrom`.
+-   **cto**: `cto`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+
+#### zlascl.ndarray( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA )
+
+Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
 
 </section>
@@ -62,7 +77,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlascl()` corresponds to the [LAPACK][lapack] level routine [`zlascl`][lapack-zlascl].
 
 </section>
 
@@ -72,7 +87,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlascl = require( '@stdlib/lapack/base/zlascl' );
+
 // TODO: Add examples
 ```
 
@@ -92,9 +111,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlascl]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlascl.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

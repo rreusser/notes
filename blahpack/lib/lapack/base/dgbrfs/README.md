@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgbrfs
 
-> Improves the computed solution to a real system A \* X = B where A is a general band matrix and provides error bounds.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,66 +30,70 @@
 var dgbrfs = require( '@stdlib/lapack/base/dgbrfs' );
 ```
 
-#### dgbrfs.ndarray( trans, N, kl, ku, nrhs, AB, sAB1, sAB2, oAB, AFB, sAFB1, sAFB2, oAFB, IPIV, sIPIV, oIPIV, B, sB1, sB2, oB, X, sX1, sX2, oX, FERR, sFERR, oFERR, BERR, sBERR, oBERR, WORK, sWORK, oWORK, IWORK, sIWORK, oIWORK )
+#### dgbrfs( trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, B, LDB, X, LDX, FERR, BERR, WORK, IWORK )
 
-Improves the computed solution to a real system of linear equations and provides error bounds and backward error estimates for the solution.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 1x1 system: 3*x = 5
-var AB = new Float64Array( [ 3.0 ] );
-var AFB = new Float64Array( [ 3.0 ] );
-var IPIV = new Int32Array( [ 0 ] );
-var B = new Float64Array( [ 5.0 ] );
-var X = new Float64Array( [ 5.0 / 3.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 3 );
-var IWORK = new Int32Array( 1 );
-
-var info = dgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, AB, 1, 1, 0, AFB, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **trans**: specifies the transpose operation: `'no-transpose'` or `'transpose'`.
--   **N**: order of the matrix A.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **N**: number of columns.
 -   **kl**: number of subdiagonals.
 -   **ku**: number of superdiagonals.
--   **nrhs**: number of right-hand side columns.
--   **AB**: original band matrix in band storage (`Float64Array`).
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input array `AFB`.
+-   **LDAFB**: leading dimension of `AFB`.
+-   **IPIV**: input array `IPIV`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
+-   **BERR**: input array `BERR`.
+-   **WORK**: input array `WORK`.
+-   **IWORK**: input array `IWORK`.
+
+#### dgbrfs.ndarray( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **AFB**: LU-factored band matrix from `dgbtrf` (`Float64Array`).
--   **strideAFB1**: stride of the first dimension of `AFB`.
--   **strideAFB2**: stride of the second dimension of `AFB`.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
 -   **offsetAFB**: starting index for `AFB`.
--   **IPIV**: pivot indices from `dgbtrf` (0-based, `Int32Array`).
--   **strideIPIV**: stride for `IPIV`.
+-   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **B**: right-hand side matrix (`Float64Array`).
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **X**: solution matrix, improved on exit (`Float64Array`).
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **FERR**: output forward error bounds (`Float64Array`).
--   **strideFERR**: stride for `FERR`.
+-   **strideFERR**: stride length for `FERR`.
 -   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output backward error bounds (`Float64Array`).
--   **strideBERR**: stride for `BERR`.
+-   **strideBERR**: stride length for `BERR`.
 -   **offsetBERR**: starting index for `BERR`.
--   **WORK**: workspace of length >= 3\*N (`Float64Array`).
--   **strideWORK**: stride for `WORK`.
+-   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace of length >= N (`Int32Array`).
--   **strideIWORK**: stride for `IWORK`.
+-   **strideIWORK**: stride length for `IWORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -80,9 +104,7 @@ The function has the following parameters:
 
 ## Notes
 
--   IPIV must contain 0-based pivot indices (as produced by `dgbtrf`).
--   AB uses standard BLAS band storage with `KL+KU+1` rows, diagonal at row `KU` (0-based).
--   AFB uses the factored band storage from `dgbtrf` with `2*KL+KU+1` rows.
+-   `dgbrfs()` corresponds to the [LAPACK][lapack] level routine [`dgbrfs`][lapack-dgbrfs].
 
 </section>
 
@@ -92,24 +114,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dgbrfs = require( '@stdlib/lapack/base/dgbrfs' );
 
-var AB = new Float64Array( [ 3.0 ] );
-var AFB = new Float64Array( [ 3.0 ] );
-var IPIV = new Int32Array( [ 0 ] );
-var B = new Float64Array( [ 5.0 ] );
-var X = new Float64Array( [ 5.0 / 3.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 3 );
-var IWORK = new Int32Array( 1 );
-
-var info = dgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, AB, 1, 1, 0, AFB, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-console.log( info );
-// => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -127,6 +137,14 @@ console.log( info );
 <!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
 
 <section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgbrfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgbrfs.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

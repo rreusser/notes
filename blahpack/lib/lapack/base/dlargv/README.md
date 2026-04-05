@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlargv
 
-> Generate a vector of real plane rotations.
+> Generates a vector of real plane rotations (Givens rotations).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlargv = require( '@stdlib/lapack/base/dlargv' );
 ```
 
-#### dlargv.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC )
+#### dlargv( N, x, strideX, y, strideY, c, strideC )
 
-Generate a vector of real plane rotations.
+Generates a vector of real plane rotations (Givens rotations).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,15 +43,28 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **y**: input array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **c**: output array.
--   **strideC**: stride length for `c`.
--   **offsetC**: starting index for `c`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
+
+#### dlargv.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC )
+
+Generates a vector of real plane rotations (Givens rotations), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
+-   **offsetC**: starting index for `C`.
 
 </section>
 
@@ -41,7 +74,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlargv()` corresponds to the [LAPACK][lapack] level routine [`dlargv`][lapack-dlargv].
 
 </section>
 
@@ -51,7 +84,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlargv = require( '@stdlib/lapack/base/dlargv' );
+
 // TODO: Add examples
 ```
 
@@ -71,9 +108,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlargv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlargv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

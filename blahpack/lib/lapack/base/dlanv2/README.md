@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlanv2
 
-> Compute the Schur factorization of a real 2-by-2 nonsymmetric matrix in standard form.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,35 +32,37 @@ var dlanv2 = require( '@stdlib/lapack/base/dlanv2' );
 
 #### dlanv2( a, b, c, d )
 
-Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in standard form:
-
-```text
-[ A  B ] = [ CS -SN ] [ AA  BB ] [ CS  SN ]
-[ C  D ]   [ SN  CS ] [ CC  DD ] [-SN  CS ]
-```
-
-where either
-
-1. `CC = 0` so that `AA` and `DD` are real eigenvalues of the matrix, or
-2. `AA = DD` and `BB*CC < 0`, so that `AA +/- sqrt(BB*CC)` are complex conjugate eigenvalues.
+@license Apache-2.0.
 
 ```javascript
-var result = dlanv2( 4.0, 1.0, 2.0, 3.0 );
-// returns {...}
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
 ```
 
-The function returns an object with the following fields:
+The function has the following parameters:
 
--   **a**: the (1,1) element of the Schur form.
--   **b**: the (1,2) element of the Schur form.
--   **c**: the (2,1) element of the Schur form.
--   **d**: the (2,2) element of the Schur form.
--   **rt1r**: real part of the first eigenvalue.
--   **rt1i**: imaginary part of the first eigenvalue.
--   **rt2r**: real part of the second eigenvalue.
--   **rt2i**: imaginary part of the second eigenvalue.
--   **cs**: cosine of the rotation matrix.
--   **sn**: sine of the rotation matrix.
+-   **a**: `a`.
+-   **b**: `b`.
+-   **c**: `c`.
+-   **d**: `d`.
+
+#### dlanv2.ndarray( A, B, C, D )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **A**: input array `A`.
+-   **B**: input array `B`.
+-   **C**: input array `C`.
+-   **D**: input array `D`.
 
 </section>
 
@@ -50,8 +72,7 @@ The function returns an object with the following fields:
 
 ## Notes
 
--   When eigenvalues are complex conjugate pairs, `rt1i > 0`.
--   The rotation matrix `Q = [ CS, -SN; SN, CS ]` is orthogonal and satisfies `Q^T * [A B; C D] * Q = [AA BB; CC DD]`.
+-   `dlanv2()` corresponds to the [LAPACK][lapack] level routine [`dlanv2`][lapack-dlanv2].
 
 </section>
 
@@ -61,16 +82,12 @@ The function returns an object with the following fields:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
 var dlanv2 = require( '@stdlib/lapack/base/dlanv2' );
 
-// Real eigenvalue case:
-var result = dlanv2( 4.0, 1.0, 2.0, 3.0 );
-console.log( result );
-
-// Complex eigenvalue case:
-result = dlanv2( 1.0, -5.0, 1.0, 1.0 );
-console.log( result );
+// TODO: Add examples
 ```
 
 </section>
@@ -88,6 +105,14 @@ console.log( result );
 <!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
 
 <section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlanv2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlanv2.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

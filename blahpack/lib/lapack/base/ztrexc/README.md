@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztrexc
 
-> Reorder Schur factorization of a complex matrix
+> Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so that.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var ztrexc = require( '@stdlib/lapack/base/ztrexc' );
 ```
 
-#### ztrexc.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst )
+#### ztrexc( compq, N, T, LDT, Q, LDQ, ifst, ilst )
 
-Reorder Schur factorization of a complex matrix
+Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so that.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,18 +42,33 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **compq**: specifies the operation type.
+-   **compq**: `compq`.
 -   **N**: number of columns.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
+-   **T**: input array `T`.
+-   **LDT**: leading dimension of `T`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **ifst**: `ifst`.
+-   **ilst**: `ilst`.
+
+#### ztrexc.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst )
+
+Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so that, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
 -   **offsetT**: starting index for `T`.
--   **Q**: output matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
 -   **offsetQ**: starting index for `Q`.
--   **ifst**: ifst.
--   **ilst**: ilst.
 
 </section>
 
@@ -43,7 +78,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztrexc()` corresponds to the [LAPACK][lapack] level routine [`ztrexc`][lapack-ztrexc].
 
 </section>
 
@@ -53,7 +88,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztrexc = require( '@stdlib/lapack/base/ztrexc' );
+
 // TODO: Add examples
 ```
 
@@ -73,9 +112,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztrexc]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztrexc.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

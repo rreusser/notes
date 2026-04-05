@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhegv
 
-> Computes all eigenvalues and optionally eigenvectors of a complex generalized Hermitian-definite eigenproblem
+> Computes all the eigenvalues, and optionally, the eigenvectors of a complex.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zhegv = require( '@stdlib/lapack/base/zhegv' );
 ```
 
-#### zhegv.ndarray( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+#### zhegv( itype, jobz, uplo, N, A, LDA, B, LDB, w, strideW, WORK, strideWORK, lwork, RWORK, strideRWORK )
 
-Computes all eigenvalues and optionally eigenvectors of a complex generalized Hermitian-definite eigenproblem
+Computes all the eigenvalues, and optionally, the eigenvectors of a complex.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,27 +42,42 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **itype**: itype.
--   **jobz**: specifies the operation type.
--   **uplo**: specifies the operation type.
+-   **itype**: `itype`.
+-   **jobz**: `jobz`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **w**: input array.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **WORK**: input array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **RWORK**: output array.
+-   **lwork**: `lwork`.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
+
+#### zhegv.ndarray( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+
+Computes all the eigenvalues, and optionally, the eigenvectors of a complex, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **offsetW**: starting index for `W`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -53,7 +88,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zhegv()` corresponds to the [LAPACK][lapack] level routine [`zhegv`][lapack-zhegv].
 
 </section>
 
@@ -63,7 +98,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zhegv = require( '@stdlib/lapack/base/zhegv' );
+
 // TODO: Add examples
 ```
 
@@ -83,9 +122,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhegv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhegv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhemv
 
-> Perform Hermitian matrix-vector multiplication
+> Perform Hermitian matrix-vector multiplication:.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zhemv = require( '@stdlib/blas/base/zhemv' );
 ```
 
-#### zhemv.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+#### zhemv( order, uplo, N, alpha, A, LDA, x, strideX, beta, y, strideY )
 
-Perform Hermitian matrix-vector multiplication
+Perform Hermitian matrix-vector multiplication:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,20 +42,35 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
 -   **beta**: scalar constant.
--   **y**: output array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+
+#### zhemv.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+
+Perform Hermitian matrix-vector multiplication:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -45,7 +80,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zhemv()` corresponds to the [LAPACK][lapack] level routine [`zhemv`][lapack-zhemv].
 
 </section>
 
@@ -55,7 +90,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zhemv = require( '@stdlib/blas/base/zhemv' );
+
 // TODO: Add examples
 ```
 
@@ -75,9 +114,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhemv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhemv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

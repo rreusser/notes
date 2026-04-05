@@ -18,7 +18,21 @@
 
 'use strict';
 
-var zggbak = require( '@stdlib/lapack/base/zggbak' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zggbak = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zggbak );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var LSCALE = discreteUniform( N, -10, 10, opts );
+var RSCALE = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zggbak( 'row-major', 'both', 'left', N, N, N, LSCALE, 1, RSCALE, 1, N, V, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = zggbak.ndarray( 'both', 'left', N, N, N, LSCALE, 1, 0, RSCALE, 1, 0, N, V, N, 1, 0 );
+console.log( out );

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaexc
 
-> Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix
+> Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlaexc = require( '@stdlib/lapack/base/dlaexc' );
 ```
 
-#### dlaexc.ndarray( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK )
+#### dlaexc( wantq, N, T, LDT, Q, LDQ, j1, n1, n2, WORK, strideWORK )
 
-Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix
+Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,21 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **wantq**: wantq.
+-   **wantq**: `wantq`.
 -   **N**: number of columns.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
--   **offsetT**: starting index for `T`.
--   **Q**: input matrix.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
--   **offsetQ**: starting index for `Q`.
--   **j1**: j1.
--   **n1**: n1.
--   **n2**: n2.
--   **WORK**: output array.
+-   **T**: input array `T`.
+-   **LDT**: leading dimension of `T`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **j1**: `j1`.
+-   **n1**: `n1`.
+-   **n2**: `n2`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### dlaexc.ndarray( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK )
+
+Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -47,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlaexc()` corresponds to the [LAPACK][lapack] level routine [`dlaexc`][lapack-dlaexc].
 
 </section>
 
@@ -57,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlaexc = require( '@stdlib/lapack/base/dlaexc' );
+
 // TODO: Add examples
 ```
 
@@ -77,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaexc]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaexc.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpftrf
 
-> Computes the Cholesky factorization of a complex Hermitian positive definite matrix stored in Rectangular Full Packed (RFP) format.
+> Computes the Cholesky factorization of a complex Hermitian positive definite matrix in Rectangular Full Packed format.
 
 <section class="usage">
 
@@ -10,25 +30,35 @@
 var zpftrf = require( '@stdlib/lapack/base/zpftrf' );
 ```
 
-#### zpftrf.ndarray( transr, uplo, N, A, strideA, offsetA )
+#### zpftrf( transr, uplo, N, A )
 
-Computes the Cholesky factorization of a complex Hermitian positive definite matrix stored in RFP format.
+Computes the Cholesky factorization of a complex Hermitian positive definite matrix in Rectangular Full Packed format.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 HPD matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Complex128Array( [ 10, 0, 3, -1, 1, 2, 6, 0, 8, 0, 2, -1 ] );
-var info = zpftrf.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **transr**: specifies the RFP storage format (`'no-transpose'` or `'conjugate-transpose'`).
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix.
--   **A**: input/output [`Complex128Array`][@stdlib/array/complex128] in RFP format of length `N*(N+1)/2`.
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+
+#### zpftrf.ndarray( transr, uplo, N, A, strideA, offsetA )
+
+Computes the Cholesky factorization of a complex Hermitian positive definite matrix in Rectangular Full Packed format, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideA**: stride length for `A`.
 -   **offsetA**: starting index for `A`.
 
@@ -40,10 +70,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The RFP (Rectangular Full Packed) format stores a triangular matrix in a rectangular array, enabling efficient use of Level 3 BLAS operations.
--   The factorization has the form `A = U^H * U` if `uplo = 'upper'`, or `A = L * L^H` if `uplo = 'lower'`.
--   On successful exit (`info = 0`), the factor `U` or `L` overwrites the input in RFP format.
--   If `info = k > 0`, the leading minor of order `k` is not positive definite and the factorization could not be completed.
+-   `zpftrf()` corresponds to the [LAPACK][lapack] level routine [`zpftrf`][lapack-zpftrf].
 
 </section>
 
@@ -53,15 +80,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var zpftrf = require( '@stdlib/lapack/base/zpftrf' );
 
-// 3x3 HPD matrix in RFP format (TRANSR='no-transpose', UPLO='lower'):
-var A = new Complex128Array( [ 10, 0, 3, -1, 1, 2, 6, 0, 8, 0, 2, -1 ] );
-var info = zpftrf.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
-console.log( 'info:', info );
-// => info: 0
+// TODO: Add examples
 ```
 
 </section>
@@ -80,7 +104,13 @@ console.log( 'info:', info );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/array/complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpftrf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpftrf.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

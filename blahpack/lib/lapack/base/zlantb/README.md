@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlantb
 
 > Returns the norm of a complex triangular band matrix.
@@ -10,42 +30,43 @@
 var zlantb = require( '@stdlib/lapack/base/zlantb' );
 ```
 
-#### zlantb.ndarray( norm, uplo, diag, N, K, AB, strideAB1, strideAB2, offsetAB, WORK, strideWORK, offsetWORK )
+#### zlantb( norm, uplo, diag, N, K, AB, LDAB, WORK, strideWORK )
 
 Returns the norm of a complex triangular band matrix.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 upper triangular band matrix with K=1 superdiagonal:
-// Full matrix:
-//   [ (1+1i)  (2+2i)    0   ]
-//   [    0    (3+3i)  (4+4i) ]
-//   [    0       0    (5+5i) ]
-// Band storage (LDAB=2):
-//   Row 0:  0      (2+2i)  (4+4i)
-//   Row 1: (1+1i)  (3+3i)  (5+5i)
-var AB = new Complex128Array( [ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 ] );
-var WORK = new Float64Array( 3 );
-
-var v = zlantb.ndarray( 'one-norm', 'upper', 'non-unit', 3, 1, AB, 1, 2, 0, WORK, 1, 0 );
-// returns ~12.73
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: norm type (`'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`).
--   **uplo**: specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`).
--   **diag**: specifies whether the matrix has a unit diagonal (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix.
--   **K**: number of super-diagonals (if upper) or sub-diagonals (if lower).
--   **AB**: band matrix in band storage as a [`Complex128Array`][@stdlib/array/complex128].
--   **strideAB1**: stride of the first dimension of `AB` (in complex elements).
--   **strideAB2**: stride of the second dimension of `AB` (in complex elements).
--   **offsetAB**: starting index for `AB` (in complex elements).
--   **WORK**: workspace array (length >= N for `'inf-norm'`).
+-   **norm**: `norm`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **K**: inner dimension.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### zlantb.ndarray( norm, uplo, diag, N, K, AB, strideAB1, strideAB2, offsetAB, WORK, strideWORK, offsetWORK )
+
+Returns the norm of a complex triangular band matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -56,8 +77,7 @@ The function has the following parameters:
 
 ## Notes
 
--   Band storage format: for upper triangular, the diagonal is at band row K (0-indexed); for lower triangular, the diagonal is at band row 0.
--   WORK is only referenced when `norm` is `'inf-norm'`.
+-   `zlantb()` corresponds to the [LAPACK][lapack] level routine [`zlantb`][lapack-zlantb].
 
 </section>
 
@@ -67,17 +87,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlantb = require( '@stdlib/lapack/base/zlantb' );
 
-// 3x3 upper triangular band matrix with K=1 superdiagonal
-var AB = new Complex128Array( [ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 ] );
-var WORK = new Float64Array( 3 );
-
-var v = zlantb.ndarray( 'frobenius', 'upper', 'non-unit', 3, 1, AB, 1, 2, 0, WORK, 1, 0 );
-console.log( v );
+// TODO: Add examples
 ```
 
 </section>
@@ -96,9 +111,12 @@ console.log( v );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlantb]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlantb.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgeev
 
-> Computes eigenvalues and eigenvectors of a real general matrix
+> Computes the eigenvalues and, optionally, the left and/or right eigenvectors.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dgeev = require( '@stdlib/lapack/base/dgeev' );
 ```
 
-#### dgeev.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork )
+#### dgeev( jobvl, jobvr, N, A, LDA, WR, strideWR, WI, strideWI, VL, LDVL, VR, LDVR )
 
-Computes eigenvalues and eigenvectors of a real general matrix
+Computes the eigenvalues and, optionally, the left and/or right eigenvectors.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,31 +42,47 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **jobvl**: specifies the operation type.
--   **jobvr**: specifies the operation type.
+-   **jobvl**: `jobvl`.
+-   **jobvr**: `jobvr`.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **WR**: input array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **WR**: input array `WR`.
 -   **strideWR**: stride length for `WR`.
--   **offsetWR**: starting index for `WR`.
--   **WI**: input array.
+-   **WI**: input array `WI`.
 -   **strideWI**: stride length for `WI`.
+-   **VL**: input array `VL`.
+-   **LDVL**: leading dimension of `VL`.
+-   **VR**: input array `VR`.
+-   **LDVR**: leading dimension of `VR`.
+
+#### dgeev.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork )
+
+Computes the eigenvalues and, optionally, the left and/or right eigenvectors, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetWR**: starting index for `WR`.
 -   **offsetWI**: starting index for `WI`.
--   **VL**: input matrix.
--   **strideVL1**: stride of the first dimension of `VL`.
--   **strideVL2**: stride of the second dimension of `VL`.
+-   **strideVL1**: stride of dimension 1 of `VL`.
+-   **strideVL2**: stride of dimension 2 of `VL`.
 -   **offsetVL**: starting index for `VL`.
--   **VR**: input matrix.
--   **strideVR1**: stride of the first dimension of `VR`.
--   **strideVR2**: stride of the second dimension of `VR`.
+-   **strideVR1**: stride of dimension 1 of `VR`.
+-   **strideVR2**: stride of dimension 2 of `VR`.
 -   **offsetVR**: starting index for `VR`.
--   **WORK**: output array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
+-   **lwork**: `lwork`.
 
 </section>
 
@@ -56,7 +92,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dgeev()` corresponds to the [LAPACK][lapack] level routine [`dgeev`][lapack-dgeev].
 
 </section>
 
@@ -66,7 +102,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dgeev = require( '@stdlib/lapack/base/dgeev' );
+
 // TODO: Add examples
 ```
 
@@ -86,9 +126,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgeev]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgeev.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

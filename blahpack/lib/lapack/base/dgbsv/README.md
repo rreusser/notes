@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgbsv
 
-> Solve a banded system of linear equations
+> Solves a system of linear equations A * X = B where A is an N-by-N band.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dgbsv = require( '@stdlib/lapack/base/dgbsv' );
 ```
 
-#### dgbsv.ndarray( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+#### dgbsv( order, N, kl, ku, nrhs, AB, LDAB, IPIV, strideIPIV, B, LDB )
 
-Solve a banded system of linear equations
+Solves a system of linear equations A * X = B where A is an N-by-N band.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,20 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **N**: number of columns.
--   **kl**: kl.
--   **ku**: ku.
--   **nrhs**: nrhs.
--   **AB**: input matrix.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
--   **offsetAB**: starting index for `AB`.
--   **IPIV**: input array.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### dgbsv.ndarray( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+
+Solves a system of linear equations A * X = B where A is an N-by-N band, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **B**: output matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
 
 </section>
@@ -46,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dgbsv()` corresponds to the [LAPACK][lapack] level routine [`dgbsv`][lapack-dgbsv].
 
 </section>
 
@@ -56,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dgbsv = require( '@stdlib/lapack/base/dgbsv' );
+
 // TODO: Add examples
 ```
 
@@ -76,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgbsv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgbsv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

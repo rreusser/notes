@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgebak
 
-> Back-transforms eigenvectors after balancing by zgebal
+> Back-transforms eigenvectors after balancing by zgebal.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zgebak = require( '@stdlib/lapack/base/zgebak' );
 ```
 
-#### zgebak.ndarray( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, strideV1, strideV2, offsetV )
+#### zgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, M, V, LDV )
 
-Back-transforms eigenvectors after balancing by zgebal
+Back-transforms eigenvectors after balancing by zgebal.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,18 +42,32 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **job**: specifies the operation type.
--   **side**: specifies the operation type.
+-   **job**: `job`.
+-   **side**: specifies the side of the operation.
 -   **N**: number of columns.
--   **ilo**: ilo.
--   **ihi**: ihi.
--   **SCALE**: input array.
+-   **ilo**: `ilo`.
+-   **ihi**: `ihi`.
+-   **SCALE**: input array `SCALE`.
 -   **strideSCALE**: stride length for `SCALE`.
--   **offsetSCALE**: starting index for `SCALE`.
 -   **M**: number of rows.
--   **V**: output matrix.
--   **strideV1**: stride of the first dimension of `V`.
--   **strideV2**: stride of the second dimension of `V`.
+-   **V**: input array `V`.
+-   **LDV**: leading dimension of `V`.
+
+#### zgebak.ndarray( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, strideV1, strideV2, offsetV )
+
+Back-transforms eigenvectors after balancing by zgebal, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetSCALE**: starting index for `SCALE`.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
 -   **offsetV**: starting index for `V`.
 
 </section>
@@ -44,7 +78,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgebak()` corresponds to the [LAPACK][lapack] level routine [`zgebak`][lapack-zgebak].
 
 </section>
 
@@ -54,7 +88,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgebak = require( '@stdlib/lapack/base/zgebak' );
+
 // TODO: Add examples
 ```
 
@@ -74,9 +112,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgebak]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgebak.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

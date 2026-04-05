@@ -18,7 +18,20 @@
 
 'use strict';
 
-var dlacpy = require( '@stdlib/lapack/base/dlacpy' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var dlacpy = require( './../lib' );
 
-// TODO: Add example usage
-console.log( dlacpy );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+// Using the standard interface:
+var out = dlacpy( 'row-major', 'upper', N, N, A, N, B, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = dlacpy.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
+console.log( out );

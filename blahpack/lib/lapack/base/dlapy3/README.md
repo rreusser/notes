@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlapy3
 
-> Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+> Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
 ```
 
-#### dlapy3.ndarray( x, y, z )
+#### dlapy3( x, y, z )
 
-Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,9 +42,22 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **x**: x.
--   **y**: y.
--   **z**: z.
+-   **x**: `x`.
+-   **y**: `y`.
+-   **z**: `z`.
+
+#### dlapy3.ndarray( x, y, z )
+
+Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -54,7 +67,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlapy3()` corresponds to the [LAPACK][lapack] level routine [`dlapy3`][lapack-dlapy3].
 
 </section>
 
@@ -64,7 +77,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
+
 // TODO: Add examples
 ```
 
@@ -84,9 +101,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlapy3]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlapy3.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

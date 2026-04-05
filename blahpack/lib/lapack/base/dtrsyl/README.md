@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dtrsyl
 
-> Solves the real Sylvester matrix equation
+> Solves the real Sylvester matrix equation:.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dtrsyl = require( '@stdlib/lapack/base/dtrsyl' );
 ```
 
-#### dtrsyl.ndarray( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale )
+#### dtrsyl( trana, tranb, isgn, M, N, A, LDA, B, LDB, C, LDC, scale )
 
-Solves the real Sylvester matrix equation
+Solves the real Sylvester matrix equation:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,24 +42,40 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **trana**: specifies the operation type.
--   **tranb**: specifies the operation type.
--   **isgn**: isgn.
+-   **trana**: `trana`.
+-   **tranb**: `tranb`.
+-   **isgn**: `isgn`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **scale**: `scale`.
+
+#### dtrsyl.ndarray( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale )
+
+Solves the real Sylvester matrix equation:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **C**: output matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
 -   **offsetC**: starting index for `C`.
--   **scale**: scale.
 
 </section>
 
@@ -49,7 +85,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dtrsyl()` corresponds to the [LAPACK][lapack] level routine [`dtrsyl`][lapack-dtrsyl].
 
 </section>
 
@@ -59,7 +95,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dtrsyl = require( '@stdlib/lapack/base/dtrsyl' );
+
 // TODO: Add examples
 ```
 
@@ -79,9 +119,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dtrsyl]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dtrsyl.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

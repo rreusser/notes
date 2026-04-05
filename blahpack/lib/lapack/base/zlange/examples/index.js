@@ -18,7 +18,20 @@
 
 'use strict';
 
-var zlange = require( '@stdlib/lapack/base/zlange' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zlange = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlange );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zlange( 'row-major', '1', N, N, A, N, WORK, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlange.ndarray( '1', N, N, A, N, 1, 0, WORK, 1, 0 );
+console.log( out );

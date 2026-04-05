@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhbev
 
 > Computes all eigenvalues and optionally eigenvectors of a complex Hermitian band matrix.
@@ -12,63 +32,52 @@ var zhbev = require( '@stdlib/lapack/base/zhbev' );
 
 #### zhbev( order, jobz, uplo, N, kd, AB, LDAB, w, strideW, Z, LDZ, WORK, strideWORK, RWORK, strideRWORK )
 
-Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian band matrix.
+Computes all eigenvalues and optionally eigenvectors of a complex Hermitian band matrix.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 4x4 Hermitian tridiagonal (KD=1), upper band storage, column-major:
-var AB = new Complex128Array( [ 0.0, 0.0, 4.0, 0.0, 1.0, 1.0, 5.0, 0.0, 2.0, -1.0, 6.0, 0.0, 3.0, 1.0, 7.0, 0.0 ] );
-var W = new Float64Array( 4 );
-var Z = new Complex128Array( 16 );
-var WORK = new Complex128Array( 4 );
-var RWORK = new Float64Array( 10 );
-
-zhbev( 'column-major', 'compute-vectors', 'upper', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1, RWORK, 1 );
-// W now contains eigenvalues in ascending order
-```
-
-#### zhbev.ndarray( jobz, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
-
-Computes all eigenvalues and optionally eigenvectors of a complex Hermitian band matrix using alternative indexing semantics.
-
-```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-
-var AB = new Complex128Array( [ 0.0, 0.0, 4.0, 0.0, 1.0, 1.0, 5.0, 0.0, 2.0, -1.0, 6.0, 0.0, 3.0, 1.0, 7.0, 0.0 ] );
-var W = new Float64Array( 4 );
-var Z = new Complex128Array( 16 );
-var WORK = new Complex128Array( 4 );
-var RWORK = new Float64Array( 10 );
-
-zhbev.ndarray( 'compute-vectors', 'upper', 4, 1, AB, 1, 2, 0, W, 1, 0, Z, 1, 4, 0, WORK, 1, 0, RWORK, 1, 0 );
-// W now contains eigenvalues in ascending order
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **jobz**: `'no-vectors'` to compute eigenvalues only, or `'compute-vectors'` to compute eigenvalues and eigenvectors.
--   **uplo**: `'upper'` or `'lower'`, specifying which triangle of the band matrix is stored.
--   **N**: order of the matrix A.
--   **kd**: number of super- (upper) or sub-diagonals (lower).
--   **AB**: [`Complex128Array`][@stdlib/array/complex128] band matrix in band storage.
--   **strideAB1**: stride of the first dimension of `AB` (in complex elements).
--   **strideAB2**: stride of the second dimension of `AB` (in complex elements).
--   **offsetAB**: starting index for `AB` (in complex elements).
--   **w**: [`Float64Array`][mdn-float64array] output array for eigenvalues (length N), returned in ascending order.
--   **strideW**: stride length for `w`.
--   **offsetW**: starting index for `w`.
--   **Z**: [`Complex128Array`][@stdlib/array/complex128] output matrix for eigenvectors (N-by-N). Only referenced when `jobz` is `'compute-vectors'`.
--   **strideZ1**: stride of the first dimension of `Z` (in complex elements).
--   **strideZ2**: stride of the second dimension of `Z` (in complex elements).
--   **offsetZ**: starting index for `Z` (in complex elements).
--   **WORK**: [`Complex128Array`][@stdlib/array/complex128] complex workspace (length >= N).
--   **strideWORK**: stride length for `WORK` (in complex elements).
--   **offsetWORK**: starting index for `WORK` (in complex elements).
--   **RWORK**: [`Float64Array`][mdn-float64array] real workspace (length >= max(1, 3*N-2)).
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **jobz**: `jobz`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **w**: `w`.
+-   **strideW**: stride length for `W`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
+
+#### zhbev.ndarray( jobz, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Computes all eigenvalues and optionally eigenvectors of a complex Hermitian band matrix, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **offsetW**: starting index for `W`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
@@ -79,9 +88,7 @@ The function has the following parameters:
 
 ## Notes
 
--   Eigenvalues of a Hermitian matrix are always real, so `w` is a `Float64Array`.
--   The matrix AB is overwritten during computation.
--   WORK is a complex workspace, while RWORK is a real workspace used for the tridiagonal eigenvalue solver.
+-   `zhbev()` corresponds to the [LAPACK][lapack] level routine [`zhbev`][lapack-zhbev].
 
 </section>
 
@@ -91,26 +98,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zhbev = require( '@stdlib/lapack/base/zhbev' );
 
-// 4x4 Hermitian tridiagonal, upper band, column-major:
-var AB = new Complex128Array( [
-    0.0, 0.0, 4.0, 0.0,   // col 1
-    1.0, 1.0, 5.0, 0.0,   // col 2
-    2.0, -1.0, 6.0, 0.0,  // col 3
-    3.0, 1.0, 7.0, 0.0    // col 4
-] );
-var W = new Float64Array( 4 );
-var Z = new Complex128Array( 16 );
-var WORK = new Complex128Array( 4 );
-var RWORK = new Float64Array( 10 );
-
-var info = zhbev( 'column-major', 'compute-vectors', 'upper', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1, RWORK, 1 );
-console.log( 'info:', info );
-console.log( 'eigenvalues:', W );
+// TODO: Add examples
 ```
 
 </section>
@@ -129,8 +122,13 @@ console.log( 'eigenvalues:', W );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zhbev]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhbev.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

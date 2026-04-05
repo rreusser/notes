@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsptrf
 
 > Computes the Bunch-Kaufman factorization of a real symmetric matrix in packed storage.
@@ -12,53 +32,35 @@ var dsptrf = require( '@stdlib/lapack/base/dsptrf' );
 
 #### dsptrf( uplo, N, AP, IPIV )
 
-Computes the Bunch-Kaufman factorization of a real symmetric matrix `A` stored in packed format.
+Computes the Bunch-Kaufman factorization of a real symmetric matrix in packed storage.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 3x3 symmetric positive definite matrix (lower packed):
-// [4 2 1]
-// [2 5 3]
-// [1 3 6]
-var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
-var IPIV = new Int32Array( 3 );
-
-var info = dsptrf( 'lower', 3, AP, IPIV );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangular part of `A` is packed ('upper' or 'lower').
--   **N**: order of the matrix `A`.
--   **AP**: packed symmetric matrix stored as a [`Float64Array`][mdn-float64array], length `N*(N+1)/2`.
--   **IPIV**: pivot index output array stored as an [`Int32Array`][mdn-int32array], length `N`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **IPIV**: input array `IPIV`.
 
 #### dsptrf.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV )
 
-Computes the Bunch-Kaufman factorization using an alternative interface with stride and offset parameters.
+Computes the Bunch-Kaufman factorization of a real symmetric matrix in packed storage, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
-var IPIV = new Int32Array( 3 );
-
-var info = dsptrf.ndarray( 'lower', 3, AP, 1, 0, IPIV, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
-The function has the following parameters:
+The function has the following additional parameters:
 
--   **uplo**: specifies whether the upper or lower triangular part of `A` is packed ('upper' or 'lower').
--   **N**: order of the matrix `A`.
--   **AP**: packed symmetric matrix as a [`Float64Array`][mdn-float64array].
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **IPIV**: pivot index output array as an [`Int32Array`][mdn-int32array].
 -   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
 
@@ -70,9 +72,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The factorization has the form `A = U*D*U^T` (if uplo = 'upper') or `A = L*D*L^T` (if uplo = 'lower'), where U (or L) is a product of permutation and unit upper (lower) triangular matrices, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.
--   `IPIV` stores 0-based pivot indices. If `IPIV[k] >= 0`, a 1x1 pivot was used and rows/columns k and `IPIV[k]` were interchanged. If `IPIV[k] < 0`, a 2x2 pivot was used and `IPIV[k] = ~p` where `p` is the 0-based row/column interchanged.
--   Returns 0 if successful. If the return value is `k > 0`, then `D(k,k)` is exactly zero, indicating that the matrix is singular.
+-   `dsptrf()` corresponds to the [LAPACK][lapack] level routine [`dsptrf`][lapack-dsptrf].
 
 </section>
 
@@ -82,20 +82,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dsptrf = require( '@stdlib/lapack/base/dsptrf' );
 
-// 3x3 symmetric positive definite matrix (lower packed):
-// [4 2 1]
-// [2 5 3]
-// [1 3 6]
-var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
-var IPIV = new Int32Array( 3 );
-
-var info = dsptrf( 'lower', 3, AP, IPIV );
-// info => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -114,9 +106,12 @@ var info = dsptrf( 'lower', 3, AP, IPIV );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsptrf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsptrf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zhptrf
 
-> Computes the Bunch-Kaufman factorization of a complex Hermitian matrix in packed storage.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,46 +32,35 @@ var zhptrf = require( '@stdlib/lapack/base/zhptrf' );
 
 #### zhptrf( uplo, N, AP, IPIV )
 
-Computes the Bunch-Kaufman factorization of a complex Hermitian matrix `A` stored in packed format.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 Hermitian positive definite matrix (lower packed):
-var AP = new Complex128Array( [ 4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0 ] );
-var IPIV = new Int32Array( 3 );
-
-var info = zhptrf( 'lower', 3, AP, IPIV );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangular part of `A` is packed (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **AP**: packed Hermitian matrix as a [`Complex128Array`][@stdlib/array/complex128], length `N*(N+1)/2`.
--   **IPIV**: pivot index output array as an [`Int32Array`][mdn-int32array], length `N`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **IPIV**: input array `IPIV`.
 
 #### zhptrf.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV )
 
-Computes the Bunch-Kaufman factorization with alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Complex128Array( [ 4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0 ] );
-var IPIV = new Int32Array( 3 );
-
-var info = zhptrf.ndarray( 'lower', 3, AP, 1, 0, IPIV, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
 -   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
 
@@ -63,10 +72,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   The factorization has the form `A = U*D*U^H` (if uplo = `'upper'`) or `A = L*D*L^H` (if uplo = `'lower'`), where U (or L) is a product of permutation and unit upper (lower) triangular matrices, and D is Hermitian and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.
--   Diagonal elements of a Hermitian matrix are real. The routine enforces this by zeroing imaginary parts on the diagonal.
--   IPIV stores 0-based pivot indices. If `IPIV[k] >= 0`, a 1x1 pivot was used. If `IPIV[k] < 0`, a 2x2 pivot was used and `IPIV[k] = ~p` where `p` is the 0-based interchange index.
--   Returns `0` on success, or `k > 0` (1-based) if `D(k,k)` is exactly zero, indicating the matrix is singular.
+-   `zhptrf()` corresponds to the [LAPACK][lapack] level routine [`zhptrf`][lapack-zhptrf].
 
 </section>
 
@@ -76,23 +82,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Int32Array = require( '@stdlib/array/int32' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhptrf = require( '@stdlib/lapack/base/zhptrf' );
 
-// 3x3 Hermitian matrix (lower packed):
-// A = [ 4       1-2i    3+i  ]
-//     [ 1+2i    5       2-i  ]
-//     [ 3-i     2+i     7    ]
-var AP = new Complex128Array( [ 4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0 ] );
-var IPIV = new Int32Array( 3 );
-
-var info = zhptrf( 'lower', 3, AP, IPIV );
-console.log( 'info:', info );
-console.log( 'AP:', reinterpret( AP, 0 ) );
-console.log( 'IPIV:', IPIV );
+// TODO: Add examples
 ```
 
 </section>
@@ -111,9 +106,13 @@ console.log( 'IPIV:', IPIV );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
 
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[lapack-zhptrf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zhptrf.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

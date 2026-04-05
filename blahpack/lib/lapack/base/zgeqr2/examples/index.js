@@ -18,7 +18,21 @@
 
 'use strict';
 
-var zgeqr2 = require( '@stdlib/lapack/base/zgeqr2' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zgeqr2 = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zgeqr2 );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zgeqr2( 'row-major', N, N, A, N, TAU, 1, WORK, 1 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zgeqr2.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+console.log( out );

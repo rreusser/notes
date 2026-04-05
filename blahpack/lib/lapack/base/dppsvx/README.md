@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dppsvx
 
-> Solves a real system A * X = B where A is symmetric positive definite in packed storage, with equilibration, condition estimation, and error bounds.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,77 +30,67 @@
 var dppsvx = require( '@stdlib/lapack/base/dppsvx' );
 ```
 
-#### dppsvx.ndarray( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, equed, s, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dppsvx( fact, uplo, N, nrhs, AP, AFP, equed, S, strideS, B, LDB, X, LDX, rcond, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, IWORK, strideIWORK )
 
-Solves a real system A * X = B where A is symmetric positive definite in packed storage, with equilibration, condition estimation, and error bounds.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 3x3 symmetric positive definite matrix in lower packed storage:
-// A = [4 2 1; 2 5 3; 1 3 6]
-var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
-var AFP = new Float64Array( 6 );
-var S = new Float64Array( 3 );
-var equed = [ 'none' ];
-
-// Right-hand side: b = A * [1; 1; 1] = [7; 10; 10]
-var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
-var X = new Float64Array( 3 );
-var rcond = new Float64Array( 1 );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var info = dppsvx.ndarray(
-    'not-factored', 'lower', 3, 1,
-    AP, 1, 0, AFP, 1, 0, equed, S, 1, 0,
-    B, 1, 3, 0, X, 1, 3, 0, rcond,
-    FERR, 1, 0, BERR, 1, 0,
-    WORK, 1, 0, IWORK, 1, 0
-);
-// info => 0
-// X => [ 1.0, 1.0, 1.0 ]
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **fact**: specifies the operation type.
--   **uplo**: specifies the operation type.
+-   **fact**: `fact`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **nrhs**: nrhs.
--   **AP**: input array.
+-   **nrhs**: number of right-hand sides.
+-   **AP**: input array `AP`.
+-   **AFP**: input array `AFP`.
+-   **equed**: `equed`.
+-   **S**: input array `S`.
+-   **strideS**: stride length for `S`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **rcond**: `rcond`.
+-   **FERR**: input array `FERR`.
+-   **strideFERR**: stride length for `FERR`.
+-   **BERR**: input array `BERR`.
+-   **strideBERR**: stride length for `BERR`.
+-   **WORK**: input array `WORK`.
+-   **strideWORK**: stride length for `WORK`.
+-   **IWORK**: input array `IWORK`.
+-   **strideIWORK**: stride length for `IWORK`.
+
+#### dppsvx.ndarray( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, equed, S, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 -   **strideAP**: stride length for `AP`.
 -   **offsetAP**: starting index for `AP`.
--   **AFP**: input array.
 -   **strideAFP**: stride length for `AFP`.
 -   **offsetAFP**: starting index for `AFP`.
--   **equed**: specifies the operation type.
--   **s**: input array.
--   **strideS**: stride length for `s`.
--   **offsetS**: starting index for `s`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **offsetS**: starting index for `S`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **X**: input matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **rcond**: rcond.
--   **FERR**: input array.
--   **strideFERR**: stride length for `FERR`.
 -   **offsetFERR**: starting index for `FERR`.
--   **BERR**: input array.
--   **strideBERR**: stride length for `BERR`.
 -   **offsetBERR**: starting index for `BERR`.
--   **WORK**: input array.
--   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: output array.
--   **strideIWORK**: stride length for `IWORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -91,10 +101,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The `fact` parameter accepts `'not-factored'`, `'factored'`, or `'equilibrate'`.
--   The `equed` parameter is a single-element array (`['none']` or `['yes']`) that is both input and output.
--   When `fact` is `'equilibrate'`, the routine may modify `AP`, `S`, and `B`.
--   Returns `info`: `0` on success, `k > 0` if the leading minor of order `k` is not positive definite, `N+1` if the reciprocal condition number is less than machine epsilon.
+-   `dppsvx()` corresponds to the [LAPACK][lapack] level routine [`dppsvx`][lapack-dppsvx].
 
 </section>
 
@@ -104,34 +111,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dppsvx = require( '@stdlib/lapack/base/dppsvx' );
 
-var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
-var AFP = new Float64Array( 6 );
-var S = new Float64Array( 3 );
-var equed = [ 'none' ];
-var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
-var X = new Float64Array( 3 );
-var rcond = new Float64Array( 1 );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var info = dppsvx.ndarray(
-    'not-factored', 'lower', 3, 1,
-    AP, 1, 0, AFP, 1, 0, equed, S, 1, 0,
-    B, 1, 3, 0, X, 1, 3, 0, rcond,
-    FERR, 1, 0, BERR, 1, 0,
-    WORK, 1, 0, IWORK, 1, 0
-);
-console.log( 'info:', info );
-// => info: 0
-console.log( 'X:', X );
-// => X: Float64Array [ 1.0, 1.0, 1.0 ]
+// TODO: Add examples
 ```
 
 </section>
@@ -150,9 +135,12 @@ console.log( 'X:', X );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dppsvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dppsvx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

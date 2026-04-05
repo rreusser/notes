@@ -20,7 +20,7 @@ limitations under the License.
 
 # dladiv
 
-> Perform safe complex division in real arithmetic
+> Internal helper: DLADIV2.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var dladiv = require( '@stdlib/lapack/base/dladiv' );
 ```
 
-#### dladiv.ndarray( a, b, c, d, p, q )
+#### dladiv( a, b, c, d, out )
 
-Perform safe complex division in real arithmetic
+Internal helper: DLADIV2.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,12 +42,24 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **a**: a.
--   **b**: b.
--   **c**: c.
--   **d**: d.
--   **p**: p.
--   **q**: q.
+-   **a**: `a`.
+-   **b**: `b`.
+-   **c**: `c`.
+-   **d**: `d`.
+-   **out**: `out`.
+
+#### dladiv.ndarray( a, b, c, d, out )
+
+Internal helper: DLADIV2, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -57,7 +69,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dladiv()` corresponds to the [LAPACK][lapack] level routine [`dladiv`][lapack-dladiv].
 
 </section>
 
@@ -67,7 +79,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dladiv = require( '@stdlib/lapack/base/dladiv' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +103,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dladiv]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dladiv.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

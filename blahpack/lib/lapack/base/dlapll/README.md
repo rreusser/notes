@@ -1,8 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlapll
 
-> Measure the linear dependence of two vectors.
-
-Given two column vectors X and Y, let `A = ( X Y )`. The routine first computes the QR factorization of `A = Q*R`, then computes the SVD of the 2-by-2 upper triangular matrix R. The smaller singular value of R is returned in SSMIN, which serves as a measurement of the linear dependency of the vectors X and Y.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -14,47 +32,37 @@ var dlapll = require( '@stdlib/lapack/base/dlapll' );
 
 #### dlapll( N, x, strideX, y, strideY, ssmin )
 
-Measures the linear dependence of two vectors by computing the smallest singular value of the N-by-2 matrix `A = ( X Y )`.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-var y = new Float64Array( [ 2.0, 4.0, 6.0, 8.0 ] );
-var ssmin = new Float64Array( 1 );
-
-dlapll( 4, x, 1, y, 1, ssmin );
-// ssmin[ 0 ] ~ 0.0 (vectors are linearly dependent)
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **N**: length of the vectors X and Y.
--   **x**: first input vector (overwritten on exit).
--   **strideX**: stride for `x`.
--   **y**: second input vector (overwritten on exit).
--   **strideY**: stride for `y`.
--   **ssmin**: output [`Float64Array`][mdn-float64array] of length 1; on exit, `ssmin[0]` contains the smallest singular value.
+-   **N**: number of columns.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+-   **ssmin**: `ssmin`.
 
 #### dlapll.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
 
-Measures linear dependence using alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var x = new Float64Array( [ 0.0, 1.0, 2.0, 3.0 ] );
-var y = new Float64Array( [ 0.0, 4.0, 5.0, 6.0 ] );
-var ssmin = new Float64Array( 1 );
-
-dlapll.ndarray( 3, x, 1, 1, y, 1, 1, ssmin );
-// ssmin[ 0 ] contains the smallest singular value
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **offsetX**: starting index for `x`.
--   **offsetY**: starting index for `y`.
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -64,9 +72,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   Both `x` and `y` are overwritten on exit.
--   A small value of `ssmin[0]` indicates that the vectors are nearly linearly dependent.
--   If `N <= 1`, `ssmin[0]` is set to zero.
+-   `dlapll()` corresponds to the [LAPACK][lapack] level routine [`dlapll`][lapack-dlapll].
 
 </section>
 
@@ -76,27 +82,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlapll = require( '@stdlib/lapack/base/dlapll' );
 
-// Parallel vectors (linearly dependent):
-var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-var y = new Float64Array( [ 2.0, 4.0, 6.0, 8.0 ] );
-var ssmin = new Float64Array( 1 );
-
-dlapll( 4, x, 1, y, 1, ssmin );
-console.log( 'Parallel vectors, ssmin:', ssmin[ 0 ] );
-// => ~0.0
-
-// Orthogonal vectors (linearly independent):
-x = new Float64Array( [ 1.0, 0.0, 0.0 ] );
-y = new Float64Array( [ 0.0, 1.0, 0.0 ] );
-ssmin = new Float64Array( 1 );
-
-dlapll( 3, x, 1, y, 1, ssmin );
-console.log( 'Orthogonal vectors, ssmin:', ssmin[ 0 ] );
-// => 1.0
+// TODO: Add examples
 ```
 
 </section>
@@ -115,7 +106,13 @@ console.log( 'Orthogonal vectors, ssmin:', ssmin[ 0 ] );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlapll]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlapll.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

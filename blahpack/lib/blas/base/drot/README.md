@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # drot
 
-> Apply a Givens plane rotation
+> Applies a plane rotation.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var drot = require( '@stdlib/blas/base/drot' );
 ```
 
-#### drot.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, s )
+#### drot( N, x, strideX, y, strideY, c, s )
 
-Apply a Givens plane rotation
+Applies a plane rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,14 +43,27 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **y**: output array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **c**: c.
--   **s**: s.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+-   **c**: `c`.
+-   **s**: `s`.
+
+#### drot.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, c, s )
+
+Applies a plane rotation, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
+-   **offsetY**: starting index for `Y`.
 
 </section>
 
@@ -40,7 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `drot()` corresponds to the [LAPACK][lapack] level routine [`drot`][lapack-drot].
 
 </section>
 
@@ -50,7 +83,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var drot = require( '@stdlib/blas/base/drot' );
+
 // TODO: Add examples
 ```
 
@@ -70,9 +107,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-drot]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__drot.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

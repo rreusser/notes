@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dbdsqr
 
-> Compute the SVD of a real bidiagonal matrix
+> Returns |a| with the sign of b (Fortran SIGN intrinsic).
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dbdsqr = require( '@stdlib/lapack/base/dbdsqr' );
 ```
 
-#### dbdsqr.ndarray( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+#### dbdsqr( order, uplo, N, ncvt, nru, ncc, d, strideD, e, strideE, VT, LDVT, U, LDU, C, LDC, WORK, strideWORK )
 
-Compute the SVD of a real bidiagonal matrix
+Returns |a| with the sign of b (Fortran SIGN intrinsic).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,31 +42,48 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **ncvt**: ncvt.
--   **nru**: nru.
--   **ncc**: ncc.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **e**: input array.
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **VT**: input matrix.
--   **strideVT1**: stride of the first dimension of `VT`.
--   **strideVT2**: stride of the second dimension of `VT`.
--   **offsetVT**: starting index for `VT`.
--   **U**: input matrix.
--   **strideU1**: stride of the first dimension of `U`.
--   **strideU2**: stride of the second dimension of `U`.
--   **offsetU**: starting index for `U`.
--   **C**: input matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
--   **offsetC**: starting index for `C`.
--   **WORK**: output array.
+-   **ncvt**: `ncvt`.
+-   **nru**: `nru`.
+-   **ncc**: `ncc`.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **e**: `e`.
+-   **strideE**: stride length for `E`.
+-   **VT**: input array `VT`.
+-   **LDVT**: leading dimension of `VT`.
+-   **U**: input array `U`.
+-   **LDU**: leading dimension of `U`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+
+#### dbdsqr.ndarray( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+Returns |a| with the sign of b (Fortran SIGN intrinsic), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetD**: starting index for `D`.
+-   **offsetE**: starting index for `E`.
+-   **strideVT1**: stride of dimension 1 of `VT`.
+-   **strideVT2**: stride of dimension 2 of `VT`.
+-   **offsetVT**: starting index for `VT`.
+-   **strideU1**: stride of dimension 1 of `U`.
+-   **strideU2**: stride of dimension 2 of `U`.
+-   **offsetU**: starting index for `U`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
 -   **offsetWORK**: starting index for `WORK`.
 
 </section>
@@ -57,7 +94,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dbdsqr()` corresponds to the [LAPACK][lapack] level routine [`dbdsqr`][lapack-dbdsqr].
 
 </section>
 
@@ -67,7 +104,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dbdsqr = require( '@stdlib/lapack/base/dbdsqr' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +128,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dbdsqr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dbdsqr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsytri
 
 > Computes the inverse of a real symmetric matrix using the factorization computed by dsytrf.
@@ -12,60 +32,41 @@ var dsytri = require( '@stdlib/lapack/base/dsytri' );
 
 #### dsytri( order, uplo, N, A, LDA, IPIV, strideIPIV, WORK )
 
-Computes the inverse of a real symmetric matrix `A` using the factorization `A = U * D * U^T` or `A = L * D * L^T` computed by [`dsytrf`][@stdlib/lapack/base/dsytrf].
+Computes the inverse of a real symmetric matrix using the factorization computed by dsytrf.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 2x2 factored symmetric matrix (column-major), with D and L factors:
-var A = new Float64Array( [ 2.0, 0.5, 0.0, 1.5 ] );
-var IPIV = new Int32Array( [ 1, 1 ] );
-var WORK = new Float64Array( 2 );
-
-var info = dsytri( 'column-major', 'lower', 2, A, 2, IPIV, 1, WORK );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **order**: storage layout ('row-major' or 'column-major').
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **A**: input matrix stored as a [`Float64Array`][mdn-float64array], containing the factorization from `dsytrf`.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
 -   **LDA**: leading dimension of `A`.
--   **IPIV**: pivot index array from `dsytrf` stored as an [`Int32Array`][mdn-int32array], length `N`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **WORK**: workspace array stored as a [`Float64Array`][mdn-float64array], length `N`.
+-   **WORK**: input array `WORK`.
 
 #### dsytri.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
 
-Computes the inverse using an alternative interface with stride and offset parameters.
+Computes the inverse of a real symmetric matrix using the factorization computed by dsytrf, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-var A = new Float64Array( [ 2.0, 0.5, 0.0, 1.5 ] );
-var IPIV = new Int32Array( [ 1, 1 ] );
-var WORK = new Float64Array( 2 );
-
-var info = dsytri.ndarray( 'lower', 2, A, 1, 2, 0, IPIV, 1, 0, WORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
-The function has the following parameters:
+The function has the following additional parameters:
 
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **A**: input matrix as a [`Float64Array`][mdn-float64array].
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **IPIV**: pivot index array as an [`Int32Array`][mdn-int32array].
--   **strideIPIV**: stride length for `IPIV`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **WORK**: workspace array as a [`Float64Array`][mdn-float64array].
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
@@ -77,9 +78,7 @@ The function has the following parameters:
 
 ## Notes
 
--   On entry, `A` must contain the block diagonal matrix `D` and the multipliers used to obtain the factor `U` (or `L`) as computed by `dsytrf`, stored in full format. On exit, if `info === 0`, `A` contains the upper (or lower) triangle of the inverse.
--   `IPIV` stores 0-based pivot indices from `dsytrf`/`dsytf2`. If `IPIV[k] >= 0`, a 1x1 pivot was used. If `IPIV[k] < 0`, then `IPIV[k] = ~p` where `p` is the 0-based row/column that was interchanged.
--   Returns 0 if successful. If the return value is `k > 0`, then `D[k-1,k-1]` is exactly zero, indicating that the matrix is singular and the inverse could not be computed.
+-   `dsytri()` corresponds to the [LAPACK][lapack] level routine [`dsytri`][lapack-dsytri].
 
 </section>
 
@@ -89,19 +88,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var dsytri = require( '@stdlib/lapack/base/dsytri' );
 
-// 3x3 factored symmetric matrix (column-major), already factored by dsytf2:
-var A = new Float64Array( [ 4.0, 0.5, 0.25, 0.0, 2.0, 0.5, 0.0, 0.0, 1.0 ] );
-var IPIV = new Int32Array( [ 0, 1, 2 ] );
-var WORK = new Float64Array( 3 );
-
-var info = dsytri.ndarray( 'upper', 3, A, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0 );
-console.log( 'info:', info );
-console.log( 'A (inverse):', A );
+// TODO: Add examples
 ```
 
 </section>
@@ -120,9 +112,12 @@ console.log( 'A (inverse):', A );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsytri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsytri.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

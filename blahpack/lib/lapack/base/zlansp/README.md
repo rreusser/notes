@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlansp
 
 > Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a complex symmetric matrix supplied in packed storage.
@@ -15,40 +35,33 @@ var zlansp = require( '@stdlib/lapack/base/zlansp' );
 Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a complex symmetric matrix supplied in packed storage.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 2.0, 5.0, -1.0, 3.0, -1.0, 2.0, 1.0, 4.0, 2.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = zlansp( 'max', 'upper', 3, AP, WORK );
-// returns ~5.099
-```
-
-#### zlansp.ndarray( norm, uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
-
-Returns the norm of a complex symmetric matrix in packed storage using alternative indexing semantics.
-
-```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
-
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 2.0, 5.0, -1.0, 3.0, -1.0, 2.0, 1.0, 4.0, 2.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = zlansp.ndarray( 'max', 'upper', 3, AP, 1, 0, WORK, 1, 0 );
-// returns ~5.099
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: specifies the norm: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`.
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix.
--   **AP**: packed symmetric matrix as a [`Complex128Array`][@stdlib/array/complex128].
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
--   **WORK**: workspace [`Float64Array`][mdn-float64array] of length at least `N`.
+-   **norm**: `norm`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **WORK**: input array `WORK`.
+
+#### zlansp.ndarray( norm, uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
+
+Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a complex symmetric matrix supplied in packed storage, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
 
@@ -60,8 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   For a symmetric matrix, the one-norm equals the infinity-norm.
--   The `WORK` array is only used for `'one-norm'` and `'inf-norm'` norms. For `'max'` and `'frobenius'`, it is not referenced.
+-   `zlansp()` corresponds to the [LAPACK][lapack] level routine [`zlansp`][lapack-zlansp].
 
 </section>
 
@@ -71,18 +83,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zlansp = require( '@stdlib/lapack/base/zlansp' );
 
-// 3x3 complex symmetric matrix in upper packed storage:
-var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 2.0, 5.0, -1.0, 3.0, -1.0, 2.0, 1.0, 4.0, 2.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = zlansp( 'max', 'upper', 3, AP, WORK );
-console.log( 'max norm: %d', result );
-// => ~5.099
+// TODO: Add examples
 ```
 
 </section>
@@ -101,8 +107,13 @@ console.log( 'max norm: %d', result );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlansp]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlansp.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

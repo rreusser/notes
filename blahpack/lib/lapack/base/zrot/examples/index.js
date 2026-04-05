@@ -18,7 +18,12 @@
 
 'use strict';
 
-var zrot = require( '@stdlib/lapack/base/zrot' );
+var zrot = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zrot );
+// Using the standard interface:
+var out = zrot( N, 1, 1, 1, 1, 1.0, 1.0 );
+console.log( out );
+
+// Using the ndarray interface:
+out = zrot.ndarray( N, 1, 1, 0, 1, 1, 0, 1.0, 1.0 );
+console.log( out );

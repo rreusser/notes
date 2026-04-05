@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsprfs
 
-> Improves the computed solution to a real system A * X = B where A is symmetric in packed storage and provides error bounds and backward error estimates.
+> Improves the computed solution to a real system A * X = B where A is symmetric in packed storage and provides error bounds.
 
 <section class="usage">
 
@@ -10,63 +30,64 @@
 var dsprfs = require( '@stdlib/lapack/base/dsprfs' );
 ```
 
-#### dsprfs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dsprfs( uplo, N, nrhs, AP, strideAP, AFP, strideAFP, IPIV, strideIPIV, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, IWORK, strideIWORK )
 
 Improves the computed solution to a real system A * X = B where A is symmetric in packed storage and provides error bounds.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 
-// 3x3 symmetric matrix [4 2 1; 2 5 3; 1 3 6] in upper packed storage:
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var AFP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var IPIV = new Int32Array( 3 );
-var B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var X = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-// After factoring AFP with dsptrf and solving with dsptrs:
-var info = dsprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **nrhs**: number of right-hand side columns.
--   **AP**: original symmetric packed matrix of length `N*(N+1)/2`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **nrhs**: number of right-hand sides.
+-   **AP**: input array `AP`.
 -   **strideAP**: stride length for `AP`.
--   **offsetAP**: starting index for `AP`.
--   **AFP**: factored packed matrix from `dsptrf`, length `N*(N+1)/2`.
+-   **AFP**: input array `AFP`.
 -   **strideAFP**: stride length for `AFP`.
--   **offsetAFP**: starting index for `AFP`.
--   **IPIV**: pivot indices from `dsptrf` (0-based).
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **offsetIPIV**: starting index for `IPIV`.
--   **B**: right-hand side matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **X**: solution matrix (improved on exit).
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
--   **offsetX**: starting index for `X`.
--   **FERR**: output forward error bounds (length `nrhs`).
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
--   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output backward error bounds (length `nrhs`).
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
--   **offsetBERR**: starting index for `BERR`.
--   **WORK**: workspace array (allocated internally, length `3*N`).
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: workspace array (allocated internally, length `N`).
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+
+#### dsprfs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+Improves the computed solution to a real system A * X = B where A is symmetric in packed storage and provides error bounds, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetAP**: starting index for `AP`.
+-   **offsetAFP**: starting index for `AFP`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -77,9 +98,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The routine uses iterative refinement to improve the computed solution and uses `dlacn2` to estimate componentwise relative backward error and forward error bounds.
--   `AP` and `AFP` are packed symmetric matrices stored in either upper or lower packed format. For upper, the elements are stored column by column: `A(1,1), A(1,2), A(2,2), A(1,3), ...`. For lower: `A(1,1), A(2,1), A(3,1), A(2,2), ...`.
--   `WORK` and `IWORK` workspace arrays are accepted in the signature for API compatibility but are allocated internally.
+-   `dsprfs()` corresponds to the [LAPACK][lapack] level routine [`dsprfs`][lapack-dsprfs].
 
 </section>
 
@@ -89,29 +108,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var dsptrf = require( '@stdlib/lapack/base/dsptrf' );
-var dsptrs = require( '@stdlib/lapack/base/dsptrs' );
 var dsprfs = require( '@stdlib/lapack/base/dsprfs' );
 
-var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var AFP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
-var IPIV = new Int32Array( 3 );
-var B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var X = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-dsptrf.ndarray( 'upper', 3, AFP, 1, 0, IPIV, 1, 0 );
-dsptrs.ndarray( 'upper', 3, 1, AFP, 1, 0, IPIV, 1, 0, X, 1, 3, 0 );
-dsprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-console.log( 'X:', X );
-console.log( 'FERR:', FERR );
-console.log( 'BERR:', BERR );
+// TODO: Add examples
 ```
 
 </section>
@@ -130,9 +132,12 @@ console.log( 'BERR:', BERR );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsprfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsprfs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

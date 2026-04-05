@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlaqsp
 
-> Equilibrate a symmetric matrix in packed storage using scaling factors.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,45 +32,32 @@ var dlaqsp = require( '@stdlib/lapack/base/dlaqsp' );
 
 #### dlaqsp( uplo, N, AP, S, strideS, scond, amax )
 
-Equilibrates a symmetric matrix `A` in packed storage using the scaling factors in vector `S`.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 4.0, 1.0, 9.0, 0.5, 2.0, 16.0 ] );
-var S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
-
-var equed = dlaqsp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
-// returns 'yes'
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`).
--   **N**: order of the matrix `A`.
--   **AP**: packed symmetric matrix of length `N*(N+1)/2` stored as a [`Float64Array`][mdn-float64array].
--   **S**: scaling factors of length `N` stored as a [`Float64Array`][mdn-float64array].
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **S**: input array `S`.
 -   **strideS**: stride length for `S`.
--   **scond**: ratio of the smallest to largest scaling factor.
--   **amax**: absolute value of the largest matrix element.
-
-The function returns a string indicating whether equilibration was performed:
-
--   `'none'`: no equilibration was needed.
--   `'yes'`: equilibration was done (i.e., `A` was replaced by `diag(S) * A * diag(S)`).
+-   **scond**: `scond`.
+-   **amax**: `amax`.
 
 #### dlaqsp.ndarray( uplo, N, AP, strideAP, offsetAP, S, strideS, offsetS, scond, amax )
 
-Equilibrates a symmetric matrix `A` in packed storage using the scaling factors in vector `S`, with alternative indexing semantics.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 4.0, 1.0, 9.0, 0.5, 2.0, 16.0 ] );
-var S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
-
-var equed = dlaqsp.ndarray( 'upper', 3, AP, 1, 0, S, 1, 0, 0.05, 16.0 );
-// returns 'yes'
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
@@ -67,8 +74,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   Equilibration scales the matrix so that `A(i,j)` becomes `S(i) * A(i,j) * S(j)`. This is only done when the scaling factors are poorly conditioned (`scond` is small) or the matrix elements are very large or very small.
--   The packed storage format stores only the upper or lower triangle of the symmetric matrix in a one-dimensional array of length `N*(N+1)/2`.
+-   `dlaqsp()` corresponds to the [LAPACK][lapack] level routine [`dlaqsp`][lapack-dlaqsp].
 
 </section>
 
@@ -78,18 +84,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlaqsp = require( '@stdlib/lapack/base/dlaqsp' );
 
-// 3x3 symmetric matrix, upper packed:
-var AP = new Float64Array( [ 4.0, 1.0, 9.0, 0.5, 2.0, 16.0 ] );
-var S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
-
-var equed = dlaqsp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
-console.log( 'equed:', equed );
-// => 'yes'
-console.log( 'AP:', AP );
+// TODO: Add examples
 ```
 
 </section>
@@ -108,7 +108,13 @@ console.log( 'AP:', AP );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaqsp]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaqsp.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

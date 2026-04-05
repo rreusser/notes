@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztrevc3
 
-> Computes eigenvectors of a complex upper triangular matrix
+> CABS1: |re(z)| + |im(z)|.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var ztrevc3 = require( '@stdlib/lapack/base/ztrevc3' );
 ```
 
-#### ztrevc3.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, lrwork )
+#### ztrevc3( v, idx )
 
-Computes eigenvectors of a complex upper triangular matrix
+CABS1: |re(z)| + |im(z)|.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,34 +42,49 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **side**: specifies the operation type.
--   **howmny**: specifies the operation type.
--   **SELECT**: input array.
+-   **v**: `v`.
+-   **idx**: `idx`.
+
+#### ztrevc3.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, lrwork )
+
+CABS1: |re(z)| + |im(z)|, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **side**: specifies the side of the operation.
+-   **howmny**: `howmny`.
+-   **SELECT**: input array `SELECT`.
 -   **strideSELECT**: stride length for `SELECT`.
 -   **offsetSELECT**: starting index for `SELECT`.
 -   **N**: number of columns.
--   **T**: input matrix.
--   **strideT1**: stride of the first dimension of `T`.
--   **strideT2**: stride of the second dimension of `T`.
+-   **T**: input array `T`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
 -   **offsetT**: starting index for `T`.
--   **VL**: input matrix.
--   **strideVL1**: stride of the first dimension of `VL`.
--   **strideVL2**: stride of the second dimension of `VL`.
+-   **VL**: input array `VL`.
+-   **strideVL1**: stride of dimension 1 of `VL`.
+-   **strideVL2**: stride of dimension 2 of `VL`.
 -   **offsetVL**: starting index for `VL`.
--   **VR**: input matrix.
--   **strideVR1**: stride of the first dimension of `VR`.
--   **strideVR2**: stride of the second dimension of `VR`.
+-   **VR**: input array `VR`.
+-   **strideVR1**: stride of dimension 1 of `VR`.
+-   **strideVR2**: stride of dimension 2 of `VR`.
 -   **offsetVR**: starting index for `VR`.
--   **mm**: mm.
+-   **mm**: `mm`.
 -   **M**: number of rows.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **RWORK**: output array.
+-   **lwork**: `lwork`.
+-   **RWORK**: input array `RWORK`.
 -   **strideRWORK**: stride length for `RWORK`.
 -   **offsetRWORK**: starting index for `RWORK`.
--   **lrwork**: lrwork.
+-   **lrwork**: `lrwork`.
 
 </section>
 
@@ -59,7 +94,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `ztrevc3()` corresponds to the [LAPACK][lapack] level routine [`ztrevc3`][lapack-ztrevc3].
 
 </section>
 
@@ -69,7 +104,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var ztrevc3 = require( '@stdlib/lapack/base/ztrevc3' );
+
 // TODO: Add examples
 ```
 
@@ -89,9 +128,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztrevc3]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztrevc3.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

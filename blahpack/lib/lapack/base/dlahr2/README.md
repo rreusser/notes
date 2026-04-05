@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlahr2
 
-> Reduce NB columns of a general matrix in Hessenberg form
+> Reduces NB columns of a real general n-by-(n-k+1) matrix A.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlahr2 = require( '@stdlib/lapack/base/dlahr2' );
 ```
 
-#### dlahr2.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, t, strideT, offsetT, ldt, y, strideY, offsetY, ldy )
+#### dlahr2( order, N, K, nb, A, LDA, tau, strideTAU, t, strideT, ldt, y, strideY, ldy )
 
-Reduce NB columns of a general matrix in Hessenberg form
+Reduces NB columns of a real general n-by-(n-k+1) matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,24 +42,43 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
--   **nb**: nb.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **K**: inner dimension.
+-   **nb**: `nb`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **tau**: `tau`.
+-   **strideTAU**: stride length for `TAU`.
+-   **t**: `t`.
+-   **strideT**: stride length for `T`.
+-   **ldt**: `ldt`.
+-   **y**: `y`.
+-   **strideY**: stride length for `Y`.
+-   **ldy**: `ldy`.
+
+#### dlahr2.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT, offsetT, ldT, Y, strideY, offsetY, ldY )
+
+Reduces NB columns of a real general n-by-(n-k+1) matrix A, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **tau**: input array.
--   **strideTAU**: stride length for `tau`.
--   **offsetTAU**: starting index for `tau`.
--   **t**: input array.
--   **strideT**: stride length for `t`.
--   **offsetT**: starting index for `t`.
--   **ldt**: ldt.
--   **y**: input array.
--   **strideY**: stride length for `y`.
--   **offsetY**: starting index for `y`.
--   **ldy**: ldy.
+-   **offsetTAU**: starting index for `TAU`.
+-   **T**: input array `T`.
+-   **offsetT**: starting index for `T`.
+-   **ldT**: `ldT`.
+-   **Y**: input array `Y`.
+-   **offsetY**: starting index for `Y`.
+-   **ldY**: `ldY`.
 
 </section>
 
@@ -49,7 +88,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlahr2()` corresponds to the [LAPACK][lapack] level routine [`dlahr2`][lapack-dlahr2].
 
 </section>
 
@@ -59,7 +98,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlahr2 = require( '@stdlib/lapack/base/dlahr2' );
+
 // TODO: Add examples
 ```
 
@@ -79,9 +122,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlahr2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlahr2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

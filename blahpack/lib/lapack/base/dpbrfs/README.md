@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dpbrfs
 
-> Improve the computed solution to a real system `A * X = B` where `A` is symmetric positive definite band, and provide error bounds and backward error estimates.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,72 +30,65 @@
 var dpbrfs = require( '@stdlib/lapack/base/dpbrfs' );
 ```
 
-#### dpbrfs.ndarray( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+#### dpbrfs( uplo, N, kd, nrhs, AB, LDAB, AFB, LDAFB, B, LDB, X, LDX, FERR, BERR, WORK, IWORK )
 
-Improves the computed solution to `A * X = B` where `A` is symmetric positive definite band, and provides forward and backward error bounds.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var dpbtrf = require( '@stdlib/lapack/base/dpbtrf' );
-var dpbtrs = require( '@stdlib/lapack/base/dpbtrs' );
 
-// 3x3 SPD band matrix with KD=1, upper storage:
-// Full: [4 1 0; 1 5 1; 0 1 6]
-var ab = new Float64Array( [ 0.0, 4.0, 1.0, 5.0, 1.0, 6.0 ] );
-var afb = new Float64Array( ab );
-
-dpbtrf.ndarray( 'upper', 3, 1, afb, 1, 2, 0 );
-
-var b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var x = new Float64Array( b );
-
-dpbtrs.ndarray( 'upper', 3, 1, 1, afb, 1, 2, 0, x, 1, 3, 0 );
-
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var info = dpbrfs.ndarray( 'upper', 3, 1, 1, ab, 1, 2, 0, afb, 1, 2, 0, b, 1, 3, 0, x, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-// info => 0
-// x => refined solution
-// FERR => forward error bound
-// BERR => backward error bound
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper (`'upper'`) or lower (`'lower'`) triangle of A is stored in band format.
--   **N**: order of the matrix `A`.
--   **kd**: number of superdiagonals (if `uplo` is `'upper'`) or subdiagonals (if `uplo` is `'lower'`) of `A`.
--   **nrhs**: number of right-hand side columns.
--   **AB**: original symmetric band matrix in band storage.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **kd**: `kd`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input array `AFB`.
+-   **LDAFB**: leading dimension of `AFB`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **FERR**: input array `FERR`.
+-   **BERR**: input array `BERR`.
+-   **WORK**: input array `WORK`.
+-   **IWORK**: input array `IWORK`.
+
+#### dpbrfs.ndarray( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **AFB**: Cholesky-factored band matrix (from `dpbtrf`).
--   **strideAFB1**: stride of the first dimension of `AFB`.
--   **strideAFB2**: stride of the second dimension of `AFB`.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
 -   **offsetAFB**: starting index for `AFB`.
--   **B**: right-hand side matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **X**: solution matrix (improved on exit).
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
 -   **offsetX**: starting index for `X`.
--   **FERR**: output forward error bounds (length `nrhs`).
 -   **strideFERR**: stride length for `FERR`.
 -   **offsetFERR**: starting index for `FERR`.
--   **BERR**: output backward error bounds (length `nrhs`).
 -   **strideBERR**: stride length for `BERR`.
 -   **offsetBERR**: starting index for `BERR`.
--   **WORK**: workspace array (length >= `3*N`).
 -   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
--   **IWORK**: integer workspace array (length >= `N`).
 -   **strideIWORK**: stride length for `IWORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
@@ -87,9 +100,7 @@ The function has the following parameters:
 
 ## Notes
 
--   `dpbrfs` uses iterative refinement to improve the solution computed by `dpbtrs` and provides componentwise forward and backward error bounds.
--   The workspace array `WORK` is partitioned into three segments of length `N` for internal computations.
--   The routine uses `dlacn2` (reverse communication) to estimate the infinity-norm of `inv(A) * diag(W)` for computing forward error bounds.
+-   `dpbrfs()` corresponds to the [LAPACK][lapack] level routine [`dpbrfs`][lapack-dpbrfs].
 
 </section>
 
@@ -99,35 +110,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var dpbtrf = require( '@stdlib/lapack/base/dpbtrf' );
-var dpbtrs = require( '@stdlib/lapack/base/dpbtrs' );
 var dpbrfs = require( '@stdlib/lapack/base/dpbrfs' );
 
-// 3x3 SPD band matrix with KD=1, upper storage
-var ab = new Float64Array( [ 0.0, 4.0, 1.0, 5.0, 1.0, 6.0 ] );
-var afb = new Float64Array( ab );
-
-dpbtrf.ndarray( 'upper', 3, 1, afb, 1, 2, 0 );
-
-var b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-var x = new Float64Array( b );
-
-dpbtrs.ndarray( 'upper', 3, 1, 1, afb, 1, 2, 0, x, 1, 3, 0 );
-
-var FERR = new Float64Array( 1 );
-var BERR = new Float64Array( 1 );
-var WORK = new Float64Array( 9 );
-var IWORK = new Int32Array( 3 );
-
-var info = dpbrfs.ndarray( 'upper', 3, 1, 1, ab, 1, 2, 0, afb, 1, 2, 0, b, 1, 3, 0, x, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
-
-console.log( 'info:', info );
-console.log( 'x:', x );
-console.log( 'FERR:', FERR );
-console.log( 'BERR:', BERR );
+// TODO: Add examples
 ```
 
 </section>
@@ -146,9 +134,12 @@ console.log( 'BERR:', BERR );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dpbrfs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dpbrfs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

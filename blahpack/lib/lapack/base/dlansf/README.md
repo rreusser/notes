@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlansf
 
-> Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a real symmetric matrix stored in Rectangular Full Packed (RFP) format.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,41 +32,39 @@ var dlansf = require( '@stdlib/lapack/base/dlansf' );
 
 #### dlansf( norm, transr, uplo, N, A, WORK )
 
-Returns the value of a matrix norm for a real symmetric matrix stored in RFP format.
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 symmetric matrix in RFP format (upper, no-transpose):
-var A = new Float64Array( [ 2.0, 5.0, 4.0, 1.0, 3.0, 6.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = dlansf( 'max', 'no-transpose', 'upper', 3, A, WORK );
-// returns 6.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: specifies the norm type: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`.
--   **transr**: specifies the RFP storage format: `'no-transpose'` or `'transpose'`.
--   **uplo**: specifies the triangle: `'upper'` or `'lower'`.
--   **N**: order of the matrix.
--   **A**: input `Float64Array` in RFP format, length `N*(N+1)/2`.
--   **WORK**: workspace `Float64Array`, length `N` (used only for `'one-norm'` and `'inf-norm'`).
+-   **norm**: `norm`.
+-   **transr**: `transr`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+-   **WORK**: input array `WORK`.
 
 #### dlansf.ndarray( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK )
 
-Returns the value of a matrix norm with ndarray-style stride and offset parameters.
+@license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var A = new Float64Array( [ 0.0, 2.0, 5.0, 4.0, 1.0, 3.0, 6.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = dlansf.ndarray( 'max', 'no-transpose', 'upper', 3, A, 1, 1, WORK, 1, 0 );
-// returns 6.0
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **strideA**: stride length for `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
 
 </section>
 
@@ -56,10 +74,7 @@ var result = dlansf.ndarray( 'max', 'no-transpose', 'upper', 3, A, 1, 1, WORK, 1
 
 ## Notes
 
--   For a symmetric matrix, the one-norm and infinity-norm are equal.
--   The `'max'` norm returns the largest absolute value of any element.
--   The `'frobenius'` norm returns the square root of the sum of squares of all elements (counting off-diagonal elements twice).
--   The WORK array is only referenced when `norm` is `'one-norm'` or `'inf-norm'`.
+-   `dlansf()` corresponds to the [LAPACK][lapack] level routine [`dlansf`][lapack-dlansf].
 
 </section>
 
@@ -69,23 +84,12 @@ var result = dlansf.ndarray( 'max', 'no-transpose', 'upper', 3, A, 1, 1, WORK, 1
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlansf = require( '@stdlib/lapack/base/dlansf' );
 
-// 3x3 symmetric matrix in RFP (upper, no-transpose):
-var A = new Float64Array( [ 2.0, 5.0, 4.0, 1.0, 3.0, 6.0 ] );
-var WORK = new Float64Array( 3 );
-
-var maxNorm = dlansf( 'max', 'no-transpose', 'upper', 3, A, WORK );
-console.log( 'max norm: %d', maxNorm );
-
-WORK = new Float64Array( 3 );
-var oneNorm = dlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
-console.log( 'one-norm: %d', oneNorm );
-
-var frobNorm = dlansf( 'frobenius', 'no-transpose', 'upper', 3, A, WORK );
-console.log( 'frobenius norm: %d', frobNorm );
+// TODO: Add examples
 ```
 
 </section>
@@ -104,7 +108,13 @@ console.log( 'frobenius norm: %d', frobNorm );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlansf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlansf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

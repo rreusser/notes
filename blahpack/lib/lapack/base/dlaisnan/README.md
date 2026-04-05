@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlaisnan
 
-> Test for NaN by comparing two arguments for inequality
+> Tests for NaN by comparing two arguments for inequality.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
 ```
 
-#### dlaisnan.ndarray( din1, din2 )
+#### dlaisnan( din1, din2 )
 
-Test for NaN by comparing two arguments for inequality
+Tests for NaN by comparing two arguments for inequality.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,8 +42,21 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **din1**: din1.
--   **din2**: din2.
+-   **din1**: `din1`.
+-   **din2**: `din2`.
+
+#### dlaisnan.ndarray( din1, din2 )
+
+Tests for NaN by comparing two arguments for inequality, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
 
 </section>
 
@@ -53,7 +66,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlaisnan()` corresponds to the [LAPACK][lapack] level routine [`dlaisnan`][lapack-dlaisnan].
 
 </section>
 
@@ -63,7 +76,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
+
 // TODO: Add examples
 ```
 
@@ -83,9 +100,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlaisnan]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlaisnan.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlatdf
 
-> Computes contribution to reciprocal DIF estimate using LU factorization from dgetc2
+> Uses the LU factorization of the n-by-n matrix Z computed by dgetc2.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dlatdf = require( '@stdlib/lapack/base/dlatdf' );
 ```
 
-#### dlatdf.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+#### dlatdf( ijob, N, Z, LDZ, RHS, strideRHS, rdsum, rdscal, IPIV, strideIPIV, JPIV, strideJPIV )
 
-Computes contribution to reciprocal DIF estimate using LU factorization from dgetc2
+Uses the LU factorization of the n-by-n matrix Z computed by dgetc2.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,22 +42,36 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **ijob**: ijob.
+-   **ijob**: `ijob`.
 -   **N**: number of columns.
--   **Z**: input matrix.
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
--   **offsetZ**: starting index for `Z`.
--   **RHS**: input array.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+-   **RHS**: input array `RHS`.
 -   **strideRHS**: stride length for `RHS`.
--   **offsetRHS**: starting index for `RHS`.
--   **rdsum**: rdsum.
--   **rdscal**: rdscal.
--   **IPIV**: input array.
+-   **rdsum**: `rdsum`.
+-   **rdscal**: `rdscal`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **offsetIPIV**: starting index for `IPIV`.
--   **JPIV**: output array.
+-   **JPIV**: input array `JPIV`.
 -   **strideJPIV**: stride length for `JPIV`.
+
+#### dlatdf.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+
+Uses the LU factorization of the n-by-n matrix Z computed by dgetc2, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+-   **offsetRHS**: starting index for `RHS`.
+-   **offsetIPIV**: starting index for `IPIV`.
 -   **offsetJPIV**: starting index for `JPIV`.
 
 </section>
@@ -48,7 +82,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlatdf()` corresponds to the [LAPACK][lapack] level routine [`dlatdf`][lapack-dlatdf].
 
 </section>
 
@@ -58,7 +92,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dlatdf = require( '@stdlib/lapack/base/dlatdf' );
+
 // TODO: Add examples
 ```
 
@@ -78,9 +116,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlatdf]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlatdf.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

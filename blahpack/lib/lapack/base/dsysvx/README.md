@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dsysvx
 
-> Expert symmetric indefinite solver with condition estimation and iterative refinement
+> Solves a real symmetric indefinite system of linear equations A_X = B using.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dsysvx = require( '@stdlib/lapack/base/dsysvx' );
 ```
 
-#### dsysvx.ndarray( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+#### dsysvx( fact, uplo, N, nrhs, A, LDA, AF, LDAF, IPIV, strideIPIV, B, LDB, X, LDX, rcond, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, lwork, IWORK, strideIWORK )
 
-Expert symmetric indefinite solver with condition estimation and iterative refinement
+Solves a real symmetric indefinite system of linear equations A_X = B using.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,42 +42,59 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **fact**: specifies the operation type.
--   **uplo**: specifies the operation type.
+-   **fact**: `fact`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **nrhs**: nrhs.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **AF**: input matrix.
--   **strideAF1**: stride of the first dimension of `AF`.
--   **strideAF2**: stride of the second dimension of `AF`.
--   **offsetAF**: starting index for `AF`.
--   **IPIV**: input array.
+-   **nrhs**: number of right-hand sides.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **AF**: input array `AF`.
+-   **LDAF**: leading dimension of `AF`.
+-   **IPIV**: input array `IPIV`.
 -   **strideIPIV**: stride length for `IPIV`.
--   **offsetIPIV**: starting index for `IPIV`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
--   **X**: input matrix.
--   **strideX1**: stride of the first dimension of `X`.
--   **strideX2**: stride of the second dimension of `X`.
--   **offsetX**: starting index for `X`.
--   **rcond**: rcond.
--   **FERR**: input array.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **X**: input array `X`.
+-   **LDX**: leading dimension of `X`.
+-   **rcond**: `rcond`.
+-   **FERR**: input array `FERR`.
 -   **strideFERR**: stride length for `FERR`.
--   **offsetFERR**: starting index for `FERR`.
--   **BERR**: input array.
+-   **BERR**: input array `BERR`.
 -   **strideBERR**: stride length for `BERR`.
--   **offsetBERR**: starting index for `BERR`.
--   **WORK**: input array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
--   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
--   **IWORK**: output array.
+-   **lwork**: `lwork`.
+-   **IWORK**: input array `IWORK`.
 -   **strideIWORK**: stride length for `IWORK`.
+
+#### dsysvx.ndarray( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+
+Solves a real symmetric indefinite system of linear equations A_X = B using, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideAF1**: stride of dimension 1 of `AF`.
+-   **strideAF2**: stride of dimension 2 of `AF`.
+-   **offsetAF**: starting index for `AF`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideX1**: stride of dimension 1 of `X`.
+-   **strideX2**: stride of dimension 2 of `X`.
+-   **offsetX**: starting index for `X`.
+-   **offsetFERR**: starting index for `FERR`.
+-   **offsetBERR**: starting index for `BERR`.
+-   **offsetWORK**: starting index for `WORK`.
 -   **offsetIWORK**: starting index for `IWORK`.
 
 </section>
@@ -68,7 +105,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dsysvx()` corresponds to the [LAPACK][lapack] level routine [`dsysvx`][lapack-dsysvx].
 
 </section>
 
@@ -78,7 +115,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dsysvx = require( '@stdlib/lapack/base/dsysvx' );
+
 // TODO: Add examples
 ```
 
@@ -98,9 +139,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dsysvx]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dsysvx.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

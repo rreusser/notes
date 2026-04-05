@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgemm
 
-> Perform complex matrix-matrix operations
+> Perform one of the complex matrix-matrix operations:.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zgemm = require( '@stdlib/blas/base/zgemm' );
 ```
 
-#### zgemm.ndarray( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC )
+#### zgemm( order, transa, transb, M, N, K, alpha, A, LDA, B, LDB, beta, C, LDC )
 
-Perform complex matrix-matrix operations
+Perform one of the complex matrix-matrix operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -42,24 +42,41 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **transa**: specifies the operation type.
--   **transb**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **transa**: specifies the operation for matrix `A`.
+-   **transb**: specifies the operation for matrix `B`.
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **K**: number of superdiagonals.
+-   **K**: inner dimension.
 -   **alpha**: scalar constant.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **B**: input matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
--   **offsetB**: starting index for `B`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
 -   **beta**: scalar constant.
--   **C**: output matrix.
--   **strideC1**: stride of the first dimension of `C`.
--   **strideC2**: stride of the second dimension of `C`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+
+#### zgemm.ndarray( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC )
+
+Perform one of the complex matrix-matrix operations:, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
 -   **offsetC**: starting index for `C`.
 
 </section>
@@ -70,7 +87,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgemm()` corresponds to the [LAPACK][lapack] level routine [`zgemm`][lapack-zgemm].
 
 </section>
 
@@ -80,7 +97,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgemm = require( '@stdlib/blas/base/zgemm' );
+
 // TODO: Add examples
 ```
 
@@ -100,9 +121,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgemm]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgemm.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

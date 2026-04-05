@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dspr
 
-> Perform symmetric rank-1 update of a packed matrix
+> Performs the symmetric rank-1 update `A := alpha*x*x^T + A`.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var dspr = require( '@stdlib/blas/base/dspr' );
 ```
 
-#### dspr.ndarray( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP )
+#### dspr( uplo, N, alpha, x, strideX, AP, strideAP )
 
-Perform symmetric rank-1 update of a packed matrix
+Performs the symmetric rank-1 update `A := alpha*x*x^T + A`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,14 +42,27 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
 -   **alpha**: scalar constant.
--   **x**: input array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **AP**: output array.
+-   **x**: `x`.
+-   **strideX**: stride length for `X`.
+-   **AP**: input array `AP`.
 -   **strideAP**: stride length for `AP`.
+
+#### dspr.ndarray( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP )
+
+Performs the symmetric rank-1 update `A := alpha*x*x^T + A`, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 -   **offsetAP**: starting index for `AP`.
 
 </section>
@@ -40,7 +73,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dspr()` corresponds to the [LAPACK][lapack] level routine [`dspr`][lapack-dspr].
 
 </section>
 
@@ -50,7 +83,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dspr = require( '@stdlib/blas/base/dspr' );
+
 // TODO: Add examples
 ```
 
@@ -70,9 +107,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dspr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dspr.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpbtrs
 
-> Solve a Hermitian positive definite banded system using Cholesky factorization
+> Solves a complex Hermitian positive definite banded system of equations.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zpbtrs = require( '@stdlib/lapack/base/zpbtrs' );
 ```
 
-#### zpbtrs.ndarray( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB )
+#### zpbtrs( order, uplo, N, kd, nrhs, AB, LDAB, B, LDB )
 
-Solve a Hermitian positive definite banded system using Cholesky factorization
+Solves a complex Hermitian positive definite banded system of equations.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,17 +42,33 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
--   **uplo**: specifies the operation type.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
 -   **N**: number of columns.
--   **kd**: kd.
--   **nrhs**: nrhs.
--   **AB**: input matrix.
--   **strideAB1**: stride of the first dimension of `AB`.
--   **strideAB2**: stride of the second dimension of `AB`.
+-   **kd**: `kd`.
+-   **nrhs**: number of right-hand sides.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### zpbtrs.ndarray( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB )
+
+Solves a complex Hermitian positive definite banded system of equations, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
 -   **offsetAB**: starting index for `AB`.
--   **B**: output matrix.
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
 
 </section>
@@ -43,7 +79,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zpbtrs()` corresponds to the [LAPACK][lapack] level routine [`zpbtrs`][lapack-zpbtrs].
 
 </section>
 
@@ -53,7 +89,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zpbtrs = require( '@stdlib/lapack/base/zpbtrs' );
+
 // TODO: Add examples
 ```
 
@@ -73,9 +113,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpbtrs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpbtrs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

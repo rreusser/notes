@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgbequ
 
-> Computes row and column scalings to equilibrate a complex general band matrix.
+> Computes row and column scalings intended to equilibrate an M-by-N complex band matrix A and reduce its condition number.
 
 <section class="usage">
 
@@ -10,45 +30,46 @@
 var zgbequ = require( '@stdlib/lapack/base/zgbequ' );
 ```
 
-#### zgbequ.ndarray( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC )
+#### zgbequ( M, N, kl, ku, AB, LDAB, r, strideR, c, strideC )
 
-Computes row and column scalings intended to equilibrate an M-by-N complex band matrix A stored in LAPACK band storage and reduce its condition number. Uses `CABS1(z) = |Re(z)| + |Im(z)|` for element magnitudes.
+Computes row and column scalings intended to equilibrate an M-by-N complex band matrix A and reduce its condition number.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 tridiagonal complex band matrix (KL=1, KU=1, LDAB=3):
-var AB = new Complex128Array([
-    0, 0, 2, 1, 3, 0,
-    1, 2, 4, 1, 2, 3,
-    1, 1, 5, 0, 0, 0
-]);
-var r = new Float64Array( 3 );
-var c = new Float64Array( 3 );
-var out = zgbequ.ndarray( 3, 3, 1, 1, AB, 1, 3, 0, r, 1, 0, c, 1, 0 );
-// out.info => 0
-// out.amax => 5.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **M**: number of rows of A.
--   **N**: number of columns of A.
--   **kl**: number of subdiagonals within the band of A.
--   **ku**: number of superdiagonals within the band of A.
--   **AB**: input complex band matrix stored in LAPACK band format (`Complex128Array`).
--   **strideAB1**: stride of the first dimension of `AB` (in complex elements).
--   **strideAB2**: stride of the second dimension of `AB` (in complex elements).
--   **offsetAB**: starting index for `AB` (in complex elements).
--   **r**: output row scale factors (`Float64Array`, length M).
--   **strideR**: stride for `r`.
--   **offsetR**: starting index for `r`.
--   **c**: output column scale factors (`Float64Array`, length N).
--   **strideC**: stride for `c`.
--   **offsetC**: starting index for `c`.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **kl**: number of subdiagonals.
+-   **ku**: number of superdiagonals.
+-   **AB**: input array `AB`.
+-   **LDAB**: leading dimension of `AB`.
+-   **r**: `r`.
+-   **strideR**: stride length for `R`.
+-   **c**: `c`.
+-   **strideC**: stride length for `C`.
 
-Returns an object with `info`, `rowcnd`, `colcnd`, and `amax`.
+#### zgbequ.ndarray( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC )
+
+Computes row and column scalings intended to equilibrate an M-by-N complex band matrix A and reduce its condition number, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **offsetR**: starting index for `R`.
+-   **offsetC**: starting index for `C`.
 
 </section>
 
@@ -58,9 +79,7 @@ Returns an object with `info`, `rowcnd`, `colcnd`, and `amax`.
 
 ## Notes
 
--   The band matrix A is stored in rows 1 to KL+KU+1 such that `AB(ku+1+i-j, j) = A(i,j)`.
--   Element magnitudes use `CABS1(z) = |Re(z)| + |Im(z)|`, not the complex modulus.
--   If `info = 0`, the equilibration was successful. If `info = i` (1-based) where `i <= M`, the i-th row of A is exactly zero. If `info = M + j`, the j-th column is exactly zero after row scaling.
+-   `zgbequ()` corresponds to the [LAPACK][lapack] level routine [`zgbequ`][lapack-zgbequ].
 
 </section>
 
@@ -70,20 +89,12 @@ Returns an object with `info`, `rowcnd`, `colcnd`, and `amax`.
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var zgbequ = require( '@stdlib/lapack/base/zgbequ' );
 
-// Diagonal complex band matrix (KL=0, KU=0):
-var AB = new Complex128Array([ 3, 4, 1, 0, 0, 2 ]);
-var r = new Float64Array( 3 );
-var c = new Float64Array( 3 );
-var out = zgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
-console.log( 'info:', out.info );
-console.log( 'amax:', out.amax );
-console.log( 'r:', r );
-console.log( 'c:', c );
+// TODO: Add examples
 ```
 
 </section>
@@ -102,7 +113,12 @@ console.log( 'c:', c );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgbequ]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgbequ.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

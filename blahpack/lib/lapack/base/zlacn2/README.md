@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zlacn2
 
-> Estimate 1-norm of a square matrix using reverse communication
+> Estimates the 1-norm of a square complex matrix A using reverse communication.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zlacn2 = require( '@stdlib/lapack/base/zlacn2' );
 ```
 
-#### zlacn2.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE )
+#### zlacn2( N, V, strideV, X, strideX, EST, KASE, ISAVE, strideISAVE )
 
-Estimate 1-norm of a square matrix using reverse communication
+Estimates the 1-norm of a square complex matrix A using reverse communication.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -23,17 +43,30 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **v**: input array.
--   **strideV**: stride length for `v`.
--   **offsetV**: starting index for `v`.
--   **x**: output array.
--   **strideX**: stride length for `x`.
--   **offsetX**: starting index for `x`.
--   **est**: est.
--   **kase**: kase.
--   **isave**: input array.
--   **strideISAVE**: stride length for `isave`.
--   **offsetISAVE**: starting index for `isave`.
+-   **V**: input array `V`.
+-   **strideV**: stride length for `V`.
+-   **X**: input array `X`.
+-   **strideX**: stride length for `X`.
+-   **EST**: input array `EST`.
+-   **KASE**: input array `KASE`.
+-   **ISAVE**: input array `ISAVE`.
+-   **strideISAVE**: stride length for `ISAVE`.
+
+#### zlacn2.ndarray( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE, ISAVE, strideISAVE, offsetISAVE )
+
+Estimates the 1-norm of a square complex matrix A using reverse communication, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetV**: starting index for `V`.
+-   **offsetX**: starting index for `X`.
+-   **offsetISAVE**: starting index for `ISAVE`.
 
 </section>
 
@@ -43,7 +76,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlacn2()` corresponds to the [LAPACK][lapack] level routine [`zlacn2`][lapack-zlacn2].
 
 </section>
 
@@ -53,7 +86,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zlacn2 = require( '@stdlib/lapack/base/zlacn2' );
+
 // TODO: Add examples
 ```
 
@@ -73,9 +110,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zlacn2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zlacn2.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

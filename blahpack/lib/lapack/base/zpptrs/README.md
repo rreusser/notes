@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpptrs
 
-> Solve a system of linear equations with a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -10,33 +30,43 @@
 var zpptrs = require( '@stdlib/lapack/base/zpptrs' );
 ```
 
-#### zpptrs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
+#### zpptrs( order, uplo, N, nrhs, AP, B, LDB )
 
-Solves `A * X = B` where `A` is a complex Hermitian positive definite matrix in packed storage, using the Cholesky factorization `A = U**H * U` or `A = L * L**H` computed by `zpptrf`.
+@license Apache-2.0.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// Pre-factored upper Cholesky of a 3x3 Hermitian positive definite matrix:
-var AP = new Complex128Array( [ 3.162, 0.0, 0.949, -0.316, 2.646, 0.0, 0.316, 0.632, 0.718, -0.643, 2.138, 0.0 ] );
-var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
-
-zpptrs.ndarray( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
-// B is overwritten with the solution X
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper or lower triangular factor is stored (`'upper'` or `'lower'`).
--   **N**: order of matrix `A`.
--   **nrhs**: number of right-hand side columns.
--   **AP**: packed triangular factor from `zpptrf` (`Complex128Array`).
--   **strideAP**: stride length for `AP` (in complex elements).
--   **offsetAP**: starting index for `AP` (in complex elements).
--   **B**: right-hand side matrix, overwritten with solution on exit (`Complex128Array`).
--   **strideB1**: stride of the first dimension of `B` (in complex elements).
--   **strideB2**: stride of the second dimension of `B` (in complex elements).
--   **offsetB**: starting index for `B` (in complex elements).
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **nrhs**: number of right-hand sides.
+-   **AP**: input array `AP`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+
+#### zpptrs.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
 
 </section>
 
@@ -46,10 +76,7 @@ The function has the following parameters:
 
 ## Notes
 
--   The matrix `A` must have been previously factored by `zpptrf` as `A = U**H * U` (upper) or `A = L * L**H` (lower).
--   The routine overwrites `B` with the solution matrix `X`.
--   For upper triangular storage, the routine solves `U**H * Y = B` then `U * X = Y`.
--   For lower triangular storage, the routine solves `L * Y = B` then `L**H * X = Y`.
+-   `zpptrs()` corresponds to the [LAPACK][lapack] level routine [`zpptrs`][lapack-zpptrs].
 
 </section>
 
@@ -59,16 +86,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var zpptrs = require( '@stdlib/lapack/base/zpptrs' );
 
-var AP = new Complex128Array( [ 3.162, 0.0, 0.949, -0.316, 2.646, 0.0, 0.316, 0.632, 0.718, -0.643, 2.138, 0.0 ] );
-var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
-
-var info = zpptrs.ndarray( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
-console.log( 'info:', info );
-// => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -87,9 +110,12 @@ console.log( 'info:', info );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpptrs]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpptrs.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

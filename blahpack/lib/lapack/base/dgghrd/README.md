@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dgghrd
 
-> Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations.
+> @license Apache-2.0.
 
 <section class="usage">
 
@@ -12,58 +32,54 @@ var dgghrd = require( '@stdlib/lapack/base/dgghrd' );
 
 #### dgghrd( order, compq, compz, N, ilo, ihi, A, LDA, B, LDB, Q, LDQ, Z, LDZ )
 
-Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations, where `Q**T * A * Z = H` (upper Hessenberg) and `Q**T * B * Z = T` (upper triangular).
+@license Apache-2.0.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var A = new Float64Array( [ 2.0, 3.0, 1.0, 1.0, 0.5, 2.0, 3.0, 0.5, 2.0 ] );
-var B = new Float64Array( [ 1.0, 0.0, 0.0, 0.5, 2.0, 0.0, 0.25, 1.0, 3.0 ] );
-var Q = new Float64Array( 9 );
-var Z = new Float64Array( 9 );
-
-var info = dgghrd( 'column-major', 'initialize', 'initialize', 3, 1, 3, A, 3, B, 3, Q, 3, Z, 3 );
-// info => 0
-```
-
-#### dgghrd.ndarray( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ )
-
-Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations (ndarray interface).
-
-```javascript
-var Float64Array = require( '@stdlib/array/float64' );
-
-var A = new Float64Array( [ 2.0, 3.0, 1.0, 1.0, 0.5, 2.0, 3.0, 0.5, 2.0 ] );
-var B = new Float64Array( [ 1.0, 0.0, 0.0, 0.5, 2.0, 0.0, 0.25, 1.0, 3.0 ] );
-var Q = new Float64Array( 9 );
-var Z = new Float64Array( 9 );
-
-var info = dgghrd.ndarray( 'initialize', 'initialize', 3, 1, 3, A, 1, 3, 0, B, 1, 3, 0, Q, 1, 3, 0, Z, 1, 3, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **compq**: specifies whether Q is computed. Must be `'none'`, `'initialize'`, or `'update'`.
--   **compz**: specifies whether Z is computed. Must be `'none'`, `'initialize'`, or `'update'`.
--   **N**: order of the matrices A and B.
--   **ilo**: ilo index (1-based).
--   **ihi**: ihi index (1-based).
--   **A**: input/output matrix A.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **compq**: `compq`.
+-   **compz**: `compz`.
+-   **N**: number of columns.
+-   **ilo**: `ilo`.
+-   **ihi**: `ihi`.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input array `B`.
+-   **LDB**: leading dimension of `B`.
+-   **Q**: input array `Q`.
+-   **LDQ**: leading dimension of `Q`.
+-   **Z**: input array `Z`.
+-   **LDZ**: leading dimension of `Z`.
+
+#### dgghrd.ndarray( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ )
+
+@license Apache-2.0, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **B**: input/output matrix B (upper triangular on entry).
--   **strideB1**: stride of the first dimension of `B`.
--   **strideB2**: stride of the second dimension of `B`.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
 -   **offsetB**: starting index for `B`.
--   **Q**: input/output orthogonal matrix Q.
--   **strideQ1**: stride of the first dimension of `Q`.
--   **strideQ2**: stride of the second dimension of `Q`.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
 -   **offsetQ**: starting index for `Q`.
--   **Z**: input/output orthogonal matrix Z.
--   **strideZ1**: stride of the first dimension of `Z`.
--   **strideZ2**: stride of the second dimension of `Z`.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
 -   **offsetZ**: starting index for `Z`.
 
 </section>
@@ -74,8 +90,7 @@ The function has the following parameters:
 
 ## Notes
 
--   On entry, matrix A is a general real N-by-N matrix and B is an N-by-N upper triangular matrix. On exit, A is overwritten by the upper Hessenberg matrix H and B is overwritten by the upper triangular matrix T.
--   The `compq` and `compz` parameters control whether the orthogonal transformation matrices Q and Z are computed: `'none'` means they are not referenced, `'initialize'` means they are initialized to identity and the transformations are accumulated, and `'update'` means transformations are accumulated into existing Q and Z.
+-   `dgghrd()` corresponds to the [LAPACK][lapack] level routine [`dgghrd`][lapack-dgghrd].
 
 </section>
 
@@ -85,17 +100,12 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dgghrd = require( '@stdlib/lapack/base/dgghrd' );
 
-var A = new Float64Array( [ 2.0, 3.0, 1.0, 1.0, 1.0, 0.5, 0.5, 2.0, 3.0 ] );
-var B = new Float64Array( [ 1.0, 0.0, 0.0, 0.5, 2.0, 0.0, 0.25, 1.0, 3.0 ] );
-var Q = new Float64Array( 9 );
-var Z = new Float64Array( 9 );
-
-var info = dgghrd( 'column-major', 'initialize', 'initialize', 3, 1, 3, A, 3, B, 3, Q, 3, Z, 3 );
-// info => 0
+// TODO: Add examples
 ```
 
 </section>
@@ -114,9 +124,12 @@ var info = dgghrd( 'column-major', 'initialize', 'initialize', 3, 1, 3, A, 3, B,
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dgghrd]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dgghrd.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

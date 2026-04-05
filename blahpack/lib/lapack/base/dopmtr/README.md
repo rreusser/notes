@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dopmtr
 
-> Overwrites a general real M-by-N matrix C with Q\*C, C\*Q, Q^T\*C, or C\*Q^T, where Q is a real orthogonal matrix from DSPTRD (packed storage).
+> Overwrites a general matrix with a transformation from the orthogonal matrix Q returned by dsptrd.
 
 <section class="usage">
 
@@ -12,61 +32,48 @@ var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
 
 #### dopmtr( side, uplo, trans, M, N, AP, TAU, C, LDC, WORK )
 
-Overwrites the general real M-by-N matrix C with Q\*C, C\*Q, Q^T\*C, or C\*Q^T, where Q is a real orthogonal matrix defined as the product of NQ-1 elementary reflectors, as returned by [`dsptrd`][@stdlib/lapack/base/dsptrd] using packed storage.
+Overwrites a general matrix with a transformation from the orthogonal matrix Q returned by dsptrd.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// AP and TAU from a prior call to dsptrd('upper', 4, ...):
-var AP = new Float64Array( [ 2.26, -0.09, 1.18, -0.58, 0.90, 5.56, -0.4, -0.2, 3.0, -1.0 ] );
-var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
-var C = new Float64Array( [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ] );
-var WORK = new Float64Array( 4 );
-
-dopmtr( 'left', 'upper', 'no-transpose', 4, 4, AP, TAU, C, 4, WORK );
-// C is overwritten with Q * C
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **side**: `'left'` to apply Q or Q^T from the left, `'right'` from the right.
--   **uplo**: `'upper'` or `'lower'`, specifying whether upper or lower triangular packed storage was used in the call to dsptrd.
--   **trans**: `'no-transpose'` for Q, `'transpose'` for Q^T.
--   **M**: number of rows of C.
--   **N**: number of columns of C.
--   **AP**: packed reflector storage from dsptrd (modified temporarily, restored on exit).
--   **TAU**: scalar factors of the elementary reflectors from dsptrd.
--   **C**: input/output M-by-N matrix (column-major).
--   **LDC**: leading dimension of C.
--   **WORK**: workspace array of length N (if side='left') or M (if side='right').
+-   **side**: specifies the side of the operation.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **trans**: specifies whether the matrix should be transposed.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **TAU**: input array `TAU`.
+-   **C**: input array `C`.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: input array `WORK`.
 
 #### dopmtr.ndarray( side, uplo, trans, M, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 
-Overwrites a general matrix with a transformation from the orthogonal matrix Q returned by dsptrd, with explicit stride and offset control.
+Overwrites a general matrix with a transformation from the orthogonal matrix Q returned by dsptrd, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 2.26, -0.09, 1.18, -0.58, 0.90, 5.56, -0.4, -0.2, 3.0, -1.0 ] );
-var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
-var C = new Float64Array( [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ] );
-var WORK = new Float64Array( 4 );
-
-dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
-// C is overwritten with Q * C
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **strideAP**: stride for AP.
--   **offsetAP**: starting index for AP.
--   **strideTAU**: stride for TAU.
--   **offsetTAU**: starting index for TAU.
--   **strideC1**: stride of the first dimension of C.
--   **strideC2**: stride of the second dimension of C.
--   **offsetC**: starting index for C.
--   **strideWORK**: stride for WORK.
--   **offsetWORK**: starting index for WORK.
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideTAU**: stride length for `TAU`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
 
 </section>
 
@@ -76,8 +83,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   AP is temporarily modified during computation (diagonal elements set to 1.0 for reflector application) but is restored to its original values on exit.
--   This routine is the packed-storage analog of [`dormtr`][@stdlib/lapack/base/dormtr], which works with full-storage symmetric matrices.
+-   `dopmtr()` corresponds to the [LAPACK][lapack] level routine [`dopmtr`][lapack-dopmtr].
 
 </section>
 
@@ -87,20 +93,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
 
-// AP and TAU from dsptrd('upper', 4, ...):
-var AP = new Float64Array( [ 2.26, -0.09, 1.18, -0.58, 0.90, 5.56, -0.4, -0.2, 3.0, -1.0 ] );
-var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
-
-// Apply Q to 4x4 identity from the left (Q * I = Q):
-var C = new Float64Array( [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ] );
-var WORK = new Float64Array( 4 );
-
-dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
-// C now contains the orthogonal matrix Q
+// TODO: Add examples
 ```
 
 </section>
@@ -119,12 +117,12 @@ dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1
 
 <section class="links">
 
-[@stdlib/lapack/base/dsptrd]: https://github.com/stdlib-js/stdlib
-[@stdlib/lapack/base/dormtr]: https://github.com/stdlib-js/stdlib
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dopmtr]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dopmtr.html
 
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

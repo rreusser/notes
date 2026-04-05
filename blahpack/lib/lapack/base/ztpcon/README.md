@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # ztpcon
 
 > Estimates the reciprocal condition number of a complex triangular matrix in packed storage.
@@ -15,48 +35,40 @@ var ztpcon = require( '@stdlib/lapack/base/ztpcon' );
 Estimates the reciprocal condition number of a complex triangular matrix in packed storage.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-// 3x3 upper triangular, non-unit, packed column-major:
-var AP = new Complex128Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.5, 0.0, 1.0, -1.0, 2.0, 1.0 ] );
-var RCOND = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztpcon( 'one-norm', 'upper', 'non-unit', 3, AP, RCOND, WORK, RWORK );
-// info => 0
-// RCOND[ 0 ] => ~0.335
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: norm type (`'one-norm'` or `'inf-norm'`).
--   **uplo**: specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`).
--   **diag**: specifies whether the matrix has a unit diagonal (`'unit'` or `'non-unit'`).
--   **N**: order of the matrix.
--   **AP**: packed triangular matrix as a [`Complex128Array`][@stdlib/array/complex128].
--   **RCOND**: output [`Float64Array`][mdn-float64array] of length 1 to receive the reciprocal condition number.
--   **WORK**: workspace [`Complex128Array`][@stdlib/array/complex128] of length `2*N`.
--   **RWORK**: workspace [`Float64Array`][mdn-float64array] of length `N`.
+-   **norm**: `norm`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **diag**: specifies whether the matrix is unit triangular.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **RCOND**: input array `RCOND`.
+-   **WORK**: input array `WORK`.
+-   **RWORK**: input array `RWORK`.
 
 #### ztpcon.ndarray( norm, uplo, diag, N, AP, strideAP, offsetAP, RCOND, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
 
-Estimates the reciprocal condition number with explicit stride and offset control.
+Estimates the reciprocal condition number of a complex triangular matrix in packed storage, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Complex128Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.5, 0.0, 1.0, -1.0, 2.0, 1.0 ] );
-var RCOND = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztpcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, AP, 1, 0, RCOND, WORK, 1, 0, RWORK, 1, 0 );
-// info => 0
-// RCOND[ 0 ] => ~0.335
+// TODO: Add usage example
 ```
+
+The function has the following additional parameters:
+
+-   **strideAP**: stride length for `AP`.
+-   **offsetAP**: starting index for `AP`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **strideRWORK**: stride length for `RWORK`.
+-   **offsetRWORK**: starting index for `RWORK`.
 
 </section>
 
@@ -66,8 +78,7 @@ var info = ztpcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, AP, 1, 0, RCOND, 
 
 ## Notes
 
--   The routine computes `norm(A)` via [`zlantp`][@stdlib/lapack/base/zlantp] and estimates `norm(inv(A))` using reverse communication with [`zlacn2`][@stdlib/lapack/base/zlacn2] and triangular solves via [`zlatps`][@stdlib/lapack/base/zlatps].
--   The reciprocal condition number is returned in `RCOND[0]` as `1 / (norm(A) * norm(inv(A)))`.
+-   `ztpcon()` corresponds to the [LAPACK][lapack] level routine [`ztpcon`][lapack-ztpcon].
 
 </section>
 
@@ -77,20 +88,12 @@ var info = ztpcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, AP, 1, 0, RCOND, 
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var Float64Array = require( '@stdlib/array/float64' );
 var ztpcon = require( '@stdlib/lapack/base/ztpcon' );
 
-// 3x3 upper triangular matrix in packed storage:
-var AP = new Complex128Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.5, 0.0, 1.0, -1.0, 2.0, 1.0 ] );
-var RCOND = new Float64Array( 1 );
-var WORK = new Complex128Array( 6 );
-var RWORK = new Float64Array( 3 );
-
-var info = ztpcon( 'one-norm', 'upper', 'non-unit', 3, AP, RCOND, WORK, RWORK );
-console.log( 'info:', info );
-console.log( 'rcond:', RCOND[ 0 ] );
+// TODO: Add examples
 ```
 
 </section>
@@ -109,15 +112,13 @@ console.log( 'rcond:', RCOND[ 0 ] );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-ztpcon]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__ztpcon.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
-
-[@stdlib/lapack/base/zlantp]: https://github.com/stdlib-js/lapack-base-zlantp
-
-[@stdlib/lapack/base/zlacn2]: https://github.com/stdlib-js/lapack-base-zlacn2
-
-[@stdlib/lapack/base/zlatps]: https://github.com/stdlib-js/lapack-base-zlatps
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

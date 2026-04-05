@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # dlansp
 
 > Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a real symmetric matrix supplied in packed storage.
@@ -17,33 +37,25 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = dlansp( 'max', 'upper', 3, AP, WORK );
-// returns 7.0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **norm**: specifies the norm type: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`.
--   **uplo**: specifies whether the upper or lower triangle is stored: `'upper'` or `'lower'`.
--   **N**: order of the matrix.
--   **AP**: packed symmetric matrix as a [`Float64Array`][mdn-float64array], length >= `N*(N+1)/2`.
--   **WORK**: workspace [`Float64Array`][mdn-float64array], length >= `N`.
+-   **norm**: `norm`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
+-   **WORK**: input array `WORK`.
 
 #### dlansp.ndarray( norm, uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
 
-Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a real symmetric matrix supplied in packed storage using alternative indexing semantics.
+Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a real symmetric matrix supplied in packed storage, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-var AP = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
-var WORK = new Float64Array( 3 );
-
-var result = dlansp.ndarray( 'max', 'upper', 3, AP, 1, 0, WORK, 1, 0 );
-// returns 7.0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
@@ -61,8 +73,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   For a symmetric matrix, the one-norm equals the infinity-norm.
--   The workspace array `WORK` is only referenced when `norm` is `'one-norm'` or `'inf-norm'`.
+-   `dlansp()` corresponds to the [LAPACK][lapack] level routine [`dlansp`][lapack-dlansp].
 
 </section>
 
@@ -72,23 +83,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
 var dlansp = require( '@stdlib/lapack/base/dlansp' );
 
-// 3x3 symmetric matrix in upper packed storage:
-var AP = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
-var WORK = new Float64Array( 3 );
-var result;
-
-result = dlansp( 'max', 'upper', 3, AP, WORK );
-// returns 7.0
-
-result = dlansp( 'one-norm', 'upper', 3, AP, WORK );
-// returns 10.0
-
-result = dlansp( 'frobenius', 'upper', 3, AP, WORK );
-// returns ~10.296
+// TODO: Add examples
 ```
 
 </section>
@@ -107,7 +107,13 @@ result = dlansp( 'frobenius', 'upper', 3, AP, WORK );
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlansp]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dlansp.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

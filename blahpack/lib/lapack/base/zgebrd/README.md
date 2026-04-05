@@ -1,6 +1,26 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zgebrd
 
-> Reduce a complex matrix to bidiagonal form (blocked)
+> Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
 
 <section class="usage">
 
@@ -10,9 +30,9 @@
 var zgebrd = require( '@stdlib/lapack/base/zgebrd' );
 ```
 
-#### zgebrd.ndarray( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK, lwork )
+#### zgebrd( order, M, N, A, LDA, d, strideD, e, strideE, TAUQ, strideTAUQ, TAUP, strideTAUP, WORK, strideWORK, lwork )
 
-Reduce a complex matrix to bidiagonal form (blocked)
+Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -22,28 +42,43 @@ var Float64Array = require( '@stdlib/array/float64' );
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input matrix.
--   **strideA1**: stride of the first dimension of `A`.
--   **strideA2**: stride of the second dimension of `A`.
--   **offsetA**: starting index for `A`.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `d`.
--   **e**: input array.
--   **strideE**: stride length for `e`.
--   **offsetE**: starting index for `e`.
--   **TAUQ**: input array.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+-   **d**: `d`.
+-   **strideD**: stride length for `D`.
+-   **e**: `e`.
+-   **strideE**: stride length for `E`.
+-   **TAUQ**: input array `TAUQ`.
 -   **strideTAUQ**: stride length for `TAUQ`.
--   **offsetTAUQ**: starting index for `TAUQ`.
--   **TAUP**: input array.
+-   **TAUP**: input array `TAUP`.
 -   **strideTAUP**: stride length for `TAUP`.
--   **offsetTAUP**: starting index for `TAUP`.
--   **WORK**: output array.
+-   **WORK**: input array `WORK`.
 -   **strideWORK**: stride length for `WORK`.
+-   **lwork**: `lwork`.
+
+#### zgebrd.ndarray( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK, lwork )
+
+Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetD**: starting index for `D`.
+-   **offsetE**: starting index for `E`.
+-   **offsetTAUQ**: starting index for `TAUQ`.
+-   **offsetTAUP**: starting index for `TAUP`.
 -   **offsetWORK**: starting index for `WORK`.
--   **lwork**: lwork.
 
 </section>
 
@@ -53,7 +88,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgebrd()` corresponds to the [LAPACK][lapack] level routine [`zgebrd`][lapack-zgebrd].
 
 </section>
 
@@ -63,7 +98,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zgebrd = require( '@stdlib/lapack/base/zgebrd' );
+
 // TODO: Add examples
 ```
 
@@ -83,9 +122,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zgebrd]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zgebrd.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

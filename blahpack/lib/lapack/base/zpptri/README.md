@@ -1,3 +1,23 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
 # zpptri
 
 > Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization.
@@ -12,42 +32,34 @@ var zpptri = require( '@stdlib/lapack/base/zpptri' );
 
 #### zpptri( uplo, N, AP )
 
-Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization computed by `zpptrf`.
+Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 2x2 upper Cholesky factor (already factored):
-var AP = new Complex128Array( [ 3.0, 0.0, 1.0, 0.0, 2.0, 0.0 ] );
-
-var info = zpptri( 'upper', 2, AP );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following parameters:
 
--   **uplo**: specifies whether the upper (`'upper'`) or lower (`'lower'`) triangle of `A` is stored.
--   **N**: order of the matrix `A`.
--   **AP**: packed Hermitian matrix as a [`Complex128Array`][@stdlib/array/complex128], containing the Cholesky factor from `zpptrf`.
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **AP**: input array `AP`.
 
 #### zpptri.ndarray( uplo, N, AP, stride, offset )
 
-Computes the inverse with alternative indexing semantics.
+Computes the inverse of a complex Hermitian positive definite matrix in packed storage using the Cholesky factorization, using alternative indexing semantics.
 
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 
-// 2x2 upper Cholesky factor (already factored):
-var AP = new Complex128Array( [ 3.0, 0.0, 1.0, 0.0, 2.0, 0.0 ] );
-
-var info = zpptri.ndarray( 'upper', 2, AP, 1, 0 );
-// info => 0
+// TODO: Add usage example
 ```
 
 The function has the following additional parameters:
 
--   **stride**: stride length for `AP` (in complex elements).
--   **offset**: starting index for `AP` (in complex elements).
+-   **stride**: `stride`.
+-   **offset**: `offset`.
 
 </section>
 
@@ -57,9 +69,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   On entry, `AP` must contain the triangular factor U or L from the Cholesky factorization `A = U^H * U` or `A = L * L^H`, as computed by `zpptrf`, in packed format.
--   On exit, `AP` is overwritten by the upper or lower triangle of the inverse of `A`, in packed format.
--   The return value is `0` on success, or `k > 0` if the `k`-th diagonal element of the Cholesky factor is zero (the matrix is singular).
+-   `zpptri()` corresponds to the [LAPACK][lapack] level routine [`zpptri`][lapack-zpptri].
 
 </section>
 
@@ -69,17 +79,12 @@ The function has the following additional parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpptri = require( '@stdlib/lapack/base/zpptri' );
 
-// 2x2 upper Cholesky factor (real diagonal, already factored):
-var AP = new Complex128Array( [ 3.0, 0.0, 1.0, 0.0, 2.0, 0.0 ] );
-
-var info = zpptri( 'upper', 2, AP );
-console.log( 'info:', info );
-console.log( 'inverse (packed):', reinterpret( AP, 0 ) );
+// TODO: Add examples
 ```
 
 </section>
@@ -98,7 +103,13 @@ console.log( 'inverse (packed):', reinterpret( AP, 0 ) );
 
 <section class="links">
 
-[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zpptri]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zpptri.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

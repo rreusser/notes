@@ -20,7 +20,7 @@ limitations under the License.
 
 # zscal
 
-> Scale a complex double-precision vector by a complex constant
+> Scale a complex double-precision vector by a complex constant.
 
 <section class="usage">
 
@@ -30,9 +30,9 @@ limitations under the License.
 var zscal = require( '@stdlib/blas/base/zscal' );
 ```
 
-#### zscal.ndarray( N, za, x, stride, offset, incx )
+#### zscal( N, za, zx, strideX )
 
-Scale a complex double-precision vector by a complex constant
+Scale a complex double-precision vector by a complex constant.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
@@ -43,11 +43,23 @@ var Float64Array = require( '@stdlib/array/float64' );
 The function has the following parameters:
 
 -   **N**: number of columns.
--   **za**: za.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for `x`.
--   **incx**: incx.
+-   **za**: `za`.
+-   **zx**: `zx`.
+-   **strideX**: stride length for `X`.
+
+#### zscal.ndarray( N, za, zx, strideX, offsetX )
+
+Scale a complex double-precision vector by a complex constant, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **offsetX**: starting index for `X`.
 
 </section>
 
@@ -57,7 +69,7 @@ The function has the following parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zscal()` corresponds to the [LAPACK][lapack] level routine [`zscal`][lapack-zscal].
 
 </section>
 
@@ -67,7 +79,11 @@ The function has the following parameters:
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var zscal = require( '@stdlib/blas/base/zscal' );
+
 // TODO: Add examples
 ```
 
@@ -87,9 +103,12 @@ The function has the following parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zscal]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zscal.html
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

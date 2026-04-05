@@ -1,28 +1,28 @@
 <!--
 
-/**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 -->
 
 # dpotf2
 
-> Compute the Cholesky factorization of a real symmetric positive definite matrix (unblocked algorithm).
+> Computes the Cholesky factorization of a real symmetric positive definite.
+
+<section class="usage">
 
 ## Usage
 
@@ -30,21 +30,90 @@
 var dpotf2 = require( '@stdlib/lapack/base/dpotf2' );
 ```
 
+#### dpotf2( order, uplo, N, A, LDA )
+
+Computes the Cholesky factorization of a real symmetric positive definite.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced.
+-   **N**: number of columns.
+-   **A**: input array `A`.
+-   **LDA**: leading dimension of `A`.
+
 #### dpotf2.ndarray( uplo, N, A, strideA1, strideA2, offsetA )
 
-TODO: Add parameter descriptions.
+Computes the Cholesky factorization of a real symmetric positive definite, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
 
 ## Notes
 
--   TODO: Add notes.
+-   `dpotf2()` corresponds to the [LAPACK][lapack] level routine [`dpotf2`][lapack-dpotf2].
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
 
 ## Examples
 
+<!-- eslint no-undef: "error" -->
+
 ```javascript
+var dpotf2 = require( '@stdlib/lapack/base/dpotf2' );
+
 // TODO: Add examples
 ```
 
-## License
+</section>
 
-See [LICENSE][stdlib-license].
+<!-- /.examples -->
 
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dpotf2]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dpotf2.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

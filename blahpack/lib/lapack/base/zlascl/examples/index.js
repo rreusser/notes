@@ -18,7 +18,19 @@
 
 'use strict';
 
-var zlascl = require( '@stdlib/lapack/base/zlascl' );
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zlascl = require( './../lib' );
 
-// TODO: Add example usage
-console.log( zlascl );
+var opts = {
+	'dtype': 'float64'
+};
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+// Using the standard interface:
+var out = zlascl( 'row-major', 1, N, N, 1, 1, N, N, A, N );
+console.log( out );
+
+// Using the ndarray interface:
+out = zlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
+console.log( out );
