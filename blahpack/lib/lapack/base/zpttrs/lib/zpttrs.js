@@ -7,6 +7,7 @@
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -44,6 +45,9 @@ function zpttrs( uplo, N, nrhs, d, strideD, e, strideE, B, LDB ) { // eslint-dis
 	}
 	if ( nrhs < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
 	}
 	return base( uplo, N, nrhs, d, strideD, od, e, strideE, oe, B, sb1, sb2, 0 );
 }

@@ -6,6 +6,7 @@
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -69,6 +70,15 @@ function dsygvx( itype, jobz, range, uplo, N, A, LDA, B, LDB, vl, vu, il, iu, ab
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
+	}
+	if ( LDZ < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Nineteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
 	return base( itype, jobz, range, uplo, N, A, sa1, sa2, 0, B, sb1, sb2, 0, vl, vu, il, iu, abstol, out, w, strideW, ow, Z, sz1, sz2, 0, WORK, strideWORK, owork, lwork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }

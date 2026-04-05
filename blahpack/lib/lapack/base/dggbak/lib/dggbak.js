@@ -26,6 +26,7 @@ var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -67,6 +68,12 @@ function dggbak( order, job, side, N, ilo, ihi, LSCALE, strideLSCALE, RSCALE, st
 	}
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( order === 'row-major' && LDV < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDV ) );
+	}
+	if ( order === 'column-major' && LDV < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
 	}
 	if ( order === 'column-major' ) {
 		sv1 = 1;

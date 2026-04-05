@@ -9,6 +9,7 @@ var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -54,6 +55,9 @@ function dtbmv( order, uplo, trans, diag, N, K, A, LDA, x, strideX ) { // eslint
 		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', K ) );
 	}
 
+	if ( LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

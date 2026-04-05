@@ -5,6 +5,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -72,6 +73,21 @@ function dlaqr2( wantt, wantz, N, ktop, kbot, nw, H, LDH, iloz, ihiz, Z, LDZ, SR
 	owork = stride2offset( N, strideWORK );
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDH < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDH ) );
+	}
+	if ( LDZ < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
+	}
+	if ( LDV < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDV ) );
+	}
+	if ( LDT < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Twenty-first argument must be greater than or equal to max(1,N). Value: `%d`.', LDT ) );
+	}
+	if ( LDWV < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Twenty-fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDWV ) );
 	}
 	return base( wantt, wantz, N, ktop, kbot, nw, H, sh1, sh2, 0, iloz, ihiz, Z, sz1, sz2, 0, SR, strideSR, osr, SI, strideSI, osi, V, sv1, sv2, 0, nh, T, st1, st2, 0, nv, WV, swv1, swv2, 0, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }

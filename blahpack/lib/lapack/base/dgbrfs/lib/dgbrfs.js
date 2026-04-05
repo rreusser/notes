@@ -22,6 +22,7 @@
 
 var format = require( '@stdlib/string/format' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -61,6 +62,18 @@ function dgbrfs( trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, B, LDB, X, 
 	}
 	if ( nrhs < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
+	if ( LDAB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDAB ) );
+	}
+	if ( LDAFB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDAFB ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
+	}
+	if ( LDX < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fourteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
 	return base( trans, N, kl, ku, nrhs, AB, 1, LDAB, 0, AFB, 1, LDAFB, 0, IPIV, 1, 0, B, 1, LDB, 0, X, 1, LDX, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 ); // eslint-disable-line max-len
 }

@@ -25,6 +25,7 @@
 var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -74,6 +75,24 @@ function dlabrd( order, M, N, nb, A, LDA, d, strideD, e, strideE, TAUQ, strideTA
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( order === 'row-major' && LDY < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDY ) );
+	}
+	if ( order === 'column-major' && LDY < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eighteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDY ) );
+	}
+	if ( order === 'row-major' && LDX < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Sixteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
+	}
+	if ( order === 'column-major' && LDX < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Sixteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDX ) );
+	}
+	if ( order === 'row-major' && LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( order === 'column-major' && LDA < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
 	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;

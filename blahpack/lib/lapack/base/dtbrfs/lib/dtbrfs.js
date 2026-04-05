@@ -8,6 +8,7 @@ var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -62,6 +63,15 @@ function dtbrfs( uplo, trans, diag, N, kd, nrhs, AB, LDAB, B, LDB, X, LDX, FERR,
 	}
 	if ( nrhs < 0 ) {
 		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
+	if ( LDAB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDAB ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
+	}
+	if ( LDX < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
 	return base( uplo, trans, diag, N, kd, nrhs, AB, 1, LDAB, 0, B, 1, LDB, 0, X, 1, LDX, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }

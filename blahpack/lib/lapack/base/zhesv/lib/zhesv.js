@@ -7,6 +7,7 @@
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -51,6 +52,12 @@ function zhesv( uplo, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB, WORK, strideWOR
 	}
 	if ( nrhs < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
+	if ( LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
 	}
 	return base( uplo, N, nrhs, A, sa1, sa2, 0, IPIV, strideIPIV, oipiv, B, sb1, sb2, 0, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }

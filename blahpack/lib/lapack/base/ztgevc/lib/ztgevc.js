@@ -26,6 +26,7 @@ var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -80,6 +81,30 @@ function ztgevc( order, side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, 
 	}
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Seventeenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( order === 'row-major' && LDVR < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fifteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDVR ) );
+	}
+	if ( order === 'column-major' && LDVR < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Fifteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDVR ) );
+	}
+	if ( order === 'row-major' && LDVL < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDVL ) );
+	}
+	if ( order === 'column-major' && LDVL < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDVL ) );
+	}
+	if ( order === 'row-major' && LDP < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDP ) );
+	}
+	if ( order === 'column-major' && LDP < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDP ) );
+	}
+	if ( order === 'row-major' && LDS < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDS ) );
+	}
+	if ( order === 'column-major' && LDS < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDS ) );
 	}
 	if ( order === 'column-major' ) {
 		ss1 = 1;

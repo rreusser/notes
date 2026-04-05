@@ -5,6 +5,7 @@
 // MODULES //
 
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -35,6 +36,12 @@ function ztrexc( compq, N, T, LDT, Q, LDQ, ifst, ilst ) { // eslint-disable-line
 	sq2 = LDQ;
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDT < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDT ) );
+	}
+	if ( LDQ < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,N). Value: `%d`.', LDQ ) );
 	}
 	return base( compq, N, T, st1, st2, 0, Q, sq1, sq2, 0, ifst, ilst );
 }

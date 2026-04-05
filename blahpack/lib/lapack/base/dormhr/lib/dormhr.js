@@ -7,6 +7,7 @@ var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -57,6 +58,12 @@ function dormhr( side, trans, M, N, ilo, ihi, A, LDA, TAU, strideTAU, C, LDC, WO
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDA < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
+	}
+	if ( LDC < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
 	}
 	return base( side, trans, M, N, ilo, ihi, A, sa1, sa2, 0, TAU, strideTAU, otau, C, sc1, sc2, 0, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }

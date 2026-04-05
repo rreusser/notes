@@ -5,6 +5,7 @@
 
 var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -37,6 +38,12 @@ function dsygs2( itype, uplo, N, A, LDA, B, LDB ) { // eslint-disable-line max-l
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
 	}
 	return base( itype, uplo, N, A, sa1, sa2, 0, B, sb1, sb2, 0 );
 }

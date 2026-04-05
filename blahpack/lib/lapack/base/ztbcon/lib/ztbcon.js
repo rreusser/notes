@@ -7,6 +7,7 @@ var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -43,6 +44,9 @@ function ztbcon( norm, uplo, diag, N, kd, AB, LDAB, RCOND, WORK, strideWORK, RWO
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDAB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDAB ) );
 	}
 	return base( norm, uplo, diag, N, kd, AB, 1, LDAB, 0, RCOND, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }

@@ -5,6 +5,7 @@
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -37,6 +38,9 @@ function dlantb( norm, uplo, diag, N, K, AB, LDAB, WORK ) { // eslint-disable-li
 	}
 	if ( K < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
+	if ( LDAB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDAB ) );
 	}
 	return base( norm, uplo, diag, N, K, AB, 1, LDAB, 0, WORK, 1, 0 );
 }

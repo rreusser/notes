@@ -27,6 +27,7 @@ var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -78,6 +79,18 @@ function zunmbr( order, vect, side, trans, M, N, K, A, LDA, TAU, strideTAU, C, L
 	}
 	if ( K < 0 ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
+	if ( order === 'row-major' && LDC < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDC ) );
+	}
+	if ( order === 'column-major' && LDC < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
+	}
+	if ( order === 'row-major' && LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( order === 'column-major' && LDA < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
 	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;

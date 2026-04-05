@@ -7,6 +7,7 @@ var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -55,6 +56,24 @@ function zsymm( order, side, uplo, M, N, alpha, A, LDA, B, LDB, beta, C, LDC ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
 
+	if ( order === 'row-major' && LDC < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDC ) );
+	}
+	if ( order === 'column-major' && LDC < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
+	}
+	if ( order === 'row-major' && LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
+	}
+	if ( order === 'column-major' && LDB < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDB ) );
+	}
+	if ( order === 'row-major' && LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( order === 'column-major' && LDA < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

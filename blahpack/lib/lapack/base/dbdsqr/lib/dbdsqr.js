@@ -26,6 +26,7 @@ var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -74,6 +75,15 @@ function dbdsqr( order, uplo, N, ncvt, nru, ncc, d, strideD, e, strideE, VT, LDV
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDVT < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,N). Value: `%d`.', LDVT ) );
+	}
+	if ( LDU < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fourteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDU ) );
+	}
+	if ( LDC < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Sixteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDC ) );
 	}
 	if ( order === 'column-major' ) {
 		sv1 = 1;

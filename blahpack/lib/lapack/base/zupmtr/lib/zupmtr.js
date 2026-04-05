@@ -27,6 +27,7 @@ var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var format = require( '@stdlib/string/format' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -68,6 +69,9 @@ function zupmtr( side, uplo, trans, M, N, AP, TAU, C, LDC, WORK ) {
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDC < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
 	}
 	return base( side, uplo, trans, M, N, AP, 1, 0, TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 }

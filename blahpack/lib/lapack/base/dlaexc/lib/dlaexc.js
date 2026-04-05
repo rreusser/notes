@@ -5,6 +5,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -40,6 +41,12 @@ function dlaexc( wantq, N, T, LDT, Q, LDQ, j1, n1, n2, WORK, strideWORK ) { // e
 	owork = stride2offset( N, strideWORK );
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDT < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDT ) );
+	}
+	if ( LDQ < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,N). Value: `%d`.', LDQ ) );
 	}
 	return base( wantq, N, T, st1, st2, 0, Q, sq1, sq2, 0, j1, n1, n2, WORK, strideWORK, owork );
 }

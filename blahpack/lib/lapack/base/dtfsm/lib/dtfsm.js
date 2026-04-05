@@ -7,6 +7,7 @@ var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -46,6 +47,9 @@ function dtfsm( transr, side, uplo, trans, diag, M, N, alpha, A, B, LDB ) { // e
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDB < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDB ) );
 	}
 	base( transr, side, uplo, trans, diag, M, N, alpha, A, 1, 0, B, 1, LDB, 0 );
 }

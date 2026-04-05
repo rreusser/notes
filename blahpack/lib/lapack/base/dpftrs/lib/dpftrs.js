@@ -4,6 +4,7 @@
 // MODULES //
 
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -30,6 +31,9 @@ function dpftrs( transr, uplo, N, nrhs, A, B, LDB ) {
 	}
 	if ( nrhs < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
 	}
 	return base( transr, uplo, N, nrhs, A, 1, 0, B, 1, LDB, 0 );
 }

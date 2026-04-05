@@ -5,6 +5,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -61,6 +62,9 @@ function dstevx( jobz, range, N, d, strideD, e, strideE, vl, vu, il, iu, abstol,
 	}
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Thirteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( LDZ < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Seventeenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDZ ) );
 	}
 	return base( jobz, range, N, d, strideD, od, e, strideE, oe, vl, vu, il, iu, abstol, M, w, strideW, ow, Z, sz1, sz2, 0, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }

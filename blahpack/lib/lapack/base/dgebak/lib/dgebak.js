@@ -7,6 +7,7 @@
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -43,6 +44,9 @@ function dgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, M, V, LDV ) { // es
 	}
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Eighth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( LDV < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
 	}
 	return base( job, side, N, ilo, ihi, SCALE, strideSCALE, oscale, M, V, sv1, sv2, 0 );
 }

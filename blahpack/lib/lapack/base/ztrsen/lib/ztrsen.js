@@ -6,6 +6,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -54,6 +55,12 @@ function ztrsen( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, W, strideW
 	}
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Twelfth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( LDT < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDT ) );
+	}
+	if ( LDQ < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDQ ) );
 	}
 	return base( job, compq, SELECT, strideSELECT, oselect, N, T, st1, st2, 0, Q, sq1, sq2, 0, W, strideW, ow, M, s, sep, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }

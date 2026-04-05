@@ -6,6 +6,7 @@
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -58,6 +59,15 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, N, T, LDT, VL, LDVL, VR, L
 	}
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Thirteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( LDT < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDT ) );
+	}
+	if ( LDVL < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDVL ) );
+	}
+	if ( LDVR < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDVR ) );
 	}
 	return base( side, howmny, SELECT, strideSELECT, oselect, N, T, st1, st2, 0, VL, svl1, svl2, 0, VR, svr1, svr2, 0, mm, M, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }

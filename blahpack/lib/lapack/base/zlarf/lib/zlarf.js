@@ -26,6 +26,7 @@ var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -65,6 +66,12 @@ function zlarf( order, side, M, N, v, strideV, tau, offsetTau, C, LDC, WORK, str
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( order === 'row-major' && LDC < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDC ) );
+	}
+	if ( order === 'column-major' && LDC < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
 	}
 	if ( order === 'column-major' ) {
 		sc1 = 1;

@@ -5,6 +5,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -78,6 +79,21 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, LDA, B, LDB, tola, tolb, AL
 	}
 	if ( K < 0 ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
+	if ( LDA < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
+	}
+	if ( LDB < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,M). Value: `%d`.', LDB ) );
+	}
+	if ( LDU < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twentieth argument must be greater than or equal to max(1,M). Value: `%d`.', LDU ) );
+	}
+	if ( LDV < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twenty-second argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
+	}
+	if ( LDQ < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twenty-fourth argument must be greater than or equal to max(1,M). Value: `%d`.', LDQ ) );
 	}
 	return base( jobu, jobv, jobq, M, p, N, K, l, A, sa1, sa2, 0, B, sb1, sb2, 0, tola, tolb, ALPHA, strideALPHA, oalpha, BETA, strideBETA, obeta, U, su1, su2, 0, V, sv1, sv2, 0, Q, sq1, sq2, 0, WORK, strideWORK, owork, ncycle ); // eslint-disable-line max-len
 }

@@ -5,6 +5,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -40,6 +41,9 @@ function dgbequ( M, N, kl, ku, AB, LDAB, r, strideR, c, strideC ) { // eslint-di
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDAB < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,M). Value: `%d`.', LDAB ) );
 	}
 	return base( M, N, kl, ku, AB, sa1, sa2, 0, r, strideR, or, c, strideC, oc ); // eslint-disable-line max-len
 }

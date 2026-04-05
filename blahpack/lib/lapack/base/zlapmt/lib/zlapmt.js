@@ -6,6 +6,7 @@
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -36,6 +37,9 @@ function zlapmt( forwrd, M, N, X, LDX, k, strideK ) { // eslint-disable-line max
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDX < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be greater than or equal to max(1,M). Value: `%d`.', LDX ) );
 	}
 	return base( forwrd, M, N, X, sx1, sx2, 0, k, strideK, ok );
 }

@@ -27,6 +27,7 @@ var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var format = require( '@stdlib/string/format' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -73,6 +74,12 @@ function zhprfs( order, uplo, N, nrhs, AP, AFP, IPIV, B, LDB, X, LDX, FERR, BERR
 	}
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
+	}
+	if ( LDX < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
 	if ( order === 'column-major' ) {
 		sb1 = 1;

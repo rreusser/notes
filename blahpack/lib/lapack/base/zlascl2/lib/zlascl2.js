@@ -5,6 +5,7 @@
 
 var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -34,6 +35,12 @@ function zlascl2( order, M, N, d, X, LDX ) {
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( order === 'row-major' && LDX < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
+	}
+	if ( order === 'column-major' && LDX < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,M). Value: `%d`.', LDX ) );
 	}
 	if ( order === 'column-major' ) {
 		sx1 = 1;

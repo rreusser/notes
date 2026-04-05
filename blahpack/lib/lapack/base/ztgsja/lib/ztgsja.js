@@ -4,6 +4,7 @@
 // MODULES //
 
 var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
 
 
@@ -51,6 +52,21 @@ function ztgsja( jobu, jobv, jobq, M, p, N, K, l, A, LDA, B, LDB, tola, tolb, AL
 	}
 	if ( K < 0 ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
+	if ( LDA < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
+	}
+	if ( LDB < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,M). Value: `%d`.', LDB ) );
+	}
+	if ( LDU < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Eighteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDU ) );
+	}
+	if ( LDV < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twentieth argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
+	}
+	if ( LDQ < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Twenty-second argument must be greater than or equal to max(1,M). Value: `%d`.', LDQ ) );
 	}
 	return base( jobu, jobv, jobq, M, p, N, K, l, A, 1, LDA, 0, B, 1, LDB, 0, tola, tolb, ALPHA, 1, 0, BETA, 1, 0, U, 1, LDU, 0, V, 1, LDV, 0, Q, 1, LDQ, 0, WORK, 1, 0, ncycle ); // eslint-disable-line max-len
 }
