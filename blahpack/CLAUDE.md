@@ -67,8 +67,7 @@ bin/lint.sh lib/<path>/base.js  # Lint a single file
 **ALWAYS pipe test/lint/coverage through `tail` or `grep`:**
 ```bash
 node --test lib/<pkg>/base/<routine>/test/test*.js 2>&1 | tail -20
-npm test 2>&1 | tail -10          # If you MUST run full suite
-npm test 2>&1 | grep '✖' | head -20  # Find specific failures
+bin/test-failures.sh              # Full suite — shows ONLY summary + failures
 ```
 
 ## Skills

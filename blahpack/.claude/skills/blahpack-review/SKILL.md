@@ -280,16 +280,11 @@ lines of output that wastes context. Instead:
 # Run the module's own tests (< 50 lines of output):
 node --test lib/<pkg>/base/<routine>/test/test.js lib/<pkg>/base/<routine>/test/test.<routine>.js lib/<pkg>/base/<routine>/test/test.ndarray.js 2>&1 | tail -20
 
+# Check for regressions across the full suite (shows ONLY summary + failures):
+bin/test-failures.sh
+
 # Fast gate on all modules (file checks only, manageable output):
 node bin/gate.js --all --fast 2>&1 | tail -30
-
-# Full test suite ONLY if needed, with summary only:
-npm test 2>&1 | tail -10
-```
-
-If you need to find specific failures across the full suite:
-```bash
-npm test 2>&1 | grep '✖' | head -20
 ```
 
 ---

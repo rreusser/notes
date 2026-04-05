@@ -544,8 +544,11 @@ Do not declare a translation done until this passes.
 **This is the MANDATORY final gate.** Do not declare a translation complete
 until `node bin/gate.js` shows all checks passing.
 
-**Do NOT run `npm test` or `npm run check`** — the gate already runs the
-module's tests. The full suite is the coordinator's responsibility, not yours.
+**Do NOT run `npm test` or `npm run check`** — they dump 12,000+ lines.
+If you need to check for regressions in dependent modules, use:
+```bash
+bin/test-failures.sh    # Full suite — shows ONLY summary + failures
+```
 
 ---
 
