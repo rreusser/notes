@@ -1,0 +1,8 @@
+dlamch
+ieeeck
+ilaenv
+iparmq
+zlatrs
+zladiv
+dladiv
+ztrevc

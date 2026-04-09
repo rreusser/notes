@@ -1,0 +1,177 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dggev
+
+> Computes generalized eigenvalues and, optionally, left and/or right generalized eigenvectors for a pair of N-by-N real nonsymmetric matrices (A,B).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dggev = require( '@stdlib/lapack/base/dggev' );
+```
+
+#### dggev( order, jobvl, jobvr, N, A, LDA, B, LDB, ALPHAR, ALPHAI, BETA, VL, LDVL, VR, LDVR )
+
+Computes generalized eigenvalues and, optionally, eigenvectors for a pair of real nonsymmetric matrices.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 1, 0, 0, 3 ] );
+var B = new Float64Array( [ 1, 0, 0, 1 ] );
+var ALPHAR = new Float64Array( 2 );
+var ALPHAI = new Float64Array( 2 );
+var BETA = new Float64Array( 2 );
+var VL = new Float64Array( 1 );
+var VR = new Float64Array( 1 );
+
+var info = dggev( 'column-major', 'no-vectors', 'no-vectors', 2, A, 2, B, 2, ALPHAR, ALPHAI, BETA, VL, 1, VR, 1 );
+// info => 0
+// ALPHAR => [ 1.0, 3.0 ]
+// BETA => [ 1.0, 1.0 ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **jobvl**: `'compute-vectors'` to compute left eigenvectors, `'no-vectors'` to not.
+-   **jobvr**: `'compute-vectors'` to compute right eigenvectors, `'no-vectors'` to not.
+-   **N**: order of matrices A and B.
+-   **A**: input matrix A (N x N), overwritten on exit.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input matrix B (N x N), overwritten on exit.
+-   **LDB**: leading dimension of `B`.
+-   **ALPHAR**: output array for real parts of alpha (length N).
+-   **ALPHAI**: output array for imaginary parts of alpha (length N).
+-   **BETA**: output array for beta values (length N).
+-   **VL**: output matrix for left eigenvectors (N x N).
+-   **LDVL**: leading dimension of `VL`.
+-   **VR**: output matrix for right eigenvectors (N x N).
+-   **LDVR**: leading dimension of `VR`.
+
+#### dggev.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHAR, strideALPHAR, offsetALPHAR, ALPHAI, strideALPHAI, offsetALPHAI, BETA, strideBETA, offsetBETA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR )
+
+Computes generalized eigenvalues and eigenvectors using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 1, 0, 0, 3 ] );
+var B = new Float64Array( [ 1, 0, 0, 1 ] );
+var ALPHAR = new Float64Array( 2 );
+var ALPHAI = new Float64Array( 2 );
+var BETA = new Float64Array( 2 );
+var VL = new Float64Array( 1 );
+var VR = new Float64Array( 1 );
+
+var info = dggev.ndarray( 'no-vectors', 'no-vectors', 2, A, 1, 2, 0, B, 1, 2, 0, ALPHAR, 1, 0, ALPHAI, 1, 0, BETA, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
+// info => 0
+```
+
+The function has the following additional parameters:
+
+-   **jobvl**: `'compute-vectors'` or `'no-vectors'`.
+-   **jobvr**: `'compute-vectors'` or `'no-vectors'`.
+-   **N**: order of matrices A and B.
+-   **A**: input matrix A.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **B**: input matrix B.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **ALPHAR**: output array for real parts of alpha.
+-   **strideALPHAR**: stride length for `ALPHAR`.
+-   **offsetALPHAR**: starting index for `ALPHAR`.
+-   **ALPHAI**: output array for imaginary parts of alpha.
+-   **strideALPHAI**: stride length for `ALPHAI`.
+-   **offsetALPHAI**: starting index for `ALPHAI`.
+-   **BETA**: output array for beta values.
+-   **strideBETA**: stride length for `BETA`.
+-   **offsetBETA**: starting index for `BETA`.
+-   **VL**: output matrix for left eigenvectors.
+-   **strideVL1**: stride of dimension 1 of `VL`.
+-   **strideVL2**: stride of dimension 2 of `VL`.
+-   **offsetVL**: starting index for `VL`.
+-   **VR**: output matrix for right eigenvectors.
+-   **strideVR1**: stride of dimension 1 of `VR`.
+-   **strideVR2**: stride of dimension 2 of `VR`.
+-   **offsetVR**: starting index for `VR`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The generalized eigenvalues are returned as the pairs (ALPHAR(j)+i*ALPHAI(j), BETA(j)), j=1,...,N. The eigenvalue is ALPHAR(j)/BETA(j) + i*ALPHAI(j)/BETA(j) when BETA(j) is nonzero.
+-   Workspace is allocated internally; there is no LWORK parameter.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dggev = require( '@stdlib/lapack/base/dggev' );
+
+var N = 3;
+var A = new Float64Array( [ 1, 4, 7, 2, 5, 8, 3, 6, 10 ] );
+var B = new Float64Array( [ 1, 0, 0, 0, 2, 0, 0, 0, 3 ] );
+var ALPHAR = new Float64Array( N );
+var ALPHAI = new Float64Array( N );
+var BETA = new Float64Array( N );
+var VR = new Float64Array( N * N );
+
+var info = dggev( 'column-major', 'no-vectors', 'compute-vectors', N, A, N, B, N, ALPHAR, ALPHAI, BETA, new Float64Array( 1 ), 1, VR, N );
+// info => 0
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

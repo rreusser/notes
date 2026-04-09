@@ -70,6 +70,45 @@ node --test lib/<pkg>/base/<routine>/test/test*.js 2>&1 | tail -20
 bin/test-failures.sh              # Full suite — shows ONLY summary + failures
 ```
 
+## Batch Translation Workflow
+
+When translating multiple routines, **always dispatch each routine to its
+own background agent**. Do NOT translate routines in the main context. Do
+NOT use worktrees (they fail in this environment). The main context is for
+coordination: checking dependencies, triaging results, reviewing gate
+output, and dispatching follow-up work.
+
+**How to dispatch a translation agent:**
+
+```
+Agent({
+  description: "Translate <routine> to JavaScript",
+  run_in_background: true,
+  prompt: "<self-contained prompt with routine name, Fortran source path, deps, and conventions>"
+})
+```
+
+Each agent prompt must be **self-contained** — agents have no memory of
+prior conversation. Include:
+1. The routine name and what it does (one line)
+2. Commands to run: `python bin/signature.py`, `python bin/fortran_body.py`
+3. The full translation checklist steps (scaffold → implement → test →
+   lint → gate)
+4. Key conventions for this routine type (string mappings, complex number
+   rules for z-prefix, etc.)
+5. Context efficiency rules (pipe through `tail -20`, never `npm test`)
+
+The `/blahpack-translate` skill contains the complete checklist and
+conventions reference — read it once in the main context, then embed
+the relevant parts into each agent prompt. Do NOT invoke the skill
+inside an agent (skills are not available to agents).
+
+**Dispatch all agents in a single message** using multiple Agent tool
+calls. Do not serialize them or wait between launches.
+
+**When agents complete**, review their results and run
+`bin/test-failures.sh 2>&1 | tail -30` to check for regressions.
+
 ## Skills
 
 Use these skills for translation and review workflows:

@@ -1,0 +1,209 @@
+
+{{alias}}( order, job, compq, compz, N, ilo, ihi, H, LDH, T, LDT, ALPHAR, strideALPHAR, ALPHAI, strideALPHAI, BETA, strideBETA, Q, LDQ, Z, LDZ, WORK, strideWORK, lwork )
+    Computes the eigenvalues of a real matrix pair (H,T) where H is upper Hessenberg and T is upper triangular, using the QZ method.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        job: string
+            specifies the operation type.
+
+        compq: string
+            specifies the operation type.
+
+        compz: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        H: Float64Array
+            input matrix.
+
+        LDH: integer
+            leading dimension of `H`.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        ALPHAR: Float64Array
+            input array.
+
+        strideALPHAR: integer
+            stride length for `ALPHAR`.
+
+        ALPHAI: Float64Array
+            input array.
+
+        strideALPHAI: integer
+            stride length for `ALPHAI`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        Q: Float64Array
+            input matrix.
+
+        LDQ: integer
+            leading dimension of `Q`.
+
+        Z: Float64Array
+            input matrix.
+
+        LDZ: integer
+            leading dimension of `Z`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHAR, strideALPHAR, offsetALPHAR, ALPHAI, strideALPHAI, offsetALPHAI, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
+    Computes the eigenvalues of a real matrix pair (H,T) where H is upper Hessenberg and T is upper triangular, using the QZ method., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        job: string
+            specifies the operation type.
+
+        compq: string
+            specifies the operation type.
+
+        compz: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of dimension 1 of `H`.
+
+        strideH2: integer
+            stride of dimension 2 of `H`.
+
+        offsetH: integer
+            starting index for `H`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        ALPHAR: Float64Array
+            input array.
+
+        strideALPHAR: integer
+            stride length for `ALPHAR`.
+
+        offsetALPHAR: integer
+            starting index for `ALPHAR`.
+
+        ALPHAI: Float64Array
+            input array.
+
+        strideALPHAI: integer
+            stride length for `ALPHAI`.
+
+        offsetALPHAI: integer
+            starting index for `ALPHAI`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: integer
+            starting index for `BETA`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of dimension 1 of `Q`.
+
+        strideQ2: integer
+            stride of dimension 2 of `Q`.
+
+        offsetQ: integer
+            starting index for `Q`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of dimension 1 of `Z`.
+
+        strideZ2: integer
+            stride of dimension 2 of `Z`.
+
+        offsetZ: integer
+            starting index for `Z`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

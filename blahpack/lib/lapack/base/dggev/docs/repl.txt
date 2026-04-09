@@ -1,0 +1,191 @@
+
+{{alias}}( order, jobvl, jobvr, N, A, LDA, B, LDB, ALPHAR, strideALPHAR, ALPHAI, strideALPHAI, BETA, strideBETA, VL, LDVL, VR, LDVR, WORK, strideWORK, lwork )
+    Computes generalized eigenvalues and eigenvectors for a pair of real nonsymmetric matrices
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        jobvl: string
+            specifies the operation type.
+
+        jobvr: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        ALPHAR: Float64Array
+            input array.
+
+        strideALPHAR: integer
+            stride length for `ALPHAR`.
+
+        ALPHAI: Float64Array
+            input array.
+
+        strideALPHAI: integer
+            stride length for `ALPHAI`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        VL: Float64Array
+            input matrix.
+
+        LDVL: integer
+            leading dimension of `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        LDVR: integer
+            leading dimension of `VR`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHAR, strideALPHAR, offsetALPHAR, ALPHAI, strideALPHAI, offsetALPHAI, BETA, strideBETA, offsetBETA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork )
+    Computes generalized eigenvalues and eigenvectors for a pair of real nonsymmetric matrices, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        jobvl: string
+            specifies the operation type.
+
+        jobvr: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        ALPHAR: Float64Array
+            input array.
+
+        strideALPHAR: integer
+            stride length for `ALPHAR`.
+
+        offsetALPHAR: integer
+            starting index for `ALPHAR`.
+
+        ALPHAI: Float64Array
+            input array.
+
+        strideALPHAI: integer
+            stride length for `ALPHAI`.
+
+        offsetALPHAI: integer
+            starting index for `ALPHAI`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: integer
+            starting index for `BETA`.
+
+        VL: Float64Array
+            input matrix.
+
+        strideVL1: integer
+            stride of dimension 1 of `VL`.
+
+        strideVL2: integer
+            stride of dimension 2 of `VL`.
+
+        offsetVL: integer
+            starting index for `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        strideVR1: integer
+            stride of dimension 1 of `VR`.
+
+        strideVR2: integer
+            stride of dimension 2 of `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

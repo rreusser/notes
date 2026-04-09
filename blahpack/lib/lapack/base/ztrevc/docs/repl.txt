@@ -1,0 +1,164 @@
+
+{{alias}}( order, side, howmny, SELECT, strideSELECT, N, T, LDT, VL, LDVL, VR, LDVR, mm, M, WORK, strideWORK, RWORK, strideRWORK )
+    Computes some or all of the right and/or left eigenvectors of a complex upper triangular matrix.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        howmny: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        VL: Float64Array
+            input matrix.
+
+        LDVL: integer
+            leading dimension of `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        LDVR: integer
+            leading dimension of `VR`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+    Computes some or all of the right and/or left eigenvectors of a complex upper triangular matrix., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        howmny: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        offsetSELECT: integer
+            starting index for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        VL: Float64Array
+            input matrix.
+
+        strideVL1: integer
+            stride of dimension 1 of `VL`.
+
+        strideVL2: integer
+            stride of dimension 2 of `VL`.
+
+        offsetVL: integer
+            starting index for `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        strideVR1: integer
+            stride of dimension 1 of `VR`.
+
+        strideVR2: integer
+            stride of dimension 2 of `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: integer
+            starting index for `RWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

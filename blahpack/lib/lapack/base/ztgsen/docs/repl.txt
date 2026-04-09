@@ -1,0 +1,254 @@
+
+{{alias}}( order, ijob, wantq, wantz, SELECT, strideSELECT, N, A, LDA, B, LDB, ALPHA, strideALPHA, BETA, strideBETA, Q, LDQ, Z, LDZ, M, pl, pr, DIF, strideDIF, WORK, strideWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+    Reorders the generalized Schur decomposition of a complex matrix pair
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        ijob: integer
+            ijob.
+
+        wantq: boolean
+            wantq.
+
+        wantz: boolean
+            wantz.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        Q: Float64Array
+            input matrix.
+
+        LDQ: integer
+            leading dimension of `Q`.
+
+        Z: Float64Array
+            input matrix.
+
+        LDZ: integer
+            leading dimension of `Z`.
+
+        M: integer
+            number of rows.
+
+        pl: number
+            pl.
+
+        pr: number
+            pr.
+
+        DIF: Float64Array
+            input array.
+
+        strideDIF: integer
+            stride length for `DIF`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+        liwork: integer
+            liwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( ijob, wantq, wantz, SELECT, strideSELECT, offsetSELECT, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, M, pl, pr, DIF, strideDIF, offsetDIF, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+    Reorders the generalized Schur decomposition of a complex matrix pair, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        ijob: integer
+            ijob.
+
+        wantq: boolean
+            wantq.
+
+        wantz: boolean
+            wantz.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        offsetSELECT: integer
+            starting index for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        offsetALPHA: integer
+            starting index for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: integer
+            starting index for `BETA`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of dimension 1 of `Q`.
+
+        strideQ2: integer
+            stride of dimension 2 of `Q`.
+
+        offsetQ: integer
+            starting index for `Q`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of dimension 1 of `Z`.
+
+        strideZ2: integer
+            stride of dimension 2 of `Z`.
+
+        offsetZ: integer
+            starting index for `Z`.
+
+        M: integer
+            number of rows.
+
+        pl: number
+            pl.
+
+        pr: number
+            pr.
+
+        DIF: Float64Array
+            input array.
+
+        strideDIF: integer
+            stride length for `DIF`.
+
+        offsetDIF: integer
+            starting index for `DIF`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+        liwork: integer
+            liwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

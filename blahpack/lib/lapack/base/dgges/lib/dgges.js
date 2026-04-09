@@ -1,0 +1,91 @@
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes the generalized eigenvalues, the generalized real Schur form (S,T),.
+* and optionally the left and/or right matrices of Schur vectors for a pair of
+* N-by-N real nonsymmetric matrices (A,B).
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} jobvsl - `'compute-vectors'` to compute left Schur vectors, `'no-vectors'` to not
+* @param {string} jobvsr - `'compute-vectors'` to compute right Schur vectors, `'no-vectors'` to not
+* @param {string} sort - `'sorted'` to order eigenvalues, `'not-sorted'` to not
+* @param {Function} selctg - selection function `(alphar, alphai, beta) => boolean`
+* @param {NonNegativeInteger} N - order of matrices A and B
+* @param {Float64Array} A - input matrix A (N x N), overwritten by Schur form S on exit
+* @param {PositiveInteger} LDA - leading dimension of A
+* @param {Float64Array} B - input matrix B (N x N), overwritten by triangular form T on exit
+* @param {PositiveInteger} LDB - leading dimension of B
+* @param {Float64Array} ALPHAR - output: real parts of alpha (length N)
+* @param {Float64Array} ALPHAI - output: imaginary parts of alpha (length N)
+* @param {Float64Array} BETA - output: beta values (length N)
+* @param {Float64Array} VSL - output: left Schur vectors (N x N)
+* @param {PositiveInteger} LDVSL - leading dimension of VSL
+* @param {Float64Array} VSR - output: right Schur vectors (N x N)
+* @param {PositiveInteger} LDVSR - leading dimension of VSR
+* @throws {TypeError} first argument must be a valid order
+* @throws {RangeError} sixth argument must be a nonnegative integer
+* @throws {RangeError} eighth argument must be greater than or equal to max(1,N)
+* @throws {RangeError} tenth argument must be greater than or equal to max(1,N)
+* @returns {Object} result with properties: info (integer status code), sdim (number of sorted eigenvalues)
+*/
+function dgges( order, jobvsl, jobvsr, sort, selctg, N, A, LDA, B, LDB, ALPHAR, ALPHAI, BETA, VSL, LDVSL, VSR, LDVSR ) {
+	var svsl1;
+	var svsl2;
+	var svsr1;
+	var svsr2;
+	var sa1;
+	var sa2;
+	var sb1;
+	var sb2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	}
+	if ( LDB < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+		sb1 = 1;
+		sb2 = LDB;
+		svsl1 = 1;
+		svsl2 = LDVSL;
+		svsr1 = 1;
+		svsr2 = LDVSR;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+		sb1 = LDB;
+		sb2 = 1;
+		svsl1 = LDVSL;
+		svsl2 = 1;
+		svsr1 = LDVSR;
+		svsr2 = 1;
+	}
+	return base( jobvsl, jobvsr, sort, selctg, N, A, sa1, sa2, 0, B, sb1, sb2, 0, ALPHAR, 1, 0, ALPHAI, 1, 0, BETA, 1, 0, VSL, svsl1, svsl2, 0, VSR, svsr1, svsr2, 0 ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = dgges;

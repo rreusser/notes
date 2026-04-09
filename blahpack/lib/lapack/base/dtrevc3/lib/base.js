@@ -582,7 +582,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 
 					ii = idamax( N - ki, VL, strideVL1, offsetVL + ki * strideVL1 + is * strideVL2 ) + ki;
 					remax = ONE / Math.abs( VL[ offsetVL + ii * strideVL1 + is * strideVL2 ] );
-					dscal( N - ki, remax, VL, strideVL1, offsetVR + ki * strideVL1 + is * strideVL2 );
+					dscal( N - ki, remax, VL, strideVL1, offsetVL + ki * strideVL1 + is * strideVL2 );
 
 					for ( k = 0; k < ki; k++ ) {
 						VL[ offsetVL + k * strideVL1 + is * strideVL2 ] = ZERO;

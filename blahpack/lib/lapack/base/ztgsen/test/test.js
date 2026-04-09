@@ -1,0 +1,518 @@
+/* eslint-disable max-len */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var ztgsen = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'ztgsen.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Constructs the 4x4 upper triangular test matrices used in tests 1, 4, and 5.
+*
+* @private
+* @returns {Object} object with A, B Complex128Array (column-major, stride1=1, stride2=4)
+*/
+function makeAB4() {
+	var A = new Complex128Array( 16 );
+	var B = new Complex128Array( 16 );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var N = 4;
+
+	// A: upper triangular, column-major, stride1=1, stride2=N
+	// A(0,0) = (1.0, 0.5)
+	Av[ 0 ] = 1.0; Av[ 1 ] = 0.5;
+	// A(0,1) = (0.3, 0.1)
+	Av[ 2 * N ] = 0.3; Av[ 2 * N + 1 ] = 0.1;
+	// A(1,1) = (2.0, -0.3)
+	Av[ 2 * ( N + 1 ) ] = 2.0; Av[ 2 * ( N + 1 ) + 1 ] = -0.3;
+	// A(0,2) = (0.1, -0.1)
+	Av[ 2 * ( 2 * N ) ] = 0.1; Av[ 2 * ( 2 * N ) + 1 ] = -0.1;
+	// A(1,2) = (0.4, 0.3)
+	Av[ 2 * ( 2 * N + 1 ) ] = 0.4; Av[ 2 * ( 2 * N + 1 ) + 1 ] = 0.3;
+	// A(2,2) = (3.0, 1.0)
+	Av[ 2 * ( 2 * N + 2 ) ] = 3.0; Av[ 2 * ( 2 * N + 2 ) + 1 ] = 1.0;
+	// A(0,3) = (0.05, 0.02)
+	Av[ 2 * ( 3 * N ) ] = 0.05; Av[ 2 * ( 3 * N ) + 1 ] = 0.02;
+	// A(1,3) = (0.2, -0.1)
+	Av[ 2 * ( 3 * N + 1 ) ] = 0.2; Av[ 2 * ( 3 * N + 1 ) + 1 ] = -0.1;
+	// A(2,3) = (0.6, 0.1)
+	Av[ 2 * ( 3 * N + 2 ) ] = 0.6; Av[ 2 * ( 3 * N + 2 ) + 1 ] = 0.1;
+	// A(3,3) = (4.0, 0.8)
+	Av[ 2 * ( 3 * N + 3 ) ] = 4.0; Av[ 2 * ( 3 * N + 3 ) + 1 ] = 0.8;
+
+	// B: upper triangular
+	// B(0,0) = (1.0, 0.2)
+	Bv[ 0 ] = 1.0; Bv[ 1 ] = 0.2;
+	// B(0,1) = (0.1, 0.1)
+	Bv[ 2 * N ] = 0.1; Bv[ 2 * N + 1 ] = 0.1;
+	// B(1,1) = (2.0, -0.1)
+	Bv[ 2 * ( N + 1 ) ] = 2.0; Bv[ 2 * ( N + 1 ) + 1 ] = -0.1;
+	// B(0,2) = (0.05, 0.0)
+	Bv[ 2 * ( 2 * N ) ] = 0.05; Bv[ 2 * ( 2 * N ) + 1 ] = 0.0;
+	// B(1,2) = (0.15, -0.05)
+	Bv[ 2 * ( 2 * N + 1 ) ] = 0.15; Bv[ 2 * ( 2 * N + 1 ) + 1 ] = -0.05;
+	// B(2,2) = (1.5, 0.3)
+	Bv[ 2 * ( 2 * N + 2 ) ] = 1.5; Bv[ 2 * ( 2 * N + 2 ) + 1 ] = 0.3;
+	// B(0,3) = (0.02, -0.01)
+	Bv[ 2 * ( 3 * N ) ] = 0.02; Bv[ 2 * ( 3 * N ) + 1 ] = -0.01;
+	// B(1,3) = (0.08, 0.03)
+	Bv[ 2 * ( 3 * N + 1 ) ] = 0.08; Bv[ 2 * ( 3 * N + 1 ) + 1 ] = 0.03;
+	// B(2,3) = (0.12, 0.04)
+	Bv[ 2 * ( 3 * N + 2 ) ] = 0.12; Bv[ 2 * ( 3 * N + 2 ) + 1 ] = 0.04;
+	// B(3,3) = (3.0, 0.0)
+	Bv[ 2 * ( 3 * N + 3 ) ] = 3.0; Bv[ 2 * ( 3 * N + 3 ) + 1 ] = 0.0;
+
+	return { 'A': A, 'B': B };
+}
+
+/**
+* Creates an N-by-N complex identity matrix.
+*
+* @private
+* @param {integer} N - dimension
+* @returns {Complex128Array} identity matrix (column-major)
+*/
+function eye( N ) {
+	var M = new Complex128Array( N * N );
+	var Mv = reinterpret( M, 0 );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		Mv[ 2 * ( i * N + i ) ] = 1.0;
+	}
+	return M;
+}
+
+
+// TESTS //
+
+test( 'ztgsen: ijob=0 select=[T,F,T,F] wantq=T wantz=T N=4', function t() {
+	var ALPHA;
+	var BETA;
+	var tc;
+	var ab;
+	var DIF;
+	var SEL;
+	var WK;
+	var IWK;
+	var Q;
+	var Z;
+	var r;
+
+	tc = findCase( 'ijob=0 select=[T,F,T,F] wantq=T wantz=T N=4' );
+	ab = makeAB4();
+	Q = eye( 4 );
+	Z = eye( 4 );
+	ALPHA = new Complex128Array( 4 );
+	BETA = new Complex128Array( 4 );
+	DIF = new Float64Array( 2 );
+	SEL = new Uint8Array( [ 1, 0, 1, 0 ] );
+	WK = new Complex128Array( 64 );
+	IWK = new Int32Array( 64 );
+
+	r = ztgsen( 0, true, true, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, -1, IWK, 1, 0, -1 );
+
+	assert.equal( r.info, tc.info, 'info' );
+	assert.equal( r.m, tc.M, 'M' );
+	assertArrayClose( Array.from( reinterpret( ab.A, 0 ) ), tc.A, 1e-12, 'A' );
+	assertArrayClose( Array.from( reinterpret( ab.B, 0 ) ), tc.B, 1e-12, 'B' );
+	assertArrayClose( Array.from( reinterpret( Q, 0 ) ), tc.Q, 1e-12, 'Q' );
+	assertArrayClose( Array.from( reinterpret( Z, 0 ) ), tc.Z, 1e-12, 'Z' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.ALPHA, 1e-12, 'ALPHA' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.BETA, 1e-12, 'BETA' );
+});
+
+test( 'ztgsen: ijob=0 select=[T,T,T] wantq=T wantz=T N=3 (all selected)', function t() {
+	var ALPHA;
+	var BETA;
+	var tc;
+	var DIF;
+	var SEL;
+	var WK;
+	var IWK;
+	var Av;
+	var Bv;
+	var A;
+	var B;
+	var Q;
+	var Z;
+	var r;
+
+	tc = findCase( 'ijob=0 select=[T,T,T] wantq=T wantz=T N=3' );
+	A = new Complex128Array( 9 );
+	B = new Complex128Array( 9 );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+
+	// A: 3x3 upper triangular, column-major stride1=1, stride2=3
+	Av[ 0 ] = 2.0; Av[ 1 ] = 1.0;          // A(0,0)
+	Av[ 6 ] = 0.5; Av[ 7 ] = -0.2;         // A(0,1)
+	Av[ 8 ] = 4.0; Av[ 9 ] = 0.0;          // A(1,1)
+	Av[ 12 ] = 0.3; Av[ 13 ] = 0.1;        // A(0,2)
+	Av[ 14 ] = 0.7; Av[ 15 ] = -0.3;       // A(1,2)
+	Av[ 16 ] = 6.0; Av[ 17 ] = -1.0;       // A(2,2)
+
+	// B: 3x3 upper triangular
+	Bv[ 0 ] = 1.0; Bv[ 1 ] = 0.0;          // B(0,0)
+	Bv[ 6 ] = 0.1; Bv[ 7 ] = 0.05;         // B(0,1)
+	Bv[ 8 ] = 1.0; Bv[ 9 ] = 0.0;          // B(1,1)
+	Bv[ 12 ] = 0.0; Bv[ 13 ] = 0.0;        // B(0,2)
+	Bv[ 14 ] = 0.2; Bv[ 15 ] = -0.1;       // B(1,2)
+	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.0;        // B(2,2)
+
+	Q = eye( 3 );
+	Z = eye( 3 );
+	ALPHA = new Complex128Array( 3 );
+	BETA = new Complex128Array( 3 );
+	DIF = new Float64Array( 2 );
+	SEL = new Uint8Array( [ 1, 1, 1 ] );
+	WK = new Complex128Array( 64 );
+	IWK = new Int32Array( 64 );
+
+	r = ztgsen( 0, true, true, SEL, 1, 0, 3, A, 1, 3, 0, B, 1, 3, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 3, 0, Z, 1, 3, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, -1, IWK, 1, 0, -1 );
+
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 3, 'M' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.ALPHA, 1e-12, 'ALPHA' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.BETA, 1e-12, 'BETA' );
+});
+
+test( 'ztgsen: ijob=0 select=[F,F,F] wantq=T wantz=T N=3 (none selected)', function t() {
+	var ALPHA;
+	var BETA;
+	var tc;
+	var DIF;
+	var SEL;
+	var WK;
+	var IWK;
+	var Av;
+	var Bv;
+	var A;
+	var B;
+	var Q;
+	var Z;
+	var r;
+
+	tc = findCase( 'ijob=0 select=[F,F,F] wantq=T wantz=T N=3' );
+	A = new Complex128Array( 9 );
+	B = new Complex128Array( 9 );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+
+	Av[ 0 ] = 2.0; Av[ 1 ] = 1.0;
+	Av[ 6 ] = 0.5; Av[ 7 ] = -0.2;
+	Av[ 8 ] = 4.0; Av[ 9 ] = 0.0;
+	Av[ 12 ] = 0.3; Av[ 13 ] = 0.1;
+	Av[ 14 ] = 0.7; Av[ 15 ] = -0.3;
+	Av[ 16 ] = 6.0; Av[ 17 ] = -1.0;
+
+	Bv[ 0 ] = 1.0; Bv[ 1 ] = 0.0;
+	Bv[ 6 ] = 0.1; Bv[ 7 ] = 0.05;
+	Bv[ 8 ] = 1.0; Bv[ 9 ] = 0.0;
+	Bv[ 14 ] = 0.2; Bv[ 15 ] = -0.1;
+	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.0;
+
+	Q = eye( 3 );
+	Z = eye( 3 );
+	ALPHA = new Complex128Array( 3 );
+	BETA = new Complex128Array( 3 );
+	DIF = new Float64Array( 2 );
+	SEL = new Uint8Array( [ 0, 0, 0 ] );
+	WK = new Complex128Array( 64 );
+	IWK = new Int32Array( 64 );
+
+	r = ztgsen( 0, true, true, SEL, 1, 0, 3, A, 1, 3, 0, B, 1, 3, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 3, 0, Z, 1, 3, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, -1, IWK, 1, 0, -1 );
+
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 0, 'M' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.ALPHA, 1e-12, 'ALPHA' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.BETA, 1e-12, 'BETA' );
+});
+
+test( 'ztgsen: ijob=0 select=[F,T,F,T] wantq=F wantz=F N=4', function t() {
+	var ALPHA;
+	var BETA;
+	var tc;
+	var ab;
+	var DIF;
+	var SEL;
+	var WK;
+	var IWK;
+	var Q;
+	var Z;
+	var r;
+
+	tc = findCase( 'ijob=0 select=[F,T,F,T] wantq=F wantz=F N=4' );
+	ab = makeAB4();
+	Q = new Complex128Array( 16 );
+	Z = new Complex128Array( 16 );
+	ALPHA = new Complex128Array( 4 );
+	BETA = new Complex128Array( 4 );
+	DIF = new Float64Array( 2 );
+	SEL = new Uint8Array( [ 0, 1, 0, 1 ] );
+	WK = new Complex128Array( 64 );
+	IWK = new Int32Array( 64 );
+
+	r = ztgsen( 0, false, false, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, -1, IWK, 1, 0, -1 );
+
+	assert.equal( r.info, tc.info, 'info' );
+	assert.equal( r.m, tc.M, 'M' );
+	assertArrayClose( Array.from( reinterpret( ab.A, 0 ) ), tc.A, 1e-12, 'A' );
+	assertArrayClose( Array.from( reinterpret( ab.B, 0 ) ), tc.B, 1e-12, 'B' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.ALPHA, 1e-12, 'ALPHA' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.BETA, 1e-12, 'BETA' );
+});
+
+test( 'ztgsen: ijob=1 select=[T,F,T,F] wantq=T wantz=T N=4 (condition numbers)', function t() {
+	var ALPHA;
+	var BETA;
+	var tc;
+	var ab;
+	var DIF;
+	var SEL;
+	var WK;
+	var IWK;
+	var Q;
+	var Z;
+	var r;
+
+	tc = findCase( 'ijob=1 select=[T,F,T,F] wantq=T wantz=T N=4' );
+	ab = makeAB4();
+	Q = eye( 4 );
+	Z = eye( 4 );
+	ALPHA = new Complex128Array( 4 );
+	BETA = new Complex128Array( 4 );
+	DIF = new Float64Array( 2 );
+	SEL = new Uint8Array( [ 1, 0, 1, 0 ] );
+	WK = new Complex128Array( 256 );
+	IWK = new Int32Array( 256 );
+
+	r = ztgsen( 1, true, true, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 256, IWK, 1, 0, 256 );
+
+	assert.equal( r.info, tc.info, 'info' );
+	assert.equal( r.m, tc.M, 'M' );
+	assertClose( r.pl, tc.PL, 1e-10, 'PL' );
+	assertClose( r.pr, tc.PR, 1e-10, 'PR' );
+	assertArrayClose( Array.from( reinterpret( ab.A, 0 ) ), tc.A, 1e-12, 'A' );
+	assertArrayClose( Array.from( reinterpret( ab.B, 0 ) ), tc.B, 1e-12, 'B' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.ALPHA, 1e-12, 'ALPHA' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.BETA, 1e-12, 'BETA' );
+});
+
+test( 'ztgsen: ijob=0 N=1 select=[T] (trivial)', function t() {
+	var ALPHA;
+	var BETA;
+	var tc;
+	var DIF;
+	var SEL;
+	var WK;
+	var IWK;
+	var Av;
+	var Bv;
+	var A;
+	var B;
+	var Q;
+	var Z;
+	var r;
+
+	tc = findCase( 'ijob=0 N=1 select=[T]' );
+	A = new Complex128Array( 1 );
+	B = new Complex128Array( 1 );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Av[ 0 ] = 5.0; Av[ 1 ] = 3.0;
+	Bv[ 0 ] = 2.0; Bv[ 1 ] = 1.0;
+	Q = eye( 1 );
+	Z = eye( 1 );
+	ALPHA = new Complex128Array( 1 );
+	BETA = new Complex128Array( 1 );
+	DIF = new Float64Array( 2 );
+	SEL = new Uint8Array( [ 1 ] );
+	WK = new Complex128Array( 4 );
+	IWK = new Int32Array( 4 );
+
+	r = ztgsen( 0, true, true, SEL, 1, 0, 1, A, 1, 1, 0, B, 1, 1, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, -1, IWK, 1, 0, -1 );
+
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 1, 'M' );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-12, 'A' );
+	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-12, 'B' );
+	assertArrayClose( Array.from( reinterpret( Q, 0 ) ), tc.Q, 1e-12, 'Q' );
+	assertArrayClose( Array.from( reinterpret( Z, 0 ) ), tc.Z, 1e-12, 'Z' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.ALPHA, 1e-12, 'ALPHA' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.BETA, 1e-12, 'BETA' );
+});
+
+test( 'ztgsen: ijob=2 (DIF via direct solve)', function t() {
+	var tc = findCase( 'ijob=2 select=[T,F,T,F] wantq=T wantz=T N=4' );
+	var ab = makeAB4();
+	var Q = eye( 4 );
+	var Z = eye( 4 );
+	var ALPHA = new Complex128Array( 4 );
+	var BETA = new Complex128Array( 4 );
+	var DIF = new Float64Array( 2 );
+	var SEL = new Uint8Array( [ 1, 0, 1, 0 ] );
+	var WK = new Complex128Array( 256 );
+	var IWK = new Int32Array( 256 );
+	var r = ztgsen( 2, true, true, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 256, IWK, 1, 0, 256 );
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 2, 'M' );
+	assertClose( DIF[ 0 ], tc.DIF[ 0 ], 1e-10, 'DIF[0]' );
+	assertClose( DIF[ 1 ], tc.DIF[ 1 ], 1e-10, 'DIF[1]' );
+});
+
+test( 'ztgsen: ijob=3 (DIF via condition estimation)', function t() {
+	var tc = findCase( 'ijob=3 select=[T,F,T,F] wantq=T wantz=T N=4' );
+	var ab = makeAB4();
+	var Q = eye( 4 );
+	var Z = eye( 4 );
+	var ALPHA = new Complex128Array( 4 );
+	var BETA = new Complex128Array( 4 );
+	var DIF = new Float64Array( 2 );
+	var SEL = new Uint8Array( [ 1, 0, 1, 0 ] );
+	var WK = new Complex128Array( 256 );
+	var IWK = new Int32Array( 256 );
+	var r = ztgsen( 3, true, true, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 256, IWK, 1, 0, 256 );
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 2, 'M' );
+	assertClose( DIF[ 0 ], tc.DIF[ 0 ], 1e-10, 'DIF[0]' );
+	assertClose( DIF[ 1 ], tc.DIF[ 1 ], 1e-10, 'DIF[1]' );
+});
+
+test( 'ztgsen: ijob=4 (PL,PR + DIF direct)', function t() {
+	var tc = findCase( 'ijob=4 select=[T,F,T,F] wantq=T wantz=T N=4' );
+	var ab = makeAB4();
+	var Q = eye( 4 );
+	var Z = eye( 4 );
+	var ALPHA = new Complex128Array( 4 );
+	var BETA = new Complex128Array( 4 );
+	var DIF = new Float64Array( 2 );
+	var SEL = new Uint8Array( [ 1, 0, 1, 0 ] );
+	var WK = new Complex128Array( 256 );
+	var IWK = new Int32Array( 256 );
+	var r = ztgsen( 4, true, true, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 256, IWK, 1, 0, 256 );
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 2, 'M' );
+	assertClose( r.pl, tc.PL, 1e-10, 'PL' );
+	assertClose( r.pr, tc.PR, 1e-10, 'PR' );
+	assertClose( DIF[ 0 ], tc.DIF[ 0 ], 1e-10, 'DIF[0]' );
+	assertClose( DIF[ 1 ], tc.DIF[ 1 ], 1e-10, 'DIF[1]' );
+});
+
+test( 'ztgsen: ijob=5 (PL,PR + DIF estimated)', function t() {
+	var tc = findCase( 'ijob=5 select=[T,F,T,F] wantq=T wantz=T N=4' );
+	var ab = makeAB4();
+	var Q = eye( 4 );
+	var Z = eye( 4 );
+	var ALPHA = new Complex128Array( 4 );
+	var BETA = new Complex128Array( 4 );
+	var DIF = new Float64Array( 2 );
+	var SEL = new Uint8Array( [ 1, 0, 1, 0 ] );
+	var WK = new Complex128Array( 256 );
+	var IWK = new Int32Array( 256 );
+	var r = ztgsen( 5, true, true, SEL, 1, 0, 4, ab.A, 1, 4, 0, ab.B, 1, 4, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 4, 0, Z, 1, 4, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 256, IWK, 1, 0, 256 );
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 2, 'M' );
+	assertClose( r.pl, tc.PL, 1e-10, 'PL' );
+	assertClose( r.pr, tc.PR, 1e-10, 'PR' );
+	assertClose( DIF[ 0 ], tc.DIF[ 0 ], 1e-10, 'DIF[0]' );
+	assertClose( DIF[ 1 ], tc.DIF[ 1 ], 1e-10, 'DIF[1]' );
+});
+
+test( 'ztgsen: ijob=2 all selected (M=N early return with DIF)', function t() {
+	var tc = findCase( 'ijob=2 select=[T,T,T] wantq=T wantz=T N=3 allsel' );
+	var A = new Complex128Array( 9 );
+	var B = new Complex128Array( 9 );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	Av[ 0 ] = 2.0; Av[ 1 ] = 1.0;
+	Av[ 6 ] = 0.5; Av[ 7 ] = -0.2;
+	Av[ 8 ] = 4.0; Av[ 9 ] = 0.0;
+	Av[ 12 ] = 0.3; Av[ 13 ] = 0.1;
+	Av[ 14 ] = 0.7; Av[ 15 ] = -0.3;
+	Av[ 16 ] = 6.0; Av[ 17 ] = -1.0;
+	Bv[ 0 ] = 1.0; Bv[ 1 ] = 0.0;
+	Bv[ 6 ] = 0.1; Bv[ 7 ] = 0.05;
+	Bv[ 8 ] = 1.0; Bv[ 9 ] = 0.0;
+	Bv[ 14 ] = 0.2; Bv[ 15 ] = -0.1;
+	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.0;
+	var Q = eye( 3 );
+	var Z = eye( 3 );
+	var ALPHA = new Complex128Array( 3 );
+	var BETA = new Complex128Array( 3 );
+	var DIF = new Float64Array( 2 );
+	var SEL = new Uint8Array( [ 1, 1, 1 ] );
+	var WK = new Complex128Array( 64 );
+	var IWK = new Int32Array( 64 );
+	var r = ztgsen( 2, true, true, SEL, 1, 0, 3, A, 1, 3, 0, B, 1, 3, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 3, 0, Z, 1, 3, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 64, IWK, 1, 0, 64 );
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 3, 'M' );
+	assertClose( DIF[ 0 ], tc.DIF[ 0 ], 1e-10, 'DIF[0]' );
+	assertClose( DIF[ 1 ], tc.DIF[ 1 ], 1e-10, 'DIF[1]' );
+});
+
+test( 'ztgsen: ijob=1 none selected (M=0 early return with PL PR)', function t() {
+	var tc = findCase( 'ijob=1 select=[F,F,F] wantq=T wantz=T N=3 nonesel' );
+	var A = new Complex128Array( 9 );
+	var B = new Complex128Array( 9 );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	Av[ 0 ] = 2.0; Av[ 1 ] = 1.0;
+	Av[ 6 ] = 0.5; Av[ 7 ] = -0.2;
+	Av[ 8 ] = 4.0; Av[ 9 ] = 0.0;
+	Av[ 12 ] = 0.3; Av[ 13 ] = 0.1;
+	Av[ 14 ] = 0.7; Av[ 15 ] = -0.3;
+	Av[ 16 ] = 6.0; Av[ 17 ] = -1.0;
+	Bv[ 0 ] = 1.0; Bv[ 1 ] = 0.0;
+	Bv[ 6 ] = 0.1; Bv[ 7 ] = 0.05;
+	Bv[ 8 ] = 1.0; Bv[ 9 ] = 0.0;
+	Bv[ 14 ] = 0.2; Bv[ 15 ] = -0.1;
+	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.0;
+	var Q = eye( 3 );
+	var Z = eye( 3 );
+	var ALPHA = new Complex128Array( 3 );
+	var BETA = new Complex128Array( 3 );
+	var DIF = new Float64Array( 2 );
+	var SEL = new Uint8Array( [ 0, 0, 0 ] );
+	var WK = new Complex128Array( 64 );
+	var IWK = new Int32Array( 64 );
+	var r = ztgsen( 1, true, true, SEL, 1, 0, 3, A, 1, 3, 0, B, 1, 3, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 3, 0, Z, 1, 3, 0, 0, 1.0, 1.0, DIF, 1, 0, WK, 1, 0, 64, IWK, 1, 0, 64 );
+	assert.equal( r.info, 0, 'info' );
+	assert.equal( r.m, 0, 'M' );
+	assertClose( r.pl, tc.PL, 1e-10, 'PL' );
+	assertClose( r.pr, tc.PR, 1e-10, 'PR' );
+});

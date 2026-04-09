@@ -53,16 +53,44 @@ fi
 
 # Verify the sandbox runtime is reachable (times out after 10s instead of hanging)
 TIMEOUT=10
-if ! timeout "$TIMEOUT" docker sandbox ls &>/dev/null; then
-    echo "Error: 'docker sandbox ls' did not respond within ${TIMEOUT}s." >&2
-    echo "The Docker sandbox runtime may be down. Try restarting Docker Desktop." >&2
-    exit 1
-fi
+SANDBOX_LIST="$(timeout "$TIMEOUT" docker sandbox ls 2>/dev/null)" || {
+    echo "'docker sandbox ls' timed out. Checking for stuck sandbox daemon..." >&2
+    STUCK_PID="$(pgrep -f 'docker-sandbox daemon' 2>/dev/null || true)"
+    if [ -n "$STUCK_PID" ]; then
+        echo "Found stuck sandbox daemon (PID $STUCK_PID, likely 100% CPU). Killing..." >&2
+        kill -9 $STUCK_PID 2>/dev/null || true
+        sleep 3
+        SANDBOX_LIST="$(timeout "$TIMEOUT" docker sandbox ls 2>/dev/null)" || {
+            echo "Error: sandbox runtime still unresponsive after killing daemon." >&2
+            echo "Try restarting Docker Desktop." >&2
+            exit 1
+        }
+        echo "Sandbox daemon recovered." >&2
+    else
+        echo "Error: sandbox runtime unresponsive and no daemon found." >&2
+        echo "Try restarting Docker Desktop." >&2
+        exit 1
+    fi
+}
 
-# Check if sandbox already exists
-if docker sandbox ls 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$FULL_SANDBOX_NAME"; then
+# Check if sandbox already exists (reuse the captured output — don't call ls again)
+if echo "$SANDBOX_LIST" | awk 'NR>1{print $1}' | grep -qx "$FULL_SANDBOX_NAME"; then
     echo "Resuming existing sandbox '$FULL_SANDBOX_NAME'..." >&2
-    exec docker sandbox run "$FULL_SANDBOX_NAME"
+    echo "(If this hangs, Ctrl-C and re-run with --reset)" >&2
+    docker sandbox run "$FULL_SANDBOX_NAME"
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -ne 0 ]; then
+        echo "" >&2
+        echo "Sandbox resume failed (exit $EXIT_CODE). Resetting..." >&2
+        docker sandbox rm "$FULL_SANDBOX_NAME" 2>/dev/null || true
+        echo "Creating fresh sandbox '$SANDBOX_NAME'..." >&2
+        exec docker sandbox run \
+            --name "$SANDBOX_NAME" \
+            -t "$IMAGE" \
+            claude \
+            "$ROOT_DIR" \
+            "${STDLIB_PATH:-$HOME/gh/stdlib-js/stdlib}":ro
+    fi
 else
     echo "Creating new sandbox '$SANDBOX_NAME'..." >&2
     exec docker sandbox run \

@@ -1,0 +1,224 @@
+
+{{alias}}( order, jobvsl, jobvsr, sort, selctg, N, A, LDA, B, LDB, sdim, ALPHA, strideALPHA, BETA, strideBETA, VSL, LDVSL, VSR, LDVSR, WORK, strideWORK, lwork, RWORK, strideRWORK, BWORK, strideBWORK )
+    Computes generalized eigenvalues and Schur form for a pair of complex nonsymmetric matrices
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        jobvsl: string
+            specifies the operation type.
+
+        jobvsr: string
+            specifies the operation type.
+
+        sort: string
+            specifies the operation type.
+
+        selctg: boolean
+            selctg.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        sdim: integer
+            sdim.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        VSL: Float64Array
+            input matrix.
+
+        LDVSL: integer
+            leading dimension of `VSL`.
+
+        VSR: Float64Array
+            input matrix.
+
+        LDVSR: integer
+            leading dimension of `VSR`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        BWORK: Float64Array
+            output array.
+
+        strideBWORK: integer
+            stride length for `BWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( jobvsl, jobvsr, sort, selctg, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, sdim, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, VSL, strideVSL1, strideVSL2, offsetVSL, VSR, strideVSR1, strideVSR2, offsetVSR, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK )
+    Computes generalized eigenvalues and Schur form for a pair of complex nonsymmetric matrices, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        jobvsl: string
+            specifies the operation type.
+
+        jobvsr: string
+            specifies the operation type.
+
+        sort: string
+            specifies the operation type.
+
+        selctg: boolean
+            selctg.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        sdim: integer
+            sdim.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        offsetALPHA: integer
+            starting index for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: integer
+            starting index for `BETA`.
+
+        VSL: Float64Array
+            input matrix.
+
+        strideVSL1: integer
+            stride of dimension 1 of `VSL`.
+
+        strideVSL2: integer
+            stride of dimension 2 of `VSL`.
+
+        offsetVSL: integer
+            starting index for `VSL`.
+
+        VSR: Float64Array
+            input matrix.
+
+        strideVSR1: integer
+            stride of dimension 1 of `VSR`.
+
+        strideVSR2: integer
+            stride of dimension 2 of `VSR`.
+
+        offsetVSR: integer
+            starting index for `VSR`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: integer
+            starting index for `RWORK`.
+
+        BWORK: Float64Array
+            output array.
+
+        strideBWORK: integer
+            stride length for `BWORK`.
+
+        offsetBWORK: integer
+            starting index for `BWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------
