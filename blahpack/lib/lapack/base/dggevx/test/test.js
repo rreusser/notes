@@ -1,0 +1,26 @@
+
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var dggevx = require( './../lib' );
+
+
+// TESTS //
+
+test( 'main export is a function', function t() {
+	assert.strictEqual( typeof dggevx, 'function', 'main export is a function' );
+	assert.ok( dggevx, 'module exports something truthy' );
+	assert.strictEqual( dggevx.name, 'dggevx', 'function has expected name' );
+});
+
+test( 'main export has an ndarray method', function t() {
+	assert.strictEqual( typeof dggevx.ndarray, 'function', 'has ndarray method' );
+	assert.ok( dggevx.ndarray, 'ndarray method is truthy' );
+	assert.notStrictEqual( dggevx.ndarray, dggevx, 'ndarray is distinct from main' ); // eslint-disable-line max-len
+});

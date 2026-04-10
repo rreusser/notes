@@ -1,0 +1,320 @@
+
+{{alias}}( order, balanc, jobvl, jobvr, sense, N, A, LDA, B, LDB, ALPHA, strideALPHA, BETA, strideBETA, VL, LDVL, VR, LDVR, ilo, ihi, LSCALE, strideLSCALE, RSCALE, strideRSCALE, abnrm, bbnrm, RCONDE, strideRCONDE, RCONDV, strideRCONDV, WORK, strideWORK, lwork, RWORK, strideRWORK, IWORK, strideIWORK, offsetIWORK, BWORK, strideBWORK )
+    Computes generalized eigenvalues, eigenvectors, and reciprocal condition numbers for a pair of complex matrices
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        balanc: string
+            specifies the operation type.
+
+        jobvl: string
+            specifies the operation type.
+
+        jobvr: string
+            specifies the operation type.
+
+        sense: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        VL: Float64Array
+            input matrix.
+
+        LDVL: integer
+            leading dimension of `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        LDVR: integer
+            leading dimension of `VR`.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        LSCALE: Float64Array
+            input array.
+
+        strideLSCALE: integer
+            stride length for `LSCALE`.
+
+        RSCALE: Float64Array
+            input array.
+
+        strideRSCALE: integer
+            stride length for `RSCALE`.
+
+        abnrm: number
+            abnrm.
+
+        bbnrm: number
+            bbnrm.
+
+        RCONDE: Float64Array
+            input array.
+
+        strideRCONDE: integer
+            stride length for `RCONDE`.
+
+        RCONDV: Float64Array
+            input array.
+
+        strideRCONDV: integer
+            stride length for `RCONDV`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        IWORK: Int32Array
+            input array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+        BWORK: Float64Array
+            output array.
+
+        strideBWORK: integer
+            stride length for `BWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( balanc, jobvl, jobvr, sense, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, abnrm, bbnrm, RCONDE, strideRCONDE, offsetRCONDE, RCONDV, strideRCONDV, offsetRCONDV, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, BWORK, strideBWORK, offsetBWORK )
+    Computes generalized eigenvalues, eigenvectors, and reciprocal condition numbers for a pair of complex matrices, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        balanc: string
+            specifies the operation type.
+
+        jobvl: string
+            specifies the operation type.
+
+        jobvr: string
+            specifies the operation type.
+
+        sense: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        offsetALPHA: integer
+            starting index for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: integer
+            starting index for `BETA`.
+
+        VL: Float64Array
+            input matrix.
+
+        strideVL1: integer
+            stride of dimension 1 of `VL`.
+
+        strideVL2: integer
+            stride of dimension 2 of `VL`.
+
+        offsetVL: integer
+            starting index for `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        strideVR1: integer
+            stride of dimension 1 of `VR`.
+
+        strideVR2: integer
+            stride of dimension 2 of `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        LSCALE: Float64Array
+            input array.
+
+        strideLSCALE: integer
+            stride length for `LSCALE`.
+
+        offsetLSCALE: integer
+            starting index for `LSCALE`.
+
+        RSCALE: Float64Array
+            input array.
+
+        strideRSCALE: integer
+            stride length for `RSCALE`.
+
+        offsetRSCALE: integer
+            starting index for `RSCALE`.
+
+        abnrm: number
+            abnrm.
+
+        bbnrm: number
+            bbnrm.
+
+        RCONDE: Float64Array
+            input array.
+
+        strideRCONDE: integer
+            stride length for `RCONDE`.
+
+        offsetRCONDE: integer
+            starting index for `RCONDE`.
+
+        RCONDV: Float64Array
+            input array.
+
+        strideRCONDV: integer
+            stride length for `RCONDV`.
+
+        offsetRCONDV: integer
+            starting index for `RCONDV`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: integer
+            starting index for `RWORK`.
+
+        IWORK: Int32Array
+            input array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+        BWORK: Float64Array
+            output array.
+
+        strideBWORK: integer
+            stride length for `BWORK`.
+
+        offsetBWORK: integer
+            starting index for `BWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

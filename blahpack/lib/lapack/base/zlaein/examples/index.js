@@ -1,0 +1,34 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*/
+
+'use strict';
+
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zlaein = require( './../lib/base.js' );
+
+var N = 3;
+var LDH = 3;
+var H = new Complex128Array( N * LDH );
+var w = new Complex128( 3.9, -0.95 );
+var v = new Complex128Array( N );
+var B = new Complex128Array( N * LDH );
+var rwork = new Float64Array( N );
+var info;
+
+// Column-major 3x3 upper Hessenberg matrix:
+H.set( [ 2.0, 1.0 ], 0 );
+H.set( [ 0.1, 0.0 ], 1 );
+H.set( [ 1.0, 0.5 ], LDH );
+H.set( [ 3.0, 0.0 ], LDH + 1 );
+H.set( [ 0.05, 0.0 ], LDH + 2 );
+H.set( [ 0.5, 0.0 ], 2 * LDH );
+H.set( [ 1.0, -1.0 ], ( 2 * LDH ) + 1 );
+H.set( [ 4.0, -1.0 ], ( 2 * LDH ) + 2 );
+
+info = zlaein( true, true, N, H, 1, LDH, 0, w, v, 1, 0, B, 1, LDH, 0, rwork, 1, 0, 1.0e-4, 1.0e-292 ); // eslint-disable-line max-len
+console.log( info ); // eslint-disable-line no-console

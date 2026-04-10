@@ -1,0 +1,200 @@
+
+{{alias}}( order, job, howmny, SELECT, strideSELECT, N, T, LDT, VL, LDVL, VR, LDVR, s, strideS, SEP, strideSEP, mm, M, WORK, LDWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates reciprocal condition numbers of eigenvalues and/or eigenvectors of a real upper quasi-triangular matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        job: string
+            specifies the operation type.
+
+        howmny: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        VL: Float64Array
+            input matrix.
+
+        LDVL: integer
+            leading dimension of `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        LDVR: integer
+            leading dimension of `VR`.
+
+        s: Float64Array
+            input array.
+
+        strideS: integer
+            stride length for `s`.
+
+        SEP: Float64Array
+            input array.
+
+        strideSEP: integer
+            stride length for `SEP`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input matrix.
+
+        LDWORK: integer
+            leading dimension of `WORK`.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( job, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, s, strideS, offsetS, SEP, strideSEP, offsetSEP, mm, M, WORK, strideWORK1, strideWORK2, offsetWORK, IWORK, strideIWORK, offsetIWORK )
+    Estimates reciprocal condition numbers of eigenvalues and/or eigenvectors of a real upper quasi-triangular matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        job: string
+            specifies the operation type.
+
+        howmny: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        offsetSELECT: integer
+            starting index for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        VL: Float64Array
+            input matrix.
+
+        strideVL1: integer
+            stride of dimension 1 of `VL`.
+
+        strideVL2: integer
+            stride of dimension 2 of `VL`.
+
+        offsetVL: integer
+            starting index for `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        strideVR1: integer
+            stride of dimension 1 of `VR`.
+
+        strideVR2: integer
+            stride of dimension 2 of `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        s: Float64Array
+            input array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: integer
+            starting index for `S`.
+
+        SEP: Float64Array
+            input array.
+
+        strideSEP: integer
+            stride length for `SEP`.
+
+        offsetSEP: integer
+            starting index for `SEP`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input matrix.
+
+        strideWORK1: integer
+            stride of dimension 1 of `WORK`.
+
+        strideWORK2: integer
+            stride of dimension 2 of `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

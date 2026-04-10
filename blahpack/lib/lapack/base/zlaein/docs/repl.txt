@@ -1,0 +1,137 @@
+
+{{alias}}( order, rightv, noinit, N, H, LDH, w, v, strideV, B, LDB, RWORK, strideRWORK, eps3, smlnum )
+    Uses inverse iteration to find an eigenvector of a complex upper Hessenberg matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        rightv: boolean
+            rightv.
+
+        noinit: boolean
+            noinit.
+
+        N: integer
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        LDH: integer
+            leading dimension of `H`.
+
+        w: Complex128
+            w.
+
+        v: Float64Array
+            input array.
+
+        strideV: integer
+            stride length for `v`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        eps3: number
+            eps3.
+
+        smlnum: number
+            smlnum.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( rightv, noinit, N, H, strideH1, strideH2, offsetH, w, v, strideV, offsetV, B, strideB1, strideB2, offsetB, RWORK, strideRWORK, offsetRWORK, eps3, smlnum )
+    Uses inverse iteration to find an eigenvector of a complex upper Hessenberg matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        rightv: boolean
+            rightv.
+
+        noinit: boolean
+            noinit.
+
+        N: integer
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of dimension 1 of `H`.
+
+        strideH2: integer
+            stride of dimension 2 of `H`.
+
+        offsetH: integer
+            starting index for `H`.
+
+        w: Complex128
+            w.
+
+        v: Float64Array
+            input array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: integer
+            starting index for `RWORK`.
+
+        eps3: number
+            eps3.
+
+        smlnum: number
+            smlnum.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

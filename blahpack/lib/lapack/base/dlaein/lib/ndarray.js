@@ -1,0 +1,48 @@
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Uses inverse iteration to find a right or left eigenvector of a real upper Hessenberg matrix.
+*
+* @param {boolean} rightv - rightv
+* @param {boolean} noinit - noinit
+* @param {NonNegativeInteger} N - number of columns
+* @param {Float64Array} H - input matrix
+* @param {integer} strideH1 - stride of the first dimension of `H`
+* @param {integer} strideH2 - stride of the second dimension of `H`
+* @param {NonNegativeInteger} offsetH - starting index for `H`
+* @param {number} wr - wr
+* @param {number} wi - wi
+* @param {Float64Array} VR - input array
+* @param {integer} strideVR - stride length for `VR`
+* @param {NonNegativeInteger} offsetVR - starting index for `VR`
+* @param {Float64Array} VI - input array
+* @param {integer} strideVI - stride length for `VI`
+* @param {NonNegativeInteger} offsetVI - starting index for `VI`
+* @param {Float64Array} B - input matrix
+* @param {integer} strideB1 - stride of the first dimension of `B`
+* @param {integer} strideB2 - stride of the second dimension of `B`
+* @param {NonNegativeInteger} offsetB - starting index for `B`
+* @param {Float64Array} WORK - output array
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {number} eps3 - eps3
+* @param {number} smlnum - smlnum
+* @param {number} bignum - bignum
+* @returns {integer} status code (0 = success)
+*/
+function dlaein( rightv, noinit, N, H, strideH1, strideH2, offsetH, wr, wi, VR, strideVR, offsetVR, VI, strideVI, offsetVI, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK, eps3, smlnum, bignum ) { // eslint-disable-line max-len, max-params
+	return base( rightv, noinit, N, H, strideH1, strideH2, offsetH, wr, wi, VR, strideVR, offsetVR, VI, strideVI, offsetVI, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK, eps3, smlnum, bignum ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = dlaein;

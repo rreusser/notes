@@ -1,0 +1,128 @@
+
+{{alias}}( order, ltran, lreal, N, T, LDT, b, strideB, w, scale, x, strideX, WORK, strideWORK )
+    Solves a real quasi-triangular system of equations
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        ltran: boolean
+            ltran.
+
+        lreal: boolean
+            lreal.
+
+        N: integer
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        b: Float64Array
+            input array.
+
+        strideB: integer
+            stride length for `b`.
+
+        w: number
+            w.
+
+        scale: number
+            scale.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( ltran, lreal, N, T, strideT1, strideT2, offsetT, b, strideB, offsetB, w, scale, x, strideX, offsetX, WORK, strideWORK, offsetWORK )
+    Solves a real quasi-triangular system of equations, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        ltran: boolean
+            ltran.
+
+        lreal: boolean
+            lreal.
+
+        N: integer
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        b: Float64Array
+            input array.
+
+        strideB: integer
+            stride length for `b`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        w: number
+            w.
+
+        scale: number
+            scale.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: integer
+            starting index for `X`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

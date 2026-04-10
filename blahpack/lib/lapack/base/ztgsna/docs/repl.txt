@@ -1,0 +1,221 @@
+
+{{alias}}( order, job, howmny, SELECT, strideSELECT, N, A, LDA, B, LDB, VL, LDVL, VR, LDVR, s, strideS, DIF, strideDIF, mm, M, WORK, strideWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+    Estimates reciprocal condition numbers for eigenvalues and eigenvectors of a complex generalized Schur form
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        job: string
+            specifies the operation type.
+
+        howmny: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        VL: Float64Array
+            input matrix.
+
+        LDVL: integer
+            leading dimension of `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        LDVR: integer
+            leading dimension of `VR`.
+
+        s: Float64Array
+            input array.
+
+        strideS: integer
+            stride length for `s`.
+
+        DIF: Float64Array
+            input array.
+
+        strideDIF: integer
+            stride length for `DIF`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( job, howmny, SELECT, strideSELECT, offsetSELECT, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, s, strideS, offsetS, DIF, strideDIF, offsetDIF, mm, M, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK )
+    Estimates reciprocal condition numbers for eigenvalues and eigenvectors of a complex generalized Schur form, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        job: string
+            specifies the operation type.
+
+        howmny: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        offsetSELECT: integer
+            starting index for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        VL: Float64Array
+            input matrix.
+
+        strideVL1: integer
+            stride of dimension 1 of `VL`.
+
+        strideVL2: integer
+            stride of dimension 2 of `VL`.
+
+        offsetVL: integer
+            starting index for `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        strideVR1: integer
+            stride of dimension 1 of `VR`.
+
+        strideVR2: integer
+            stride of dimension 2 of `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        s: Float64Array
+            input array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: integer
+            starting index for `S`.
+
+        DIF: Float64Array
+            input array.
+
+        strideDIF: integer
+            stride length for `DIF`.
+
+        offsetDIF: integer
+            starting index for `DIF`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

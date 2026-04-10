@@ -1,0 +1,254 @@
+
+{{alias}}( order, jobu, jobv, jobq, M, p, N, A, LDA, B, LDB, tola, tolb, K, l, U, LDU, V, LDV, Q, LDQ, IWORK, strideIWORK, offsetIWORK, RWORK, strideRWORK, TAU, strideTAU, WORK, strideWORK, lwork )
+    Computes unitary matrices for generalized SVD pre-processing of a complex matrix pair
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        jobu: string
+            specifies the operation type.
+
+        jobv: string
+            specifies the operation type.
+
+        jobq: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        p: integer
+            p.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        tola: number
+            tola.
+
+        tolb: number
+            tolb.
+
+        K: integer
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        U: Float64Array
+            input matrix.
+
+        LDU: integer
+            leading dimension of `U`.
+
+        V: Float64Array
+            input matrix.
+
+        LDV: integer
+            leading dimension of `V`.
+
+        Q: Float64Array
+            input matrix.
+
+        LDQ: integer
+            leading dimension of `Q`.
+
+        IWORK: Int32Array
+            input array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, RWORK, strideRWORK, offsetRWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
+    Computes unitary matrices for generalized SVD pre-processing of a complex matrix pair, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        jobu: string
+            specifies the operation type.
+
+        jobv: string
+            specifies the operation type.
+
+        jobq: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        p: integer
+            p.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        tola: number
+            tola.
+
+        tolb: number
+            tolb.
+
+        K: integer
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        U: Float64Array
+            input matrix.
+
+        strideU1: integer
+            stride of dimension 1 of `U`.
+
+        strideU2: integer
+            stride of dimension 2 of `U`.
+
+        offsetU: integer
+            starting index for `U`.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of dimension 1 of `V`.
+
+        strideV2: integer
+            stride of dimension 2 of `V`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of dimension 1 of `Q`.
+
+        strideQ2: integer
+            stride of dimension 2 of `Q`.
+
+        offsetQ: integer
+            starting index for `Q`.
+
+        IWORK: Int32Array
+            input array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: integer
+            starting index for `IWORK`.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: integer
+            starting index for `RWORK`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: integer
+            starting index for `TAU`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

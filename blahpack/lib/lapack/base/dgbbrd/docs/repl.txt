@@ -1,0 +1,188 @@
+
+{{alias}}( order, vect, M, N, ncc, kl, ku, AB, LDAB, d, strideD, e, strideE, Q, LDQ, PT, LDPT, C, LDC, WORK, strideWORK )
+    Reduces a real general band matrix to upper bidiagonal form
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        vect: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        ncc: integer
+            ncc.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        AB: Float64Array
+            input matrix.
+
+        LDAB: integer
+            leading dimension of `AB`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        Q: Float64Array
+            input matrix.
+
+        LDQ: integer
+            leading dimension of `Q`.
+
+        PT: Float64Array
+            input matrix.
+
+        LDPT: integer
+            leading dimension of `PT`.
+
+        C: Float64Array
+            input matrix.
+
+        LDC: integer
+            leading dimension of `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( vect, M, N, ncc, kl, ku, AB, strideAB1, strideAB2, offsetAB, d, strideD, offsetD, e, strideE, offsetE, Q, strideQ1, strideQ2, offsetQ, PT, stridePT1, stridePT2, offsetPT, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    Reduces a real general band matrix to upper bidiagonal form, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        vect: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        ncc: integer
+            ncc.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of dimension 1 of `AB`.
+
+        strideAB2: integer
+            stride of dimension 2 of `AB`.
+
+        offsetAB: integer
+            starting index for `AB`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: integer
+            starting index for `D`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: integer
+            starting index for `E`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of dimension 1 of `Q`.
+
+        strideQ2: integer
+            stride of dimension 2 of `Q`.
+
+        offsetQ: integer
+            starting index for `Q`.
+
+        PT: Float64Array
+            input matrix.
+
+        stridePT1: integer
+            stride of dimension 1 of `PT`.
+
+        stridePT2: integer
+            stride of dimension 2 of `PT`.
+
+        offsetPT: integer
+            starting index for `PT`.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of dimension 1 of `C`.
+
+        strideC2: integer
+            stride of dimension 2 of `C`.
+
+        offsetC: integer
+            starting index for `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

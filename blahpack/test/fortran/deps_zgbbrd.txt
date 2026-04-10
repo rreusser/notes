@@ -1,0 +1,13 @@
+disnan
+dlaisnan
+dlamch
+dlapy2
+ieeeck
+ilaenv
+iparmq
+zgbbrd
+zlargv
+zlartg
+zlartv
+zlaset
+zrot

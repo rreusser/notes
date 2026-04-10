@@ -1,0 +1,221 @@
+
+{{alias}}( order, side, eigsrc, initv, SELECT, strideSELECT, N, H, LDH, w, strideW, VL, LDVL, VR, LDVR, mm, M, WORK, strideWORK, RWORK, strideRWORK, IFAILL, strideIFAILL, offsetIFAILL, IFAILR, strideIFAILR, offsetIFAILR )
+    Uses inverse iteration to find right and/or left eigenvectors of a complex upper Hessenberg matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        eigsrc: string
+            specifies the operation type.
+
+        initv: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        LDH: integer
+            leading dimension of `H`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        VL: Float64Array
+            input matrix.
+
+        LDVL: integer
+            leading dimension of `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        LDVR: integer
+            leading dimension of `VR`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        IFAILL: Int32Array
+            input array.
+
+        strideIFAILL: integer
+            stride length for `IFAILL`.
+
+        offsetIFAILL: integer
+            starting index for `IFAILL`.
+
+        IFAILR: Int32Array
+            output array.
+
+        strideIFAILR: integer
+            stride length for `IFAILR`.
+
+        offsetIFAILR: integer
+            starting index for `IFAILR`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, eigsrc, initv, SELECT, strideSELECT, offsetSELECT, N, H, strideH1, strideH2, offsetH, w, strideW, offsetW, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK, IFAILL, strideIFAILL, offsetIFAILL, IFAILR, strideIFAILR, offsetIFAILR )
+    Uses inverse iteration to find right and/or left eigenvectors of a complex upper Hessenberg matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        eigsrc: string
+            specifies the operation type.
+
+        initv: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        offsetSELECT: integer
+            starting index for `SELECT`.
+
+        N: integer
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of dimension 1 of `H`.
+
+        strideH2: integer
+            stride of dimension 2 of `H`.
+
+        offsetH: integer
+            starting index for `H`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: integer
+            starting index for `W`.
+
+        VL: Float64Array
+            input matrix.
+
+        strideVL1: integer
+            stride of dimension 1 of `VL`.
+
+        strideVL2: integer
+            stride of dimension 2 of `VL`.
+
+        offsetVL: integer
+            starting index for `VL`.
+
+        VR: Float64Array
+            input matrix.
+
+        strideVR1: integer
+            stride of dimension 1 of `VR`.
+
+        strideVR2: integer
+            stride of dimension 2 of `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        mm: integer
+            mm.
+
+        M: integer
+            number of rows.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: integer
+            starting index for `RWORK`.
+
+        IFAILL: Int32Array
+            input array.
+
+        strideIFAILL: integer
+            stride length for `IFAILL`.
+
+        offsetIFAILL: integer
+            starting index for `IFAILL`.
+
+        IFAILR: Int32Array
+            output array.
+
+        strideIFAILR: integer
+            stride length for `IFAILR`.
+
+        offsetIFAILR: integer
+            starting index for `IFAILR`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -30,6 +30,22 @@ if ( !fs.existsSync( routinesPath ) ) {
 }
 var db = JSON.parse( fs.readFileSync( routinesPath, 'utf8' ) );
 
+// Strip single-precision (s, c) variants project-wide. We don't translate
+// single-precision routines, so they shouldn't appear in the report.
+var SKIP_TYPES = { 's': true, 'c': true };
+db.routines.forEach( function( a ) {
+	a.variants = a.variants.filter( function( v ) { return !SKIP_TYPES[ v.type ]; } );
+});
+db.routines = db.routines.filter( function( a ) { return a.variants.length > 0; } );
+
+// Recompute meta totals to match the filtered set.
+db.meta.total_routines = db.routines.reduce( function( s, a ) { return s + a.variants.length; }, 0 );
+db.meta.total_algorithms = db.routines.length;
+if ( db.meta.type_prefixes ) {
+	delete db.meta.type_prefixes.s;
+	delete db.meta.type_prefixes.c;
+}
+
 // ---------------------------------------------------------------------------
 // Scan implemented modules
 // ---------------------------------------------------------------------------
@@ -64,21 +80,35 @@ function scanModules( pkg ) {
 			} catch ( e ) {}
 		}
 
-		var hasTests = fs.existsSync( testJs );
+		// Discover ALL test files (test.js, test.<routine>.js, test.ndarray.js)
+		var testDir = path.join( dir, 'test' );
+		var testFiles = [];
+		if ( fs.existsSync( testDir ) ) {
+			testFiles = fs.readdirSync( testDir ).filter( function( f ) {
+				return /^test(\.|$).*\.js$/.test( f );
+			}).map( function( f ) {
+				return path.join( testDir, f );
+			});
+		}
+		var hasTests = testFiles.length > 0;
 		var testCount = 0;
 		if ( hasTests ) {
-			var testSrc = fs.readFileSync( testJs, 'utf8' );
-			testCount = ( testSrc.match( /\btest\s*\(/g ) || [] ).length;
+			testFiles.forEach( function( tf ) {
+				var testSrc = fs.readFileSync( tf, 'utf8' );
+				testCount += ( testSrc.match( /\btest\s*\(/g ) || [] ).length;
+			});
 		}
 
-		// Coverage
+		// Coverage — run ALL test files together so coverage reflects the
+		// full test suite, not just test.js (which usually only has export
+		// checks). The real fixture-based tests live in test.ndarray.js.
 		var lineCov = null;
 		var branchCov = null;
 		if ( hasTests && hasImpl && !isStub ) {
 			try {
 				var covOut = execSync(
-					'node --test --experimental-test-coverage ' + testJs + ' 2>&1',
-					{ timeout: 30000, encoding: 'utf8' }
+					'node --test --experimental-test-coverage ' + testFiles.join( ' ' ) + ' 2>&1',
+					{ timeout: 60000, encoding: 'utf8' }
 				);
 				var covLines = covOut.split( '\n' );
 				var foundDir = false;
@@ -141,11 +171,15 @@ var totalTests = allImpl.reduce( function( s, k ) {
 	return s + ( m ? m.testCount : 0 );
 }, 0 );
 
-// Count source routines from the actual Fortran directories
+// Count source routines from the actual Fortran directories — exclude
+// single-precision (s*, c*) since we don't translate those.
+function isSinglePrecision( f ) {
+	return /^[sc]/i.test( f );
+}
 var blasSourceCount = fs.readdirSync( path.join( ROOT, 'data', 'BLAS-3.12.0' ) )
-	.filter( function( f ) { return /\.(f|f90)$/i.test( f ); } ).length;
+	.filter( function( f ) { return /\.(f|f90)$/i.test( f ) && !isSinglePrecision( f ); } ).length;
 var lapackSourceCount = fs.readdirSync( path.join( ROOT, 'data', 'lapack-3.12.0', 'SRC' ) )
-	.filter( function( f ) { return /\.(f|f90)$/i.test( f ); } ).length;
+	.filter( function( f ) { return /\.(f|f90)$/i.test( f ) && !isSinglePrecision( f ); } ).length;
 var blasImplCount = Object.keys( blasImpl ).filter( function( k ) { return blasImpl[ k ].hasImpl; } ).length;
 var lapackImplCount = Object.keys( lapackImpl ).filter( function( k ) { return lapackImpl[ k ].hasImpl; } ).length;
 
@@ -635,9 +669,7 @@ var html = '<!DOCTYPE html>\n' +
 '<div class="legend-col">\n' +
 '<h4>Type prefixes</h4>\n' +
 '<table class="legend-table"><tbody>\n' +
-'<tr><td class="legend-code">s</td><td>single-precision real</td></tr>\n' +
 '<tr><td class="legend-code">d</td><td>double-precision real</td></tr>\n' +
-'<tr><td class="legend-code">c</td><td>single-precision complex</td></tr>\n' +
 '<tr><td class="legend-code">z</td><td>double-precision complex</td></tr>\n' +
 '</tbody></table>\n' +
 '</div>\n' +

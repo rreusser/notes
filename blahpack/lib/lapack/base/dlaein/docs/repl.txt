@@ -1,0 +1,164 @@
+
+{{alias}}( order, rightv, noinit, N, H, LDH, wr, wi, VR, strideVR, VI, strideVI, B, LDB, WORK, strideWORK, eps3, smlnum, bignum )
+    Uses inverse iteration to find a right or left eigenvector of a real upper Hessenberg matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        rightv: boolean
+            rightv.
+
+        noinit: boolean
+            noinit.
+
+        N: integer
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        LDH: integer
+            leading dimension of `H`.
+
+        wr: number
+            wr.
+
+        wi: number
+            wi.
+
+        VR: Float64Array
+            input array.
+
+        strideVR: integer
+            stride length for `VR`.
+
+        VI: Float64Array
+            input array.
+
+        strideVI: integer
+            stride length for `VI`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        eps3: number
+            eps3.
+
+        smlnum: number
+            smlnum.
+
+        bignum: number
+            bignum.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( rightv, noinit, N, H, strideH1, strideH2, offsetH, wr, wi, VR, strideVR, offsetVR, VI, strideVI, offsetVI, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK, eps3, smlnum, bignum )
+    Uses inverse iteration to find a right or left eigenvector of a real upper Hessenberg matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        rightv: boolean
+            rightv.
+
+        noinit: boolean
+            noinit.
+
+        N: integer
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of dimension 1 of `H`.
+
+        strideH2: integer
+            stride of dimension 2 of `H`.
+
+        offsetH: integer
+            starting index for `H`.
+
+        wr: number
+            wr.
+
+        wi: number
+            wi.
+
+        VR: Float64Array
+            input array.
+
+        strideVR: integer
+            stride length for `VR`.
+
+        offsetVR: integer
+            starting index for `VR`.
+
+        VI: Float64Array
+            input array.
+
+        strideVI: integer
+            stride length for `VI`.
+
+        offsetVI: integer
+            starting index for `VI`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        eps3: number
+            eps3.
+
+        smlnum: number
+            smlnum.
+
+        bignum: number
+            bignum.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

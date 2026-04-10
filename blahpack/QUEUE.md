@@ -3,12 +3,12 @@
 Prioritized remaining d\*/z\* LAPACK routines, ordered by tier then by
 completion progress. Items near the top of each tier are closest to done.
 
-**Implemented: 684 modules (203 algorithms complete) | Remaining: 413 routines (196 algorithms)**
+**Implemented: 703 modules (211 algorithms complete) | Remaining: 394 routines (188 algorithms)**
 
 > To update this file after implementing a routine, run `/blahpack-status`
 > or check the box manually. Regenerate with `node bin/gen-queue.js > QUEUE.md`.
 
-## Core Solvers & Factorizations (70 routines)
+## Core Solvers & Factorizations (69 routines)
 
 - [ ] **dbdsvdx, dgesvdx, zgesvdx** — Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B, B = U * S * VT, w
 - [ ] **dgedmd, zgedmd** — Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.
@@ -30,7 +30,6 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dgetsls, zgetsls** — Solves overdetermined or underdetermined real linear systems involving an M-by-N matrix A, using a tall skinny QR or sho
 - [ ] **dlals0, zlals0** — Applies back multiplying factors in solving the least squares problem using divide and conquer SVD approach. Used by sge
 - [ ] **dlaqp2rk, zlaqp2rk** — Computes truncated QR factorization with column pivoting of a real matrix block using Level 2 BLAS and overwrites a real
-- [ ] **dlaqtr** — Solves a real quasi-triangular system of equations, or a complex quasi-triangular system of special form, in real arithm
 - [ ] **dlaqz0, zlaqz0** — Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, u
 - [ ] **dlarrb** — Provides limited bisection to locate eigenvalues for more accuracy.
 - [ ] **dlarrd** — Computes the eigenvalues of a symmetric tridiagonal matrix to suitable accuracy.
@@ -69,12 +68,8 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dstegr, zstegr** — Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T.
 - [ ] **dstemr, zstemr** — Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T.
 
-## Generalized Eigenvalue Problems (24 routines)
+## Generalized Eigenvalue Problems (14 routines)
 
-- [ ] **dgeevx, dggevx, zgeevx, zggevx** (7/11 done) — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices
-- [ ] **zggsvd3** (1/2 done) — Computes the singular value decomposition (SVD) for OTHER matrices
-- [ ] **zggsvp3** (1/2 done) — Computes orthogonal matrices U, V and Q such that N-K-L K L U**T*A*Q = K ( 0 A12 A13 ) if M-K-L >= 0; L ( 0 0 A23 ) M-K-
-- [ ] **dtgsna, dtrsna, ztgsna, ztrsna** (1/5 done) — Computes the reciprocal condition numbers for the eigenvectors of a real symmetric or complex Hermitian matrix or for th
 - [ ] **dgeesx, dggesx, zgeesx, zggesx** — Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices
 - [ ] **dgges3, zgges3** — Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices (blocked algorith
 - [ ] **dggev3, zggev3** — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices (blocked algorithm)
@@ -89,9 +84,8 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dsbgvd, dspgvd, dsygvd, zhbgvd, zhegvd, zhpgvd** — Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenprob
 - [ ] **dsposv** — Computes the solution to system of linear equations A * X = B for PO matrices
 
-## Condition Numbers, Norms & Refinement (68 routines)
+## Condition Numbers, Norms & Refinement (66 routines)
 
-- [ ] **dgbbrd, zgbbrd** (4/6 done) — Reduces a real general m-by-n band matrix A to upper bidiagonal form B by an orthogonal transformation: Q**T * A * P = B
 - [ ] **dgemlq, zgemlq** (2/4 done) — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
 - [ ] **dgemqr, zgemqr** (2/4 done) — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
 - [ ] **dgbrfsx, dgerfsx, dporfsx, dsyrfsx, zgbrfsx, zgerfsx, zherfsx, zporfsx, zsyrfsx** — Improves the computed solution to a system of linear equations and provides error bounds and backward error estimates fo
@@ -131,9 +125,8 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **zla_syrcond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for symmetric indefinite matrices.
 - [ ] **zla_syrcond_x** — Computes the infinity norm condition number of op(A)*diag(x) for symmetric indefinite matrices.
 
-## Auxiliary Routines (61 routines)
+## Auxiliary Routines (57 routines)
 
-- [ ] **dhsein, dlaein, zhsein, zlaein** (2/6 done) — Uses inverse iteration to find specified right and/or left eigenvectors of a real upper Hessenberg matrix H.
 - [ ] **dgelsd, dlalsd, zgelsd, zlalsd** — Computes the minimum-norm solution to a linear least squares problem for GE matrices
 - [ ] **dlag2s** — Converts a double precision matrix to a single precision matrix.
 - [ ] **dlaic1, zlaic1** — Applies one step of incremental condition estimation.
@@ -176,9 +169,8 @@ completion progress. Items near the top of each tier are closest to done.
 
 - [ ] **dgbsvxx, dgesvxx, dposvxx, dsysvxx, zgbsvxx, zgesvxx, zhesvxx, zposvxx, zsysvxx** — Computes the solution to system of linear equations A * X = B for GB matrices
 
-## Variants, TSQR, Mixed-Precision & CSD (139 routines)
+## Variants, TSQR, Mixed-Precision & CSD (137 routines)
 
-- [ ] **dtprfb, ztprfb** (2/4 done) — Applies a block reflector or its transpose to a general rectangular matrix.
 - [ ] **dbbcsd, dorcsd, zbbcsd, zuncsd** — Computes the CS decomposition of an orthogonal matrix in bidiagonal-block form, [ B11 | B12 0 0 ] [ 0 | 0 -I 0 ] X = [--
 - [ ] **dgbequb, dgeequb, dpoequb, dsyequb, zgbequb, zgeequb, zheequb, zpoequb, zsyequb** — Computes row and column scalings intended to equilibrate an M-by-N matrix A and reduce its condition number.
 - [ ] **dgelqt, dtplqt, zgelqt, ztplqt** — Computes a blocked LQ factorization of a real M-by-N matrix A using the compact WY representation of Q.
@@ -229,4 +221,4 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **zcposv** — Computes the solution to system of linear equations A * X = B for PO matrices
 
 ---
-**Total remaining: 413 routines across 196 algorithms**
+**Total remaining: 394 routines across 188 algorithms**

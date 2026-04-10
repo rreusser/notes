@@ -1,0 +1,19 @@
+
+
+'use strict';
+
+// MODULES //
+
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
+var dtrsna = require( './dtrsna.js' );
+var ndarray = require( './ndarray.js' );
+
+
+// MAIN //
+
+setReadOnly( dtrsna, 'ndarray', ndarray );
+
+
+// EXPORTS //
+
+module.exports = dtrsna;
