@@ -1,0 +1,10 @@
+dgsvj0
+disnan
+dlaisnan
+dlamch
+dlascl
+dlassq
+ieeeck
+ilaenv
+iparmq
+la_xisnan

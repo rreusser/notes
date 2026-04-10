@@ -1,0 +1,113 @@
+
+{{alias}}( order, side, M, N, l, v, strideV, tau, C, LDC, WORK, strideWORK )
+    Applies an elementary reflector defined by RZ factorization
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        l: integer
+            l.
+
+        v: Float64Array
+            input array.
+
+        strideV: integer
+            stride length for `v`.
+
+        tau: number
+            tau.
+
+        C: Float64Array
+            input matrix.
+
+        LDC: integer
+            leading dimension of `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    Applies an elementary reflector defined by RZ factorization, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        l: integer
+            l.
+
+        v: Float64Array
+            input array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        tau: number
+            tau.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of dimension 1 of `C`.
+
+        strideC2: integer
+            stride of dimension 2 of `C`.
+
+        offsetC: integer
+            starting index for `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -812,7 +812,7 @@ def gen_readme(routine, package, description, sig):
         desc = meta['desc']
         if name.startswith('stride'):
             arr_ref = name.replace('stride', '')
-            if arr_ref[-1] in ('1', '2'):
+            if arr_ref and arr_ref[-1] in ('1', '2'):
                 arr_name = arr_ref[:-1]
                 dim = arr_ref[-1]
                 ndarray_param_lines.append(f'-   **{name}**: stride of dimension {dim} of `{arr_name}`.')
@@ -1237,6 +1237,9 @@ def gen_benchmark_js(routine, package, sig, description):
     blas_args, blas_arg_meta, array_ld_map = build_blas_args(sig)
     arrays_info = sig.get('arrays', {})
     has_2d = any(info['dim'] == 2 for info in arrays_info.values())
+    # Cap N for matrix (N*N) benchmarks so buffers stay ~8 MB per array.
+    # 2D: max=3 → N=1000 → N*N=1e6 doubles = 8 MB. 1D: max=6 → 1e6 doubles = 8 MB.
+    max_exp = 3 if has_2d else 6
 
     # Build benchmark call args
     if has_2d:
@@ -1371,7 +1374,7 @@ function main() {{
 \tvar i;
 
 \tmin = 1; // 10^min
-\tmax = 6; // 10^max
+\tmax = {max_exp}; // 10^max
 
 \tfor ( i = min; i <= max; i++ ) {{
 \t\tlen = pow( 10, i );
@@ -1388,6 +1391,8 @@ def gen_benchmark_ndarray_js(routine, package, sig, description):
     """Generate benchmark/benchmark.ndarray.js — ndarray-style benchmark."""
     arrays_info = sig.get('arrays', {})
     has_2d = any(info['dim'] == 2 for info in arrays_info.values())
+    # Cap N for matrix benchmarks; see gen_benchmark_js for rationale.
+    max_exp = 3 if has_2d else 6
     js_args = sig['js_args']
     js_arg_meta = sig['js_arg_meta']
 
@@ -1507,7 +1512,7 @@ function main() {{
 \tvar i;
 
 \tmin = 1; // 10^min
-\tmax = 6; // 10^max
+\tmax = {max_exp}; // 10^max
 
 \tfor ( i = min; i <= max; i++ ) {{
 \t\tlen = pow( 10, i );

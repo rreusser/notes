@@ -1,0 +1,65 @@
+
+{{alias}}( N, alpha, x, stride, tau )
+    Generates an elementary reflector with non-negative beta
+
+    Parameters
+    ----------
+        N: integer
+            number of columns.
+
+        alpha: number
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        tau: number
+            tau.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( N, alpha, x, stride, offset, tau )
+    Generates an elementary reflector with non-negative beta, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        N: integer
+            number of columns.
+
+        alpha: number
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: integer
+            starting index for ``.
+
+        tau: number
+            tau.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

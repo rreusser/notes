@@ -1,0 +1,11 @@
+zlarfgp
+zladiv
+dladiv
+dlapy2
+dlapy3
+dznrm2
+zdscal
+zscal
+disnan
+dlaisnan
+dlamch

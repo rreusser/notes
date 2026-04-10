@@ -1,0 +1,65 @@
+
+{{alias}}( N, alpha, x, stride, tau )
+    Generates a complex elementary reflector with non-negative beta
+
+    Parameters
+    ----------
+        N: integer
+            number of columns.
+
+        alpha: Complex128
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        tau: Complex128
+            tau.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( N, alpha, x, stride, offset, tau )
+    Generates a complex elementary reflector with non-negative beta, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        N: integer
+            number of columns.
+
+        alpha: Complex128
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: integer
+            starting index for ``.
+
+        tau: Complex128
+            tau.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,0 +1,170 @@
+
+{{alias}}( order, jobv, M, N, A, LDA, d, strideD, sva, strideSVA, mv, V, LDV, eps, sfmin, tol, nsweep, work, strideWORK, lwork )
+    Pre-processor for dgesvj performing Jacobi rotations
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        jobv: number
+            jobv.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        sva: Float64Array
+            input array.
+
+        strideSVA: integer
+            stride length for `sva`.
+
+        mv: integer
+            mv.
+
+        V: Float64Array
+            output matrix.
+
+        LDV: integer
+            leading dimension of `V`.
+
+        eps: number
+            eps.
+
+        sfmin: number
+            sfmin.
+
+        tol: number
+            tol.
+
+        nsweep: integer
+            nsweep.
+
+        work: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `work`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( jobv, M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, sva, strideSVA, offsetSVA, mv, V, strideV1, strideV2, offsetV, eps, sfmin, tol, nsweep, work, strideWORK, offsetWORK, lwork )
+    Pre-processor for dgesvj performing Jacobi rotations, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        jobv: number
+            jobv.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: integer
+            starting index for `D`.
+
+        sva: Float64Array
+            input array.
+
+        strideSVA: integer
+            stride length for `sva`.
+
+        offsetSVA: integer
+            starting index for `SVA`.
+
+        mv: integer
+            mv.
+
+        V: Float64Array
+            output matrix.
+
+        strideV1: integer
+            stride of dimension 1 of `V`.
+
+        strideV2: integer
+            stride of dimension 2 of `V`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        eps: number
+            eps.
+
+        sfmin: number
+            sfmin.
+
+        tol: number
+            tol.
+
+        nsweep: integer
+            nsweep.
+
+        work: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `work`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,0 +1,173 @@
+program test_zlarfgp
+  use test_utils
+  implicit none
+
+  complex*16 :: alpha, tau, x(10)
+  double precision :: alpha_real(2), tau_real(2), x_real(20)
+  equivalence (alpha, alpha_real)
+  equivalence (tau, tau_real)
+  equivalence (x, x_real)
+
+  ! Test 1: basic case, n=3, positive real alpha, real x
+  alpha = (3.0d0, 0.0d0)
+  x(1) = (1.0d0, 0.0d0)
+  x(2) = (2.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_basic_real_pos')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+  ! Test 2: n=3, negative real alpha, real x
+  alpha = (-3.0d0, 0.0d0)
+  x(1) = (1.0d0, 0.0d0)
+  x(2) = (2.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_basic_real_neg')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+  ! Test 3: complex alpha and x, n=3
+  alpha = (2.0d0, 1.0d0)
+  x(1) = (1.0d0, -1.0d0)
+  x(2) = (0.5d0, 0.5d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_complex')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+  ! Test 4: n=1 (no x vector), complex alpha
+  alpha = (5.0d0, 3.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(1, alpha, x, 1, tau)
+  call begin_test('zlarfgp_n_one_complex')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call end_test()
+
+  ! Test 5: n=1 (no x vector), negative real alpha
+  alpha = (-5.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(1, alpha, x, 1, tau)
+  call begin_test('zlarfgp_n_one_neg_real')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call end_test()
+
+  ! Test 6: n=1 (no x vector), positive real alpha
+  alpha = (5.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(1, alpha, x, 1, tau)
+  call begin_test('zlarfgp_n_one_pos_real')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call end_test()
+
+  ! Test 7: n=0 (quick return)
+  alpha = (5.0d0, 3.0d0)
+  tau = (99.0d0, 99.0d0)
+  call zlarfgp(0, alpha, x, 1, tau)
+  call begin_test('zlarfgp_n_zero')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call end_test()
+
+  ! Test 8: x is zero, alpha is real positive => tau=0
+  alpha = (4.0d0, 0.0d0)
+  x(1) = (0.0d0, 0.0d0)
+  x(2) = (0.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_x_zero_alpha_real_pos')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+  ! Test 9: x is zero, alpha is real negative => tau=2, alpha flipped
+  alpha = (-4.0d0, 0.0d0)
+  x(1) = (0.0d0, 0.0d0)
+  x(2) = (0.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_x_zero_alpha_real_neg')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+  ! Test 10: x is zero, alpha has imaginary part
+  alpha = (4.0d0, 3.0d0)
+  x(1) = (0.0d0, 0.0d0)
+  x(2) = (0.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_x_zero_alpha_complex')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+  ! Test 11: stride=2
+  x(1) = (1.0d0, 2.0d0)
+  x(2) = (99.0d0, 99.0d0)
+  x(3) = (3.0d0, 4.0d0)
+  x(4) = (99.0d0, 99.0d0)
+  alpha = (2.0d0, -1.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 2, tau)
+  call begin_test('zlarfgp_stride2')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 8)
+  call end_test()
+
+  ! Test 12: larger case n=5
+  alpha = (1.0d0, 1.0d0)
+  x(1) = (2.0d0, 3.0d0)
+  x(2) = (4.0d0, 5.0d0)
+  x(3) = (6.0d0, 7.0d0)
+  x(4) = (8.0d0, 9.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(5, alpha, x, 1, tau)
+  call begin_test('zlarfgp_larger')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 8)
+  call end_test()
+
+  ! Test 13: negative real alpha with real x, n=5
+  alpha = (-2.0d0, 0.0d0)
+  x(1) = (1.0d0, 0.0d0)
+  x(2) = (2.0d0, 0.0d0)
+  x(3) = (3.0d0, 0.0d0)
+  x(4) = (4.0d0, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(5, alpha, x, 1, tau)
+  call begin_test('zlarfgp_neg_real_alpha_real_x')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 8)
+  call end_test()
+
+  ! Test 14: rescaling loop triggered by very small values
+  alpha = (1.0d-310, 0.0d0)
+  x(1) = (1.0d-310, 0.0d0)
+  x(2) = (1.0d-310, 0.0d0)
+  tau = (0.0d0, 0.0d0)
+  call zlarfgp(3, alpha, x, 1, tau)
+  call begin_test('zlarfgp_rescaling')
+  call print_array('alpha', alpha_real, 2)
+  call print_array('tau', tau_real, 2)
+  call print_array('x', x_real, 4)
+  call end_test()
+
+end program
