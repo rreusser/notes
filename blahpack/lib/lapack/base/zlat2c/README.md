@@ -1,0 +1,145 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zlat2c
+
+> Converts a double-complex triangular matrix to a single-complex triangular matrix with overflow checking.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlat2c = require( '@stdlib/lapack/base/zlat2c' );
+```
+
+#### zlat2c( order, uplo, N, A, LDA, SA, LDSA )
+
+Converts the referenced triangle of a double-complex matrix `A` to a single-complex matrix `SA`, returning `0` on success or `1` if any entry exceeds the single-precision overflow threshold.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex64Array = require( '@stdlib/array/complex64' );
+
+var A = new Complex128Array( 4 );
+A.set( [ 1.0, 2.0 ], 0 );
+A.set( [ 3.0, 4.0 ], 2 );
+A.set( [ 5.0, 6.0 ], 3 );
+
+var SA = new Complex64Array( 4 );
+var info = zlat2c( 'column-major', 'upper', 2, A, 2, SA, 2 );
+// returns 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether `A` is upper (`'upper'`) or lower (`'lower'`) triangular.
+-   **N**: order of the square matrix `A`.
+-   **A**: input matrix (`Complex128Array`).
+-   **LDA**: leading dimension of `A`.
+-   **SA**: output matrix (`Complex64Array`).
+-   **LDSA**: leading dimension of `SA`.
+
+#### zlat2c.ndarray( uplo, N, A, strideA1, strideA2, offsetA, SA, strideSA1, strideSA2, offsetSA )
+
+Converts a double-complex triangular matrix to a single-complex triangular matrix, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex64Array = require( '@stdlib/array/complex64' );
+
+var A = new Complex128Array( 4 );
+A.set( [ 1.0, 2.0 ], 0 );
+A.set( [ 3.0, 4.0 ], 2 );
+A.set( [ 5.0, 6.0 ], 3 );
+
+var SA = new Complex64Array( 4 );
+var info = zlat2c.ndarray( 'upper', 2, A, 1, 2, 0, SA, 1, 2, 0 );
+// returns 0
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideSA1**: stride of dimension 1 of `SA`.
+-   **strideSA2**: stride of dimension 2 of `SA`.
+-   **offsetSA**: starting index for `SA`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The single-precision overflow threshold is IEEE 754 binary32's `RMAX` (approximately `3.4028e+38`). If any referenced entry of `A` has a real or imaginary part outside `[-RMAX, RMAX]`, the routine returns `1` and leaves the referenced triangle of `SA` in an unspecified state.
+-   Each real and imaginary component is rounded independently via `Math.fround`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex64Array = require( '@stdlib/array/complex64' );
+var zlat2c = require( '@stdlib/lapack/base/zlat2c' );
+
+var N = 3;
+var A = new Complex128Array( N * N );
+var SA = new Complex64Array( N * N );
+var i;
+for ( i = 0; i < N * N; i++ ) {
+    A.set( [ i + 1, ( i + 1 ) * 0.5 ], i );
+}
+
+var info = zlat2c( 'column-major', 'upper', N, A, N, SA, N );
+console.log( 'info = ' + info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-complex128array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-complex64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+
+</section>
+
+<!-- /.links -->

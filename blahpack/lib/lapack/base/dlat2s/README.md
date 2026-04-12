@@ -1,0 +1,141 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dlat2s
+
+> Convert a double-precision triangular matrix to a single-precision triangular matrix.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dlat2s = require( '@stdlib/lapack/base/dlat2s' );
+```
+
+#### dlat2s( order, uplo, N, A, LDA, SA, LDSA )
+
+Converts a double-precision triangular matrix `A` to a single-precision triangular matrix `SA`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Float32Array = require( '@stdlib/array/float32' );
+
+var A = new Float64Array( [ 1.0, 0.0, 2.0, 3.0 ] );
+var SA = new Float32Array( 4 );
+
+var info = dlat2s( 'column-major', 'upper', 2, A, 2, SA, 2 );
+// info => 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether `A` is upper or lower triangular (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **A**: input [`Float64Array`][mdn-float64array].
+-   **LDA**: leading dimension of `A`.
+-   **SA**: output [`Float32Array`][mdn-float32array].
+-   **LDSA**: leading dimension of `SA`.
+
+The function returns `0` on success, or `1` if any element of `A` falls outside the representable range of single precision.
+
+#### dlat2s.ndarray( uplo, N, A, strideA1, strideA2, offsetA, SA, strideSA1, strideSA2, offsetSA )
+
+Converts a double-precision triangular matrix `A` to a single-precision triangular matrix `SA`, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Float32Array = require( '@stdlib/array/float32' );
+
+var A = new Float64Array( [ 1.0, 0.0, 2.0, 3.0 ] );
+var SA = new Float32Array( 4 );
+
+var info = dlat2s.ndarray( 'upper', 2, A, 1, 2, 0, SA, 1, 2, 0 );
+// info => 0
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies whether `A` is upper or lower triangular (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **A**: input [`Float64Array`][mdn-float64array].
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **SA**: output [`Float32Array`][mdn-float32array].
+-   **strideSA1**: stride of dimension 1 of `SA`.
+-   **strideSA2**: stride of dimension 2 of `SA`.
+-   **offsetSA**: starting index for `SA`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   Only the triangle of `A` selected by `uplo` is converted; the remaining entries of `SA` are left untouched.
+-   Conversion from double to single precision is performed via `Math.fround` and follows IEEE 754 round-to-nearest.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Float32Array = require( '@stdlib/array/float32' );
+var dlat2s = require( '@stdlib/lapack/base/dlat2s' );
+
+var A = new Float64Array( [ 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9 ] );
+var SA = new Float32Array( 9 );
+
+var info = dlat2s( 'column-major', 'upper', 3, A, 3, SA, 3 );
+console.log( info );
+console.log( SA );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+
+</section>
+
+<!-- /.links -->

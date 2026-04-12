@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlaneg
 
-> Computes the Sturm count for a tridiagonal matrix
+> Computes the Sturm count
 
 <section class="usage">
 
@@ -32,47 +32,47 @@ var dlaneg = require( '@stdlib/lapack/base/dlaneg' );
 
 #### dlaneg( N, d, strideD, LLD, strideLLD, sigma, pivmin, r )
 
-Computes the Sturm count for a tridiagonal matrix
+Computes the Sturm count
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
+var LLD = new Float64Array( [ 0.5, 0.5, 0.5, 0.5 ] );
+
+var negcnt = dlaneg( 5, d, 1, LLD, 1, 0.0, 1.0e-30, 3 );
+// returns 0
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **d**: input array.
+-   **N**: order of the matrix.
+-   **d**: diagonal of `D` in the factorization `T = L*D*L^T` (length `N`).
 -   **strideD**: stride length for `d`.
--   **LLD**: output array.
+-   **LLD**: `(N-1)` elements `L(i)*L(i)*D(i)`.
 -   **strideLLD**: stride length for `LLD`.
--   **sigma**: sigma.
--   **pivmin**: pivmin.
--   **r**: r.
+-   **sigma**: shift amount in `T - sigma*I = L*D*L^T`.
+-   **pivmin**: minimum pivot in the Sturm sequence.
+-   **r**: twist index for the twisted factorization (1-based).
 
 #### dlaneg.ndarray( N, d, strideD, offsetD, LLD, strideLLD, offsetLLD, sigma, pivmin, r )
 
-Computes the Sturm count for a tridiagonal matrix, using alternative indexing semantics.
+Computes the Sturm count, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
+var LLD = new Float64Array( [ 0.5, 0.5, 0.5, 0.5 ] );
+
+var negcnt = dlaneg.ndarray( 5, d, 1, 0, LLD, 1, 0, 10.0, 1.0e-30, 3 );
+// returns 5
 ```
 
 The function has the following additional parameters:
 
--   **N**: number of columns.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **offsetD**: starting index for `D`.
--   **LLD**: output array.
--   **strideLLD**: stride length for `LLD`.
+-   **offsetD**: starting index for `d`.
 -   **offsetLLD**: starting index for `LLD`.
--   **sigma**: sigma.
--   **pivmin**: pivmin.
--   **r**: r.
 
 </section>
 
@@ -82,7 +82,9 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlaneg` computes the Sturm count — the number of negative pivots encountered while factoring `T - sigma*I = L*D*L^T`. This count equals the number of eigenvalues of the symmetric tridiagonal matrix `T` that are strictly less than `sigma`, and is the building block of bisection-based eigenvalue algorithms (e.g., `dlarrb`).
+-   The implementation relies on IEEE-754 Inf/NaN propagation: a zero pivot is allowed to produce infinities, which the slow fallback path resolves by substituting `1` for `Inf/Inf`. The `pivmin` parameter is accepted for API compatibility but not used by the reference algorithm.
+-   `r` is the 1-based twist index: the factorization sweeps from index `1` up to `r-1` and from `N-1` down to `r`, then combines the two partial factorizations at position `r`.
 
 </section>
 
@@ -93,7 +95,21 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dlaneg = require( '@stdlib/lapack/base/dlaneg' );
+
+var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
+var LLD = new Float64Array( [ 0.5, 0.5, 0.5, 0.5 ] );
+
+// Count eigenvalues below sigma = 0 (positive-definite T):
+var negcnt = dlaneg( 5, d, 1, LLD, 1, 0.0, 1.0e-30, 3 );
+console.log( negcnt );
+// => 0
+
+// Count eigenvalues below sigma = 10 (above the spectrum):
+negcnt = dlaneg( 5, d, 1, LLD, 1, 10.0, 1.0e-30, 3 );
+console.log( negcnt );
+// => 5
 ```
 
 </section>

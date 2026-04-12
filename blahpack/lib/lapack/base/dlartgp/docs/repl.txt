@@ -1,0 +1,62 @@
+
+{{alias}}( f, g, cs, sn, r )
+    Generates a plane rotation with non-negative diagonal
+
+    Parameters
+    ----------
+        f: number
+            f.
+
+        g: number
+            g.
+
+        cs: number
+            cs.
+
+        sn: number
+            sn.
+
+        r: number
+            r.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( f, g, cs, sn, r )
+    Generates a plane rotation with non-negative diagonal, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        f: number
+            f.
+
+        g: number
+            g.
+
+        cs: number
+            cs.
+
+        sn: number
+            sn.
+
+        r: number
+            r.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

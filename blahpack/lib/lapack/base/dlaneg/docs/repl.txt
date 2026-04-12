@@ -1,6 +1,6 @@
 
 {{alias}}( N, d, strideD, LLD, strideLLD, sigma, pivmin, r )
-    Computes the Sturm count for a tridiagonal matrix
+    Computes the Sturm count
 
     Parameters
     ----------
@@ -39,7 +39,7 @@
 
 
 {{alias}}.ndarray( N, d, strideD, offsetD, LLD, strideLLD, offsetLLD, sigma, pivmin, r )
-    Computes the Sturm count for a tridiagonal matrix, using alternative indexing semantics.
+    Computes the Sturm count, using alternative indexing semantics.
 
     Parameters
     ----------

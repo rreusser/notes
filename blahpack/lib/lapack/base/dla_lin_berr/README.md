@@ -1,0 +1,146 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dla_lin_berr
+
+> Compute a component-wise relative backward error.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dla_lin_berr = require( '@stdlib/lapack/base/dla_lin_berr' );
+```
+
+#### dla_lin_berr( N, nz, nrhs, res, LDRES, ayb, LDAYB, berr )
+
+Computes, for each right-hand side column `j`, the component-wise relative backward error
+
+```tex
+\mathrm{BERR}(j) = \max_{i} \frac{\mathrm{safe1} + |\mathrm{RES}(i,j)|}{\mathrm{AYB}(i,j)}
+```
+
+where `safe1 = (nz+1) * DLAMCH('Safe minimum')` guards against spuriously zero residuals and the maximum is taken over rows `i` for which `AYB(i,j) != 0`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var res = new Float64Array( [ 1e-6, 2e-6, 3e-6, 4e-6 ] );
+var ayb = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var berr = new Float64Array( 2 );
+
+dla_lin_berr( 2, 2, 2, res, 2, ayb, 2, berr );
+// berr => <Float64Array>[ 1e-6, 1e-6 ]
+```
+
+The function has the following parameters:
+
+-   **N**: number of rows in `res` and `ayb`.
+-   **nz**: guard factor. `(nz+1) * DLAMCH('Safe minimum')` is added to the numerator.
+-   **nrhs**: number of right-hand sides (columns of `res` and `ayb`).
+-   **res**: residual matrix `R` stored column-major with dimensions `(N, nrhs)` ([`Float64Array`][mdn-float64array]).
+-   **LDRES**: leading dimension of `res`. Must satisfy `LDRES >= max(1, N)`.
+-   **ayb**: denominator matrix `|op(A_s)|*|Y| + |B_s|` stored column-major with dimensions `(N, nrhs)` ([`Float64Array`][mdn-float64array]).
+-   **LDAYB**: leading dimension of `ayb`. Must satisfy `LDAYB >= max(1, N)`.
+-   **berr**: output vector of length `nrhs` receiving the per-column backward error ([`Float64Array`][mdn-float64array]).
+
+#### dla_lin_berr.ndarray( N, nz, nrhs, res, strideRES1, strideRES2, offsetRES, ayb, strideAYB1, strideAYB2, offsetAYB, berr, strideBERR, offsetBERR )
+
+Computes the component-wise relative backward error, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var res = new Float64Array( [ 1e-6, 2e-6, 3e-6, 4e-6 ] );
+var ayb = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var berr = new Float64Array( 2 );
+
+dla_lin_berr.ndarray( 2, 2, 2, res, 1, 2, 0, ayb, 1, 2, 0, berr, 1, 0 );
+// berr => <Float64Array>[ 1e-6, 1e-6 ]
+```
+
+The function has the following additional parameters:
+
+-   **strideRES1**: stride of the first (row) dimension of `res`.
+-   **strideRES2**: stride of the second (column) dimension of `res`.
+-   **offsetRES**: starting index for `res`.
+-   **strideAYB1**: stride of the first (row) dimension of `ayb`.
+-   **strideAYB2**: stride of the second (column) dimension of `ayb`.
+-   **offsetAYB**: starting index for `ayb`.
+-   **strideBERR**: stride of `berr`.
+-   **offsetBERR**: starting index for `berr`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `dla_lin_berr` is an auxiliary routine used by iterative refinement routines (e.g., `dla_gerfsx_extended`, `dla_porfsx_extended`).
+-   The safeguard `safe1 = (nz+1) * DLAMCH('Safe minimum')` matches the guard used in `SLA_yyAMV` when computing `AYB`, ensuring `BERR` is not inflated by spuriously zero residuals.
+-   Rows where `AYB(i,j) == 0` are skipped: if `AYB` was computed by `SLA_yyAMV`, the exact-zero denominator implies the true residual is also exactly zero.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dla_lin_berr = require( '@stdlib/lapack/base/dla_lin_berr' );
+
+var N = 3;
+var nrhs = 2;
+
+var res = new Float64Array( [ 1e-6, 2e-6, 3e-6, 4e-6, 5e-6, 6e-6 ] );
+var ayb = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var berr = new Float64Array( nrhs );
+
+dla_lin_berr( N, N, nrhs, res, N, ayb, N, berr );
+console.log( berr );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

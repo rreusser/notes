@@ -1,0 +1,2 @@
+dlat2s
+slamch

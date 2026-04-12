@@ -27,7 +27,7 @@
 */
 interface Routine {
 	/**
-	* Computes the Sturm count for a tridiagonal matrix
+	* Computes the Sturm count
 	*
 	* @param N - number of columns
 	* @param d - input array
@@ -42,7 +42,7 @@ interface Routine {
 	( N: number, d: Float64Array, strideD: number, LLD: Float64Array, strideLLD: number, sigma: number, pivmin: number, r: number ): Float64Array;
 
 	/**
-	* Computes the Sturm count for a tridiagonal matrix, using alternative indexing semantics.
+	* Computes the Sturm count, using alternative indexing semantics.
 	*
 	* @param N - number of columns
 	* @param d - input array
@@ -60,7 +60,7 @@ interface Routine {
 }
 
 /**
-* Computes the Sturm count for a tridiagonal matrix
+* Computes the Sturm count
 */
 declare var dlaneg: Routine;
 

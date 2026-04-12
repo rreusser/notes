@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -30,9 +28,9 @@ var options = {
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
+	var LLD = uniform( len, -10.0, 10.0, options );
+	var d = uniform( len, -10.0, 10.0, options );
 	var N = len;
-	var d = uniform( N, -10.0, 10.0, options );
-	var LLD = uniform( N, -10.0, 10.0, options );
 	return benchmark;
 
 	/**
@@ -47,7 +45,7 @@ function createBenchmark( len ) {
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = dlaneg( N, d, 1, 0, LLD, 1, 0, N, N, N );
+			y = dlaneg( N, d, 1, 0, LLD, 1, 0, 0.5, 1.0e-30, ( ( N / 2 ) | 0 ) + 1 ); // eslint-disable-line max-len
 			if ( isnan( y ) ) {
 				b.fail( 'should not return NaN' );
 			}

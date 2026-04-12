@@ -1,0 +1,47 @@
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Applies an elementary reflector, or Householder matrix, H, to an N-by-N symmetric matrix C, from both sides, using alternative indexing semantics.
+*
+* @param {string} uplo - specifies whether the upper or lower triangular part of C is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix C
+* @param {Float64Array} v - reflector vector
+* @param {integer} strideV - stride for `v`
+* @param {NonNegativeInteger} offsetV - starting index for `v`
+* @param {number} tau - scalar factor
+* @param {Float64Array} C - symmetric matrix (modified in-place)
+* @param {integer} strideC1 - stride of the first dimension of `C`
+* @param {integer} strideC2 - stride of the second dimension of `C`
+* @param {NonNegativeInteger} offsetC - starting index for `C`
+* @param {Float64Array} WORK - workspace array of length `N`
+* @param {integer} strideWORK - stride for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @throws {RangeError} second argument must be a nonnegative integer
+* @returns {Float64Array} `C`
+*/
+function dlarfy( uplo, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	return base( uplo, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
+}
+
+
+// EXPORTS //
+
+module.exports = dlarfy;

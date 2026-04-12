@@ -42,9 +42,9 @@ var BLKLEN = 128;
 * @returns {integer} Sturm count (number of negative pivots)
 */
 function dlaneg( N, d, strideD, offsetD, LLD, strideLLD, offsetLLD, sigma, pivmin, r ) { // eslint-disable-line max-len, max-params, no-unused-vars
+	var dminus;
 	var negcnt;
 	var sawnan;
-	var dminus;
 	var dplus;
 	var gamma;
 	var bsav;
@@ -54,9 +54,9 @@ function dlaneg( N, d, strideD, offsetD, LLD, strideLLD, offsetLLD, sigma, pivmi
 	var tmp;
 	var bj;
 	var jj;
+	var j;
 	var p;
 	var t;
-	var j;
 
 	negcnt = 0;
 

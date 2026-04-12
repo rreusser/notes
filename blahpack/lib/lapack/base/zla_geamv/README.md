@@ -1,0 +1,145 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zla_geamv
+
+> Computes `y := alpha*|A|*|x| + beta*|y|` using a general complex matrix to calculate error bounds.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlaGeamv = require( '@stdlib/lapack/base/zla_geamv' );
+```
+
+#### zlaGeamv( order, trans, M, N, alpha, A, LDA, x, strideX, beta, y, strideY )
+
+Computes `y := alpha*|A|*|x| + beta*|y|` (or the transposed variant) using a general complex matrix.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Complex128Array( [ 1.0, 0.0, -2.0, 0.0, 3.0, 0.0, -4.0, 0.0 ] );
+var x = new Complex128Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+zlaGeamv( 'row-major', 'no-transpose', 2, 2, 1.0, A, 2, x, 1, 0.0, y, 1 );
+// y => <Float64Array>[ 3.0, 7.0 ]  (plus SAFE1 perturbation, absorbed)
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **trans**: operation applied to `A` (`'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`). Because the routine uses the CABS1 norm (`|re|+|im|`), `'transpose'` and `'conjugate-transpose'` produce identical results.
+-   **M**: number of rows of `A`.
+-   **N**: number of columns of `A`.
+-   **alpha**: scalar constant.
+-   **A**: complex input matrix (`Complex128Array`).
+-   **LDA**: leading dimension of `A`.
+-   **x**: complex input vector (`Complex128Array`).
+-   **strideX**: stride length for `x`.
+-   **beta**: scalar constant.
+-   **y**: real input/output vector (`Float64Array`).
+-   **strideY**: stride length for `y`.
+
+#### zlaGeamv.ndarray( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+
+Computes `y := alpha*|A|*|x| + beta*|y|` (or the transposed variant) using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Complex128Array( [ 1.0, 0.0, -2.0, 0.0, 3.0, 0.0, -4.0, 0.0 ] );
+var x = new Complex128Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+zlaGeamv.ndarray( 'no-transpose', 2, 2, 1.0, A, 1, 2, 0, x, 1, 0, 0.0, y, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A` (in complex elements).
+-   **strideA2**: stride of dimension 2 of `A` (in complex elements).
+-   **offsetA**: starting index for `A`.
+-   **offsetX**: starting index for `x`.
+-   **offsetY**: starting index for `y`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   To protect against underflow, components in the resulting vector are perturbed away from zero by `(N+1)` times the underflow threshold. "Symbolically" zero components (where every contributing product has a zero operand) are not perturbed.
+-   Absolute values use the CABS1 norm: `|re(z)| + |im(z)|` (not the true modulus).
+-   This routine is primarily used in calculating error bounds for iterative refinement.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var uniform = require( '@stdlib/random/array/uniform' );
+var zlaGeamv = require( '@stdlib/lapack/base/zla_geamv' );
+
+var cplxOpts = { 'dtype': 'complex128' };
+var realOpts = { 'dtype': 'float64' };
+
+var A = uniform( 9, -1.0, 1.0, cplxOpts );
+var x = uniform( 3, -1.0, 1.0, cplxOpts );
+var y = uniform( 3, -1.0, 1.0, realOpts );
+
+zlaGeamv( 'row-major', 'no-transpose', 3, 3, 1.0, A, 3, x, 1, 0.0, y, 1 );
+console.log( y );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

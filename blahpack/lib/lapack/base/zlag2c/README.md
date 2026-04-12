@@ -1,0 +1,132 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zlag2c
+
+> Convert a complex double precision matrix to a complex single precision matrix.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlag2c = require( '@stdlib/lapack/base/zlag2c' );
+```
+
+#### zlag2c( order, M, N, A, LDA, SA, LDSA )
+
+Converts a complex double precision matrix `A` to a complex single precision matrix `SA`. Returns `0` on success; returns `1` if any entry of `A` exceeds the single precision overflow threshold.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 1.5, -2.25, 3.125, 4.0, -0.5, 0.75, 100.0, -200.0 ] );
+var SA = new Complex128Array( 4 );
+
+var info = zlag2c( 'column-major', 2, 2, A, 2, SA, 2 );
+// returns 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **A**: input `Complex128Array`.
+-   **LDA**: leading dimension of `A`.
+-   **SA**: output `Complex128Array` (elements are rounded to single precision).
+-   **LDSA**: leading dimension of `SA`.
+
+#### zlag2c.ndarray( M, N, A, strideA1, strideA2, offsetA, SA, strideSA1, strideSA2, offsetSA )
+
+Converts `A` to `SA` using alternative indexing semantics (explicit strides and offsets in complex elements).
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 1.5, -2.25, 3.125, 4.0 ] );
+var SA = new Complex128Array( 2 );
+
+var info = zlag2c.ndarray( 1, 2, A, 1, 1, 0, SA, 1, 1, 0 );
+// returns 0
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A` (in complex elements).
+-   **strideA2**: stride of dimension 2 of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **strideSA1**: stride of dimension 1 of `SA` (in complex elements).
+-   **strideSA2**: stride of dimension 2 of `SA` (in complex elements).
+-   **offsetSA**: starting index for `SA` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   Single precision quantization is simulated by applying `Math.fround` independently to the real and imaginary parts of each element; the output is still stored in a `Complex128Array`.
+-   On overflow (`INFO = 1`), the contents of `SA` are unspecified, matching the Fortran reference behavior.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zlag2c = require( '@stdlib/lapack/base/zlag2c' );
+
+var M = 3;
+var N = 3;
+var A = new Complex128Array( M * N );
+var v = reinterpret( A, 0 );
+var i;
+for ( i = 0; i < 2 * M * N; i++ ) {
+	v[ i ] = ( i + 1 ) * 0.5;
+}
+var SA = new Complex128Array( M * N );
+var info = zlag2c( 'column-major', M, N, A, M, SA, M );
+console.log( 'info = %d', info );
+console.log( reinterpret( SA, 0 ) );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<section class="links">
+
+</section>
+
+<!-- /.links -->

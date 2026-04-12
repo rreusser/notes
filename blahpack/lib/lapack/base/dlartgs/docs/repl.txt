@@ -1,0 +1,62 @@
+
+{{alias}}( x, y, sigma, cs, sn )
+    Generates a plane rotation for the bidiagonal SVD implicit QR iteration
+
+    Parameters
+    ----------
+        x: number
+            x.
+
+        y: number
+            y.
+
+        sigma: number
+            sigma.
+
+        cs: number
+            cs.
+
+        sn: number
+            sn.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( x, y, sigma, cs, sn )
+    Generates a plane rotation for the bidiagonal SVD implicit QR iteration, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        x: number
+            x.
+
+        y: number
+            y.
+
+        sigma: number
+            sigma.
+
+        cs: number
+            cs.
+
+        sn: number
+            sn.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,0 +1,113 @@
+
+{{alias}}( order, trans, M, N, alpha, A, LDA, x, strideX, beta, y, strideY )
+    Computes a matrix-vector product using a general matrix to calculate error bounds
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        trans: integer
+            trans.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        alpha: number
+            scalar constant.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        beta: number
+            scalar constant.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+    Computes a matrix-vector product using a general matrix to calculate error bounds, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        trans: integer
+            trans.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        alpha: number
+            scalar constant.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: integer
+            starting index for `X`.
+
+        beta: number
+            scalar constant.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: integer
+            starting index for `Y`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

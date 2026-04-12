@@ -1,0 +1,115 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dlartgs
+
+> Generates a plane rotation designed to introduce a bulge in implicit QR iteration for the bidiagonal SVD problem.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dlartgs = require( '@stdlib/lapack/base/dlartgs' );
+```
+
+#### dlartgs( x, y, sigma )
+
+Generates a plane rotation designed to introduce a bulge in implicit QR iteration for the bidiagonal SVD problem.
+
+```javascript
+var result = dlartgs( 3.0, 4.0, 1.5 );
+// returns { cs: ~0.4903, sn: ~0.8716 }
+```
+
+The function has the following parameters:
+
+-   **x**: `(1,1)` entry of an upper bidiagonal matrix.
+-   **y**: `(1,2)` entry of an upper bidiagonal matrix.
+-   **sigma**: shift.
+
+Returns an object `{ cs, sn }` where `cs` and `sn` define a plane rotation satisfying `[ cs sn; -sn cs ] * [ x^2 - sigma^2; x*y ] = [ r; 0 ]` with `r >= 0`.
+
+#### dlartgs.ndarray( x, y, sigma, out )
+
+Generates a plane rotation and writes the result into a preallocated output array.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var out = new Float64Array( 2 );
+dlartgs.ndarray( 3.0, 4.0, 1.5, out );
+// out[0] = cs, out[1] = sn
+```
+
+The function has the following additional parameters:
+
+-   **out**: output `Float64Array` of length `>= 2`; on return `out[0] = cs` and `out[1] = sn`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   If `x^2 - sigma^2` and `x*y` are both zero, the rotation is by PI/2.
+-   The routine is used as a shift-generation primitive inside Golub-Reinsch-style implicit QR iteration for the bidiagonal SVD.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var dlartgs = require( '@stdlib/lapack/base/dlartgs' );
+
+var r = dlartgs( 3.0, 4.0, 1.5 );
+console.log( r );
+
+r = dlartgs( -2.0, 3.0, 0.0 );
+console.log( r );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

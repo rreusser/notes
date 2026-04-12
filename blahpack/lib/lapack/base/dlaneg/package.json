@@ -1,7 +1,7 @@
 {
   "name": "@stdlib/lapack/base/dlaneg",
   "version": "0.0.0",
-  "description": "Computes the Sturm count for a tridiagonal matrix",
+  "description": "Computes the Sturm count",
   "license": "Apache-2.0",
   "author": {
     "name": "The Stdlib Authors",
