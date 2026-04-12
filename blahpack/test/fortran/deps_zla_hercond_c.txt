@@ -1,0 +1,16 @@
+dlamch
+dzsum1
+ieeeck
+ilaenv
+iparmq
+izmax1
+zhetrs
+zhetrf
+zhetf2
+zlahef
+zla_hercond_c
+zlacgv
+zlacn2
+disnan
+dlaisnan
+dlapy2

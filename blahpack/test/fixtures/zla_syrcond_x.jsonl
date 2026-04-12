@@ -1,0 +1,6 @@
+{"name":"uplo_U_uniform_real","result": 3.03503507743922707E-001,"info":0}
+{"name":"uplo_U_complex_x","result": 7.42440153096150385E-002,"info":0}
+{"name":"uplo_L_uniform_real","result": 3.03503507743922707E-001,"info":0}
+{"name":"uplo_L_complex_x","result": 7.42440153096150385E-002,"info":0}
+{"name":"n1_uplo_U","result": 7.61577310586390888E-001,"info":0}
+{"name":"n0","result": 1.00000000000000000E+000,"info":0}
