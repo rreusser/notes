@@ -1,0 +1,12 @@
+dla_syrcond
+dlacn2
+dlamch
+dsytrs
+dsytrf
+dlasyf
+dsytf2
+disnan
+dlaisnan
+ieeeck
+ilaenv
+iparmq

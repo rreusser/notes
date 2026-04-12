@@ -1,0 +1,225 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params, max-statements, camelcase */
+
+'use strict';
+
+// MODULES //
+
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dgetrs = require( '../../dgetrs/lib/base.js' );
+var dlacn2 = require( '../../dlacn2/lib/base.js' );
+
+
+// MAIN //
+
+/**
+* Estimates the Skeel condition number for a general matrix.
+*
+* Uses iterative refinement with a dlacn2 reverse communication loop.
+*
+* ## Notes
+*
+* -   WORK must have length at least `3*N`.
+* -   IWORK must have length at least `N`.
+* -   `cmode` controls column scaling: 1 means multiply by `C`, 0 means no scaling, -1 means divide by `C`.
+*
+* @private
+* @param {string} trans - specifies the operation type (`'no-transpose'` or `'transpose'`)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} A - original N-by-N matrix
+* @param {integer} strideA1 - stride of the first dimension of `A`
+* @param {integer} strideA2 - stride of the second dimension of `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @param {Float64Array} AF - LU-factored N-by-N matrix (from dgetrf)
+* @param {integer} strideAF1 - stride of the first dimension of `AF`
+* @param {integer} strideAF2 - stride of the second dimension of `AF`
+* @param {NonNegativeInteger} offsetAF - starting index for `AF`
+* @param {Int32Array} IPIV - pivot indices from dgetrf (0-based)
+* @param {integer} strideIPIV - stride length for `IPIV`
+* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
+* @param {integer} cmode - column scaling mode (1, 0, or -1)
+* @param {Float64Array} c - scaling vector of length N
+* @param {integer} strideC - stride length for `c`
+* @param {NonNegativeInteger} offsetC - starting index for `c`
+* @param {Float64Array} WORK - workspace array of length at least `3*N`
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {Int32Array} IWORK - integer workspace array of length at least `N`
+* @param {integer} strideIWORK - stride length for `IWORK`
+* @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
+* @returns {number} estimated reciprocal Skeel condition number
+*/
+function dla_gercond( trans, N, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, cmode, c, strideC, offsetC, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len
+	var notrans;
+	var ainvnm;
+	var ISAVE;
+	var KASE;
+	var EST;
+	var tmp;
+	var iw;
+	var ic;
+	var ia;
+	var i;
+	var j;
+
+	if ( N === 0 ) {
+		return 1.0;
+	}
+
+	notrans = ( trans === 'no-transpose' );
+
+	// Compute the norm of the scaled matrix: WORK[2*N..3*N-1]
+	if ( notrans ) {
+		for ( i = 0; i < N; i++ ) {
+			tmp = 0.0;
+			ia = offsetA + ( i * strideA1 );
+			ic = offsetC;
+			if ( cmode === 1 ) {
+				for ( j = 0; j < N; j++ ) {
+					tmp += Math.abs( A[ ia + ( j * strideA2 ) ] * c[ ic ] );
+					ic += strideC;
+				}
+			} else if ( cmode === 0 ) {
+				for ( j = 0; j < N; j++ ) {
+					tmp += Math.abs( A[ ia + ( j * strideA2 ) ] );
+				}
+			} else {
+				for ( j = 0; j < N; j++ ) {
+					tmp += Math.abs( A[ ia + ( j * strideA2 ) ] / c[ ic ] );
+					ic += strideC;
+				}
+			}
+			WORK[ offsetWORK + ( ( ( 2 * N ) + i ) * strideWORK ) ] = tmp;
+		}
+	} else {
+		for ( i = 0; i < N; i++ ) {
+			tmp = 0.0;
+			ia = offsetA + ( i * strideA2 );
+			ic = offsetC;
+			if ( cmode === 1 ) {
+				for ( j = 0; j < N; j++ ) {
+					tmp += Math.abs( A[ ia + ( j * strideA1 ) ] * c[ ic ] );
+					ic += strideC;
+				}
+			} else if ( cmode === 0 ) {
+				for ( j = 0; j < N; j++ ) {
+					tmp += Math.abs( A[ ia + ( j * strideA1 ) ] );
+				}
+			} else {
+				for ( j = 0; j < N; j++ ) {
+					tmp += Math.abs( A[ ia + ( j * strideA1 ) ] / c[ ic ] );
+					ic += strideC;
+				}
+			}
+			WORK[ offsetWORK + ( ( ( 2 * N ) + i ) * strideWORK ) ] = tmp;
+		}
+	}
+
+	// Estimate the norm of inv(op(A)) using dlacn2 reverse communication
+	ainvnm = 0.0;
+	KASE = new Int32Array( 1 );
+	EST = new Float64Array( 1 );
+	ISAVE = new Int32Array( 3 );
+
+	while ( true ) { // eslint-disable-line no-constant-condition
+		dlacn2( N, WORK, strideWORK, offsetWORK + (N * strideWORK), WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, EST, KASE, ISAVE, 1, 0 );
+		ainvnm = EST[ 0 ];
+
+		if ( KASE[ 0 ] === 0 ) {
+			break;
+		}
+		if ( KASE[ 0 ] === 2 ) {
+			// Multiply by scaled matrix and solve
+			iw = offsetWORK;
+			for ( i = 0; i < N; i++ ) {
+				WORK[ iw ] *= WORK[ offsetWORK + ( ( ( 2 * N ) + i ) * strideWORK ) ];
+				iw += strideWORK;
+			}
+			if ( notrans ) {
+				dgetrs( 'no-transpose', N, 1, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK );
+			} else {
+				dgetrs( 'transpose', N, 1, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK );
+			}
+
+			// Apply column scaling
+			if ( cmode === 1 ) {
+				iw = offsetWORK;
+				ic = offsetC;
+				for ( i = 0; i < N; i++ ) {
+					WORK[ iw ] /= c[ ic ];
+					iw += strideWORK;
+					ic += strideC;
+				}
+			} else if ( cmode === -1 ) {
+				iw = offsetWORK;
+				ic = offsetC;
+				for ( i = 0; i < N; i++ ) {
+					WORK[ iw ] *= c[ ic ];
+					iw += strideWORK;
+					ic += strideC;
+				}
+			}
+		} else {
+			// KASE === 1: Apply column scaling, solve transposed, multiply by scaled matrix
+			if ( cmode === 1 ) {
+				iw = offsetWORK;
+				ic = offsetC;
+				for ( i = 0; i < N; i++ ) {
+					WORK[ iw ] /= c[ ic ];
+					iw += strideWORK;
+					ic += strideC;
+				}
+			} else if ( cmode === -1 ) {
+				iw = offsetWORK;
+				ic = offsetC;
+				for ( i = 0; i < N; i++ ) {
+					WORK[ iw ] *= c[ ic ];
+					iw += strideWORK;
+					ic += strideC;
+				}
+			}
+
+			if ( notrans ) {
+				dgetrs( 'transpose', N, 1, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK );
+			} else {
+				dgetrs( 'no-transpose', N, 1, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK );
+			}
+
+			// Multiply by row norms
+			iw = offsetWORK;
+			for ( i = 0; i < N; i++ ) {
+				WORK[ iw ] *= WORK[ offsetWORK + ( ( ( 2 * N ) + i ) * strideWORK ) ];
+				iw += strideWORK;
+			}
+		}
+	}
+
+	// Compute reciprocal condition number
+	if ( ainvnm !== 0.0 ) {
+		return 1.0 / ainvnm;
+	}
+	return 0.0;
+}
+
+
+// EXPORTS //
+
+module.exports = dla_gercond;

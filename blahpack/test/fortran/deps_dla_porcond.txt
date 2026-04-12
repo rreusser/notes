@@ -1,0 +1,11 @@
+disnan
+dla_porcond
+dlacn2
+dlaisnan
+dpotf2
+dpotrf
+dpotrf2
+dpotrs
+ieeeck
+ilaenv
+iparmq

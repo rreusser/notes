@@ -1,0 +1,150 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zla_gbrcond_x
+
+> Estimates the infinity norm condition number for a complex general banded matrix with x scaling
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zla_gbrcond_x = require( '@stdlib/lapack/base/zla_gbrcond_x' );
+```
+
+#### zla_gbrcond_x( order, trans, N, kl, ku, AB, LDAB, AFB, LDAFB, IPIV, strideIPIV, offsetIPIV, x, strideX, WORK, strideWORK, RWORK, strideRWORK )
+
+Estimates the infinity norm condition number for a complex general banded matrix with x scaling
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+// See examples/index.js for a complete, runnable example.
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **trans**: specifies the operation type.
+-   **N**: number of columns.
+-   **kl**: kl.
+-   **ku**: ku.
+-   **AB**: input matrix.
+-   **LDAB**: leading dimension of `AB`.
+-   **AFB**: input matrix.
+-   **LDAFB**: leading dimension of `AFB`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **x**: input array.
+-   **strideX**: stride length for `x`.
+-   **WORK**: input array.
+-   **strideWORK**: stride length for `WORK`.
+-   **RWORK**: output array.
+-   **strideRWORK**: stride length for `RWORK`.
+
+#### zla_gbrcond_x.ndarray( trans, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, IPIV, strideIPIV, offsetIPIV, x, strideX, offsetX, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+
+Estimates the infinity norm condition number for a complex general banded matrix with x scaling, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+// See examples/index.js for a complete, runnable example.
+```
+
+The function has the following additional parameters:
+
+-   **trans**: specifies the operation type.
+-   **N**: number of columns.
+-   **kl**: kl.
+-   **ku**: ku.
+-   **AB**: input matrix.
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **AFB**: input matrix.
+-   **strideAFB1**: stride of dimension 1 of `AFB`.
+-   **strideAFB2**: stride of dimension 2 of `AFB`.
+-   **offsetAFB**: starting index for `AFB`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **x**: input array.
+-   **strideX**: stride length for `x`.
+-   **offsetX**: starting index for `X`.
+-   **WORK**: input array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **RWORK**: output array.
+-   **strideRWORK**: stride length for `RWORK`.
+-   **offsetRWORK**: starting index for `RWORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `AB` is the original banded matrix and must be stored with leading dimension `KL+KU+1`.
+-   `AFB` is the LU-factored band matrix from [`zgbtrf`][@stdlib/lapack/base/zgbtrf] and must use leading dimension `2*KL+KU+1`.
+-   `WORK` must provide at least `2*N` complex elements, and `RWORK` at least `N` real elements.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var zla_gbrcond_x = require( '@stdlib/lapack/base/zla_gbrcond_x' );
+
+// See examples/index.js for a full runnable example.
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

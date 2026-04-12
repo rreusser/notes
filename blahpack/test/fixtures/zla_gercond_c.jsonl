@@ -1,0 +1,8 @@
+{"name":"trans_N_capply_uniform","result": 9.53278866340695197E-002,"info":0}
+{"name":"trans_C_capply_uniform","result": 8.85240122612409447E-002,"info":0}
+{"name":"trans_N_capply_nonuniform","result": 5.93518718783173152E-002,"info":0}
+{"name":"trans_C_capply_nonuniform","result": 4.03687308392123162E-002,"info":0}
+{"name":"trans_N_nocapply","result": 9.53278866340695197E-002,"info":0}
+{"name":"trans_C_nocapply","result": 8.85240122612409447E-002,"info":0}
+{"name":"n1_trans_N","result": 7.69309258162071963E-001,"info":0}
+{"name":"n0","result": 1.00000000000000000E+000,"info":0}

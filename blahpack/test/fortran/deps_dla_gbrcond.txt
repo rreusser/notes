@@ -1,0 +1,9 @@
+dgbtf2
+dgbtrf
+dgbtrs
+dlaswp
+dla_gbrcond
+dlacn2
+ieeeck
+ilaenv
+iparmq

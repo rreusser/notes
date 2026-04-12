@@ -1,0 +1,7 @@
+{"name":"uplo_U_cmode1","rcond": 2.38759689922480617E-001,"info":0}
+{"name":"uplo_U_cmode0","rcond": 3.05555555555555525E-001,"info":0}
+{"name":"uplo_U_cmode_neg1","rcond": 2.15686274509803905E-001,"info":0}
+{"name":"uplo_L_cmode1","rcond": 2.38759689922480617E-001,"info":0}
+{"name":"uplo_L_cmode0","rcond": 3.05555555555555525E-001,"info":0}
+{"name":"uplo_L_cmode_neg1","rcond": 2.15686274509803960E-001,"info":0}
+{"name":"uplo_U_diff_C","rcond": 2.97412128234839715E-002,"info":0}

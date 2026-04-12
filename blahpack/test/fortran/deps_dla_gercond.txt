@@ -1,0 +1,11 @@
+dgetrf
+dgetrf2
+dgetf2
+dgetrs
+dla_gercond
+dlacn2
+dlamch
+dlaswp
+ieeeck
+ilaenv
+iparmq

@@ -1,0 +1,10 @@
+{"name":"trans_N_cmode1_uniform","result": 2.90322580645161255E-001,"info":0}
+{"name":"trans_T_cmode1_uniform","result": 2.90322580645161255E-001,"info":0}
+{"name":"trans_N_cmode1_nonuniform","result": 9.47368421052631471E-002,"info":0}
+{"name":"trans_T_cmode1_nonuniform","result": 9.47368421052631471E-002,"info":0}
+{"name":"trans_N_cmode0","result": 2.90322580645161255E-001,"info":0}
+{"name":"trans_T_cmode0","result": 2.90322580645161255E-001,"info":0}
+{"name":"trans_N_cmode_neg1","result": 1.41361256544502600E-001,"info":0}
+{"name":"trans_T_cmode_neg1","result": 1.41361256544502600E-001,"info":0}
+{"name":"n1_trans_N","result": 1.00000000000000000E+000,"info":0}
+{"name":"n0","result": 1.00000000000000000E+000,"info":0}
