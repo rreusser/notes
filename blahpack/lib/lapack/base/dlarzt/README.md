@@ -1,0 +1,156 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dlarzt
+
+> Forms the triangular factor T of a block reflector `H = I - V*T*V^T`.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dlarzt = require( '@stdlib/lapack/base/dlarzt' );
+```
+
+#### dlarzt( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
+
+Forms the triangular factor T of a block reflector `H = I - V*T*V^T`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var V = new Float64Array( [ 1.0, 0.5, -0.3, 0.7 ] );
+var TAU = new Float64Array( [ 0.8 ] );
+var T = new Float64Array( 1 );
+
+dlarzt( 'row-major', 'backward', 'rowwise', 4, 1, V, 4, TAU, 1, T, 1 );
+// T => <Float64Array>[ 0.8 ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **direct**: direction of the block reflector (`'backward'`).
+-   **storev**: how the reflector vectors are stored (`'rowwise'`).
+-   **N**: order of the block reflector.
+-   **K**: number of elementary reflectors.
+-   **V**: matrix of reflector vectors.
+-   **LDV**: leading dimension of `V`.
+-   **TAU**: array of scalar factors of length `K`.
+-   **strideTAU**: stride length for `TAU`.
+-   **T**: output lower triangular matrix.
+-   **LDT**: leading dimension of `T`.
+
+#### dlarzt.ndarray( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT )
+
+Forms the triangular factor T of a block reflector, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var V = new Float64Array( [ 1.0, 0.5, -0.3, 0.7 ] );
+var TAU = new Float64Array( [ 0.8 ] );
+var T = new Float64Array( 1 );
+
+dlarzt.ndarray( 'backward', 'rowwise', 4, 1, V, 1, 1, 0, TAU, 1, 0, T, 1, 1, 0 );
+// T => <Float64Array>[ 0.8 ]
+```
+
+The function has the following additional parameters:
+
+-   **direct**: direction of the block reflector (`'backward'`).
+-   **storev**: how the reflector vectors are stored (`'rowwise'`).
+-   **N**: order of the block reflector.
+-   **K**: number of elementary reflectors.
+-   **V**: matrix of reflector vectors.
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
+-   **offsetV**: starting index for `V`.
+-   **TAU**: array of scalar factors.
+-   **strideTAU**: stride length for `TAU`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **T**: output lower triangular matrix.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `dlarzt` only supports `direct = 'backward'` and `storev = 'rowwise'`. This is unlike `dlarft` which supports both forward/backward directions and columnwise/rowwise storage.
+-   The output matrix `T` is lower triangular of size `K`-by-`K`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlarzt = require( '@stdlib/lapack/base/dlarzt' );
+
+var K = 2;
+var N = 4;
+var V = new Float64Array( [
+    1.0, 0.5, -0.3, 0.7,
+    0.4, 1.0, -0.6, 0.2
+] );
+var TAU = new Float64Array( [ 0.5, 0.7 ] );
+var T = new Float64Array( K * K );
+
+dlarzt( 'row-major', 'backward', 'rowwise', N, K, V, N, TAU, 1, T, K );
+
+console.log( T );
+// => <Float64Array>[ 0.5, ..., 0.7 ]
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

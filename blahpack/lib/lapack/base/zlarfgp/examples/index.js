@@ -1,18 +1,34 @@
-
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
-var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
-var zlarfgp = require( '@stdlib/lapack/base/zlarfgp' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zlarfgp = require( './../lib' );
 
-var opts = {
-	'dtype': 'float64'
-};
+var alpha = new Complex128Array( [ 2.0, 1.0 ] );
+var x = new Complex128Array( [ 1.0, -1.0, 0.5, 0.5 ] );
+var tau = new Complex128Array( 1 );
 
-var N = 10;
-var x = discreteUniform( N, -10, 10, opts );
-var y = discreteUniform( N, -10, 10, opts );
+// Compute the Householder reflector with non-negative beta:
+zlarfgp( 3, alpha, 0, x, 1, tau, 0 );
 
-// TODO: Adjust call to match the specific routine signature
-zlarfgp( N, 1.0, x, 1, y, 1 );
-console.log( y ); // eslint-disable-line no-console
+console.log( 'beta =', reinterpret( alpha, 0 ) ); // eslint-disable-line no-console
+console.log( 'tau  =', reinterpret( tau, 0 ) ); // eslint-disable-line no-console
+console.log( 'v    =', reinterpret( x, 0 ) ); // eslint-disable-line no-console

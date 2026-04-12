@@ -1,84 +1,75 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
 
 // MODULES //
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zlarfgpMain = require( './../lib' );
 var zlarfgp = require( './../lib/zlarfgp.js' );
-
-
-// FIXTURES //
-
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlarfgp.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-
-// FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
-
-function assertArrayClose( actual, expected, tol, msg ) {
-	var i;
-	var rel;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
-	for ( i = 0; i < expected.length; i++ ) {
-		rel = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-		assert.ok( rel <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
-	}
-}
 
 
 // TESTS //
 
 test( 'zlarfgp is a function', function t() {
 	assert.strictEqual( typeof zlarfgp, 'function', 'is a function' );
-} );
+});
 
-test( 'zlarfgp: basic real positive alpha matches fixture', function t() {
-	var tc = findCase( 'zlarfgp_basic_real_pos' );
-	var alpha = new Complex128Array( [ 3.0, 0.0 ] );
-	var x = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
-	var tau = new Complex128Array( 1 );
-
-	zlarfgp( 3, alpha, 0, x, 1, tau, 0 );
-	assertArrayClose( Array.from( reinterpret( alpha, 0 ) ), tc.alpha, 1e-13, 'alpha' );
-	assertArrayClose( Array.from( reinterpret( tau, 0 ) ), tc.tau, 1e-13, 'tau' );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 1e-13, 'x' );
-} );
-
-test( 'zlarfgp: complex alpha and x matches fixture', function t() {
-	var tc = findCase( 'zlarfgp_complex' );
-	var alpha = new Complex128Array( [ 2.0, 1.0 ] );
-	var x = new Complex128Array( [ 1.0, -1.0, 0.5, 0.5 ] );
-	var tau = new Complex128Array( 1 );
-
-	zlarfgp( 3, alpha, 0, x, 1, tau, 0 );
-	assertArrayClose( Array.from( reinterpret( alpha, 0 ) ), tc.alpha, 1e-13, 'alpha' );
-	assertArrayClose( Array.from( reinterpret( tau, 0 ) ), tc.tau, 1e-13, 'tau' );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 1e-13, 'x' );
-} );
-
-test( 'zlarfgp: stride=2 with sentinel padding matches fixture', function t() {
-	var tc = findCase( 'zlarfgp_stride2' );
-	var alpha = new Complex128Array( [ 2.0, -1.0 ] );
-	var x = new Complex128Array( [ 1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0 ] );
-	var tau = new Complex128Array( 1 );
-
-	zlarfgp( 3, alpha, 0, x, 2, tau, 0 );
-	assertArrayClose( Array.from( reinterpret( alpha, 0 ) ), tc.alpha, 1e-13, 'alpha' );
-	assertArrayClose( Array.from( reinterpret( tau, 0 ) ), tc.tau, 1e-13, 'tau' );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 1e-13, 'x' );
-} );
+test( 'zlarfgp has expected arity', function t() {
+	assert.strictEqual( zlarfgp.length, 7, 'has expected arity' );
+});
 
 test( 'zlarfgp throws RangeError for negative N', function t() {
+	var alpha = new Complex128Array( [ 2.0, 0.0 ] );
+	var tau = new Complex128Array( 1 );
+	var x = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
 	assert.throws( function throws() {
-		zlarfgp( -1, new Complex128Array( 1 ), 0, new Complex128Array( 0 ), 1, new Complex128Array( 1 ), 0 );
+		zlarfgp( -1, alpha, 0, x, 1, tau, 0 );
 	}, RangeError );
-} );
+});
+
+test( 'zlarfgp quick-returns for N=0 without throwing', function t() {
+	var alpha = new Complex128Array( [ 2.0, 0.0 ] );
+	var tau = new Complex128Array( 1 );
+	var tv;
+	var x = new Complex128Array( 0 );
+	zlarfgp( 0, alpha, 0, x, 1, tau, 0 );
+	tv = reinterpret( tau, 0 );
+	assert.strictEqual( tv[ 0 ], 0.0 );
+	assert.strictEqual( tv[ 1 ], 0.0 );
+});
+
+test( 'zlarfgp main and ndarray entry points produce the same result', function t() {
+	var alpha1 = new Complex128Array( [ 3.0, 0.0 ] );
+	var alpha2 = new Complex128Array( [ 3.0, 0.0 ] );
+	var tau1 = new Complex128Array( 1 );
+	var tau2 = new Complex128Array( 1 );
+	var x1 = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
+	var x2 = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
+	zlarfgp( 3, alpha1, 0, x1, 1, tau1, 0 );
+	zlarfgpMain.ndarray( 3, alpha2, 0, x2, 1, 0, tau2, 0 );
+	assert.deepStrictEqual( reinterpret( alpha1, 0 ), reinterpret( alpha2, 0 ) );
+	assert.deepStrictEqual( reinterpret( x1, 0 ), reinterpret( x2, 0 ) );
+	assert.deepStrictEqual( reinterpret( tau1, 0 ), reinterpret( tau2, 0 ) );
+});

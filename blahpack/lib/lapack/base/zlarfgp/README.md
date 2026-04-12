@@ -20,7 +20,16 @@ limitations under the License.
 
 # zlarfgp
 
-> Generates a complex elementary reflector with non-negative beta
+> Generates a complex elementary Householder reflector with non-negative `beta`.
+
+`zlarfgp` is a variant of `zlarfg` that enforces `beta >= 0` (and real) in
+
+```text
+H^H * ( alpha ) = ( beta ),    H^H * H = I,    beta >= 0,
+      (   x   )   (  0   )
+```
+
+where `H = I - tau*( 1; v )*( 1 v^H )` and `tau` is a complex scalar.
 
 <section class="usage">
 
@@ -30,42 +39,47 @@ limitations under the License.
 var zlarfgp = require( '@stdlib/lapack/base/zlarfgp' );
 ```
 
-#### zlarfgp( N, alpha, x, stride, tau )
+#### zlarfgp( N, alpha, offsetAlpha, x, strideX, tau, offsetTau )
 
-Generates a complex elementary reflector with non-negative beta
+Generates a complex elementary reflector with non-negative `beta`.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var alpha = new Complex128Array( [ 2.0, 1.0 ] );
+var x = new Complex128Array( [ 1.0, -1.0, 0.5, 0.5 ] );
+var tau = new Complex128Array( 1 );
+
+zlarfgp( 3, alpha, 0, x, 1, tau, 0 );
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **alpha**: scalar constant.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **tau**: tau.
+-   **N**: order of the reflector.
+-   **alpha**: [`Complex128Array`][@stdlib/array/complex128]. On entry, contains the scalar `alpha`; on exit, is overwritten with the non-negative real scalar `beta`.
+-   **offsetAlpha**: starting index for `alpha` (in complex elements).
+-   **x**: [`Complex128Array`][@stdlib/array/complex128]. On entry, the `(N-1)`-element vector `x`; on exit, overwritten with `v`.
+-   **strideX**: stride for `x` (in complex elements).
+-   **tau**: [`Complex128Array`][@stdlib/array/complex128] output. Element `offsetTau` is overwritten with the complex scalar `tau`.
+-   **offsetTau**: starting index for `tau` (in complex elements).
 
-#### zlarfgp.ndarray( N, alpha, x, stride, offset, tau )
+#### zlarfgp.ndarray( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
 
-Generates a complex elementary reflector with non-negative beta, using alternative indexing semantics.
+Generates a complex elementary reflector with non-negative `beta`, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var alpha = new Complex128Array( [ 2.0, 1.0 ] );
+var x = new Complex128Array( [ 1.0, -1.0, 0.5, 0.5 ] );
+var tau = new Complex128Array( 1 );
+
+zlarfgp.ndarray( 3, alpha, 0, x, 1, 0, tau, 0 );
 ```
 
 The function has the following additional parameters:
 
--   **N**: number of columns.
--   **alpha**: scalar constant.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for ``.
--   **tau**: tau.
+-   **offsetX**: starting index for `x` (in complex elements).
 
 </section>
 
@@ -75,7 +89,8 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlarfgp` is the complex analog of `dlarfgp` and is used by `zgeqr2p`/`zgeqrfp` to enforce a non-negative diagonal.
+-   If the elements of `x` are all zero and `alpha` is real, then `tau = 0` and `H` is taken to be the unit matrix.
 
 </section>
 
@@ -86,7 +101,19 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zlarfgp = require( '@stdlib/lapack/base/zlarfgp' );
+
+var alpha = new Complex128Array( [ 2.0, 1.0 ] );
+var x = new Complex128Array( [ 1.0, -1.0, 0.5, 0.5 ] );
+var tau = new Complex128Array( 1 );
+
+zlarfgp( 3, alpha, 0, x, 1, tau, 0 );
+
+console.log( 'beta =', reinterpret( alpha, 0 ) );
+console.log( 'tau  =', reinterpret( tau, 0 ) );
+console.log( 'v    =', reinterpret( x, 0 ) );
 ```
 
 </section>
@@ -105,10 +132,7 @@ The function has the following additional parameters:
 
 <section class="links">
 
-[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
-[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
 
 </section>
 

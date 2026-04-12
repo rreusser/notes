@@ -1,18 +1,18 @@
 # dlarrk: Translation Learnings
 
-Document anything surprising or non-obvious that came up during
-translation. Only write sections where you have something to say —
-leave out sections that would just say "N/A". The goal is to capture
-hard-won knowledge that helps future translations.
-
 ## Translation pitfalls
 
-(Index off-by-ones, Fortran loop bound surprises, non-obvious
-packed storage conventions, string flag values that differ from
-the standard table, etc.)
+- W and WERR are scalar outputs in Fortran. In JS they use the Float64Array
+  output pattern: caller passes `new Float64Array(1)` and the routine writes
+  into `w[0]` and `werr[0]`. INFO is returned as the integer return value.
+- The Sturm count loop indexes E2 with `i-1` (0-based in JS) while D uses `i`,
+  matching the Fortran `DO 20 I = 2, N` loop.
+- `dlamch('precision')` (EPS) is hoisted to module scope since it never changes.
+- The `itmax` computation uses `|0` (bitwise OR) for the Fortran `INT()` truncation.
+- The `for (;;)` infinite loop with break replaces Fortran's `GOTO 10` / `GOTO 30`
+  pattern. Two exit conditions: convergence (info=0) and iteration limit exceeded
+  (info stays -1).
 
 ## Dependency interface surprises
 
-(Unexpected calling conventions, parameter ordering, stride
-semantics, or return value conventions in dependencies.)
-
+- Only dependency is `dlamch`. No BLAS calls despite being a LAPACK routine.

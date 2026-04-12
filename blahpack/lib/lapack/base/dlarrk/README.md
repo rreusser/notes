@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlarrk
 
-> Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy
+> Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy using bisection.
 
 <section class="usage">
 
@@ -30,57 +30,61 @@ limitations under the License.
 var dlarrk = require( '@stdlib/lapack/base/dlarrk' );
 ```
 
-#### dlarrk( N, iw, gl, gu, d, strideD, E2, strideE2, pivmin, reltol, w, werr )
+#### dlarrk( N, iw, gl, gu, D, strideD, E2, strideE2, pivmin, reltol, w, werr )
 
-Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy
+Computes one eigenvalue of a symmetric tridiagonal matrix `T` to suitable accuracy. Uses bisection on the Sturm count to refine the `iw`-th eigenvalue within the interval `[gl, gu]`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var D = new Float64Array( [ 2.0, 2.0, 2.0 ] );
+var E2 = new Float64Array( [ 1.0, 1.0 ] );
+var w = new Float64Array( 1 );
+var werr = new Float64Array( 1 );
+
+var info = dlarrk( 3, 2, 0.0, 4.0, D, 1, E2, 1, 1.0e-18, 1.0e-12, w, werr );
+// info => 0
+// w[ 0 ] => ~2.0
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **iw**: iw.
--   **gl**: gl.
--   **gu**: gu.
--   **d**: input array.
--   **strideD**: stride length for `d`.
--   **E2**: output array.
+-   **N**: order of the tridiagonal matrix.
+-   **iw**: 1-based index of the eigenvalue to compute.
+-   **gl**: lower bound of the initial interval containing the eigenvalue.
+-   **gu**: upper bound of the initial interval containing the eigenvalue.
+-   **D**: diagonal elements of `T` as a [`Float64Array`][mdn-float64array].
+-   **strideD**: stride length for `D`.
+-   **E2**: squared off-diagonal elements of `T` as a [`Float64Array`][mdn-float64array].
 -   **strideE2**: stride length for `E2`.
--   **pivmin**: pivmin.
--   **reltol**: reltol.
--   **w**: w.
--   **werr**: werr.
+-   **pivmin**: minimum pivot in the Sturm sequence.
+-   **reltol**: relative tolerance for convergence.
+-   **w**: output [`Float64Array`][mdn-float64array] of length at least 1, receiving the computed eigenvalue.
+-   **werr**: output [`Float64Array`][mdn-float64array] of length at least 1, receiving the error bound.
 
-#### dlarrk.ndarray( N, iw, gl, gu, d, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol, w, werr )
+The function returns an integer status code: `0` indicates successful convergence, `-1` indicates that the bisection iteration did not converge within the maximum number of iterations.
+
+#### dlarrk.ndarray( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol, w, werr )
 
 Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var D = new Float64Array( [ 0.0, 2.0, 2.0, 2.0 ] );
+var E2 = new Float64Array( [ 0.0, 1.0, 1.0 ] );
+var w = new Float64Array( 1 );
+var werr = new Float64Array( 1 );
+
+var info = dlarrk.ndarray( 3, 2, 0.0, 4.0, D, 1, 1, E2, 1, 1, 1.0e-18, 1.0e-12, w, werr );
+// info => 0
+// w[ 0 ] => ~2.0
 ```
 
 The function has the following additional parameters:
 
--   **N**: number of columns.
--   **iw**: iw.
--   **gl**: gl.
--   **gu**: gu.
--   **d**: input array.
--   **strideD**: stride length for `d`.
 -   **offsetD**: starting index for `D`.
--   **E2**: output array.
--   **strideE2**: stride of dimension 2 of `E`.
 -   **offsetE2**: starting index for `E2`.
--   **pivmin**: pivmin.
--   **reltol**: reltol.
--   **w**: w.
--   **werr**: werr.
 
 </section>
 
@@ -90,7 +94,8 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlarrk` is a helper routine used internally by `dlarrd` to refine individual eigenvalues via bisection on the Sturm count of a symmetric tridiagonal matrix.
+-   The eigenvalue is refined within the interval `[gl, gu]`, which is widened slightly to ensure the target eigenvalue is bracketed.
 
 </section>
 
@@ -101,7 +106,24 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dlarrk = require( '@stdlib/lapack/base/dlarrk' );
+
+// 3x3 symmetric tridiagonal: D=[2,2,2], E=[1,1], E2=[1,1]
+// Eigenvalues: 2-sqrt(2) ~ 0.586, 2.0, 2+sqrt(2) ~ 3.414
+var D = new Float64Array( [ 2.0, 2.0, 2.0 ] );
+var E2 = new Float64Array( [ 1.0, 1.0 ] );
+var w = new Float64Array( 1 );
+var werr = new Float64Array( 1 );
+
+var info = dlarrk( 3, 1, 0.0, 4.0, D, 1, E2, 1, 1.0e-18, 1.0e-12, w, werr );
+console.log( 'First eigenvalue:', w[ 0 ], '(info:', info, ')' );
+
+info = dlarrk( 3, 2, 0.0, 4.0, D, 1, E2, 1, 1.0e-18, 1.0e-12, w, werr );
+console.log( 'Second eigenvalue:', w[ 0 ], '(info:', info, ')' );
+
+info = dlarrk( 3, 3, 0.0, 4.0, D, 1, E2, 1, 1.0e-18, 1.0e-12, w, werr );
+console.log( 'Third eigenvalue:', w[ 0 ], '(info:', info, ')' );
 ```
 
 </section>
@@ -121,9 +143,6 @@ The function has the following additional parameters:
 <section class="links">
 
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
-[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

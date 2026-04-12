@@ -1,0 +1,159 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zla_gbamv
+
+> Performs a matrix-vector operation to calculate error bounds on complex banded matrices
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zla_gbamv = require( '@stdlib/lapack/base/zla_gbamv' );
+```
+
+#### zla_gbamv( order, trans, M, N, kl, ku, alpha, AB, LDAB, x, strideX, beta, y, strideY )
+
+Performs a matrix-vector operation to calculate error bounds on complex banded matrices
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var AB = new Complex128Array( 12 ); // LDAB=3, N=4 band
+var x = new Complex128Array( 4 );
+var y = new Float64Array( 4 );
+
+zla_gbamv( 'column-major', 'no-transpose', 4, 4, 1, 1, 1.0, AB, 3, x, 1, 0.0, y, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **trans**: transpose operation (`'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`).
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **kl**: kl.
+-   **ku**: ku.
+-   **alpha**: scalar constant.
+-   **AB**: input matrix.
+-   **LDAB**: leading dimension of `AB`.
+-   **x**: input array.
+-   **strideX**: stride length for `x`.
+-   **beta**: scalar constant.
+-   **y**: output array.
+-   **strideY**: stride length for `y`.
+
+#### zla_gbamv.ndarray( trans, M, N, kl, ku, alpha, AB, strideAB1, strideAB2, offsetAB, x, strideX, offsetX, beta, y, strideY, offsetY )
+
+Performs a matrix-vector operation to calculate error bounds on complex banded matrices, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var AB = new Complex128Array( 12 );
+var x = new Complex128Array( 4 );
+var y = new Float64Array( 4 );
+
+zla_gbamv.ndarray( 'no-transpose', 4, 4, 1, 1, 1.0, AB, 1, 3, 0, x, 1, 0, 0.0, y, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **trans**: trans.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **kl**: kl.
+-   **ku**: ku.
+-   **alpha**: scalar constant.
+-   **AB**: input matrix.
+-   **strideAB1**: stride of dimension 1 of `AB`.
+-   **strideAB2**: stride of dimension 2 of `AB`.
+-   **offsetAB**: starting index for `AB`.
+-   **x**: input array.
+-   **strideX**: stride length for `x`.
+-   **offsetX**: starting index for `X`.
+-   **beta**: scalar constant.
+-   **y**: output array.
+-   **strideY**: stride length for `y`.
+-   **offsetY**: starting index for `Y`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `AB` and `x` are `Complex128Array`; `y` is a real `Float64Array`.
+-   Absolute values use the `CABS1` norm: `|re| + |im|`. Because `|conj(z)| = |z|`, `'transpose'` and `'conjugate-transpose'` produce identical results.
+-   Band storage: `AB` has `kl+ku+1` rows by `N` columns with `A[i,j]` stored at band row `ku+i-j`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var uniform = require( '@stdlib/random/array/uniform' );
+var zla_gbamv = require( '@stdlib/lapack/base/zla_gbamv' );
+
+var N = 4;
+var KL = 1;
+var KU = 1;
+var LDAB = KL + KU + 1;
+var AB = uniform( LDAB * N, -5.0, 5.0, { 'dtype': 'complex128' } );
+var x = uniform( N, -5.0, 5.0, { 'dtype': 'complex128' } );
+var y = uniform( N, -5.0, 5.0, { 'dtype': 'float64' } );
+
+zla_gbamv( 'column-major', 'no-transpose', N, N, KL, KU, 1.0, AB, LDAB, x, 1, 1.0, y, 1 );
+console.log( y );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

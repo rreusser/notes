@@ -1,0 +1,149 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zla\_syamv
+
+> Compute `y := alpha*|A|*|x| + beta*|y|` using a complex symmetric matrix to calculate error bounds.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zla_syamv = require( '@stdlib/lapack/base/zla_syamv' );
+```
+
+#### zla\_syamv( order, uplo, N, alpha, A, LDA, x, strideX, beta, y, strideY )
+
+Computes a matrix-vector product using a complex symmetric matrix to calculate error bounds.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Complex128Array( [ 1.0, 2.0, -2.0, 1.0, -2.0, 1.0, 5.0, 0.0 ] );
+var x = new Complex128Array( [ 1.0, -1.0, -2.0, 0.5 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+zla_syamv( 'row-major', 'upper', 2, 1.0, A, 2, x, 1, 0.0, y, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part of `A` is referenced (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **alpha**: real scalar constant.
+-   **A**: input complex symmetric matrix as a [`Complex128Array`][@stdlib/array/complex128].
+-   **LDA**: leading dimension of `A`.
+-   **x**: input complex vector as a [`Complex128Array`][@stdlib/array/complex128].
+-   **strideX**: stride length for `x`.
+-   **beta**: real scalar constant.
+-   **y**: input/output real vector as a [`Float64Array`][mdn-float64array].
+-   **strideY**: stride length for `y`.
+
+#### zla\_syamv.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+
+Computes a matrix-vector product using a complex symmetric matrix to calculate error bounds, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Complex128Array( [ 1.0, 2.0, -2.0, 1.0, -2.0, 1.0, 5.0, 0.0 ] );
+var x = new Complex128Array( [ 1.0, -1.0, -2.0, 0.5 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+zla_syamv.ndarray( 'upper', 2, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies whether the upper or lower triangular part of `A` is referenced (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **alpha**: real scalar constant.
+-   **A**: input complex symmetric matrix as a [`Complex128Array`][@stdlib/array/complex128].
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **x**: input complex vector as a [`Complex128Array`][@stdlib/array/complex128].
+-   **strideX**: stride length for `x`.
+-   **offsetX**: starting index for `x`.
+-   **beta**: real scalar constant.
+-   **y**: input/output real vector as a [`Float64Array`][mdn-float64array].
+-   **strideY**: stride length for `y`.
+-   **offsetY**: starting index for `y`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `A` and `x` are complex ([`Complex128Array`][@stdlib/array/complex128]), but `y`, `alpha`, and `beta` are real. The routine uses CABS1 (1-norm: `|Re(z)| + |Im(z)|`) for absolute values of complex entries.
+-   Components in `y` are perturbed away from zero by `(N+1)` times the underflow threshold to protect against underflow, except for "symbolically" zero entries.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zla_syamv = require( '@stdlib/lapack/base/zla_syamv' );
+
+var N = 3;
+var A = new Complex128Array( discreteUniform( 2*N*N, -10, 10, { 'dtype': 'float64' } ) );
+var x = new Complex128Array( discreteUniform( 2*N, -10, 10, { 'dtype': 'float64' } ) );
+var y = new Float64Array( N );
+
+zla_syamv( 'row-major', 'upper', N, 1.0, A, N, x, 1, 0.0, y, 1 );
+console.log( y );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+
+</section>
+
+<!-- /.links -->

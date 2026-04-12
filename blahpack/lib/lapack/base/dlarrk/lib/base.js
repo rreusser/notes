@@ -11,6 +11,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 
 var FUDGE = 2.0;
 var HALF = 0.5;
+var EPS = dlamch( 'precision' );
 
 
 // MAIN //
@@ -25,8 +26,8 @@ var HALF = 0.5;
 *     eigenvalue (1-based index) in the initial interval `(gl, gu]` to the
 *     requested relative accuracy `reltol`.
 *
-* -   On return, the `w` property of the result object contains the refined
-*     eigenvalue and `werr` contains a semi-width of its uncertainty interval.
+* -   On return, `w[0]` contains the refined eigenvalue and `werr[0]` contains
+*     a semi-width of its uncertainty interval.
 *
 * @private
 * @param {NonNegativeInteger} N - order of the matrix
@@ -41,9 +42,11 @@ var HALF = 0.5;
 * @param {NonNegativeInteger} offsetE2 - starting index for `E2`
 * @param {number} pivmin - minimum pivot in the Sturm sequence
 * @param {number} reltol - relative tolerance for the returned eigenvalue
-* @returns {Object} object with `info`, `w`, and `werr` properties
+* @param {Float64Array} w - output array for the computed eigenvalue (length >= 1)
+* @param {Float64Array} werr - output array for the error bound (length >= 1)
+* @returns {integer} info - status code (0 = success, -1 = did not converge)
 */
-function dlarrk( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol ) {
+function dlarrk( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol, w, werr ) {
 	var negcnt;
 	var itmax;
 	var atoli;
@@ -51,41 +54,34 @@ function dlarrk( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, piv
 	var right;
 	var tnorm;
 	var info;
-	var werr;
 	var left;
 	var tmp1;
 	var tmp2;
-	var eps;
 	var mid;
 	var it;
-	var w;
 	var i;
 
 	// Quick return:
 	if ( N <= 0 ) {
-		return {
-			'info': 0,
-			'w': ( gl + gu ) * HALF,
-			'werr': 0.0
-		};
+		w[ 0 ] = HALF * ( gl + gu );
+		werr[ 0 ] = 0.0;
+		return 0;
 	}
-
-	eps = dlamch( 'precision' );
 
 	tnorm = Math.max( Math.abs( gl ), Math.abs( gu ) );
 	rtoli = reltol;
 	atoli = FUDGE * 2.0 * pivmin;
 
-	itmax = ( ( Math.log( tnorm + pivmin ) - Math.log( pivmin ) ) / Math.log( 2.0 ) )|0;
+	itmax = ( ( Math.log( tnorm + pivmin ) - Math.log( pivmin ) ) / Math.log( 2.0 ) ) | 0;
 	itmax += 2;
 
 	info = -1;
 
-	left = gl - ( FUDGE * tnorm * eps * N ) - ( FUDGE * 2.0 * pivmin );
-	right = gu + ( FUDGE * tnorm * eps * N ) + ( FUDGE * 2.0 * pivmin );
+	left = gl - ( FUDGE * tnorm * EPS * N ) - ( FUDGE * 2.0 * pivmin );
+	right = gu + ( FUDGE * tnorm * EPS * N ) + ( FUDGE * 2.0 * pivmin );
 	it = 0;
 
-	for ( ; ; ) {
+	for ( ;; ) {
 		tmp1 = Math.abs( right - left );
 		tmp2 = Math.max( Math.abs( right ), Math.abs( left ) );
 		if ( tmp1 < Math.max( atoli, pivmin, rtoli * tmp2 ) ) {
@@ -122,14 +118,10 @@ function dlarrk( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, piv
 		}
 	}
 
-	w = HALF * ( left + right );
-	werr = HALF * Math.abs( right - left );
+	w[ 0 ] = HALF * ( left + right );
+	werr[ 0 ] = HALF * Math.abs( right - left );
 
-	return {
-		'info': info,
-		'w': w,
-		'werr': werr
-	};
+	return info;
 }
 
 

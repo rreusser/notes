@@ -1,0 +1,104 @@
+
+{{alias}}( job, j, x, strideX, sest, w, strideW, gamma, sestpr, s, c )
+    Applies one step of incremental condition estimation
+
+    Parameters
+    ----------
+        job: integer
+            job.
+
+        j: integer
+            j.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        sest: number
+            sest.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        gamma: number
+            gamma.
+
+        sestpr: number
+            sestpr.
+
+        s: number
+            s.
+
+        c: number
+            c.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( job, j, x, strideX, offsetX, sest, w, strideW, offsetW, gamma, sestpr, s, c )
+    Applies one step of incremental condition estimation, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        job: integer
+            job.
+
+        j: integer
+            j.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: integer
+            starting index for `X`.
+
+        sest: number
+            sest.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: integer
+            starting index for `W`.
+
+        gamma: number
+            gamma.
+
+        sestpr: number
+            sestpr.
+
+        s: number
+            s.
+
+        c: number
+            c.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

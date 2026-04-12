@@ -1,0 +1,77 @@
+
+{{alias}}( uplo, N, a, strideA, lda, i1, i2 )
+    Applies an elementary permutation to a complex Hermitian matrix
+
+    Parameters
+    ----------
+        uplo: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        a: Float64Array
+            input array.
+
+        strideA: integer
+            stride length for `a`.
+
+        lda: integer
+            lda.
+
+        i1: integer
+            i1.
+
+        i2: integer
+            i2.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, N, a, strideA, offsetA, lda, i1, i2 )
+    Applies an elementary permutation to a complex Hermitian matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        uplo: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        a: Float64Array
+            input array.
+
+        strideA: integer
+            stride length for `a`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        lda: integer
+            lda.
+
+        i1: integer
+            i1.
+
+        i2: integer
+            i2.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

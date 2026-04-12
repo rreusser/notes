@@ -1,0 +1,6 @@
+dla_syamv
+dlamch
+ieeeck
+ilaenv
+ilauplo
+iparmq

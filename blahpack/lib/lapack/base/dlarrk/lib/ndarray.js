@@ -3,14 +3,13 @@
 
 // MODULES //
 
-var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy via bisection.
+* Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy.
 *
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {integer} iw - 1-based index of the eigenvalue to compute
@@ -24,14 +23,12 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetE2 - starting index for `E2`
 * @param {number} pivmin - minimum pivot in the Sturm sequence
 * @param {number} reltol - relative tolerance for the returned eigenvalue
-* @throws {RangeError} first argument must be a nonnegative integer
-* @returns {Object} object with `info`, `w`, and `werr` properties
+* @param {Float64Array} w - output array for the computed eigenvalue (length >= 1)
+* @param {Float64Array} werr - output array for the error bound (length >= 1)
+* @returns {integer} info - status code (0 = success, -1 = did not converge)
 */
-function dlarrk( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol ) { // eslint-disable-line max-len, max-params
-	if ( N < 0 ) {
-		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
-	}
-	return base( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol );
+function dlarrk( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol, w, werr ) { // eslint-disable-line max-len, max-params
+	return base( N, iw, gl, gu, D, strideD, offsetD, E2, strideE2, offsetE2, pivmin, reltol, w, werr ); // eslint-disable-line max-len
 }
 
 

@@ -1,0 +1,152 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zla_heamv
+
+> Compute a matrix-vector product `y := alpha*|A|*|x| + beta*|y|` using a Hermitian indefinite matrix to calculate error bounds.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zla_heamv = require( '@stdlib/lapack/base/zla_heamv' );
+```
+
+#### zla_heamv( order, uplo, N, alpha, A, LDA, x, strideX, beta, y, strideY )
+
+Computes `y := alpha*|A|*|x| + beta*|y|` where `A` is a complex Hermitian matrix, used for error bound computation.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Complex128Array( [ 2.0, 0.0, 1.0, 2.0, 1.0, -2.0, 5.0, 0.0 ] );
+var x = new Complex128Array( [ 1.0, 0.5, -2.0, 1.0 ] );
+var y = new Float64Array( 2 );
+
+zla_heamv( 'column-major', 'upper', 2, 1.0, A, 2, x, 1, 0.0, y, 1 );
+// y => <Float64Array>[ ~10.0, ~16.0 ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part of `A` is referenced (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **alpha**: real scalar constant.
+-   **A**: input Hermitian matrix (`Complex128Array`).
+-   **LDA**: leading dimension of `A`.
+-   **x**: input vector (`Complex128Array`).
+-   **strideX**: stride length for `x`.
+-   **beta**: real scalar constant.
+-   **y**: input/output vector (`Float64Array`).
+-   **strideY**: stride length for `y`.
+
+#### zla_heamv.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+
+Computes `y := alpha*|A|*|x| + beta*|y|` using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Complex128Array( [ 2.0, 0.0, 1.0, 2.0, 1.0, -2.0, 5.0, 0.0 ] );
+var x = new Complex128Array( [ 1.0, 0.5, -2.0, 1.0 ] );
+var y = new Float64Array( 2 );
+
+zla_heamv.ndarray( 'upper', 2, 1.0, A, 1, 2, 0, x, 1, 0, 0.0, y, 1, 0 );
+// y => <Float64Array>[ ~10.0, ~16.0 ]
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies whether the upper or lower triangular part of `A` is referenced (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **alpha**: real scalar constant.
+-   **A**: input Hermitian matrix (`Complex128Array`).
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **x**: input vector (`Complex128Array`).
+-   **strideX**: stride length for `x`.
+-   **offsetX**: starting index for `x`.
+-   **beta**: real scalar constant.
+-   **y**: input/output vector (`Float64Array`).
+-   **strideY**: stride length for `y`.
+-   **offsetY**: starting index for `y`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   A and x are complex arrays (`Complex128Array`), while y is a real array (`Float64Array`).
+-   `CABS1(z) = |Re(z)| + |Im(z)|` is used to compute absolute values for error bounding.
+-   To protect against underflow, non-symbolically-zero components are perturbed by `(N+1)*safmin`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var uniform = require( '@stdlib/random/array/uniform' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zla_heamv = require( '@stdlib/lapack/base/zla_heamv' );
+
+var opts = { 'dtype': 'float64' };
+var N = 3;
+var A = new Complex128Array( uniform( 2*N*N, -10.0, 10.0, opts ) );
+var x = new Complex128Array( uniform( 2*N, -10.0, 10.0, opts ) );
+var y = new Float64Array( N );
+
+zla_heamv( 'column-major', 'upper', N, 1.0, A, N, x, 1, 0.0, y, 1 );
+console.log( y );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

@@ -22,5 +22,5 @@ test( 'main export has an ndarray method', function t() {
 });
 
 test( 'main and ndarray are distinct functions', function t() {
-	assert.notStrictEqual( dlarfgp, dlarfgp.ndarray, 'ndarray is distinct from main' );
+	assert.notStrictEqual( dlarfgp, dlarfgp.ndarray, 'ndarray is distinct from main' ); // eslint-disable-line max-len
 });

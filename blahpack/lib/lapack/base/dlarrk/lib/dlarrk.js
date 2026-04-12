@@ -1,33 +1,41 @@
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
 var format = require( '@stdlib/string/format' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy via bisection.
+* Computes one eigenvalue of a symmetric tridiagonal matrix to suitable accuracy.
 *
-* @param {NonNegativeInteger} N - order of the matrix
-* @param {integer} iw - 1-based index of the eigenvalue to compute
-* @param {number} gl - lower bound of the initial interval
-* @param {number} gu - upper bound of the initial interval
-* @param {Float64Array} D - diagonal elements (length `N`)
-* @param {Float64Array} E2 - squared off-diagonal elements (length `N-1`)
+* @param {NonNegativeInteger} N - number of columns
+* @param {integer} iw - iw
+* @param {number} gl - gl
+* @param {number} gu - gu
+* @param {Float64Array} d - input array
+* @param {integer} strideD - stride length for `d`
+* @param {Float64Array} E2 - output array
+* @param {integer} strideE2 - stride length for `E2`
 * @param {number} pivmin - minimum pivot in the Sturm sequence
-* @param {number} reltol - relative tolerance for the returned eigenvalue
+* @param {number} reltol - relative tolerance for convergence
+* @param {Float64Array} w - output array for the computed eigenvalue
+* @param {Float64Array} werr - output array for the error bound
 * @throws {RangeError} first argument must be a nonnegative integer
-* @returns {Object} object with `info`, `w`, and `werr` properties
+* @returns {integer} status code (0 = success)
 */
-function dlarrk( N, iw, gl, gu, D, E2, pivmin, reltol ) { // eslint-disable-line max-params
+function dlarrk( N, iw, gl, gu, d, strideD, E2, strideE2, pivmin, reltol, w, werr ) { // eslint-disable-line max-len, max-params
+	var oE2 = stride2offset( N, strideE2 );
+	var od = stride2offset( N, strideD );
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, iw, gl, gu, D, 1, 0, E2, 1, 0, pivmin, reltol );
+	return base( N, iw, gl, gu, d, strideD, od, E2, strideE2, oE2, pivmin, reltol, w, werr ); // eslint-disable-line max-len
 }
 
 

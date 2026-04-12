@@ -107,7 +107,7 @@ function zlarfgp( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 
 	if ( xnorm <= eps * cmplx.absAt( av, oA ) ) {
 		// Scale of x is small compared to alpha; H is (nearly) the identity
-		// apart from possibly flipping alpha's sign to make beta non-negative.
+		// Apart from possibly flipping alpha's sign to make beta non-negative.
 		if ( alphi === 0.0 ) {
 			if ( alphr >= 0.0 ) {
 				// H = I
@@ -167,10 +167,12 @@ function zlarfgp( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		}
 		savealphaR = av[ oA ];
 		savealphaI = av[ oA + 1 ];
+
 		// alpha = alpha + beta
 		av[ oA ] = av[ oA ] + beta;
 		if ( beta < 0.0 ) {
 			beta = -beta;
+
 			// tau = -alpha / beta
 			tauv[ oT ] = -av[ oA ] / beta;
 			tauv[ oT + 1 ] = -av[ oA + 1 ] / beta;
@@ -180,7 +182,7 @@ function zlarfgp( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 			// tau = ( ALPHR/BETA, -ALPHI/BETA )
 			// alpha = ( -ALPHR, ALPHI )
 			alphr = alphi * ( alphi / av[ oA ] );
-			alphr = alphr + ( xnorm * ( xnorm / av[ oA ] ) );
+			alphr += ( xnorm * ( xnorm / av[ oA ] ) );
 			tauv[ oT ] = alphr / beta;
 			tauv[ oT + 1 ] = -alphi / beta;
 			av[ oA ] = -alphr;
@@ -195,10 +197,9 @@ function zlarfgp( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		av[ oA ] = scratch[ 0 ];
 		av[ oA + 1 ] = scratch[ 1 ];
 
+		// NOTE: the following denormal-tau flush branch is effectively unreachable in IEEE 754 double precision. Entering the general branch requires `xnorm > EPS*|alpha|`, so `|tau| >= xnorm^2/|alpha|^2 >= EPS^2 ~ 1.2e-32`, which is many orders of magnitude above `smlnum ~ 4.5e-292`. The branch is kept for strict faithfulness to the LAPACK reference. // eslint-disable-line max-len
 		if ( cmplx.absAt( tauv, oT ) <= smlnum ) {
-			// In the case where the computed TAU ends up being a denormalized
-			// number, it loses relative accuracy. Recompute using the original
-			// SAVEALPHA, effectively treating this as the x-is-small branch.
+			// Denormal-TAU recovery: use the original `SAVEALPHA`, effectively treating this as the x-is-small branch:
 			alphr = savealphaR;
 			alphi = savealphaI;
 			if ( alphi === 0.0 ) {

@@ -29,22 +29,25 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Generate a complex elementary reflector H of order N with BETA real and non-negative.
+* Generates a complex elementary reflector with non-negative beta.
 *
 * @param {NonNegativeInteger} N - order of the reflector
 * @param {Complex128Array} alpha - complex scalar, overwritten with beta
-* @param {NonNegativeInteger} offsetAlpha - starting index for alpha (in complex elements)
-* @param {Complex128Array} x - complex vector, overwritten with v
-* @param {integer} strideX - stride for x (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for x (in complex elements)
+* @param {NonNegativeInteger} offsetAlpha - starting index for `alpha` (in complex elements)
+* @param {Complex128Array} x - complex vector, overwritten with `v`
+* @param {integer} strideX - stride for `x` (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
 * @param {Complex128Array} tau - output complex scalar
-* @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
+* @param {NonNegativeInteger} offsetTau - starting index for `tau` (in complex elements)
 * @throws {RangeError} first argument must be a nonnegative integer
 * @returns {*} result
 */
 function zlarfgp( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return;
 	}
 	return base( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau );
 }

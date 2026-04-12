@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -8,6 +6,7 @@ var bench = require( '@stdlib/bench' );
 var uniform = require( '@stdlib/random/array/uniform' );
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
+var Float64Array = require( '@stdlib/array/float64' );
 var format = require( '@stdlib/string/format' );
 var pkg = require( './../package.json' ).name;
 var dlarrk = require( './../lib/ndarray.js' );
@@ -30,9 +29,10 @@ var options = {
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
-	var N = len;
-	var d = uniform( N, -10.0, 10.0, options );
-	var E2 = uniform( N, -10.0, 10.0, options );
+	var werr = new Float64Array( 1 );
+	var e2 = uniform( len, 0.0, 1.0, options );
+	var d = uniform( len, 1.0, 10.0, options );
+	var w = new Float64Array( 1 );
 	return benchmark;
 
 	/**
@@ -42,18 +42,18 @@ function createBenchmark( len ) {
 	* @param {Benchmark} b - benchmark instance
 	*/
 	function benchmark( b ) {
-		var y;
+		var info;
 		var i;
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = dlarrk( N, N, N, N, d, 1, 0, E2, 1, 0, N, N, N, N );
-			if ( isnan( y ) ) {
+			info = dlarrk( len, 1, -100.0, 100.0, d, 1, 0, e2, 1, 0, 1.0e-18, 1.0e-12, w, werr );
+			if ( isnan( info ) ) {
 				b.fail( 'should not return NaN' );
 			}
 		}
 		b.toc();
-		if ( isnan( y ) ) {
+		if ( isnan( info ) ) {
 			b.fail( 'should not return NaN' );
 		}
 		b.pass( 'benchmark finished' );
@@ -77,7 +77,7 @@ function main() {
 	var i;
 
 	min = 1; // 10^min
-	max = 6; // 10^max
+	max = 3; // 10^max
 
 	for ( i = min; i <= max; i++ ) {
 		len = pow( 10, i );

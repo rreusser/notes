@@ -566,14 +566,25 @@ function applyTextFixes( src, original, file ) {
 
 	// 3d. Ensure section headers have proper blank lines before them
 	//     Pattern: \n\n\n// SECTION //  (two blank lines before)
+	//     EXCEPTION: immediately following `'use strict';` the stdlib
+	//     `section-header-empty-lines` rule requires exactly ONE empty line,
+	//     so we must not add a second.
 	src = src.replace(
 		/([^\n])\n(\/\/ (?:MODULES|VARIABLES|FUNCTIONS|FIXTURES|TESTS|EXPORTS|MAIN) \/\/)/g,
-		'$1\n\n\n$2'
+		function replacer( match, prefix, header ) {
+			return prefix + '\n\n\n' + header;
+		}
 	);
 	// Also fix when there's only one blank line
 	src = src.replace(
 		/([^\n])\n\n(\/\/ (?:MODULES|VARIABLES|FUNCTIONS|FIXTURES|TESTS|EXPORTS|MAIN) \/\/)/g,
 		'$1\n\n\n$2'
+	);
+	// Undo for the `'use strict';` case, which the stdlib rule requires to
+	// have exactly one blank line before the section header.
+	src = src.replace(
+		/('use strict';)\n\n+(\/\/ (?:MODULES|VARIABLES|FUNCTIONS|FIXTURES|TESTS|EXPORTS|MAIN) \/\/)/g,
+		'$1\n\n$2'
 	);
 
 	// 3e. Add JSDoc to helper functions if missing
