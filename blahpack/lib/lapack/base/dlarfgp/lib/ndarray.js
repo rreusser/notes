@@ -1,3 +1,5 @@
+/* eslint-disable max-len, max-params */
+
 /**
 * @license Apache-2.0
 *
@@ -16,8 +18,6 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params */
-
 'use strict';
 
 // MODULES //
@@ -29,10 +29,10 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Generates a real elementary reflector H of order N with non-negative beta.
+* Generates a real elementary reflector `H` of order `N` with non-negative `beta`.
 *
 * @param {NonNegativeInteger} N - order of the reflector
-* @param {Float64Array} alpha - scalar, overwritten with beta on exit
+* @param {Float64Array} alpha - on entry, the scalar `alpha`; on exit, the scalar `beta` (non-negative)
 * @param {NonNegativeInteger} offsetAlpha - index into `alpha`
 * @param {Float64Array} x - vector, overwritten with `v` on exit
 * @param {integer} strideX - stride for `x`
@@ -45,9 +45,6 @@ var base = require( './base.js' );
 function dlarfgp( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
-	}
-	if ( N === 0 ) {
-		return;
 	}
 	base( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau );
 }

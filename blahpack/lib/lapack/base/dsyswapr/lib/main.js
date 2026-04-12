@@ -4,15 +4,15 @@
 // MODULES //
 
 var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
-var dlarfgp = require( './dlarfgp.js' );
+var dsyswapr = require( './dsyswapr.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-setReadOnly( dlarfgp, 'ndarray', ndarray );
+setReadOnly( dsyswapr, 'ndarray', ndarray );
 
 
 // EXPORTS //
 
-module.exports = dlarfgp;
+module.exports = dsyswapr;

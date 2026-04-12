@@ -30,13 +30,13 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Generates a real elementary reflector H of order N with non-negative beta.
+* Generates a real elementary reflector `H` of order `N` with non-negative `beta`.
 *
 * @param {NonNegativeInteger} N - order of the reflector
-* @param {Float64Array} alpha - scalar, overwritten with beta on exit
+* @param {Float64Array} alpha - on entry, the scalar `alpha`; on exit, the scalar `beta` (non-negative)
 * @param {NonNegativeInteger} offsetAlpha - index into `alpha`
-* @param {Float64Array} x - input array
-* @param {integer} strideX - `x` stride length
+* @param {Float64Array} x - input array, overwritten with `v` on exit
+* @param {integer} strideX - stride length for `x`
 * @param {Float64Array} tau - output scalar
 * @param {NonNegativeInteger} offsetTau - index into `tau`
 * @throws {RangeError} first argument must be a nonnegative integer
@@ -47,7 +47,7 @@ function dlarfgp( N, alpha, offsetAlpha, x, strideX, tau, offsetTau ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	ox = stride2offset( N - 1, strideX );
+	ox = stride2offset( N, strideX );
 	base( N, alpha, offsetAlpha, x, strideX, ox, tau, offsetTau );
 }
 

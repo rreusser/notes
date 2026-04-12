@@ -20,7 +20,16 @@ limitations under the License.
 
 # dlarfgp
 
-> Generates an elementary reflector with non-negative beta
+> Generates a real elementary reflector `H` of order `N` with non-negative `beta`.
+
+`dlarfgp` is a variant of [`dlarfg`][@stdlib/lapack/base/dlarfg] used by `dgeqr2p`/`dgeqrfp` that enforces `beta >= 0` in
+
+```text
+H * ( alpha ) = ( beta ),    H**T * H = I,    beta >= 0,
+    (   x   )   (  0   )
+```
+
+where `H = I - tau*( 1; v )*( 1 v**T )`.
 
 <section class="usage">
 
@@ -30,42 +39,49 @@ limitations under the License.
 var dlarfgp = require( '@stdlib/lapack/base/dlarfgp' );
 ```
 
-#### dlarfgp( N, alpha, x, stride, tau )
+#### dlarfgp( N, alpha, offsetAlpha, x, strideX, tau, offsetTau )
 
-Generates an elementary reflector with non-negative beta
+Generates an elementary reflector with non-negative `beta`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var alpha = new Float64Array( [ 3.0 ] );
+var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
+var tau = new Float64Array( 1 );
+
+dlarfgp( 4, alpha, 0, x, 1, tau, 0 );
+// alpha[ 0 ] => 5.0  (beta)
+// tau[ 0 ]   => 0.4
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **alpha**: scalar constant.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **tau**: tau.
+-   **N**: order of the reflector.
+-   **alpha**: single-element `Float64Array`; on entry, the scalar `alpha`; on exit, the scalar `beta` (non-negative).
+-   **offsetAlpha**: starting index into `alpha`.
+-   **x**: `Float64Array`; on entry, the vector `x`; on exit, overwritten with the reflector vector `v`.
+-   **strideX**: stride for `x`.
+-   **tau**: single-element `Float64Array`; on exit, the scalar `tau`.
+-   **offsetTau**: starting index into `tau`.
 
-#### dlarfgp.ndarray( N, alpha, x, stride, offset, tau )
+#### dlarfgp.ndarray( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
 
-Generates an elementary reflector with non-negative beta, using alternative indexing semantics.
+Generates an elementary reflector with non-negative `beta`, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var alpha = new Float64Array( [ 3.0 ] );
+var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
+var tau = new Float64Array( 1 );
+
+dlarfgp.ndarray( 4, alpha, 0, x, 1, 0, tau, 0 );
 ```
 
 The function has the following additional parameters:
 
--   **N**: number of columns.
--   **alpha**: scalar constant.
--   **x**: input array.
--   **stride**: stride length for `x`.
--   **offset**: starting index for ``.
--   **tau**: tau.
+-   **offsetX**: starting index for `x`.
 
 </section>
 
@@ -75,7 +91,8 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlarfgp()` corresponds to the [LAPACK][lapack] auxiliary routine [`dlarfgp`][lapack-dlarfgp].
+-   Unlike `dlarfg`, on exit the scalar `beta` written to `alpha` is guaranteed to be non-negative. When `x` is (relatively) zero and `alpha` is negative, `tau` is set to `2.0` and `alpha` is flipped to `-alpha` (non-negative). When `x` is zero and `alpha` is non-negative, `tau` is set to `0.0`.
 
 </section>
 
@@ -86,7 +103,18 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dlarfgp = require( '@stdlib/lapack/base/dlarfgp' );
+
+var alpha = new Float64Array( [ 3.0 ] );
+var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
+var tau = new Float64Array( 1 );
+
+dlarfgp( 4, alpha, 0, x, 1, tau, 0 );
+
+console.log( 'beta =', alpha[ 0 ] );
+console.log( 'tau  =', tau[ 0 ] );
+console.log( 'v    =', x );
 ```
 
 </section>
@@ -105,10 +133,13 @@ The function has the following additional parameters:
 
 <section class="links">
 
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dlarfgp]: https://www.netlib.org/lapack/explore-html/d9/d39/group__larfgp.html
+
+[@stdlib/lapack/base/dlarfg]: https://github.com/stdlib-js/stdlib
+
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
-[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
-[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>
 

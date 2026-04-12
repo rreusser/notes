@@ -18,29 +18,15 @@
 
 'use strict';
 
-/**
-* Generates a real elementary reflector with non-negative beta.
-*
-* @module @stdlib/lapack/base/dlarfgp
-*
-* @example
-* var Float64Array = require( '@stdlib/array/float64' );
-* var dlarfgp = require( '@stdlib/lapack/base/dlarfgp' );
-*
-* var alpha = new Float64Array( [ 3.0 ] );
-* var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
-* var tau = new Float64Array( 1 );
-*
-* dlarfgp( 4, alpha, 0, x, 1, tau, 0 );
-*/
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var dsyswapr = require( './../lib' );
 
-// MODULES //
+var opts = {
+	'dtype': 'float64'
+};
+var N = 4;
+var A = discreteUniform( N * N, -10, 10, opts );
 
-var main = require( './main.js' );
-
-
-// EXPORTS //
-
-module.exports = main;
-
-// exports: { "ndarray": "dlarfgp.ndarray" }
+// Swap rows/columns 0 and 2 of the symmetric matrix stored in the upper triangle:
+dsyswapr( 'column-major', 'upper', N, A, N, 0, 2 );
+console.log( A ); // eslint-disable-line no-console

@@ -22,18 +22,18 @@
 
 var bench = require( '@stdlib/bench' );
 var uniform = require( '@stdlib/random/array/uniform' );
-var Float64Array = require( '@stdlib/array/float64' );
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var pkg = require( './../package.json' ).name;
-var dlarfgp = require( './../lib/ndarray.js' );
+var zlarfy = require( './../lib/zlarfy.js' );
 
 
 // VARIABLES //
 
 var options = {
-	'dtype': 'float64'
+	'dtype': 'complex128'
 };
 
 
@@ -43,12 +43,20 @@ var options = {
 * Creates a benchmark function.
 *
 * @private
-* @param {PositiveInteger} len - array length
+* @param {PositiveInteger} len - order of the matrix
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
-	var x0 = uniform( len - 1, -10.0, 10.0, options );
-	var x = new Float64Array( x0 );
+	var WORK;
+	var tau;
+	var N;
+	var C;
+	var v;
+	N = len;
+	C = uniform( N * N, -10.0, 10.0, options );
+	v = uniform( N, -10.0, 10.0, options );
+	WORK = uniform( N, -10.0, 10.0, options );
+	tau = new Complex128( 0.7, 0.3 );
 	return benchmark;
 
 	/**
@@ -58,24 +66,18 @@ function createBenchmark( len ) {
 	* @param {Benchmark} b - benchmark instance
 	*/
 	function benchmark( b ) {
-		var alpha;
-		var tau;
+		var y;
 		var i;
-
-		alpha = new Float64Array( 1 );
-		tau = new Float64Array( 1 );
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			alpha[ 0 ] = 2.0;
-			x.set( x0 );
-			dlarfgp( len, alpha, 0, x, 1, 0, tau, 0 );
-			if ( isnan( tau[ 0 ] ) ) {
+			y = zlarfy( 'column-major', 'upper', N, v, 1, tau, C, N, WORK, 1 );
+			if ( isnan( y ) ) {
 				b.fail( 'should not return NaN' );
 			}
 		}
 		b.toc();
-		if ( isnan( tau[ 0 ] ) ) {
+		if ( isnan( y ) ) {
 			b.fail( 'should not return NaN' );
 		}
 		b.pass( 'benchmark finished' );
@@ -99,12 +101,12 @@ function main() {
 	var i;
 
 	min = 1; // 10^min
-	max = 6; // 10^max
+	max = 2; // 10^max
 
 	for ( i = min; i <= max; i++ ) {
 		len = pow( 10, i );
 		f = createBenchmark( len );
-		bench( format( '%s:ndarray:len=%d', pkg, len ), f );
+		bench( format( '%s:len=%d', pkg, len ), f );
 	}
 }
 
