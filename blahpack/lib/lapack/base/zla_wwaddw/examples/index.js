@@ -18,21 +18,21 @@
 
 'use strict';
 
-var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
-var zla_wwaddw = require( './../lib' );
+var uniform = require( '@stdlib/random/array/uniform' );
+var zlaWwaddw = require( './../lib' );
 
 var opts = {
-	'dtype': 'float64'
+	'dtype': 'complex128'
 };
 var N = 3;
-var x = discreteUniform( N, -10, 10, opts );
-var y = discreteUniform( N, -10, 10, opts );
-var w = discreteUniform( N, -10, 10, opts );
+var x = uniform( N, -10.0, 10.0, opts );
+var y = uniform( N, -10.0, 10.0, opts );
+var w = uniform( N, -10.0, 10.0, opts );
 
 // Using the standard interface:
-var out = zla_wwaddw( N, x, y, w );
-console.log( out );
+zlaWwaddw( N, x, 1, y, 1, w, 1 );
+console.log( x );
 
 // Using the ndarray interface:
-out = zla_wwaddw.ndarray( N, x, 1, 0, y, 1, 0, w, 1, 0 );
-console.log( out );
+zlaWwaddw.ndarray( N, x, 1, 0, y, 1, 0, w, 1, 0 );
+console.log( x );

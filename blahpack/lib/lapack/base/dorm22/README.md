@@ -37,7 +37,10 @@ Multiplies a general matrix by a banded orthogonal matrix
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var Q = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var WORK = new Float64Array( 4 );
+dorm22( 'column-major', 'left', 'no-transpose', 2, 2, 1, 1, Q, 2, C, 2, WORK, 1, 4 );
 ```
 
 The function has the following parameters:
@@ -64,7 +67,10 @@ Multiplies a general matrix by a banded orthogonal matrix, using alternative ind
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var Q = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var WORK = new Float64Array( 4 );
+dorm22.ndarray( 'left', 'no-transpose', 2, 2, 1, 1, Q, 1, 2, 0, C, 1, 2, 0, WORK, 1, 0, 4 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +102,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   The orthogonal matrix `Q` is assumed to have a 2x2 block structure: an upper-left rectangular block, a lower-triangular block, an upper-triangular block, and a lower-right rectangular block. It is typically produced by the multi-shift QR iteration (`dlaqr2`/`dlaqr3`).
 
 </section>
 
@@ -107,7 +113,16 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dorm22 = require( '@stdlib/lapack/base/dorm22' );
+
+var Q = new Float64Array( [ 0.8, 0.6, -0.6, 0.8 ] );
+var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var WORK = new Float64Array( 4 );
+
+var info = dorm22( 'column-major', 'left', 'no-transpose', 2, 2, 1, 1, Q, 2, C, 2, WORK, 1, 4 );
+console.log( info );
+console.log( C );
 ```
 
 </section>

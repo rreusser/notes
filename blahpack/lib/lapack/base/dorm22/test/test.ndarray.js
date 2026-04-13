@@ -1,67 +1,166 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-
-/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-len */
 
 'use strict';
 
 // MODULES //
 
+var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
+var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dorm22 = require( './../lib/base.js' );
-var ndarrayFn = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dorm22.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var lines = readFileSync( path.join( fixtureDir, 'dorm22.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( parse );
 
 
 // FUNCTIONS //
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+/**
+* Parses a JSONL line.
+*
+* @private
+* @param {string} line - line of JSON text
+* @returns {Object} parsed object
+*/
+function parse( line ) {
+	return JSON.parse( line );
 }
 
+/**
+* Finds a named fixture case.
+*
+* @private
+* @param {string} name - case name
+* @returns {Object} fixture case
+*/
+function findCase( name ) {
+	var i;
+	for ( i = 0; i < fixture.length; i++ ) {
+		if ( fixture[ i ].name === name ) {
+			return fixture[ i ];
+		}
+	}
+	return null;
+}
+
+/**
+* Asserts that two floats are close.
+*
+* @private
+* @param {number} actual - actual value
+* @param {number} expected - expected value
+* @param {number} tol - relative tolerance
+* @param {string} msg - failure message prefix
+*/
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+/**
+* Asserts that two arrays are elementwise close.
+*
+* @private
+* @param {Object} actual - actual array
+* @param {Object} expected - expected array
+* @param {number} tol - relative tolerance
+* @param {string} msg - failure message prefix
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
-	var relErr;
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
-		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
 
-// Build the 5x5 banded Q from the Fortran test, packed column-major tight.
-function buildQ5() {
-	var Q = new Float64Array( 25 );
-	function set( i, j, v ) { Q[ ((j - 1) * 5) + (i - 1) ] = v; }
-	set( 1, 1, 0.5 );   set( 1, 2, -0.3 );
-	set( 2, 1, 0.2 );   set( 2, 2, 0.8 );
-	set( 3, 1, -0.4 );  set( 3, 2, 0.1 );
-	set( 1, 3, 1.1 );
-	set( 2, 3, 0.7 );   set( 2, 4, 0.9 );
-	set( 3, 3, -0.5 );  set( 3, 4, 0.4 );  set( 3, 5, 1.2 );
-	set( 4, 1, 0.6 );   set( 4, 2, -0.2 );
-	                    set( 5, 2, 1.3 );
-	set( 4, 3, 0.3 );   set( 4, 4, -0.1 ); set( 4, 5, 0.5 );
-	set( 5, 3, -0.7 );  set( 5, 4, 0.4 );  set( 5, 5, 0.2 );
+/**
+* Builds the banded Q matrix used by the Fortran test (NQ=5, N1=3, N2=2).
+*
+* @private
+* @returns {Float64Array} Q packed column-major, LDQ=5
+*/
+function buildQ532() {
+	var Q = new Float64Array( 5 * 5 );
+
+	// Column 1.
+	Q[ 0 ] = 0.5;
+	Q[ 1 ] = 0.2;
+	Q[ 2 ] = -0.4;
+	Q[ 3 ] = 0.6;
+	Q[ 4 ] = 0.0;
+
+	// Column 2.
+	Q[ 5 ] = -0.3;
+	Q[ 6 ] = 0.8;
+	Q[ 7 ] = 0.1;
+	Q[ 8 ] = -0.2;
+	Q[ 9 ] = 1.3;
+
+	// Column 3.
+	Q[ 10 ] = 1.1;
+	Q[ 11 ] = 0.7;
+	Q[ 12 ] = -0.5;
+	Q[ 13 ] = 0.3;
+	Q[ 14 ] = -0.7;
+
+	// Column 4.
+	Q[ 15 ] = 0.0;
+	Q[ 16 ] = 0.9;
+	Q[ 17 ] = 0.4;
+	Q[ 18 ] = -0.1;
+	Q[ 19 ] = 0.4;
+
+	// Column 5.
+	Q[ 20 ] = 0.0;
+	Q[ 21 ] = 0.0;
+	Q[ 22 ] = 1.2;
+	Q[ 23 ] = 0.5;
+	Q[ 24 ] = 0.2;
 	return Q;
 }
 
-function buildC( M, N ) {
-	var C = new Float64Array( M * N );
+/**
+* Builds matrix C as `C(i,j) = (i-2+j)*0.25 + 0.1` (1-based), column-major, LDC=M.
+*
+* @private
+* @param {number} M - rows
+* @param {number} N - cols
+* @returns {Float64Array} C packed column-major
+*/
+function buildCAffine( M, N ) {
+	var C;
 	var i;
 	var j;
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			C[ (j * M) + i ] = ( ( (i + 1) - 2 + (j + 1) ) * 0.25 ) + 0.1;
+
+	C = new Float64Array( M * N );
+	for ( j = 1; j <= N; j++ ) {
+		for ( i = 1; i <= M; i++ ) {
+			C[ ( ( j - 1 ) * M ) + ( i - 1 ) ] = ( ( i - 2 + j ) * 0.25 ) + 0.1;
 		}
 	}
 	return C;
@@ -70,154 +169,213 @@ function buildC( M, N ) {
 
 // TESTS //
 
-test( 'base is a function', function t() {
-	assert.strictEqual( typeof dorm22, 'function', 'is a function' );
-});
-
-test( 'ndarray is a function', function t() {
-	assert.strictEqual( typeof ndarrayFn, 'function', 'is a function' );
-});
-
-test( 'ndarray: unit strides, zero offsets match left_notrans fixture', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_notrans' );
-	var Q = buildQ5();
-	var M = 5;
-	var N = 4;
-	var C = buildC( M, N );
-	var info = ndarrayFn( 'left', 'no-transpose', M, N, 3, 2, Q, 1, 5, 0, C, 1, M, 0, WORK, 1, 0, 200 );
-	assert.equal( info, 0, 'info' );
-	assertArrayClose( Array.from( C ), tc.c, 1e-13, 'c' );
-});
-
-test( 'ndarray: unit strides, zero offsets match right_trans fixture', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_trans' );
-	var Q = buildQ5();
-	var M = 4;
-	var N = 5;
-	var C = buildC( M, N );
-	var info = ndarrayFn( 'right', 'transpose', M, N, 3, 2, Q, 1, 5, 0, C, 1, M, 0, WORK, 1, 0, 200 );
-	assert.equal( info, 0, 'info' );
-	assertArrayClose( Array.from( C ), tc.c, 1e-13, 'c' );
-});
-
-test( 'ndarray: non-unit strides with interleaved C layout', function t() {
-	var strideC2;
-	var strideC1;
+test( 'dorm22: left, no-transpose', function t() {
 	var WORK;
 	var info;
-	var out;
 	var tc;
+	var n1;
+	var n2;
+	var M;
+	var N;
 	var Q;
 	var C;
-	var M;
-	var N;
-	var i;
-	var j;
 
 	tc = findCase( 'left_notrans' );
-	Q = buildQ5();
 	M = 5;
 	N = 4;
-
-	// Lay C into a buffer with row stride 2 and column stride 2*M. Every
-	// other slot is padding that must be left untouched by dorm22.
-	strideC1 = 2;
-	strideC2 = 2 * M;
-	C = new Float64Array( strideC2 * N );
-	for ( i = 0; i < C.length; i++ ) {
-		C[ i ] = -7777.0;
-	}
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			C[ (j * strideC2) + (i * strideC1) ] = ( ( (i + 1) - 2 + (j + 1) ) * 0.25 ) + 0.1;
-		}
-	}
-	WORK = new Float64Array( 200 );
-	info = ndarrayFn( 'left', 'no-transpose', M, N, 3, 2, Q, 1, 5, 0, C, strideC1, strideC2, 0, WORK, 1, 0, 200 );
+	n1 = 3;
+	n2 = 2;
+	Q = buildQ532();
+	C = buildCAffine( M, N );
+	WORK = new Float64Array( Math.max( 1, M * N ) );
+	info = dorm22( 'left', 'no-transpose', M, N, n1, n2, Q, 1, 5, 0, C, 1, M, 0, WORK, 1, 0, WORK.length );
 	assert.equal( info, 0, 'info' );
-
-	// Extract the logical matrix and compare to the fixture.
-	out = [];
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			out.push( C[ (j * strideC2) + (i * strideC1) ] );
-		}
-	}
-	assertArrayClose( out, tc.c, 1e-13, 'c' );
-
-	// Padding slots must be untouched.
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			assert.equal( C[ (j * strideC2) + (i * strideC1) + 1 ], -7777.0, 'pad' );
-		}
-	}
+	assertArrayClose( C, tc.c, 1e-13, 'c' );
 });
 
-test( 'ndarray: non-zero offsets into padded buffers', function t() {
-	var Qbase;
-	var Cbase;
+test( 'dorm22: left, transpose', function t() {
 	var WORK;
 	var info;
-	var Qpad;
-	var Cpad;
-	var out;
 	var tc;
+	var n1;
+	var n2;
 	var M;
 	var N;
-	var i;
+	var Q;
+	var C;
 
 	tc = findCase( 'left_trans' );
 	M = 5;
 	N = 4;
-
-	// Pad Q with 7 leading elements; use offsetQ = 7.
-	Qbase = buildQ5();
-	Qpad = new Float64Array( Qbase.length + 7 );
-	for ( i = 0; i < 7; i++ ) {
-		Qpad[ i ] = 1234.5 + i;
-	}
-	for ( i = 0; i < Qbase.length; i++ ) {
-		Qpad[ i + 7 ] = Qbase[ i ];
-	}
-
-	// Pad C with 3 leading elements; use offsetC = 3.
-	Cbase = buildC( M, N );
-	Cpad = new Float64Array( Cbase.length + 3 );
-	for ( i = 0; i < 3; i++ ) {
-		Cpad[ i ] = -9999.0;
-	}
-	for ( i = 0; i < Cbase.length; i++ ) {
-		Cpad[ i + 3 ] = Cbase[ i ];
-	}
-
-	// Pad WORK with 5 leading slots; use offsetWORK = 5.
-	WORK = new Float64Array( 205 );
-	for ( i = 0; i < 5; i++ ) {
-		WORK[ i ] = 42.0;
-	}
-
-	info = ndarrayFn( 'left', 'transpose', M, N, 3, 2, Qpad, 1, 5, 7, Cpad, 1, M, 3, WORK, 1, 5, 200 );
+	n1 = 3;
+	n2 = 2;
+	Q = buildQ532();
+	C = buildCAffine( M, N );
+	WORK = new Float64Array( Math.max( 1, M * N ) );
+	info = dorm22( 'left', 'transpose', M, N, n1, n2, Q, 1, 5, 0, C, 1, M, 0, WORK, 1, 0, WORK.length );
 	assert.equal( info, 0, 'info' );
+	assertArrayClose( C, tc.c, 1e-13, 'c' );
+});
 
-	// Extract logical C and compare to the fixture.
-	out = [];
-	for ( i = 0; i < M * N; i++ ) {
-		out.push( Cpad[ i + 3 ] );
-	}
-	assertArrayClose( out, tc.c, 1e-13, 'c' );
+test( 'dorm22: right, no-transpose', function t() {
+	var WORK;
+	var info;
+	var tc;
+	var n1;
+	var n2;
+	var M;
+	var N;
+	var Q;
+	var C;
 
-	// Padding in C must be untouched.
-	for ( i = 0; i < 3; i++ ) {
-		assert.equal( Cpad[ i ], -9999.0, 'C pad' );
+	tc = findCase( 'right_notrans' );
+	M = 4;
+	N = 5;
+	n1 = 3;
+	n2 = 2;
+	Q = buildQ532();
+	C = buildCAffine( M, N );
+	WORK = new Float64Array( Math.max( 1, M * N ) );
+	info = dorm22( 'right', 'no-transpose', M, N, n1, n2, Q, 1, 5, 0, C, 1, M, 0, WORK, 1, 0, WORK.length );
+	assert.equal( info, 0, 'info' );
+	assertArrayClose( C, tc.c, 1e-13, 'c' );
+});
+
+test( 'dorm22: right, transpose', function t() {
+	var WORK;
+	var info;
+	var tc;
+	var n1;
+	var n2;
+	var M;
+	var N;
+	var Q;
+	var C;
+
+	tc = findCase( 'right_trans' );
+	M = 4;
+	N = 5;
+	n1 = 3;
+	n2 = 2;
+	Q = buildQ532();
+	C = buildCAffine( M, N );
+	WORK = new Float64Array( Math.max( 1, M * N ) );
+	info = dorm22( 'right', 'transpose', M, N, n1, n2, Q, 1, 5, 0, C, 1, M, 0, WORK, 1, 0, WORK.length );
+	assert.equal( info, 0, 'info' );
+	assertArrayClose( C, tc.c, 1e-13, 'c' );
+});
+
+test( 'dorm22: n1=0 (pure upper-triangular) left no-transpose', function t() {
+	var WORK;
+	var info;
+	var tc;
+	var n1;
+	var n2;
+	var M;
+	var N;
+	var Q;
+	var C;
+	var i;
+	var j;
+
+	tc = findCase( 'n1_zero_left_notrans' );
+	M = 3;
+	N = 4;
+	n1 = 0;
+	n2 = 3;
+	Q = new Float64Array( 3 * 3 );
+	Q[ 0 ] = 1.0;
+	Q[ 3 ] = 0.5;
+	Q[ 4 ] = 0.8;
+	Q[ 6 ] = -0.2;
+	Q[ 7 ] = 0.3;
+	Q[ 8 ] = 1.2;
+	C = new Float64Array( M * N );
+	for ( j = 1; j <= N; j++ ) {
+		for ( i = 1; i <= M; i++ ) {
+			C[ ( ( j - 1 ) * M ) + ( i - 1 ) ] = ( i + j ) * 0.3;
+		}
 	}
-	// Padding in Q must be untouched.
-	for ( i = 0; i < 7; i++ ) {
-		assert.equal( Qpad[ i ], 1234.5 + i, 'Q pad' );
+	WORK = new Float64Array( Math.max( 1, M * N ) );
+	info = dorm22( 'left', 'no-transpose', M, N, n1, n2, Q, 1, 3, 0, C, 1, M, 0, WORK, 1, 0, WORK.length );
+	assert.equal( info, 0, 'info' );
+	assertArrayClose( C, tc.c, 1e-13, 'c' );
+});
+
+test( 'dorm22: n2=0 (pure lower-triangular) right transpose', function t() {
+	var WORK;
+	var info;
+	var tc;
+	var n1;
+	var n2;
+	var M;
+	var N;
+	var Q;
+	var C;
+	var i;
+	var j;
+
+	tc = findCase( 'n2_zero_right_trans' );
+	M = 4;
+	N = 3;
+	n1 = 3;
+	n2 = 0;
+	Q = new Float64Array( 3 * 3 );
+	Q[ 0 ] = 1.0;
+	Q[ 1 ] = 0.4;
+	Q[ 2 ] = -0.3;
+	Q[ 4 ] = 0.9;
+	Q[ 5 ] = 0.6;
+	Q[ 8 ] = 1.1;
+	C = new Float64Array( M * N );
+	for ( j = 1; j <= N; j++ ) {
+		for ( i = 1; i <= M; i++ ) {
+			C[ ( ( j - 1 ) * M ) + ( i - 1 ) ] = ( ( i - j ) * 0.2 ) + 0.5;
+		}
 	}
-	// Padding in WORK must be untouched.
-	for ( i = 0; i < 5; i++ ) {
-		assert.equal( WORK[ i ], 42.0, 'WORK pad' );
-	}
+	WORK = new Float64Array( Math.max( 1, M * N ) );
+	info = dorm22( 'right', 'transpose', M, N, n1, n2, Q, 1, 3, 0, C, 1, M, 0, WORK, 1, 0, WORK.length );
+	assert.equal( info, 0, 'info' );
+	assertArrayClose( C, tc.c, 1e-13, 'c' );
+});
+
+test( 'dorm22: M=0 quick return', function t() {
+	var WORK;
+	var info;
+	var Q;
+	var C;
+
+	Q = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	WORK = new Float64Array( 1 );
+	info = dorm22( 'left', 'no-transpose', 0, 4, 0, 0, Q, 1, 1, 0, C, 1, 1, 0, WORK, 1, 0, 1 );
+	assert.equal( info, 0, 'info' );
+});
+
+test( 'dorm22: N=0 quick return', function t() {
+	var WORK;
+	var info;
+	var Q;
+	var C;
+
+	Q = new Float64Array( 25 );
+	C = new Float64Array( 5 );
+	WORK = new Float64Array( 5 );
+	info = dorm22( 'left', 'no-transpose', 5, 0, 3, 2, Q, 1, 5, 0, C, 1, 5, 0, WORK, 1, 0, 5 );
+	assert.equal( info, 0, 'info' );
+});
+
+test( 'dorm22: insufficient lwork returns -12', function t() {
+	var WORK;
+	var info;
+	var Q;
+	var C;
+
+	Q = buildQ532();
+	C = buildCAffine( 5, 4 );
+	WORK = new Float64Array( 2 );
+
+	// With nq = M = 5, nw = 5, lwork = 2 < 5 → -12.
+	info = dorm22( 'left', 'no-transpose', 5, 4, 3, 2, Q, 1, 5, 0, C, 1, 5, 0, WORK, 1, 0, 2 );
+	assert.equal( info, -12, 'info' );
 });

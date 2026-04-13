@@ -1,3 +1,6 @@
+
+/* eslint-disable camelcase */
+
 'use strict';
 
 // MODULES //

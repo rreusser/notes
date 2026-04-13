@@ -27,6 +27,9 @@ var base = require( './base.js' );
 * @param {integer} strideWORK - stride length for `WORK`
 * @param {integer} lwork - lwork
 * @throws {TypeError} first argument must be a valid order
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @throws {RangeError} fifth argument must be greater than or equal to max(1,N) for row-major, or max(1,M) for column-major
 * @returns {integer} status code (0 = success)
 */
 function dgeqlf( order, M, N, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork ) { // eslint-disable-line max-len, max-params

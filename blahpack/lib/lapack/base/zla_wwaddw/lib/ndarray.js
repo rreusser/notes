@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -23,16 +22,18 @@ var base = require( './base.js' );
 * @param {Complex128Array} w - vector to be added
 * @param {integer} strideW - stride length for `w` (in complex elements)
 * @param {NonNegativeInteger} offsetW - starting index for `w` (in complex elements)
-* @returns {void}
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `x`
 */
-function zla_wwaddw( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW ) { // eslint-disable-line max-len, max-params
+function zlaWwaddw( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW ) { // eslint-disable-line max-len, max-params
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW ); // eslint-disable-line max-len
+	base( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW );
+	return x;
 }
 
 
 // EXPORTS //
 
-module.exports = zla_wwaddw;
+module.exports = zlaWwaddw;

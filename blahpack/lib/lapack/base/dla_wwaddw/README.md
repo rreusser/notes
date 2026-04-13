@@ -20,7 +20,13 @@ limitations under the License.
 
 # dla_wwaddw
 
-> Add a vector into a doubled-single accumulation vector.
+> Add a vector `W` to a doubled-single precision accumulator `(X, Y)` in place.
+
+The doubled-single representation stores the high-order part of an
+accumulated sum in `X` and its low-order compensation term in `Y` so
+that `X[i] + Y[i]` approximates the running total with extra precision.
+On each update, a Kahan-style rounding step extracts the rounded
+high-order part and pushes the lost low-order bits into `Y`.
 
 <section class="usage">
 
@@ -30,41 +36,49 @@ limitations under the License.
 var dla_wwaddw = require( '@stdlib/lapack/base/dla_wwaddw' );
 ```
 
-#### dla_wwaddw( N, x, y, w )
+#### dla_wwaddw( N, x, strideX, y, strideY, w, strideW )
 
-Add a vector into a doubled-single accumulation vector.
+Adds vector `W` to the doubled-single accumulator `(X, Y)` in place.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 0.1, 0.2, 0.3 ] );
+var w = new Float64Array( [ 10.0, 20.0, 30.0 ] );
+
+dla_wwaddw( 3, x, 1, y, 1, w, 1 );
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **x**: `x`.
--   **y**: `y`.
--   **w**: `w`.
+-   **N**: number of elements in `X`, `Y`, and `W`.
+-   **x**: high-order part of the accumulator (modified in place).
+-   **strideX**: stride length for `x`.
+-   **y**: low-order part of the accumulator (modified in place).
+-   **strideY**: stride length for `y`.
+-   **w**: vector to be added.
+-   **strideW**: stride length for `w`.
 
 #### dla_wwaddw.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW )
 
-Add a vector into a doubled-single accumulation vector, using alternative indexing semantics.
+Adds vector `W` to the doubled-single accumulator `(X, Y)` using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 0.1, 0.2, 0.3 ] );
+var w = new Float64Array( [ 10.0, 20.0, 30.0 ] );
+
+dla_wwaddw.ndarray( 3, x, 1, 0, y, 1, 0, w, 1, 0 );
 ```
 
 The function has the following additional parameters:
 
--   **strideX**: stride length for `X`.
--   **offsetX**: starting index for `X`.
--   **strideY**: stride length for `Y`.
--   **offsetY**: starting index for `Y`.
--   **strideW**: stride length for `W`.
--   **offsetW**: starting index for `W`.
+-   **offsetX**: starting index for `x`.
+-   **offsetY**: starting index for `y`.
+-   **offsetW**: starting index for `w`.
 
 </section>
 
@@ -74,7 +88,9 @@ The function has the following additional parameters:
 
 ## Notes
 
--   `dla_wwaddw()` corresponds to the [LAPACK][lapack] level routine [`dla_wwaddw`][lapack-dla_wwaddw].
+-   The `(s + s) - s` rounding step in the inner loop is **not** a no-op in IEEE 754 floating-point arithmetic. It extracts the rounded high-order part of `x[i] + w[i]`, with the truncated low-order bits pushed into the compensation term `y[i]`.
+-   This routine is a leaf LAPACK helper used by iterative refinement extended routines (`dgerfsx`, `dsyrfsx`, `dporfsx`, etc.) for extra-precise accumulation.
+-   Quick return when `N == 0`: all arrays are left untouched.
 
 </section>
 
@@ -84,12 +100,18 @@ The function has the following additional parameters:
 
 ## Examples
 
-<!-- eslint no-undef: "error" -->
-
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dla_wwaddw = require( '@stdlib/lapack/base/dla_wwaddw' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0e8, 2.0e8, 3.0e8 ] );
+var y = new Float64Array( [ 0.0, 0.0, 0.0 ] );
+var w = new Float64Array( [ 1.0e-4, 2.0e-4, 3.0e-4 ] );
+
+dla_wwaddw( 3, x, 1, y, 1, w, 1 );
+
+console.log( x );
+console.log( y );
 ```
 
 </section>
@@ -108,12 +130,9 @@ var dla_wwaddw = require( '@stdlib/lapack/base/dla_wwaddw' );
 
 <section class="links">
 
-[lapack]: https://www.netlib.org/lapack/explore-html/
-
-[lapack-dla_wwaddw]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dla_wwaddw.html
-
 [mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
-
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
 [mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
 
 </section>

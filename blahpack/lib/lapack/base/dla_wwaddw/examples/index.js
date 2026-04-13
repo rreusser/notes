@@ -16,23 +16,22 @@
 * limitations under the License.
 */
 
+/* eslint-disable camelcase */
+
 'use strict';
 
-var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var uniform = require( '@stdlib/random/array/uniform' );
 var dla_wwaddw = require( './../lib' );
 
 var opts = {
 	'dtype': 'float64'
 };
-var N = 3;
-var x = discreteUniform( N, -10, 10, opts );
-var y = discreteUniform( N, -10, 10, opts );
-var w = discreteUniform( N, -10, 10, opts );
 
-// Using the standard interface:
-var out = dla_wwaddw( N, x, y, w );
-console.log( out );
+var N = 5;
+var x = uniform( N, -10.0, 10.0, opts );
+var y = uniform( N, -1.0e-10, 1.0e-10, opts );
+var w = uniform( N, -1.0, 1.0, opts );
 
-// Using the ndarray interface:
-out = dla_wwaddw.ndarray( N, x, 1, 0, y, 1, 0, w, 1, 0 );
-console.log( out );
+dla_wwaddw( N, x, 1, y, 1, w, 1 );
+console.log( x ); // eslint-disable-line no-console
+console.log( y ); // eslint-disable-line no-console

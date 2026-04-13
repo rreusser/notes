@@ -1,14 +1,29 @@
-
-
 'use strict';
 
 /**
-* Add a complex vector into a doubled-single accumulation vector.
+* Adds a complex vector in doubled-single precision representation.
 *
 * @module @stdlib/lapack/base/zla_wwaddw
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zlaWwaddw = require( '@stdlib/lapack/base/zla_wwaddw' );
+*
+* var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4 ] );
+* var w = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0 ] );
+*
+* zlaWwaddw( 2, x, 1, y, 1, w, 1 );
+*
+* @example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zlaWwaddw = require( '@stdlib/lapack/base/zla_wwaddw' );
+*
+* var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4 ] );
+* var w = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0 ] );
+*
+* zlaWwaddw.ndarray( 2, x, 1, 0, y, 1, 0, w, 1, 0 );
 */
 
 // MODULES //
@@ -21,17 +36,17 @@ var main = require( './main.js' );
 
 // MAIN //
 
-var zla_wwaddw;
+var zlaWwaddw;
 var tmp = tryRequire( join( __dirname, './native.js' ) );
 if ( isError( tmp ) ) {
-	zla_wwaddw = main;
+	zlaWwaddw = main;
 } else {
-	zla_wwaddw = tmp;
+	zlaWwaddw = tmp;
 }
 
 
 // EXPORTS //
 
-module.exports = zla_wwaddw;
+module.exports = zlaWwaddw;
 
 // exports: { "ndarray": "zla_wwaddw.ndarray" }

@@ -1,0 +1,10 @@
+dsyconvf_rook
+disnan
+dlaisnan
+dlasyf_rook
+dsytf2_rook
+dsytrf_rook
+dlamch
+ilaenv
+ieeeck
+iparmq

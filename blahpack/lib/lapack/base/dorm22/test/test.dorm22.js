@@ -1,5 +1,3 @@
-
-
 /* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
@@ -51,4 +49,3 @@ test( 'dorm22 throws RangeError for negative N', function t() {
 		dorm22( 'row-major', 'left', 'no-transpose', 2, -1, 2, 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 2, 2 );
 	}, RangeError );
 });
-

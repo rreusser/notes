@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -9,6 +7,7 @@ var uniform = require( '@stdlib/random/array/uniform' );
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var pkg = require( './../package.json' ).name;
 var zgeqlf = require( './../lib/ndarray.js' );
 
@@ -26,14 +25,13 @@ var options = {
 * Creates a benchmark function.
 *
 * @private
-* @param {PositiveInteger} len - array length
+* @param {PositiveInteger} N - matrix dimension
 * @returns {Function} benchmark function
 */
-function createBenchmark( len ) {
-	var N = len;
-	var A = uniform( N * N, -10.0, 10.0, options );
-	var TAU = uniform( N * N, -10.0, 10.0, options );
-	var WORK = uniform( N * N, -10.0, 10.0, options );
+function createBenchmark( N ) {
+	var WORK = new Complex128Array( N * 64 );
+	var TAU = new Complex128Array( N );
+	var A = new Complex128Array( uniform( 2 * N * N, -10.0, 10.0, options ) );
 	return benchmark;
 
 	/**
@@ -48,7 +46,7 @@ function createBenchmark( len ) {
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = zgeqlf( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
+			y = zgeqlf( N, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0, -1 );
 			if ( isnan( y ) ) {
 				b.fail( 'should not return NaN' );
 			}
@@ -71,19 +69,19 @@ function createBenchmark( len ) {
 * @private
 */
 function main() {
-	var len;
 	var min;
 	var max;
+	var N;
 	var f;
 	var i;
 
-	min = 1; // 10^min
-	max = 3; // 10^max
+	min = 1;
+	max = 4;
 
 	for ( i = min; i <= max; i++ ) {
-		len = pow( 10, i );
-		f = createBenchmark( len );
-		bench( format( '%s:ndarray:len=%d', pkg, len ), f );
+		N = pow( 2, i );
+		f = createBenchmark( N );
+		bench( format( '%s:ndarray:N=%d', pkg, N ), f );
 	}
 }
 

@@ -1,0 +1,15 @@
+chla_transtype
+ilatrans
+dgbtf2
+dgbtrf
+dgbtrs
+dla_gbamv
+dla_lin_berr
+dla_wwaddw
+dla_gbrfsx_extended
+dlacn2
+dlamch
+dlaswp
+ieeeck
+ilaenv
+iparmq

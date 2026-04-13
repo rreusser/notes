@@ -37,7 +37,11 @@ Computes a QL factorization of a real general matrix
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] );
+var TAU = new Float64Array( 3 );
+var WORK = new Float64Array( 3 );
+
+dgeqlf( 'column-major', 3, 3, A, 3, TAU, 1, WORK, 1, 3 );
 ```
 
 The function has the following parameters:
@@ -60,7 +64,11 @@ Computes a QL factorization of a real general matrix, using alternative indexing
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] );
+var TAU = new Float64Array( 3 );
+var WORK = new Float64Array( 3 );
+
+dgeqlf.ndarray( 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 3 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +95,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   The matrix `Q` is represented as a product of elementary reflectors `Q = H(k) ... H(2) H(1)` where `k = min(M, N)`. The lower trapezoidal factor `L` is stored in the bottom of `A` (rows `M-k` to `M-1`). Reflector vectors are stored in the remaining portion of `A`, and their scalar factors are stored in `TAU`.
 
 </section>
 
@@ -98,7 +106,15 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dgeqlf = require( '@stdlib/lapack/base/dgeqlf' );
+
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] );
+var TAU = new Float64Array( 3 );
+var WORK = new Float64Array( 3 );
+
+var info = dgeqlf( 'column-major', 3, 3, A, 3, TAU, 1, WORK, 1, 3 );
+console.log( info );
 ```
 
 </section>

@@ -1,13 +1,13 @@
-/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-len */
 
 'use strict';
 
 // MODULES //
 
+var fs = require( 'fs' );
+var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var base = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
@@ -16,18 +16,68 @@ var ndarrayFn = require( './../lib/ndarray.js' );
 // FIXTURES //
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgeqlf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var lines = fs.readFileSync( path.join( fixtureDir, 'dgeqlf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( parseLine );
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+
+// FUNCTIONS //
+
+/**
+* Parses a JSON line.
+*
+* @private
+* @param {string} line - JSON line
+* @returns {Object} parsed object
+*/
+function parseLine( line ) {
+	return JSON.parse( line );
 }
 
+/**
+* Finds a fixture case by name.
+*
+* @private
+* @param {string} name - case name
+* @returns {Object} fixture case
+*/
+function findCase( name ) {
+	return fixture.find( matchName );
+
+	/**
+	* Name matcher.
+	*
+	* @private
+	* @param {Object} t - test case
+	* @returns {boolean} match
+	*/
+	function matchName( t ) {
+		return t.name === name;
+	}
+}
+
+/**
+* Asserts that a scalar value is close to an expected value.
+*
+* @private
+* @param {number} actual - actual value
+* @param {number} expected - expected value
+* @param {number} tol - relative tolerance
+* @param {string} msg - message
+*/
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise close.
+*
+* @private
+* @param {*} actual - actual array
+* @param {*} expected - expected array
+* @param {number} tol - relative tolerance
+* @param {string} msg - message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	for ( i = 0; i < expected.length; i++ ) {
@@ -47,37 +97,50 @@ test( 'ndarray is a function', function t() {
 });
 
 test( 'ndarray: 3x3 fixture via column-major layout (strideA1=1, strideA2=M)', function t() {
-	var tc = findCase( '3x3' );
-	var src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
-	var A = new Float64Array( src );
-	var TAU = new Float64Array( 3 );
-	var WORK = new Float64Array( 3 );
-	var info = ndarrayFn( 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	var WORK;
+	var info;
+	var TAU;
+	var src;
+	var tc;
+	var A;
+
+	tc = findCase( '3x3' );
+	src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
+	A = new Float64Array( src );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 3 );
+	info = ndarrayFn( 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
 	assert.equal( info, tc.INFO, 'info' );
 	assertArrayClose( A, tc.A, 1e-13, 'A' );
 	assertArrayClose( TAU, tc.TAU, 1e-13, 'TAU' );
 });
 
 test( 'ndarray: 3x3 fixture via row-major layout (strideA1=N, strideA2=1)', function t() {
-	// Row-major layout isn't expressible via the flat base() API: strideA1 != 1.
-	var tc = findCase( '3x3' );
-	var cmSrc = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
-	var M = 3;
-	var N = 3;
-	var A = new Float64Array( M * N );
-	// Convert column-major source into row-major storage.
+	var cmSrc;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var M;
+	var N;
+	var A;
 	var i;
 	var j;
+
+	tc = findCase( '3x3' );
+	cmSrc = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
+	M = 3;
+	N = 3;
+	A = new Float64Array( M * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
 			A[ ( i * N ) + j ] = cmSrc[ i + ( j * M ) ];
 		}
 	}
-	var TAU = new Float64Array( 3 );
-	var WORK = new Float64Array( 3 );
-	var info = ndarrayFn( M, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 3 );
+	info = ndarrayFn( M, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
 	assert.equal( info, tc.INFO, 'info' );
-	// Compare row-major A to transposed fixture (which is column-major).
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
 			assertClose( A[ ( i * N ) + j ], tc.A[ i + ( j * M ) ], 1e-13, 'A[' + i + ',' + j + ']' );
@@ -87,31 +150,39 @@ test( 'ndarray: 3x3 fixture via row-major layout (strideA1=N, strideA2=1)', func
 });
 
 test( 'ndarray: honors offsetA with sentinel padding', function t() {
-	var tc = findCase( '3x3' );
-	var src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
-	var SENTINEL = -9.99e99;
-	var offsetA = 4;
-	var pad = 3;
-	var buf = new Float64Array( offsetA + src.length + pad );
+	var SENTINEL;
+	var offsetA;
+	var WORK;
+	var info;
+	var TAU;
+	var pad;
+	var buf;
+	var src;
+	var tc;
 	var k;
+
+	tc = findCase( '3x3' );
+	src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
+	SENTINEL = -9.99e99;
+	offsetA = 4;
+	pad = 3;
+	buf = new Float64Array( offsetA + src.length + pad );
 	for ( k = 0; k < buf.length; k++ ) {
 		buf[ k ] = SENTINEL;
 	}
 	for ( k = 0; k < src.length; k++ ) {
 		buf[ offsetA + k ] = src[ k ];
 	}
-	var TAU = new Float64Array( 3 );
-	var WORK = new Float64Array( 3 );
-	var info = ndarrayFn( 3, 3, buf, 1, 3, offsetA, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 3 );
+	info = ndarrayFn( 3, 3, buf, 1, 3, offsetA, TAU, 1, 0, WORK, 1, 0, WORK.length );
 	assert.equal( info, tc.INFO, 'info' );
-	// Verify sentinels outside the logical window were not touched.
 	for ( k = 0; k < offsetA; k++ ) {
 		assert.strictEqual( buf[ k ], SENTINEL, 'pre-sentinel[' + k + ']' );
 	}
 	for ( k = 0; k < pad; k++ ) {
 		assert.strictEqual( buf[ offsetA + src.length + k ], SENTINEL, 'post-sentinel[' + k + ']' );
 	}
-	// Verify numerical output.
 	for ( k = 0; k < tc.A.length; k++ ) {
 		assertClose( buf[ offsetA + k ], tc.A[ k ], 1e-13, 'A[' + k + ']' );
 	}
@@ -119,19 +190,29 @@ test( 'ndarray: honors offsetA with sentinel padding', function t() {
 });
 
 test( 'ndarray: honors offsetTAU with sentinel padding', function t() {
-	var tc = findCase( '4x3' );
-	var src = [ 2, 1, 3, 1, 1, 4, 2, 3, 3, 2, 5, 1 ];
-	var A = new Float64Array( src );
-	var SENTINEL = 7.77e77;
-	var offsetTAU = 2;
-	var tauPad = 2;
-	var TAU = new Float64Array( offsetTAU + 3 + tauPad );
+	var offsetTAU;
+	var SENTINEL;
+	var tauPad;
+	var WORK;
+	var info;
+	var TAU;
+	var src;
+	var tc;
+	var A;
 	var k;
+
+	tc = findCase( '4x3' );
+	src = [ 2, 1, 3, 1, 1, 4, 2, 3, 3, 2, 5, 1 ];
+	A = new Float64Array( src );
+	SENTINEL = 7.77e77;
+	offsetTAU = 2;
+	tauPad = 2;
+	TAU = new Float64Array( offsetTAU + 3 + tauPad );
 	for ( k = 0; k < TAU.length; k++ ) {
 		TAU[ k ] = SENTINEL;
 	}
-	var WORK = new Float64Array( 16 );
-	var info = ndarrayFn( 4, 3, A, 1, 4, 0, TAU, 1, offsetTAU, WORK, 1, 0, WORK.length );
+	WORK = new Float64Array( 16 );
+	info = ndarrayFn( 4, 3, A, 1, 4, 0, TAU, 1, offsetTAU, WORK, 1, 0, WORK.length );
 	assert.equal( info, tc.INFO, 'info' );
 	for ( k = 0; k < offsetTAU; k++ ) {
 		assert.strictEqual( TAU[ k ], SENTINEL, 'pre-TAU-sentinel[' + k + ']' );
@@ -145,16 +226,121 @@ test( 'ndarray: honors offsetTAU with sentinel padding', function t() {
 	assertArrayClose( A, tc.A, 1e-13, 'A' );
 });
 
-test( 'ndarray: LDA > M (column-major with extra padding rows)', function t() {
-	var tc = findCase( '3x3' );
-	var src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
-	var M = 3;
-	var N = 3;
-	var lda = 5; // strideA2 = 5, rows 3..4 are padding
-	var SENTINEL = 1.23e45;
-	var buf = new Float64Array( lda * N );
+test( 'ndarray: 3x4 (wide) fixture', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var src;
+	var tc;
+	var A;
+
+	tc = findCase( '3x4' );
+	src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5, 4, 1, 2 ];
+	A = new Float64Array( src );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 4 );
+	info = ndarrayFn( 3, 4, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	assert.equal( info, tc.INFO, 'info' );
+	assertArrayClose( A, tc.A, 1e-13, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-13, 'TAU' );
+});
+
+test( 'ndarray: N=0 quick return', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var A;
+
+	A = new Float64Array( 0 );
+	TAU = new Float64Array( 0 );
+	WORK = new Float64Array( 0 );
+	info = ndarrayFn( 3, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+});
+
+test( 'ndarray: M=0 quick return', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var A;
+
+	A = new Float64Array( 0 );
+	TAU = new Float64Array( 0 );
+	WORK = new Float64Array( 0 );
+	info = ndarrayFn( 0, 3, A, 1, 0, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+});
+
+test( 'ndarray: allocates internal workspace when none provided', function t() {
+	var info;
+	var TAU;
+	var src;
+	var tc;
+	var A;
+
+	tc = findCase( '3x3' );
+	src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
+	A = new Float64Array( src );
+	TAU = new Float64Array( 3 );
+	info = ndarrayFn( 3, 3, A, 1, 3, 0, TAU, 1, 0, null, 1, 0, 3 );
+	assert.equal( info, tc.INFO, 'info' );
+	assertArrayClose( A, tc.A, 1e-13, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-13, 'TAU' );
+});
+
+test( 'ndarray: large 150x150 exercises blocked path', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var N;
+	var A;
 	var i;
 	var j;
+
+	tc = findCase( 'large_150x150' );
+	N = 150;
+	A = new Float64Array( N * N );
+
+	// Diagonal-dominant well-conditioned matrix (matches Fortran test).
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			if ( i === j ) {
+				A[ i + ( j * N ) ] = 10.0;
+			} else {
+				A[ i + ( j * N ) ] = 1.0 / ( Math.abs( i - j ) + 1 );
+			}
+		}
+	}
+	TAU = new Float64Array( N );
+	WORK = new Float64Array( N * 64 );
+	info = ndarrayFn( N, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	assert.equal( info, tc.INFO, 'info' );
+	assertArrayClose( A, tc.A, 1e-10, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-10, 'TAU' );
+});
+
+test( 'ndarray: LDA > M (column-major with extra padding rows)', function t() {
+	var SENTINEL;
+	var WORK;
+	var info;
+	var TAU;
+	var lda;
+	var buf;
+	var src;
+	var tc;
+	var M;
+	var N;
+	var i;
+	var j;
+
+	tc = findCase( '3x3' );
+	src = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
+	M = 3;
+	N = 3;
+	lda = 5;
+	SENTINEL = 1.23e45;
+	buf = new Float64Array( lda * N );
 	for ( i = 0; i < buf.length; i++ ) {
 		buf[ i ] = SENTINEL;
 	}
@@ -163,17 +349,15 @@ test( 'ndarray: LDA > M (column-major with extra padding rows)', function t() {
 			buf[ i + ( j * lda ) ] = src[ i + ( j * M ) ];
 		}
 	}
-	var TAU = new Float64Array( 3 );
-	var WORK = new Float64Array( 3 );
-	var info = ndarrayFn( M, N, buf, 1, lda, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 3 );
+	info = ndarrayFn( M, N, buf, 1, lda, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
 	assert.equal( info, tc.INFO, 'info' );
-	// Verify padding rows untouched.
 	for ( j = 0; j < N; j++ ) {
 		for ( i = M; i < lda; i++ ) {
 			assert.strictEqual( buf[ i + ( j * lda ) ], SENTINEL, 'padding[' + i + ',' + j + ']' );
 		}
 	}
-	// Verify logical rows match fixture.
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
 			assertClose( buf[ i + ( j * lda ) ], tc.A[ i + ( j * M ) ], 1e-13, 'A[' + i + ',' + j + ']' );

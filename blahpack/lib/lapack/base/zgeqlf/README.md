@@ -35,9 +35,13 @@ var zgeqlf = require( '@stdlib/lapack/base/zgeqlf' );
 Computes a QL factorization of a complex general matrix
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 1.0, 3.0, 1.5, 4.0, 2.0, 0.5, 1.0, 1.0, 0.5, 1.5, 1.0, 2.0, 1.5, 1.0, 0.0, 2.0, 0.5, 3.0, 1.0, 4.0, 1.5 ] );
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
+
+zgeqlf( 'column-major', 4, 3, A, 4, TAU, 1, WORK, 1, -1 );
 ```
 
 The function has the following parameters:
@@ -58,9 +62,13 @@ The function has the following parameters:
 Computes a QL factorization of a complex general matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 1.0, 3.0, 1.5, 4.0, 2.0, 0.5, 1.0, 1.0, 0.5, 1.5, 1.0, 2.0, 1.5, 1.0, 0.0, 2.0, 0.5, 3.0, 1.0, 4.0, 1.5 ] );
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
+
+zgeqlf.ndarray( 4, 3, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, -1 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +95,8 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zgeqlf` computes a QL factorization of a complex M-by-N matrix `A = Q * L` using a blocked Householder algorithm. The lower trapezoidal matrix `L` is written into the lower-left corner of `A`, and the Householder vectors encoding `Q` are stored in the remaining entries.
+-   The workspace size is automatically managed; `lwork` is accepted for API compatibility but ignored.
 
 </section>
 
@@ -98,7 +107,15 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgeqlf = require( '@stdlib/lapack/base/zgeqlf' );
+
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 1.0, 3.0, 1.5, 4.0, 2.0, 0.5, 1.0, 1.0, 0.5, 1.5, 1.0, 2.0, 1.5, 1.0, 0.0, 2.0, 0.5, 3.0, 1.0, 4.0, 1.5 ] );
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
+
+var info = zgeqlf( 'column-major', 4, 3, A, 4, TAU, 1, WORK, 1, -1 );
+console.log( info );
 ```
 
 </section>

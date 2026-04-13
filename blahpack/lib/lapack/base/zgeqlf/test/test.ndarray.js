@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-len */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-len, max-statements-per-line, node/no-sync, max-lines */
 
 /**
 * @license Apache-2.0
@@ -23,9 +23,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgeqlf = require( './../lib/base.js' );
@@ -102,11 +102,32 @@ test( 'zgeqlf: basic 4x3 matrix', function t() {
 	var a;
 
 	tc = findCase( 'basic_4x3' );
-	a = new Complex128Array( [
-		1, 2, 3, 4, 5, 6, 7, 8,
-		9, 1, 2, 3, 4, 5, 6, 7,
-		8, 9, 1, 2, 3, 4, 5, 6
-	] );
+	a = new Complex128Array([
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6
+	]);
 	tau = new Complex128Array( 3 );
 	work = new Complex128Array( 200 );
 	info = zgeqlf( 4, 3, a, 1, 4, 0, tau, 1, 0, work, 1, 0, -1 );
@@ -123,11 +144,26 @@ test( 'zgeqlf: square 3x3 matrix', function t() {
 	var a;
 
 	tc = findCase( 'square_3x3' );
-	a = new Complex128Array( [
-		1, 1, 0, 1, 1, 0,
-		2, 0.5, 1, 1, 0.5, 0.5,
-		0, 1, 1, 0, 2, 2
-	] );
+	a = new Complex128Array([
+		1,
+		1,
+		0,
+		1,
+		1,
+		0,
+		2,
+		0.5,
+		1,
+		1,
+		0.5,
+		0.5,
+		0,
+		1,
+		1,
+		0,
+		2,
+		2
+	]);
 	tau = new Complex128Array( 3 );
 	work = new Complex128Array( 200 );
 	info = zgeqlf( 3, 3, a, 1, 3, 0, tau, 1, 0, work, 1, 0, -1 );
@@ -187,10 +223,28 @@ test( 'zgeqlf: tall 5x2 matrix (unblocked path)', function t() {
 	var a;
 
 	tc = findCase( 'tall_5x2' );
-	a = new Complex128Array( [
-		1, 0.5, 2, 1, 3, 1.5, 4, 2, 5, 2.5,
-		0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5
-	] );
+	a = new Complex128Array([
+		1,
+		0.5,
+		2,
+		1,
+		3,
+		1.5,
+		4,
+		2,
+		5,
+		2.5,
+		0.5,
+		1,
+		1.5,
+		2,
+		2.5,
+		3,
+		3.5,
+		4,
+		4.5,
+		5
+	]);
 	tau = new Complex128Array( 2 );
 	work = new Complex128Array( 200 );
 	info = zgeqlf( 5, 2, a, 1, 5, 0, tau, 1, 0, work, 1, 0, -1 );
@@ -207,10 +261,28 @@ test( 'zgeqlf: wide 2x5 matrix (M < N)', function t() {
 	var a;
 
 	tc = findCase( 'wide_2x5' );
-	a = new Complex128Array( [
-		1, 1, 2, 0, 3, 2, 4, 1, 5, 3,
-		6, 0.5, 7, 1, 8, 2, 9, 0, 0, 1
-	] );
+	a = new Complex128Array([
+		1,
+		1,
+		2,
+		0,
+		3,
+		2,
+		4,
+		1,
+		5,
+		3,
+		6,
+		0.5,
+		7,
+		1,
+		8,
+		2,
+		9,
+		0,
+		0,
+		1
+	]);
 	tau = new Complex128Array( 2 );
 	work = new Complex128Array( 200 );
 	info = zgeqlf( 2, 5, a, 1, 2, 0, tau, 1, 0, work, 1, 0, -1 );
@@ -259,11 +331,32 @@ test( 'zgeqlf: null WORK triggers internal allocation', function t() {
 	var a;
 
 	tc = findCase( 'basic_4x3' );
-	a = new Complex128Array( [
-		1, 2, 3, 4, 5, 6, 7, 8,
-		9, 1, 2, 3, 4, 5, 6, 7,
-		8, 9, 1, 2, 3, 4, 5, 6
-	] );
+	a = new Complex128Array([
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6
+	]);
 	tau = new Complex128Array( 3 );
 	info = zgeqlf( 4, 3, a, 1, 4, 0, tau, 1, 0, null, 1, 0, -1 );
 	assertClose( info, tc.info, 1e-14, 'info' );
@@ -284,10 +377,25 @@ test( 'zgeqlf: works with offset', function t() {
 	pad = 2;
 	a = new Complex128Array( pad + 9 );
 	av = reinterpret( a, 0 );
-	av.set( [
-		1, 1, 0, 1, 1, 0,
-		2, 0.5, 1, 1, 0.5, 0.5,
-		0, 1, 1, 0, 2, 2
+	av.set([
+		1,
+		1,
+		0,
+		1,
+		1,
+		0,
+		2,
+		0.5,
+		1,
+		1,
+		0.5,
+		0.5,
+		0,
+		1,
+		1,
+		0,
+		2,
+		2
 	], pad * 2 );
 	tau = new Complex128Array( pad + 3 );
 	work = new Complex128Array( 200 );
@@ -300,13 +408,13 @@ test( 'zgeqlf: works with offset', function t() {
 test( 'zgeqlf: padded LDA with offset and strided TAU (base API cannot express)', function t() {
 	var SENTINEL_RE;
 	var SENTINEL_IM;
-	var strideA2;
 	var strideTAU;
-	var offsetA;
 	var offsetTAU;
-	var src;
+	var strideA2;
+	var offsetA;
 	var work;
 	var info;
+	var src;
 	var tau;
 	var tc;
 	var av;
@@ -330,13 +438,35 @@ test( 'zgeqlf: padded LDA with offset and strided TAU (base API cannot express)'
 
 	// Source data for the 4x3 matrix, column-major, interleaved re/im
 	src = [
-		1, 2, 3, 4, 5, 6, 7, 8,
-		9, 1, 2, 3, 4, 5, 6, 7,
-		8, 9, 1, 2, 3, 4, 5, 6
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6
 	];
 
 	a = new Complex128Array( offsetA + ( strideA2 * N ) + 4 );
 	av = reinterpret( a, 0 );
+
 	// Fill with sentinel values to detect out-of-bounds writes
 	for ( i = 0; i < av.length; i += 2 ) {
 		av[ i ] = SENTINEL_RE;

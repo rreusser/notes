@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params, no-var, no-unused-vars, stdlib/signature-conformance */
+/* eslint-disable max-len, max-params, no-var, no-unused-vars */
 
 'use strict';
 

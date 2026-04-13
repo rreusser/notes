@@ -1,20 +1,37 @@
-
-
 'use strict';
 
-var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
-var zgeqlf = require( '@stdlib/lapack/base/zgeqlf' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgeqlf = require( './../lib' );
 
-var opts = {
-	'dtype': 'float64'
-};
+// Define a 4-by-3 complex matrix in column-major layout (interleaved re/im):
+var A = new Complex128Array([
+	1.0,
+	0.5,
+	2.0,
+	1.0,
+	3.0,
+	1.5,
+	4.0,
+	2.0,
+	0.5,
+	1.0,
+	1.0,
+	0.5,
+	1.5,
+	1.0,
+	2.0,
+	1.5,
+	1.0,
+	0.0,
+	2.0,
+	0.5,
+	3.0,
+	1.0,
+	4.0,
+	1.5
+]);
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
 
-var M = 3;
-var N = 3;
-var A = discreteUniform( M * N, -10, 10, opts );
-var B = discreteUniform( M * N, -10, 10, opts );
-var C = discreteUniform( M * N, -10, 10, opts );
-
-// TODO: Adjust call to match the specific routine signature
-zgeqlf( 'row-major', M, N, 1.0, A, N, B, N, 0.0, C, N );
-console.log( C ); // eslint-disable-line no-console
+var info = zgeqlf( 'column-major', 4, 3, A, 4, TAU, 1, WORK, 1, -1 );
+console.log( info ); // eslint-disable-line no-console

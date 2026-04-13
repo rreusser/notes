@@ -1,0 +1,311 @@
+
+{{alias}}( order, prec_type, trans_type, N, A, LDA, AF, LDAF, IPIV, strideIPIV, offsetIPIV, colequ, c, strideC, B, LDB, Y, LDY, BERR_OUT, strideBERR_OUT, n_norms, ERRS_N, LDERRS_N, ERRS_C, LDERRS_C, RES, strideRES, AYB, strideAYB, y, strideY, Y_TAIL, strideY_TAIL, rcond, ithresh, rthresh, dz_ub, ignore_cwise )
+    Improves the computed solution using extra-precise iterative refinement for complex general matrices
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        prec_type: integer
+            prec_type.
+
+        trans_type: integer
+            trans_type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        AF: Float64Array
+            input matrix.
+
+        LDAF: integer
+            leading dimension of `AF`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: integer
+            starting index for `IPIV`.
+
+        colequ: boolean
+            colequ.
+
+        c: Float64Array
+            input array.
+
+        strideC: integer
+            stride length for `c`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        Y: Float64Array
+            input matrix.
+
+        LDY: integer
+            leading dimension of `Y`.
+
+        BERR_OUT: Float64Array
+            input array.
+
+        strideBERR_OUT: integer
+            stride length for `BERR_OUT`.
+
+        n_norms: integer
+            n_norms.
+
+        ERRS_N: Float64Array
+            input matrix.
+
+        LDERRS_N: integer
+            leading dimension of `ERRS_N`.
+
+        ERRS_C: Float64Array
+            input matrix.
+
+        LDERRS_C: integer
+            leading dimension of `ERRS_C`.
+
+        RES: Float64Array
+            input array.
+
+        strideRES: integer
+            stride length for `RES`.
+
+        AYB: Float64Array
+            input array.
+
+        strideAYB: integer
+            stride length for `AYB`.
+
+        y: Float64Array
+            input array.
+
+        strideY: integer
+            stride length for `y`.
+
+        Y_TAIL: Float64Array
+            output array.
+
+        strideY_TAIL: integer
+            stride length for `Y_TAIL`.
+
+        rcond: number
+            rcond.
+
+        ithresh: integer
+            ithresh.
+
+        rthresh: number
+            rthresh.
+
+        dz_ub: number
+            dz_ub.
+
+        ignore_cwise: boolean
+            ignore_cwise.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( prec_type, trans_type, N, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, colequ, c, strideC, offsetC, B, strideB1, strideB2, offsetB, Y, strideY1, strideY2, offsetY, BERR_OUT, strideBERR_OUT, offsetBERR_OUT, n_norms, ERRS_N, strideERRS_N1, strideERRS_N2, offsetERRS_N, ERRS_C, strideERRS_C1, strideERRS_C2, offsetERRS_C, RES, strideRES, offsetRES, AYB, strideAYB, offsetAYB, y, strideY, offsetY, Y_TAIL, strideY_TAIL, offsetY_TAIL, rcond, ithresh, rthresh, dz_ub, ignore_cwise )
+    Improves the computed solution using extra-precise iterative refinement for complex general matrices, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        prec_type: integer
+            prec_type.
+
+        trans_type: integer
+            trans_type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        AF: Float64Array
+            input matrix.
+
+        strideAF1: integer
+            stride of dimension 1 of `AF`.
+
+        strideAF2: integer
+            stride of dimension 2 of `AF`.
+
+        offsetAF: integer
+            starting index for `AF`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: integer
+            starting index for `IPIV`.
+
+        colequ: boolean
+            colequ.
+
+        c: Float64Array
+            input array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: integer
+            starting index for `C`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        Y: Float64Array
+            input matrix.
+
+        strideY1: integer
+            stride of dimension 1 of `Y`.
+
+        strideY2: integer
+            stride of dimension 2 of `Y`.
+
+        offsetY: integer
+            starting index for `Y`.
+
+        BERR_OUT: Float64Array
+            input array.
+
+        strideBERR_OUT: integer
+            stride length for `BERR_OUT`.
+
+        offsetBERR_OUT: integer
+            starting index for `BERR_OUT`.
+
+        n_norms: integer
+            n_norms.
+
+        ERRS_N: Float64Array
+            input matrix.
+
+        strideERRS_N1: integer
+            stride of dimension 1 of `ERRS_N`.
+
+        strideERRS_N2: integer
+            stride of dimension 2 of `ERRS_N`.
+
+        offsetERRS_N: integer
+            starting index for `ERRS_N`.
+
+        ERRS_C: Float64Array
+            input matrix.
+
+        strideERRS_C1: integer
+            stride of dimension 1 of `ERRS_C`.
+
+        strideERRS_C2: integer
+            stride of dimension 2 of `ERRS_C`.
+
+        offsetERRS_C: integer
+            starting index for `ERRS_C`.
+
+        RES: Float64Array
+            input array.
+
+        strideRES: integer
+            stride length for `RES`.
+
+        offsetRES: integer
+            starting index for `RES`.
+
+        AYB: Float64Array
+            input array.
+
+        strideAYB: integer
+            stride length for `AYB`.
+
+        offsetAYB: integer
+            starting index for `AYB`.
+
+        y: Float64Array
+            input array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: integer
+            starting index for `Y`.
+
+        Y_TAIL: Float64Array
+            output array.
+
+        strideY_TAIL: integer
+            stride length for `Y_TAIL`.
+
+        offsetY_TAIL: integer
+            starting index for `Y_TAIL`.
+
+        rcond: number
+            rcond.
+
+        ithresh: integer
+            ithresh.
+
+        rthresh: number
+            rthresh.
+
+        dz_ub: number
+            dz_ub.
+
+        ignore_cwise: boolean
+            ignore_cwise.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

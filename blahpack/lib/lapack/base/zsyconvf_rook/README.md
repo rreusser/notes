@@ -1,0 +1,150 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zsyconvf_rook
+
+> Converts the factorization output format used in zsytrf_rook for complex symmetric matrices
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zsyconvf_rook = require( '@stdlib/lapack/base/zsyconvf_rook' );
+```
+
+#### zsyconvf_rook( order, uplo, way, N, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV )
+
+Converts the factorization output format used in zsytrf_rook for complex symmetric matrices
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 3.0, 0.5, 2.0, 0.0 ] );
+var E = new Complex128Array( 2 );
+var IPIV = new Int32Array( [ -1, -1 ] );
+
+zsyconvf_rook( 'column-major', 'upper', 'convert', 2, A, 2, E, 1, IPIV, 1, 0 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: `'upper'` or `'lower'`.
+-   **way**: `'convert'` or `'revert'`.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **IPIV**: output array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+
+#### zsyconvf_rook.ndarray( uplo, way, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV )
+
+Converts the factorization output format used in zsytrf_rook for complex symmetric matrices, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 3.0, 0.5, 2.0, 0.0 ] );
+var E = new Complex128Array( 2 );
+var IPIV = new Int32Array( [ -1, -1 ] );
+
+zsyconvf_rook.ndarray( 'upper', 'convert', 2, A, 1, 2, 0, E, 1, 0, IPIV, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **way**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **offsetE**: starting index for `E`.
+-   **IPIV**: output array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   Converts between the `zsytrf_rook` and `zsytrf_rk` (or `zsytrf_bk`) factorization output formats for a complex symmetric matrix.
+-   `way = 'convert'` extracts the off-diagonal entries of 2x2 diagonal blocks of `D` into `E` and then applies the rook pivoting permutations to the triangular factor. `way = 'revert'` undoes both steps in reverse order.
+-   `IPIV` is used in-place and is NOT reformatted by this routine.
+-   `IPIV` is 0-based in the JavaScript API. Rook 2x2 pivots are encoded with both elements of the pair negative; decode the partner row via `~IPIV[i]`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsyconvf_rook = require( '@stdlib/lapack/base/zsyconvf_rook' );
+
+var A = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 3.0, 0.5, 2.0, 0.0 ] );
+var E = new Complex128Array( 2 );
+var IPIV = new Int32Array( [ -1, -1 ] );
+
+var info = zsyconvf_rook.ndarray( 'upper', 'convert', 2, A, 1, 2, 0, E, 1, 0, IPIV, 1, 0 );
+console.log( info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

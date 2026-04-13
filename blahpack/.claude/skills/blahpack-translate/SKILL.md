@@ -114,6 +114,18 @@ Track repeated manual steps; if any reaches count 2, automate first.
 
 ---
 
+## Do NOT Translate: Extended-Precision (XBLAS) Routines
+
+Routines whose names end in `_extended`, or that call XBLAS primitives
+(`BLAS_*_X`, `BLAS_*2_X`), are out of scope. If `python bin/deps.py <routine>`
+reports `blas_*_x [NOT FOUND]`, or the Fortran source declares any
+`BLAS_*_X` external, **stop immediately** and report the routine as blocked
+on XBLAS. Do not substitute plain-precision BLAS, add stubs, or fall back
+to invariant tests — a proper port requires XBLAS support and is a separate
+project.
+
+---
+
 ## Checklist: Translating a New Routine
 
 This is the end-to-end process for translating a Fortran routine to JavaScript.

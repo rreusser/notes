@@ -1,0 +1,137 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zgeqrfp
+
+> Compute a QR factorization of a complex matrix with non-negative diagonal elements (blocked algorithm).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zgeqrfp = require( '@stdlib/lapack/base/zgeqrfp' );
+```
+
+#### zgeqrfp( order, M, N, A, LDA, TAU, strideTAU, WORK, strideWORK )
+
+Computes a QR factorization of a complex M-by-N matrix `A = Q * R` such that the diagonal elements of `R` are real and non-negative, using a blocked algorithm.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+var TAU = new Complex128Array( 2 );
+var WORK = new Complex128Array( 8 );
+
+zgeqrfp( 'column-major', 2, 2, A, 2, TAU, 1, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **A**: input matrix (`Complex128Array`).
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: output array of scalar factors (`Complex128Array`).
+-   **strideTAU**: stride length for `TAU`.
+-   **WORK**: workspace array (`Complex128Array`, or `null` to auto-allocate).
+-   **strideWORK**: stride length for `WORK`.
+
+#### zgeqrfp.ndarray( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+
+Computes the QR factorization using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+var TAU = new Complex128Array( 2 );
+var WORK = new Complex128Array( 8 );
+
+zgeqrfp.ndarray( 2, 2, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A` (in complex elements).
+-   **strideA2**: stride of dimension 2 of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **offsetTAU**: starting index for `TAU` (in complex elements).
+-   **offsetWORK**: starting index for `WORK` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The matrix `A` is overwritten: the upper triangle contains `R` (with real, non-negative diagonal), and the elements below the diagonal, together with `TAU`, represent the unitary factor `Q` as a product of elementary reflectors.
+-   Passing `null` for `WORK` causes the routine to allocate a workspace internally.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var zgeqrfp = require( '@stdlib/lapack/base/zgeqrfp' );
+
+var opts = { 'dtype': 'complex128' };
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgeqrfp( 'column-major', N, N, A, N, TAU, 1, WORK, 1 );
+console.log( A );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

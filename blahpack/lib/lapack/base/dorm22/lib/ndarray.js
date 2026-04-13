@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -13,7 +12,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Multiplies a general matrix by a banded orthogonal matrix
+* Multiplies a general matrix by a banded orthogonal matrix.
 *
 * @param {string} side - specifies the operation type
 * @param {string} trans - specifies the operation type

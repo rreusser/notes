@@ -26,7 +26,7 @@ var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
 var pkg = require( './../package.json' ).name;
-var dla_wwaddw = require( './../lib/dla_wwaddw.js' );
+var dla_wwaddw = require( './../lib/dla_wwaddw.js' ); // eslint-disable-line camelcase
 
 
 // VARIABLES //
@@ -46,10 +46,9 @@ var options = {
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
-	var N = len;
-	var x = uniform( N, -10.0, 10.0, options );
-	var y = uniform( N, -10.0, 10.0, options );
-	var w = uniform( N, -10.0, 10.0, options );
+	var x = uniform( len, -10.0, 10.0, options );
+	var y = uniform( len, -10.0, 10.0, options );
+	var w = uniform( len, -10.0, 10.0, options );
 	return benchmark;
 
 	/**
@@ -59,18 +58,17 @@ function createBenchmark( len ) {
 	* @param {Benchmark} b - benchmark instance
 	*/
 	function benchmark( b ) {
-		var y;
 		var i;
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = dla_wwaddw( N, x, y, w );
-			if ( isnan( y ) ) {
+			dla_wwaddw( len, x, 1, y, 1, w, 1 );
+			if ( isnan( x[ 0 ] ) ) {
 				b.fail( 'should not return NaN' );
 			}
 		}
 		b.toc();
-		if ( isnan( y ) ) {
+		if ( isnan( x[ 0 ] ) ) {
 			b.fail( 'should not return NaN' );
 		}
 		b.pass( 'benchmark finished' );

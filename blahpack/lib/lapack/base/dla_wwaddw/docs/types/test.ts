@@ -23,21 +23,20 @@ import dla_wwaddw = require( './index' );
 
 // The function returns a Float64Array...
 {
-	dla_wwaddw( 10 ); // $ExpectType Float64Array
-}
-
-// The compiler throws an error if the function is provided a first argument which is not a number...
-{
-	dla_wwaddw( '10' ); // $ExpectError
-	dla_wwaddw( true ); // $ExpectError
-	dla_wwaddw( false ); // $ExpectError
-	dla_wwaddw( null ); // $ExpectError
-	dla_wwaddw( undefined ); // $ExpectError
-	dla_wwaddw( [] ); // $ExpectError
-	dla_wwaddw( {} ); // $ExpectError
+	dla_wwaddw( 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 2, new Float64Array( 4 ), 2 ); // $ExpectType Float64Array
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dla_wwaddw(); // $ExpectError
+}
+
+// The ndarray method returns a Float64Array...
+{
+	dla_wwaddw.ndarray( 2, new Float64Array( 4 ), 2, 2, new Float64Array( 4 ), 2, 2, new Float64Array( 4 ), 2, 2 ); // $ExpectType Float64Array
+}
+
+// The compiler throws an error if the ndarray method is provided an unsupported number of arguments...
+{
+	dla_wwaddw.ndarray(); // $ExpectError
 }

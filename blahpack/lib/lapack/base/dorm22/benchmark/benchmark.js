@@ -1,4 +1,20 @@
-
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
@@ -8,6 +24,7 @@ var bench = require( '@stdlib/bench' );
 var uniform = require( '@stdlib/random/array/uniform' );
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
+var floor = require( '@stdlib/math/base/special/floor' );
 var format = require( '@stdlib/string/format' );
 var pkg = require( './../package.json' ).name;
 var dorm22 = require( './../lib/dorm22.js' );
@@ -26,14 +43,15 @@ var options = {
 * Creates a benchmark function.
 *
 * @private
-* @param {PositiveInteger} len - array length
+* @param {PositiveInteger} N - matrix dimension (both M and N, square C)
 * @returns {Function} benchmark function
 */
-function createBenchmark( len ) {
-	var N = len;
-	var Q = uniform( N * N, -10.0, 10.0, options );
-	var C = uniform( N * N, -10.0, 10.0, options );
-	var WORK = uniform( N * N, -10.0, 10.0, options );
+function createBenchmark( N ) {
+	var WORK = uniform( N * N, 0.0, 1.0, options );
+	var n1 = floor( N / 2 );
+	var n2 = N - n1;
+	var Q = uniform( N * N, -1.0, 1.0, options );
+	var C = uniform( N * N, -1.0, 1.0, options );
 	return benchmark;
 
 	/**
@@ -48,7 +66,7 @@ function createBenchmark( len ) {
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = dorm22( 'row-major', 'left', 'no-transpose', N, N, N, N, Q, N, C, N, WORK, N, N );
+			y = dorm22( 'column-major', 'left', 'no-transpose', N, N, n1, n2, Q, N, C, N, WORK, 1, N * N );
 			if ( isnan( y ) ) {
 				b.fail( 'should not return NaN' );
 			}
@@ -77,13 +95,13 @@ function main() {
 	var f;
 	var i;
 
-	min = 1; // 10^min
-	max = 3; // 10^max
+	min = 2; // 2^min
+	max = 7; // 2^max (128x128)
 
 	for ( i = min; i <= max; i++ ) {
-		len = pow( 10, i );
+		len = pow( 2, i );
 		f = createBenchmark( len );
-		bench( format( '%s:len=%d', pkg, len ), f );
+		bench( format( '%s:size=%d', pkg, len ), f );
 	}
 }
 

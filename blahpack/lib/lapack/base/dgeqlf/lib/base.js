@@ -68,9 +68,9 @@ function dgeqlf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	var nu;
 	var ki;
 	var kk;
-	var T;
-	var K;
 	var i;
+	var K;
+	var T;
 
 	K = Math.min( M, N );
 

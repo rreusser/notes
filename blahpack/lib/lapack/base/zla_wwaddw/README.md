@@ -30,41 +30,50 @@ limitations under the License.
 var zla_wwaddw = require( '@stdlib/lapack/base/zla_wwaddw' );
 ```
 
-#### zla_wwaddw( N, x, y, w )
+#### zla_wwaddw( N, x, strideX, y, strideY, w, strideW )
 
-Adds a complex vector W into a doubled-single accumulation vector (X, Y).
+Adds a complex vector `W` into a doubled-single accumulation vector `(X, Y)`.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4 ] );
+var w = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0 ] );
+
+zla_wwaddw( 2, x, 1, y, 1, w, 1 );
+// x => <Complex128Array>[ 11.0, 22.0, 33.0, 44.0 ]
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **x**: `x`.
--   **y**: `y`.
--   **w**: `w`.
+-   **N**: number of elements.
+-   **x**: high-order part of the doubled-single accumulation vector ([`Complex128Array`][@stdlib/array/complex128]).
+-   **strideX**: stride length for `x`.
+-   **y**: low-order part of the doubled-single accumulation vector ([`Complex128Array`][@stdlib/array/complex128]).
+-   **strideY**: stride length for `y`.
+-   **w**: vector to be added ([`Complex128Array`][@stdlib/array/complex128]).
+-   **strideW**: stride length for `w`.
 
 #### zla_wwaddw.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW )
 
-Adds a complex vector W into a doubled-single accumulation vector (X, Y), using alternative indexing semantics.
+Adds a complex vector `W` into a doubled-single accumulation vector `(X, Y)`, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4 ] );
+var w = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0 ] );
+
+zla_wwaddw.ndarray( 2, x, 1, 0, y, 1, 0, w, 1, 0 );
 ```
 
 The function has the following additional parameters:
 
--   **strideX**: stride length for `X`.
--   **offsetX**: starting index for `X`.
--   **strideY**: stride length for `Y`.
--   **offsetY**: starting index for `Y`.
--   **strideW**: stride length for `W`.
--   **offsetW**: starting index for `W`.
+-   **offsetX**: starting index for `x`.
+-   **offsetY**: starting index for `y`.
+-   **offsetW**: starting index for `w`.
 
 </section>
 
@@ -87,10 +96,19 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zla_wwaddw = require( '@stdlib/lapack/base/zla_wwaddw' );
 
-// TODO: Add examples
+var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ] );
+var w = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0, 50.0, 60.0 ] );
+
+zla_wwaddw( 3, x, 1, y, 1, w, 1 );
+console.log( x );
+console.log( y );
 ```
+
+[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib
 
 </section>
 

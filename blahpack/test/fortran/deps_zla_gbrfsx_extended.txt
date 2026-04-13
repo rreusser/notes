@@ -1,0 +1,17 @@
+chla_transtype
+dlamch
+ieeeck
+ilaenv
+ilatrans
+iparmq
+zaxpy
+zgbmv
+zgbtf2
+zgbtrf
+zgbtrs
+zla_gbamv
+zla_gbrfsx_extended
+zla_lin_berr
+zla_wwaddw
+zlacgv
+zlaswp

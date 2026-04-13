@@ -1,0 +1,128 @@
+
+{{alias}}( order, side, trans, M, N, n1, n2, Q, LDQ, C, LDC, WORK, strideWORK, lwork )
+    Multiplies a general matrix by a unitary matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        n1: integer
+            n1.
+
+        n2: integer
+            n2.
+
+        Q: Float64Array
+            input matrix.
+
+        LDQ: integer
+            leading dimension of `Q`.
+
+        C: Float64Array
+            input matrix.
+
+        LDC: integer
+            leading dimension of `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, trans, M, N, n1, n2, Q, strideQ1, strideQ2, offsetQ, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork )
+    Multiplies a general matrix by a unitary matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        n1: integer
+            n1.
+
+        n2: integer
+            n2.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of dimension 1 of `Q`.
+
+        strideQ2: integer
+            stride of dimension 2 of `Q`.
+
+        offsetQ: integer
+            starting index for `Q`.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of dimension 1 of `C`.
+
+        strideC2: integer
+            stride of dimension 2 of `C`.
+
+        offsetC: integer
+            starting index for `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -10,7 +9,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes a QL factorization of a complex general matrix
+* Computes a QL factorization of a complex general matrix.
 *
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns

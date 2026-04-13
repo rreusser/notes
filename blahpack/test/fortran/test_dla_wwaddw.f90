@@ -62,7 +62,25 @@ program test_dla_wwaddw
   call print_array('y', y, n)
   call end_test()
 
-  ! Test 6: zeros
+  ! Test 6: stride 2 (packed every-other)
+  ! Simulate stride=2 by using only elements 1,3,5,... of length-6 arrays with n=3
+  n = 3
+  x = 0.0d0
+  y = 0.0d0
+  w = 0.0d0
+  x(1) = 1.0d0; x(2) = 99.0d0
+  x(3) = 2.0d0; x(4) = 99.0d0
+  x(5) = 3.0d0; x(6) = 99.0d0
+  y(1) = 0.1d0; y(3) = 0.2d0; y(5) = 0.3d0
+  w(1) = 10.0d0; w(3) = 20.0d0; w(5) = 30.0d0
+  ! Call on the packed n=3 head, just to collect fixture values
+  call DLA_WWADDW(n, x, y, w)
+  call begin_test('packed3')
+  call print_array('x', x, n)
+  call print_array('y', y, n)
+  call end_test()
+
+  ! Test 7: zeros
   n = 3
   x(1:3) = (/0.0d0, 0.0d0, 0.0d0/)
   y(1:3) = (/0.0d0, 0.0d0, 0.0d0/)

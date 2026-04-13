@@ -1,0 +1,104 @@
+
+{{alias}}( order, uplo, way, N, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV )
+    Converts the factorization output format used in zsytrf for complex symmetric matrices
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        uplo: string
+            specifies the operation type.
+
+        way: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        IPIV: Int32Array
+            output array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: integer
+            starting index for `IPIV`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, way, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV )
+    Converts the factorization output format used in zsytrf for complex symmetric matrices, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        uplo: string
+            specifies the operation type.
+
+        way: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: integer
+            starting index for `E`.
+
+        IPIV: Int32Array
+            output array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: integer
+            starting index for `IPIV`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,5 +1,4 @@
 
-
 /* eslint-disable max-len, max-params */
 
 'use strict';
@@ -17,7 +16,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Multiplies a general matrix by a banded orthogonal matrix
+* Multiplies a general matrix by a banded orthogonal matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
 * @param {string} side - specifies the operation type
@@ -36,6 +35,10 @@ var base = require( './base.js' );
 * @throws {TypeError} first argument must be a valid order
 * @throws {TypeError} Second argument must be a valid operation side
 * @throws {TypeError} Third argument must be a valid transpose operation
+* @throws {RangeError} fourth argument must be a nonnegative integer
+* @throws {RangeError} fifth argument must be a nonnegative integer
+* @throws {RangeError} ninth argument must be compatible with the matrix dimensions
+* @throws {RangeError} eleventh argument must be compatible with the matrix dimensions
 * @returns {integer} status code (0 = success)
 */
 function dorm22( order, side, trans, M, N, n1, n2, Q, LDQ, C, LDC, WORK, strideWORK, lwork ) { // eslint-disable-line max-len, max-params

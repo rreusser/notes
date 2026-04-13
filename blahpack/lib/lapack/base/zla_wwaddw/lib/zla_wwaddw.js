@@ -1,32 +1,44 @@
-
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
 var format = require( '@stdlib/string/format' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Adds a complex vector W into a doubled-single accumulation vector (X, Y).
+* Adds a complex vector in doubled-single precision representation.
 *
-* @param {NonNegativeInteger} N - length of vectors X, Y, and W
-* @param {Complex128Array} x - first part of the doubled-single accumulation vector
-* @param {Complex128Array} y - second part of the doubled-single accumulation vector
+* @param {NonNegativeInteger} N - number of elements
+* @param {Complex128Array} x - high-order part of the doubled-single accumulation vector
+* @param {integer} strideX - stride length for `x`
+* @param {Complex128Array} y - low-order part of the doubled-single accumulation vector
+* @param {integer} strideY - stride length for `y`
 * @param {Complex128Array} w - vector to be added
-* @returns {void}
+* @param {integer} strideW - stride length for `w`
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `x`
 */
-function zla_wwaddw( N, x, y, w ) { // eslint-disable-line camelcase
+function zlaWwaddw( N, x, strideX, y, strideY, w, strideW ) {
+	var ox;
+	var oy;
+	var ow;
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	base( N, x, 1, 0, y, 1, 0, w, 1, 0 );
+	ox = stride2offset( N, strideX );
+	oy = stride2offset( N, strideY );
+	ow = stride2offset( N, strideW );
+	base( N, x, strideX, ox, y, strideY, oy, w, strideW, ow );
+	return x;
 }
 
 
 // EXPORTS //
 
-module.exports = zla_wwaddw;
+module.exports = zlaWwaddw;

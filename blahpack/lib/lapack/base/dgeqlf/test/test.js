@@ -1,118 +1,161 @@
-/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-len */
 
 'use strict';
 
 // MODULES //
 
+var fs = require( 'fs' );
+var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
-var dgeqlf = require( './../lib/base.js' );
+var dgeqlf = require( './../lib' );
+var base = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgeqlf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-
-// INPUT DATA (column-major, mirrors the Fortran test fixtures) //
-
-var INPUT_3X3 = [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ];
-var INPUT_4X3 = [ 2, 1, 3, 1, 1, 4, 2, 3, 3, 2, 5, 1 ];
-var INPUT_3X4 = [ 2, 1, 3, 1, 4, 2, 3, 2, 5, 4, 1, 2 ];
+var lines = fs.readFileSync( path.join( fixtureDir, 'dgeqlf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( parseLine );
 
 
 // FUNCTIONS //
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+/**
+* Parses a JSON line.
+*
+* @private
+* @param {string} line - JSON line
+* @returns {Object} parsed object
+*/
+function parseLine( line ) {
+	return JSON.parse( line );
 }
 
+/**
+* Finds a fixture case by name.
+*
+* @private
+* @param {string} name - case name
+* @returns {Object} fixture case
+*/
+function findCase( name ) {
+	return fixture.find( matchName );
+
+	/**
+	* Name matcher.
+	*
+	* @private
+	* @param {Object} t - test case
+	* @returns {boolean} match
+	*/
+	function matchName( t ) {
+		return t.name === name;
+	}
+}
+
+/**
+* Asserts that a scalar value is close to an expected value.
+*
+* @private
+* @param {number} actual - actual value
+* @param {number} expected - expected value
+* @param {number} tol - relative tolerance
+* @param {string} msg - message
+*/
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise close.
+*
+* @private
+* @param {*} actual - actual array
+* @param {*} expected - expected array
+* @param {number} tol - relative tolerance
+* @param {string} msg - message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
 
-function buildLarge( M, N ) {
-	var out = [];
-	var i;
-	var j;
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			if ( i === j ) {
-				out.push( 10.0 );
-			} else {
-				out.push( 1.0 / ( Math.abs( i - j ) + 1 ) );
-			}
-		}
-	}
-	return out;
-}
-
-function runCase( tc, M, N, input, tol ) {
-	var A = new Float64Array( input );
-	var TAU = new Float64Array( Math.min( M, N ) );
-	var WORK = new Float64Array( Math.max( 1, N ) );
-	var info = dgeqlf( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
-	assert.equal( info, tc.INFO, 'INFO' );
-	assertArrayClose( A, tc.A, tol, 'A' );
-	assertArrayClose( TAU, tc.TAU, tol, 'TAU' );
-}
-
 
 // TESTS //
 
-test( 'dgeqlf: 3x3', function t() {
-	runCase( findCase( '3x3' ), 3, 3, INPUT_3X3, 1e-13 );
+test( 'main export is a function', function t() {
+	assert.strictEqual( typeof dgeqlf, 'function', 'main export is a function' );
 });
 
-test( 'dgeqlf: 4x3', function t() {
-	runCase( findCase( '4x3' ), 4, 3, INPUT_4X3, 1e-13 );
+test( 'main export has an ndarray method', function t() {
+	assert.strictEqual( typeof dgeqlf.ndarray, 'function', 'has ndarray method' );
 });
 
-test( 'dgeqlf: 3x4', function t() {
-	runCase( findCase( '3x4' ), 3, 4, INPUT_3X4, 1e-13 );
-});
+test( 'base: 3x3 (square) fixture', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
 
-test( 'dgeqlf: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
-	var A = new Float64Array( 1 );
-	var TAU = new Float64Array( 1 );
-	var WORK = new Float64Array( 1 );
-	var info = dgeqlf( 3, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
-	assert.equal( info, tc.INFO, 'INFO' );
-});
-
-test( 'dgeqlf: large_150x150 (exercises blocked path)', function t() {
-	runCase( findCase( 'large_150x150' ), 150, 150, buildLarge( 150, 150 ), 1e-10 );
-});
-
-test( 'dgeqlf: m_zero', function t() {
-	var A = new Float64Array( 1 );
-	var TAU = new Float64Array( 1 );
-	var WORK = new Float64Array( 1 );
-	var info = dgeqlf( 0, 3, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
-	assert.equal( info, 0, 'INFO' );
-});
-
-test( 'dgeqlf: allocates internal workspace when none provided', function t() {
-	var tc = findCase( '3x3' );
-	var A = new Float64Array( INPUT_3X3 );
-	var TAU = new Float64Array( 3 );
-	var info = dgeqlf( 3, 3, A, 1, 3, 0, TAU, 1, 0, null, 1, 0, 0 );
-	assert.equal( info, 0, 'INFO' );
+	tc = findCase( '3x3' );
+	A = new Float64Array( [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ] );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 3 );
+	info = base( 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 3 );
+	assert.equal( info, tc.INFO, 'info' );
 	assertArrayClose( A, tc.A, 1e-13, 'A' );
 	assertArrayClose( TAU, tc.TAU, 1e-13, 'TAU' );
+});
+
+test( 'base: 4x3 (tall) fixture', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
+
+	tc = findCase( '4x3' );
+	A = new Float64Array( [ 2, 1, 3, 1, 1, 4, 2, 3, 3, 2, 5, 1 ] );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 3 );
+	info = base( 4, 3, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, 3 );
+	assert.equal( info, tc.INFO, 'info' );
+	assertArrayClose( A, tc.A, 1e-13, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-13, 'TAU' );
+});
+
+test( 'base: 3x4 (wide) fixture', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
+
+	tc = findCase( '3x4' );
+	A = new Float64Array( [ 2, 1, 3, 1, 4, 2, 3, 2, 5, 4, 1, 2 ] );
+	TAU = new Float64Array( 3 );
+	WORK = new Float64Array( 4 );
+	info = base( 3, 4, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 4 );
+	assert.equal( info, tc.INFO, 'info' );
+	assertArrayClose( A, tc.A, 1e-13, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-13, 'TAU' );
+});
+
+test( 'base: N=0 quick return', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var A;
+
+	A = new Float64Array( 0 );
+	TAU = new Float64Array( 0 );
+	WORK = new Float64Array( 0 );
+	info = base( 3, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
 });

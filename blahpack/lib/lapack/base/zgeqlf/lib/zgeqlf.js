@@ -1,5 +1,4 @@
 
-
 /* eslint-disable max-len, max-params */
 
 'use strict';
@@ -15,7 +14,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes a QL factorization of a complex general matrix
+* Computes a QL factorization of a complex general matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
 * @param {NonNegativeInteger} M - number of rows
@@ -28,6 +27,9 @@ var base = require( './base.js' );
 * @param {integer} strideWORK - stride length for `WORK`
 * @param {integer} lwork - lwork
 * @throws {TypeError} first argument must be a valid order
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @throws {RangeError} fifth argument must be a valid leading dimension
 * @returns {integer} status code (0 = success)
 */
 function zgeqlf( order, M, N, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork ) { // eslint-disable-line max-len, max-params

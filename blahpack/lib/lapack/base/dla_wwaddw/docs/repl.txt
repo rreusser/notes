@@ -1,23 +1,33 @@
-{{alias}}( N, x, y, w )
-    Add a vector into a doubled-single accumulation vector.
+
+{{alias}}( N, x, strideX, y, strideY, w, strideW )
+    Adds a vector in doubled-single precision representation
 
     Parameters
     ----------
-    N: integer
-        number of columns.
+        N: integer
+            number of columns.
 
-    x: Float64Array
-        `x`.
+        x: Float64Array
+            input array.
 
-    y: Float64Array
-        `y`.
+        strideX: integer
+            stride length for `x`.
 
-    w: Float64Array
-        `w`.
+        y: Float64Array
+            input array.
+
+        strideY: integer
+            stride length for `y`.
+
+        w: Float64Array
+            output array.
+
+        strideW: integer
+            stride length for `w`.
 
     Returns
     -------
-    out: Float64Array
+    out: None
         Result.
 
     Examples
@@ -26,44 +36,43 @@
 
 
 {{alias}}.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, w, strideW, offsetW )
-    Add a vector into a doubled-single accumulation vector using alternative
-    indexing semantics.
+    Adds a vector in doubled-single precision representation, using alternative indexing semantics.
 
     Parameters
     ----------
-    N: integer
-        number of columns.
+        N: integer
+            number of columns.
 
-    x: Float64Array
-        `x`.
+        x: Float64Array
+            input array.
 
-    strideX: integer
-        stride length for `X`.
+        strideX: integer
+            stride length for `x`.
 
-    offsetX: integer
-        starting index for `X`.
+        offsetX: integer
+            starting index for `X`.
 
-    y: Float64Array
-        `y`.
+        y: Float64Array
+            input array.
 
-    strideY: integer
-        stride length for `Y`.
+        strideY: integer
+            stride length for `y`.
 
-    offsetY: integer
-        starting index for `Y`.
+        offsetY: integer
+            starting index for `Y`.
 
-    w: Float64Array
-        `w`.
+        w: Float64Array
+            output array.
 
-    strideW: integer
-        stride length for `W`.
+        strideW: integer
+            stride length for `w`.
 
-    offsetW: integer
-        starting index for `W`.
+        offsetW: integer
+            starting index for `W`.
 
     Returns
     -------
-    out: Float64Array
+    out: None
         Result.
 
     Examples

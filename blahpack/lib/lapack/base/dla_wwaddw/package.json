@@ -1,7 +1,7 @@
 {
   "name": "@stdlib/lapack/base/dla_wwaddw",
   "version": "0.0.0",
-  "description": "Add a vector into a doubled-single accumulation vector.",
+  "description": "Adds a vector in doubled-single precision representation",
   "license": "Apache-2.0",
   "author": {
     "name": "The Stdlib Authors",
@@ -21,7 +21,9 @@
     "test": "./test"
   },
   "types": "./docs/types",
-  "scripts": {},
+  "scripts": {
+    "test": "node --test test/test.js test/test.dla_wwaddw.js test/test.ndarray.js"
+  },
   "homepage": "https://github.com/stdlib-js/stdlib",
   "repository": {
     "type": "git",
@@ -53,6 +55,7 @@
     "mathematics",
     "math",
     "lapack",
+    "level 1",
     "dla_wwaddw",
     "linear",
     "algebra",

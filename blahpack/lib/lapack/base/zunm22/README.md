@@ -1,0 +1,159 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zunm22
+
+> Multiplies a general matrix by a unitary matrix
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zunm22 = require( '@stdlib/lapack/base/zunm22' );
+```
+
+#### zunm22( order, side, trans, M, N, n1, n2, Q, LDQ, C, LDC, WORK, strideWORK, lwork )
+
+Multiplies a general matrix by a unitary matrix
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var Q = new Complex128Array( 25 );
+var C = new Complex128Array( 20 );
+var WORK = new Complex128Array( 20 );
+
+zunm22( 'column-major', 'left', 'no-transpose', 5, 4, 3, 2, Q, 5, C, 5, WORK, 1, 20 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the operation type.
+-   **trans**: specifies the operation type.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **n1**: n1.
+-   **n2**: n2.
+-   **Q**: input matrix.
+-   **LDQ**: leading dimension of `Q`.
+-   **C**: input matrix.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **lwork**: lwork.
+
+#### zunm22.ndarray( side, trans, M, N, n1, n2, Q, strideQ1, strideQ2, offsetQ, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork )
+
+Multiplies a general matrix by a unitary matrix, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var Q = new Complex128Array( 25 );
+var C = new Complex128Array( 20 );
+var WORK = new Complex128Array( 20 );
+
+zunm22.ndarray( 'left', 'no-transpose', 5, 4, 3, 2, Q, 1, 5, 0, C, 1, 5, 0, WORK, 1, 0, 20 );
+```
+
+The function has the following additional parameters:
+
+-   **side**: specifies the operation type.
+-   **trans**: specifies the operation type.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **n1**: n1.
+-   **n2**: n2.
+-   **Q**: input matrix.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **C**: input matrix.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **lwork**: lwork.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The unitary matrix `Q` has block form `Q = [[Q11, Q12], [Q21, Q22]]` where `Q11` is `N1 x N2`, `Q12` is `N1 x N1` lower triangular, `Q21` is `N2 x N2` upper triangular, and `Q22` is `N2 x N1`. The routine computes one of `Q*C`, `Q**H*C`, `C*Q`, or `C*Q**H`, overwriting `C`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var uniform = require( '@stdlib/random/array/uniform' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zunm22 = require( '@stdlib/lapack/base/zunm22' );
+
+var M = 5;
+var N = 4;
+var n1 = 3;
+var n2 = 2;
+
+var opts = { 'dtype': 'float64' };
+var Q = new Complex128Array( uniform( 2 * M * M, -1.0, 1.0, opts ).buffer );
+var C = new Complex128Array( uniform( 2 * M * N, -1.0, 1.0, opts ).buffer );
+var WORK = new Complex128Array( M * N );
+
+var info = zunm22( 'column-major', 'left', 'no-transpose', M, N, n1, n2, Q, M, C, M, WORK, 1, M * N );
+console.log( info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

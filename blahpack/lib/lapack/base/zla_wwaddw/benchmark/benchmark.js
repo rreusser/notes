@@ -25,13 +25,14 @@ var uniform = require( '@stdlib/random/array/uniform' );
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var pkg = require( './../package.json' ).name;
-var zla_wwaddw = require( './../lib/zla_wwaddw.js' );
+var zlaWwaddw = require( './../lib/zla_wwaddw.js' );
 
 
 // VARIABLES //
 
-var options = {
+var OPTS = {
 	'dtype': 'complex128'
 };
 
@@ -46,10 +47,9 @@ var options = {
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
-	var N = len;
-	var x = uniform( N, -10.0, 10.0, options );
-	var y = uniform( N, -10.0, 10.0, options );
-	var w = uniform( N, -10.0, 10.0, options );
+	var x = uniform( len, -10.0, 10.0, OPTS );
+	var y = uniform( len, -10.0, 10.0, OPTS );
+	var w = uniform( len, -10.0, 10.0, OPTS );
 	return benchmark;
 
 	/**
@@ -59,18 +59,16 @@ function createBenchmark( len ) {
 	* @param {Benchmark} b - benchmark instance
 	*/
 	function benchmark( b ) {
-		var y;
+		var xv;
 		var i;
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = zla_wwaddw( N, x, y, w );
-			if ( isnan( y ) ) {
-				b.fail( 'should not return NaN' );
-			}
+			zlaWwaddw( len, x, 1, y, 1, w, 1 );
 		}
 		b.toc();
-		if ( isnan( y ) ) {
+		xv = reinterpret( x, 0 );
+		if ( isnan( xv[ 0 ] ) ) {
 			b.fail( 'should not return NaN' );
 		}
 		b.pass( 'benchmark finished' );
@@ -94,7 +92,7 @@ function main() {
 	var i;
 
 	min = 1; // 10^min
-	max = 6; // 10^max
+	max = 4; // 10^max
 
 	for ( i = min; i <= max; i++ ) {
 		len = pow( 10, i );
