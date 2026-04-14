@@ -1,0 +1,42 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+var Float64Array = require( '@stdlib/array/float64' );
+var dlarzb = require( './../lib' );
+
+// Apply a single rowwise reflector from the left to a 2-by-3 matrix C.
+
+//   V is K-by-L = 1-by-2:   [ 0.3, -0.4 ]
+
+//   T is K-by-K = 1-by-1:   [ 0.8 ]
+
+//   C is M-by-N = 2-by-3 (column-major, LDC=2):
+
+//     [ 1.0  3.0  5.0 ]
+
+//     [ 2.0  4.0  6.0 ]
+
+var V = new Float64Array( [ 0.3, -0.4 ] );
+var T = new Float64Array( [ 0.8 ] );
+var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlarzb( 'column-major', 'left', 'no-transpose', 'backward', 'rowwise', 2, 3, 1, 2, V, 1, T, 1, C, 2, WORK, 3 );
+console.log( C ); // eslint-disable-line no-console

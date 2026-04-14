@@ -1,0 +1,155 @@
+
+{{alias}}( order, side, trans, direct, storev, M, N, K, l, V, LDV, T, LDT, C, LDC, WORK, LDWORK )
+    Applies a complex block reflector from RZ factorization to a general matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        direct: string
+            specifies the operation type.
+
+        storev: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        K: integer
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        V: Float64Array
+            input matrix.
+
+        LDV: integer
+            leading dimension of `V`.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        C: Float64Array
+            input matrix.
+
+        LDC: integer
+            leading dimension of `C`.
+
+        WORK: Float64Array
+            output matrix.
+
+        LDWORK: integer
+            leading dimension of `WORK`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, trans, direct, storev, M, N, K, l, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK )
+    Applies a complex block reflector from RZ factorization to a general matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        direct: string
+            specifies the operation type.
+
+        storev: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        K: integer
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of dimension 1 of `V`.
+
+        strideV2: integer
+            stride of dimension 2 of `V`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of dimension 1 of `C`.
+
+        strideC2: integer
+            stride of dimension 2 of `C`.
+
+        offsetC: integer
+            starting index for `C`.
+
+        WORK: Float64Array
+            output matrix.
+
+        strideWORK1: integer
+            stride of dimension 1 of `WORK`.
+
+        strideWORK2: integer
+            stride of dimension 2 of `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,6 +1,6 @@
 
 {{alias}}( order, side, M, N, l, v, strideV, tau, C, LDC, WORK, strideWORK )
-    Applies an elementary reflector defined by RZ factorization
+    Applies an elementary reflector from RZ factorization to a general matrix
 
     Parameters
     ----------
@@ -51,7 +51,7 @@
 
 
 {{alias}}.ndarray( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-    Applies an elementary reflector defined by RZ factorization, using alternative indexing semantics.
+    Applies an elementary reflector from RZ factorization to a general matrix, using alternative indexing semantics.
 
     Parameters
     ----------

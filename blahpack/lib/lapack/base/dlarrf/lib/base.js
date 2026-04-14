@@ -24,12 +24,15 @@
 
 // MODULES //
 
+var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );
 
 
 // VARIABLES //
 
+var EPS = dlamch( 'precision' );
+var SAFMIN = dlamch( 'safe minimum' );
 var ONE = 1.0;
 var TWO = 2.0;
 var FOUR = 4.0;
@@ -76,6 +79,7 @@ var SRIGHT = 2;
 * @param {number} clgapl - left gap of the cluster
 * @param {number} clgapr - right gap of the cluster
 * @param {number} pivmin - minimum pivot allowed in the Sturm sequence
+* @param {Float64Array} sigma - output (length 1): `sigma[0]` receives the chosen shift
 * @param {Float64Array} dplus - output: diagonal of the new RRR L+ D+ L+^T
 * @param {integer} strideDPLUS - stride length for `dplus`
 * @param {NonNegativeInteger} offsetDPLUS - starting index for `dplus`
@@ -85,9 +89,9 @@ var SRIGHT = 2;
 * @param {Float64Array} work - workspace of length 2*N
 * @param {integer} strideWORK - stride length for `work`
 * @param {NonNegativeInteger} offsetWORK - starting index for `work`
-* @returns {Object} object containing `info` (status code) and `sigma` (chosen shift)
+* @returns {integer} info - status code (0 = success, 1 = no acceptable shift found)
 */
-function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, wgap, strideWGAP, offsetWGAP, werr, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, dplus, strideDPLUS, offsetDPLUS, lplus, strideLPLUS, offsetLPLUS, work, strideWORK, offsetWORK ) {
+function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, wgap, strideWGAP, offsetWGAP, werr, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, sigma, dplus, strideDPLUS, offsetDPLUS, lplus, strideLPLUS, offsetLPLUS, work, strideWORK, offsetWORK ) {
 	var growthBound;
 	var bestShift;
 	var smlGrowth;
@@ -105,7 +109,6 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 	var rsigma;
 	var ldmax;
 	var rdmax;
-	var sigma;
 	var avgap;
 	var shift;
 	var fail2;
@@ -123,21 +126,20 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 	var info;
 	var eps;
 	var tmp;
+	var sig;
 	var s;
 	var i;
 
 	info = 0;
-	sigma = 0.0;
+	sig = 0.0;
+	sigma[ 0 ] = 0.0;
 
 	if ( N <= 0 ) {
-		return {
-			'info': info,
-			'sigma': sigma
-		};
+		return info;
 	}
 
 	fact = ( 1 << KTRYMAX );
-	eps = dlamch( 'precision' );
+	eps = EPS;
 	shift = 0;
 	forcer = false;
 	nofail = false;
@@ -158,7 +160,7 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 	ldelta = Math.max( avgap, wgap[ offsetWGAP + ( ( clstrt - 1 ) * strideWGAP ) ] ) / fact;
 	rdelta = Math.max( avgap, wgap[ offsetWGAP + ( ( clend - 2 ) * strideWGAP ) ] ) / fact;
 
-	s = dlamch( 'safe minimum' );
+	s = SAFMIN;
 	smlGrowth = ONE / s;
 	fail = ( N - 1 ) * mingap / ( spdiam * eps );
 	fail2 = ( N - 1 ) * mingap / ( spdiam * Math.sqrt( eps ) );
@@ -197,10 +199,9 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 				max1 = tmp;
 			}
 		}
-		sawnan1 = sawnan1 || ( max1 !== max1 ); // eslint-disable-line no-self-compare
-
+		sawnan1 = sawnan1 || isnan( max1 );
 		if ( forcer || ( max1 <= growthBound && !sawnan1 ) ) {
-			sigma = lsigma;
+			sig = lsigma;
 			shift = SLEFT;
 			break;
 		}
@@ -226,10 +227,9 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 				max2 = tmp;
 			}
 		}
-		sawnan2 = sawnan2 || ( max2 !== max2 ); // eslint-disable-line no-self-compare
-
+		sawnan2 = sawnan2 || isnan( max2 );
 		if ( forcer || ( max2 <= growthBound && !sawnan2 ) ) {
-			sigma = rsigma;
+			sig = rsigma;
 			shift = SRIGHT;
 			break;
 		}
@@ -272,7 +272,7 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 				}
 				rrr1 = tmp / ( spdiam * Math.sqrt( znm2 ) );
 				if ( rrr1 <= MAXGROWTH2 ) {
-					sigma = lsigma;
+					sig = lsigma;
 					shift = SLEFT;
 					break;
 				}
@@ -293,7 +293,7 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 				}
 				rrr2 = tmp / ( spdiam * Math.sqrt( znm2 ) );
 				if ( rrr2 <= MAXGROWTH2 ) {
-					sigma = rsigma;
+					sig = rsigma;
 					shift = SRIGHT;
 					break;
 				}
@@ -316,10 +316,8 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 			continue;
 		}
 		info = 1;
-		return {
-			'info': info,
-			'sigma': sigma
-		};
+		sigma[ 0 ] = sig;
+		return info;
 	}
 
 	// Label 100: a shift was accepted; if right shift, copy WORK -> DPLUS, LPLUS
@@ -328,10 +326,8 @@ function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offs
 		dcopy( N - 1, work, strideWORK, offsetWORK + ( N * strideWORK ), lplus, strideLPLUS, offsetLPLUS );
 	}
 
-	return {
-		'info': info,
-		'sigma': sigma
-	};
+	sigma[ 0 ] = sig;
+	return info;
 }
 
 

@@ -1,7 +1,7 @@
 {
   "name": "@stdlib/lapack/base/dlarz",
   "version": "0.0.0",
-  "description": "Applies an elementary reflector defined by RZ factorization",
+  "description": "Applies an elementary reflector from RZ factorization to a general matrix",
   "license": "Apache-2.0",
   "author": {
     "name": "The Stdlib Authors",

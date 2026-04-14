@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlarz
 
-> Applies an elementary reflector defined by RZ factorization
+> Applies an elementary reflector from RZ factorization to a general matrix
 
 <section class="usage">
 
@@ -32,12 +32,16 @@ var dlarz = require( '@stdlib/lapack/base/dlarz' );
 
 #### dlarz( order, side, M, N, l, v, strideV, tau, C, LDC, WORK, strideWORK )
 
-Applies an elementary reflector defined by RZ factorization
+Applies an elementary reflector from RZ factorization to a general matrix
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var v = new Float64Array( [ 0.5, 0.25 ] );
+var C = new Float64Array( [ 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16 ] );
+var WORK = new Float64Array( 4 );
+
+dlarz( 'column-major', 'left', 4, 4, 2, v, 1, 1.5, C, 4, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -57,12 +61,16 @@ The function has the following parameters:
 
 #### dlarz.ndarray( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 
-Applies an elementary reflector defined by RZ factorization, using alternative indexing semantics.
+Applies an elementary reflector from RZ factorization to a general matrix, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var v = new Float64Array( [ 0.5, 0.25 ] );
+var C = new Float64Array( [ 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16 ] );
+var WORK = new Float64Array( 4 );
+
+dlarz.ndarray( 'left', 4, 4, 2, v, 1, 0, 1.5, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +99,8 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `dlarz` applies the elementary reflector `H = I - tau * v * v**T` produced by an RZ factorization (see `dtzrzf`), where `v` has the implicit structure `v = [ 1; 0; ...; 0; z ]` with only the trailing `l`-vector `z` stored explicitly. When `l = 0`, `H` reduces to a rank-one update on the first row (for `side='left'`) or first column (for `side='right'`) of `C`.
+-   The reflector is applied in-place: `C := H * C` when `side='left'`, or `C := C * H` when `side='right'`. When `tau` is zero, `H` is the identity and `C` is left unchanged.
 
 </section>
 
@@ -102,7 +111,23 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dlarz = require( '@stdlib/lapack/base/dlarz' );
+
+var opts = {
+    'dtype': 'float64'
+};
+
+var M = 4;
+var N = 4;
+var L = 2;
+var v = discreteUniform( L, -5, 5, opts );
+var C = discreteUniform( M*N, -10, 10, opts );
+var WORK = new Float64Array( N );
+
+dlarz( 'column-major', 'left', M, N, L, v, 1, 0.5, C, M, WORK, 1 );
+console.log( C );
 ```
 
 </section>

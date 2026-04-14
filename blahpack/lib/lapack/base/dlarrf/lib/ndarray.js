@@ -57,6 +57,7 @@ var base = require( './base.js' );
 * @param {number} clgapl - left gap of the cluster
 * @param {number} clgapr - right gap of the cluster
 * @param {number} pivmin - minimum pivot allowed in the Sturm sequence
+* @param {Float64Array} sigma - output (length 1): `sigma[0]` receives the chosen shift
 * @param {Float64Array} dplus - output: diagonal of the new RRR
 * @param {integer} strideDPLUS - stride length for `dplus`
 * @param {NonNegativeInteger} offsetDPLUS - starting index for `dplus`
@@ -66,10 +67,10 @@ var base = require( './base.js' );
 * @param {Float64Array} work - workspace of length 2*N
 * @param {integer} strideWORK - stride length for `work`
 * @param {NonNegativeInteger} offsetWORK - starting index for `work`
-* @returns {Object} object containing `info` (status code) and `sigma` (chosen shift)
+* @returns {integer} info - status code (0 = success, 1 = no acceptable shift found)
 */
-function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, wgap, strideWGAP, offsetWGAP, werr, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, dplus, strideDPLUS, offsetDPLUS, lplus, strideLPLUS, offsetLPLUS, work, strideWORK, offsetWORK ) {
-	return base( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, wgap, strideWGAP, offsetWGAP, werr, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, dplus, strideDPLUS, offsetDPLUS, lplus, strideLPLUS, offsetLPLUS, work, strideWORK, offsetWORK );
+function dlarrf( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, wgap, strideWGAP, offsetWGAP, werr, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, sigma, dplus, strideDPLUS, offsetDPLUS, lplus, strideLPLUS, offsetLPLUS, work, strideWORK, offsetWORK ) {
+	return base( N, d, strideD, offsetD, l, strideL, offsetL, ld, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, wgap, strideWGAP, offsetWGAP, werr, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, sigma, dplus, strideDPLUS, offsetDPLUS, lplus, strideLPLUS, offsetLPLUS, work, strideWORK, offsetWORK );
 }
 
 

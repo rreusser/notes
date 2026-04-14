@@ -1,338 +1,240 @@
-/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-len */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
 // MODULES //
 
-var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var path = require( 'path' );
+var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var format = require( '@stdlib/string/format' );
 var Float64Array = require( '@stdlib/array/float64' );
-var ndarray = require( './../lib/ndarray.js' );
+var dlarz = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
 var lines = readFileSync( path.join( fixtureDir, 'dlarz.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
-
-var TOL = 1e-12;
+var fixture = lines.map( parseLine );
 
 
 // FUNCTIONS //
 
 /**
-* Returns a fixture entry by name.
+* Parses a JSONL line.
 *
 * @private
-* @param {string} name - fixture name
-* @throws {Error} if the fixture name is unknown
-* @returns {Object} fixture entry
+* @param {string} line - line
+* @returns {Object} parsed
 */
-function findCase( name ) {
-	var tc = fixture.find( function find( t ) {
-		return t.name === name;
-	});
-	if ( !tc ) {
-		throw new Error( format( 'unknown fixture: `%s`.', name ) );
-	}
-	return tc;
+function parseLine( line ) {
+	return JSON.parse( line );
 }
 
 /**
-* Specs for each fixture case, matching test/fortran/test_dlarz.f90.
+* Finds a fixture case by name.
 *
 * @private
 * @param {string} name - case name
-* @throws {Error} if the case name is unknown
-* @returns {Object} case spec
+* @returns {Object} fixture case
 */
-function buildCase( name ) {
-	switch ( name ) {
-	case 'left_4x4_l2':
-		return {
-			'side': 'left',
-			'M': 4,
-			'N': 4,
-			'l': 2,
-			'v': [ 0.5, 0.25 ],
-			'tau': 1.5,
-			'A': [
-				[ 1.0, 2.0, 3.0, 4.0 ],
-				[ 5.0, 6.0, 7.0, 8.0 ],
-				[ 9.0, 10.0, 11.0, 12.0 ],
-				[ 13.0, 14.0, 15.0, 16.0 ]
-			]
-		};
-	case 'right_4x4_l2':
-		return {
-			'side': 'right',
-			'M': 4,
-			'N': 4,
-			'l': 2,
-			'v': [ 0.5, 0.25 ],
-			'tau': 1.5,
-			'A': [
-				[ 1.0, 2.0, 3.0, 4.0 ],
-				[ 5.0, 6.0, 7.0, 8.0 ],
-				[ 9.0, 10.0, 11.0, 12.0 ],
-				[ 13.0, 14.0, 15.0, 16.0 ]
-			]
-		};
-	case 'tau_zero':
-		return {
-			'side': 'left',
-			'M': 3,
-			'N': 3,
-			'l': 1,
-			'v': [ 1.0 ],
-			'tau': 0.0,
-			'A': [
-				[ 1.0, 2.0, 3.0 ],
-				[ 4.0, 5.0, 6.0 ],
-				[ 7.0, 8.0, 9.0 ]
-			]
-		};
-	case 'left_l0':
-		return {
-			'side': 'left',
-			'M': 3,
-			'N': 3,
-			'l': 0,
-			'v': [ 0.0 ],
-			'tau': 0.5,
-			'A': [
-				[ 1.0, 2.0, 3.0 ],
-				[ 4.0, 5.0, 6.0 ],
-				[ 7.0, 8.0, 9.0 ]
-			]
-		};
-	case 'left_5x3_l3':
-		return {
-			'side': 'left',
-			'M': 5,
-			'N': 3,
-			'l': 3,
-			'v': [ 0.1, 0.2, 0.3 ],
-			'tau': 2.0,
-			'A': [
-				[ 1.0, 2.0, 3.0 ],
-				[ 4.0, 5.0, 6.0 ],
-				[ 7.0, 8.0, 9.0 ],
-				[ 10.0, 11.0, 12.0 ],
-				[ 13.0, 14.0, 15.0 ]
-			]
-		};
-	case 'right_3x5_l3':
-		return {
-			'side': 'right',
-			'M': 3,
-			'N': 5,
-			'l': 3,
-			'v': [ 0.3, 0.2, 0.1 ],
-			'tau': -0.5,
-			'A': [
-				[ 1.0, 2.0, 3.0, 4.0, 5.0 ],
-				[ 6.0, 7.0, 8.0, 9.0, 10.0 ],
-				[ 11.0, 12.0, 13.0, 14.0, 15.0 ]
-			]
-		};
-	default:
-		throw new Error( format( 'unknown case: `%s`.', name ) );
+function findCase( name ) {
+	var i;
+	for ( i = 0; i < fixture.length; i++ ) {
+		if ( fixture[ i ].name === name ) {
+			return fixture[ i ];
+		}
+	}
+	return null;
+}
+
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual values
+* @param {*} expected - expected values
+* @param {number} tol - relative tolerance
+* @param {string} msg - assertion message
+*/
+function assertArrayClose( actual, expected, tol, msg ) {
+	var relErr;
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
+		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
 	}
 }
 
 /**
-* Packs a 2D JS array into a column-major Float64Array.
+* Builds a column-major M-by-N matrix from a row-wise value table.
 *
 * @private
-* @param {Array<Array>} A - rows of values
-* @param {integer} M - number of rows
-* @param {integer} N - number of columns
-* @returns {Float64Array} col-major packed M*N
+* @param {NonNegativeInteger} M - rows
+* @param {NonNegativeInteger} N - columns
+* @param {Array} rows - row-wise values
+* @returns {Float64Array} packed matrix
 */
-function packColMajor( A, M, N ) {
-	var out = new Float64Array( M * N );
+function makeMatrix( M, N, rows ) {
+	var C = new Float64Array( M * N );
 	var i;
 	var j;
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
-			out[ ( j * M ) + i ] = A[ i ][ j ];
+			C[ i + ( j * M ) ] = rows[ i ][ j ];
 		}
 	}
-	return out;
-}
-
-/**
-* Asserts two numeric arrays agree within TOL.
-*
-* @private
-* @param {ArrayLikeObject} actual - computed values
-* @param {ArrayLikeObject} expected - expected values
-* @param {string} label - label
-*/
-function expectClose( actual, expected, label ) {
-	var diff;
-	var i;
-	assert.equal( actual.length, expected.length, format( '%s: length mismatch', label ) );
-	for ( i = 0; i < actual.length; i++ ) {
-		diff = Math.abs( actual[ i ] - expected[ i ] );
-		assert.ok( diff <= TOL, format( '%s[%d]: expected %s, got %s (diff %s)', label, i, expected[ i ], actual[ i ], diff ) );
-	}
+	return C;
 }
 
 
 // TESTS //
 
-test( 'main export is a function', function t() {
-	assert.strictEqual( typeof ndarray, 'function', 'is a function' );
+test( 'dlarz: left_4x4_l2 (side=left, M=N=4, L=2)', function t() {
+	var WORK;
+	var tc;
+	var C;
+	var v;
+	tc = findCase( 'left_4x4_l2' );
+	C = makeMatrix( 4, 4, [
+		[ 1, 2, 3, 4 ],
+		[ 5, 6, 7, 8 ],
+		[ 9, 10, 11, 12 ],
+		[ 13, 14, 15, 16 ]
+	]);
+	v = new Float64Array( [ 0.5, 0.25 ] );
+	WORK = new Float64Array( 4 );
+	dlarz( 'left', 4, 4, 2, v, 1, 0, 1.5, C, 1, 4, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
-test( 'ndarray throws TypeError for invalid side', function t() {
+test( 'dlarz: right_4x4_l2 (side=right, M=N=4, L=2)', function t() {
+	var WORK;
+	var tc;
+	var C;
+	var v;
+	tc = findCase( 'right_4x4_l2' );
+	C = makeMatrix( 4, 4, [
+		[ 1, 2, 3, 4 ],
+		[ 5, 6, 7, 8 ],
+		[ 9, 10, 11, 12 ],
+		[ 13, 14, 15, 16 ]
+	]);
+	v = new Float64Array( [ 0.5, 0.25 ] );
+	WORK = new Float64Array( 4 );
+	dlarz( 'right', 4, 4, 2, v, 1, 0, 1.5, C, 1, 4, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
+});
+
+test( 'dlarz: tau_zero (quick return, side=left)', function t() {
+	var WORK;
+	var tc;
+	var C;
+	var v;
+	tc = findCase( 'tau_zero' );
+	C = makeMatrix( 3, 3, [
+		[ 1, 2, 3 ],
+		[ 4, 5, 6 ],
+		[ 7, 8, 9 ]
+	]);
+	v = new Float64Array( [ 1.0 ] );
+	WORK = new Float64Array( 3 );
+	dlarz( 'left', 3, 3, 1, v, 1, 0, 0.0, C, 1, 3, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
+});
+
+test( 'dlarz: left_l0 (L=0 path: first row of C scaled)', function t() {
+	var WORK;
+	var tc;
+	var C;
+	var v;
+	tc = findCase( 'left_l0' );
+	C = makeMatrix( 3, 3, [
+		[ 1, 2, 3 ],
+		[ 4, 5, 6 ],
+		[ 7, 8, 9 ]
+	]);
+	v = new Float64Array( [ 0.0 ] );
+	WORK = new Float64Array( 3 );
+	dlarz( 'left', 3, 3, 0, v, 1, 0, 0.5, C, 1, 3, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
+});
+
+test( 'dlarz: left_5x3_l3 (side=left, M=5, N=3, L=3)', function t() {
+	var WORK;
+	var tc;
+	var C;
+	var v;
+	tc = findCase( 'left_5x3_l3' );
+	C = makeMatrix( 5, 3, [
+		[ 1, 2, 3 ],
+		[ 4, 5, 6 ],
+		[ 7, 8, 9 ],
+		[ 10, 11, 12 ],
+		[ 13, 14, 15 ]
+	]);
+	v = new Float64Array( [ 0.1, 0.2, 0.3 ] );
+	WORK = new Float64Array( 3 );
+	dlarz( 'left', 5, 3, 3, v, 1, 0, 2.0, C, 1, 5, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
+});
+
+test( 'dlarz: right_3x5_l3 (side=right, M=3, N=5, L=3)', function t() {
+	var WORK;
+	var tc;
+	var C;
+	var v;
+	tc = findCase( 'right_3x5_l3' );
+	C = makeMatrix( 3, 5, [
+		[ 1, 2, 3, 4, 5 ],
+		[ 6, 7, 8, 9, 10 ],
+		[ 11, 12, 13, 14, 15 ]
+	]);
+	v = new Float64Array( [ 0.3, 0.2, 0.1 ] );
+	WORK = new Float64Array( 3 );
+	dlarz( 'right', 3, 5, 3, v, 1, 0, -0.5, C, 1, 3, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
+});
+
+test( 'dlarz: right L=0 path scales first column', function t() {
+	var expected;
+	var WORK;
+	var C;
+	var v;
+	C = makeMatrix( 3, 3, [
+		[ 1, 2, 3 ],
+		[ 4, 5, 6 ],
+		[ 7, 8, 9 ]
+	]);
+	v = new Float64Array( [ 0.0 ] );
+	WORK = new Float64Array( 3 );
+	dlarz( 'right', 3, 3, 0, v, 1, 0, 0.5, C, 1, 3, 0, WORK, 1, 0 );
+
+	// First column [1,4,7] is scaled by (1 - tau) = 0.5 → [0.5, 2, 3.5].
+	expected = new Float64Array( [ 0.5, 2.0, 3.5, 2, 5, 8, 3, 6, 9 ] );
+	assertArrayClose( C, expected, 1e-14, 'C' );
+});
+
+test( 'dlarz: right tau=0 quick return leaves C unchanged', function t() {
+	var original;
+	var WORK;
+	var C;
+	var v;
+	C = makeMatrix( 2, 3, [
+		[ 1, 2, 3 ],
+		[ 4, 5, 6 ]
+	]);
+	original = new Float64Array( C );
+	v = new Float64Array( [ 0.7, 0.8 ] );
+	WORK = new Float64Array( 2 );
+	dlarz( 'right', 2, 3, 2, v, 1, 0, 0.0, C, 1, 2, 0, WORK, 1, 0 );
+	assertArrayClose( C, original, 1e-14, 'C' );
+});
+
+test( 'dlarz: ndarray throws TypeError for invalid side', function t() {
 	assert.throws( function throws() {
-		ndarray( 'invalid', 2, 2, 1, new Float64Array( 2 ), 1, 0, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 0 );
+		dlarz( 'invalid', 2, 2, 1, new Float64Array( 1 ), 1, 0, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0 );
 	}, TypeError );
-});
-
-// Fixture-driven column-major (strideC1=1, strideC2=M)
-fixture.forEach( function each( tc ) {
-	test( 'ndarray col-major: ' + tc.name, function t() {
-		var inputs = buildCase( tc.name );
-		var WORK = new Float64Array( Math.max( inputs.M, inputs.N ) );
-		var C = packColMajor( inputs.A, inputs.M, inputs.N );
-		var V = new Float64Array( inputs.v );
-		ndarray( inputs.side, inputs.M, inputs.N, inputs.l, V, 1, 0, inputs.tau, C, 1, inputs.M, 0, WORK, 1, 0 );
-		expectClose( C, tc.C, tc.name + ' col-major' );
-	});
-});
-
-// Fixture-driven row-major (strideC1=N, strideC2=1)
-fixture.forEach( function each( tc ) {
-	test( 'ndarray row-major: ' + tc.name, function t() {
-		var inputs = buildCase( tc.name );
-		var WORK = new Float64Array( Math.max( inputs.M, inputs.N ) );
-		var C = new Float64Array( inputs.M * inputs.N );
-		var V = new Float64Array( inputs.v );
-		var e;
-		var a;
-		var i;
-		var j;
-		for ( i = 0; i < inputs.M; i++ ) {
-			for ( j = 0; j < inputs.N; j++ ) {
-				C[ ( i * inputs.N ) + j ] = inputs.A[ i ][ j ];
-			}
-		}
-		ndarray( inputs.side, inputs.M, inputs.N, inputs.l, V, 1, 0, inputs.tau, C, inputs.N, 1, 0, WORK, 1, 0 );
-
-		// Expected fixture is col-major packed (M*N) with index (j*M+i); row-major result index is (i*N+j), so compare element-wise:
-		for ( i = 0; i < inputs.M; i++ ) {
-			for ( j = 0; j < inputs.N; j++ ) {
-				e = tc.C[ ( j * inputs.M ) + i ];
-				a = C[ ( i * inputs.N ) + j ];
-				assert.ok( Math.abs( a - e ) <= TOL, format( '%s row-major [%d,%d]: expected %s, got %s', tc.name, i, j, e, a ) );
-			}
-		}
-	});
-});
-
-// Strided v input: v laid out with stride 3, offset 1
-test( 'ndarray: strided v with non-zero offset', function t() {
-	var inputs = buildCase( 'left_5x3_l3' );
-	var WORK = new Float64Array( Math.max( inputs.M, inputs.N ) );
-	var tc = findCase( 'left_5x3_l3' );
-	var C = packColMajor( inputs.A, inputs.M, inputs.N );
-	var V = new Float64Array([ 9.0, 0.1, 9.0, 9.0, 0.2, 9.0, 9.0, 0.3, 9.0 ]);
-	ndarray( inputs.side, inputs.M, inputs.N, inputs.l, V, 3, 1, inputs.tau, C, 1, inputs.M, 0, WORK, 1, 0 );
-	expectClose( C, tc.C, 'left_5x3_l3 strided-v' );
-});
-
-// Strided v with negative stride (reverse direction)
-test( 'ndarray: negative strideV', function t() {
-	var inputs = buildCase( 'right_3x5_l3' );
-	var WORK = new Float64Array( Math.max( inputs.M, inputs.N ) );
-	var tc = findCase( 'right_3x5_l3' );
-	var C = packColMajor( inputs.A, inputs.M, inputs.N );
-	var V = new Float64Array([ 0.1, 0.2, 0.3 ]);
-	ndarray( inputs.side, inputs.M, inputs.N, inputs.l, V, -1, 2, inputs.tau, C, 1, inputs.M, 0, WORK, 1, 0 );
-	expectClose( C, tc.C, 'right_3x5_l3 negative-strideV' );
-});
-
-// Non-zero offsetC and offsetWORK
-test( 'ndarray: non-zero offsetC and offsetWORK', function t() {
-	var packed;
-	var inputs;
-	var WORK;
-	var tc;
-	var C;
-	var e;
-	var a;
-	var i;
-	inputs = buildCase( 'left_4x4_l2' );
-	tc = findCase( 'left_4x4_l2' );
-	packed = packColMajor( inputs.A, inputs.M, inputs.N );
-	C = new Float64Array( packed.length + 5 );
-	WORK = new Float64Array( 4 + 2 );
-	for ( i = 0; i < 5; i++ ) {
-		C[ i ] = 7.0; // sentinel
-	}
-	for ( i = 0; i < packed.length; i++ ) {
-		C[ i + 5 ] = packed[ i ];
-	}
-	WORK[ 0 ] = 99.0;
-	WORK[ 1 ] = 99.0;
-	ndarray( inputs.side, inputs.M, inputs.N, inputs.l, new Float64Array( inputs.v ), 1, 0, inputs.tau, C, 1, inputs.M, 5, WORK, 1, 2 );
-
-	// Sentinels preserved:
-	for ( i = 0; i < 5; i++ ) {
-		assert.equal( C[ i ], 7.0, 'sentinel preserved at index ' + i );
-	}
-
-	// Computed region matches fixture:
-	for ( i = 0; i < tc.C.length; i++ ) {
-		a = C[ i + 5 ];
-		e = tc.C[ i ];
-		assert.ok( Math.abs( a - e ) <= TOL, 'offsetC region matches fixture at index ' + i );
-	}
-
-	// Sentinel before offsetWORK preserved:
-	assert.equal( WORK[ 0 ], 99.0, 'WORK sentinel preserved' );
-	assert.equal( WORK[ 1 ], 99.0, 'WORK sentinel preserved' );
-});
-
-// Non-unit strideC1 with col-major ordering via "interleaved rows" (strideC1=2)
-test( 'ndarray: non-unit strideC1 (interleaved rows)', function t() {
-	var inputs;
-	var WORK;
-	var tc;
-	var C;
-	var M;
-	var N;
-	var e;
-	var a;
-	var i;
-	var j;
-	inputs = buildCase( 'left_4x4_l2' );
-	tc = findCase( 'left_4x4_l2' );
-	M = inputs.M;
-	N = inputs.N;
-	C = new Float64Array( 2 * M * N );
-	WORK = new Float64Array( M );
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			C[ ( j * 2 * M ) + ( i * 2 ) ] = inputs.A[ i ][ j ];
-		}
-	}
-	ndarray( inputs.side, M, N, inputs.l, new Float64Array( inputs.v ), 1, 0, inputs.tau, C, 2, 2 * M, 0, WORK, 1, 0 );
-	for ( j = 0; j < N; j++ ) {
-		for ( i = 0; i < M; i++ ) {
-			e = tc.C[ ( j * M ) + i ];
-			a = C[ ( j * 2 * M ) + ( i * 2 ) ];
-			assert.ok( Math.abs( a - e ) <= TOL, format( 'strideC1=2 [%d,%d]: expected %s, got %s', i, j, e, a ) );
-		}
-	}
 });

@@ -53,6 +53,7 @@ var base = require( './base.js' );
 * @param {number} clgapl - left gap of the cluster
 * @param {number} clgapr - right gap of the cluster
 * @param {number} pivmin - minimum pivot allowed in the Sturm sequence
+* @param {Float64Array} sigma - output (length 1): `sigma[0]` receives the chosen shift
 * @param {Float64Array} dplus - output: diagonal of the new RRR
 * @param {integer} strideDPLUS - stride length for `dplus`
 * @param {Float64Array} lplus - output: subdiagonal of the new RRR
@@ -60,18 +61,18 @@ var base = require( './base.js' );
 * @param {Float64Array} work - workspace of length 2*N
 * @param {integer} strideWORK - stride length for `work`
 * @throws {RangeError} `N` must be a nonnegative integer
-* @returns {Object} object containing `info` (status code) and `sigma` (chosen shift)
+* @returns {integer} info - status code (0 = success, 1 = no acceptable shift found)
 */
-function dlarrf( N, d, strideD, l, strideL, ld, strideLD, clstrt, clend, w, strideW, wgap, strideWGAP, werr, strideWERR, spdiam, clgapl, clgapr, pivmin, dplus, strideDPLUS, lplus, strideLPLUS, work, strideWORK ) {
-	var od;
-	var ol;
-	var oLD;
-	var ow;
-	var oWGAP;
-	var oWERR;
+function dlarrf( N, d, strideD, l, strideL, ld, strideLD, clstrt, clend, w, strideW, wgap, strideWGAP, werr, strideWERR, spdiam, clgapl, clgapr, pivmin, sigma, dplus, strideDPLUS, lplus, strideLPLUS, work, strideWORK ) {
 	var oDPLUS;
 	var oLPLUS;
+	var oWGAP;
+	var oWERR;
 	var oWORK;
+	var oLD;
+	var od;
+	var ol;
+	var ow;
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
@@ -84,7 +85,7 @@ function dlarrf( N, d, strideD, l, strideL, ld, strideLD, clstrt, clend, w, stri
 	oDPLUS = stride2offset( N, strideDPLUS );
 	oLPLUS = stride2offset( N, strideLPLUS );
 	oWORK = stride2offset( 2 * N, strideWORK );
-	return base( N, d, strideD, od, l, strideL, ol, ld, strideLD, oLD, clstrt, clend, w, strideW, ow, wgap, strideWGAP, oWGAP, werr, strideWERR, oWERR, spdiam, clgapl, clgapr, pivmin, dplus, strideDPLUS, oDPLUS, lplus, strideLPLUS, oLPLUS, work, strideWORK, oWORK );
+	return base( N, d, strideD, od, l, strideL, ol, ld, strideLD, oLD, clstrt, clend, w, strideW, ow, wgap, strideWGAP, oWGAP, werr, strideWERR, oWERR, spdiam, clgapl, clgapr, pivmin, sigma, dplus, strideDPLUS, oDPLUS, lplus, strideLPLUS, oLPLUS, work, strideWORK, oWORK );
 }
 
 

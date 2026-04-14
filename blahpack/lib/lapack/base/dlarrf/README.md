@@ -32,51 +32,79 @@ var dlarrf = require( '@stdlib/lapack/base/dlarrf' );
 
 #### dlarrf( N, d, strideD, l, strideL, LD, strideLD, clstrt, clend, w, strideW, WGAP, strideWGAP, WERR, strideWERR, spdiam, clgapl, clgapr, pivmin, sigma, DPLUS, strideDPLUS, LPLUS, strideLPLUS, WORK, strideWORK )
 
-Finds a new relatively robust representation for eigenvalues
+Finds a new relatively robust representation `L(+) D(+) L(+)^T = L D L^T - sigma*I` for a tridiagonal eigenvalue cluster, such that at least one eigenvalue is relatively isolated.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var N = 4;
+var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
+var l = new Float64Array( [ 0.1, 0.1, 0.1, 0.0 ] );
+var ld = new Float64Array( [ 0.4, 0.3, 0.2, 0.0 ] );
+var w = new Float64Array( [ 0.95, 1.95, 2.95, 4.05 ] );
+var wgap = new Float64Array( [ 0.9, 0.9, 1.0, 0.0 ] );
+var werr = new Float64Array( [ 1e-3, 1e-3, 1e-3, 1e-3 ] );
+var sigma = new Float64Array( 1 );
+var dplus = new Float64Array( N );
+var lplus = new Float64Array( N );
+var work = new Float64Array( 2 * N );
+
+var info = dlarrf( N, d, 1, l, 1, ld, 1, 1, 4, w, 1, wgap, 1, werr, 1, 4.0, 1.0, 1.0, 2.2250738585072014e-308, sigma, dplus, 1, lplus, 1, work, 1 );
+// info => 0
 ```
 
 The function has the following parameters:
 
--   **N**: number of columns.
--   **d**: input array.
+-   **N**: order of the tridiagonal matrix.
+-   **d**: diagonal of the parent representation.
 -   **strideD**: stride length for `d`.
--   **l**: input array.
+-   **l**: subdiagonal of the unit bidiagonal factor.
 -   **strideL**: stride length for `l`.
--   **LD**: leading dimension of ``.
+-   **LD**: elementwise product `L*D`.
 -   **strideLD**: stride length for `LD`.
--   **clstrt**: clstrt.
--   **clend**: clend.
--   **w**: input array.
+-   **clstrt**: first index of the eigenvalue cluster (1-based).
+-   **clend**: last index of the eigenvalue cluster (1-based).
+-   **w**: approximate eigenvalues of the parent.
 -   **strideW**: stride length for `w`.
--   **WGAP**: input array.
+-   **WGAP**: approximate gaps between eigenvalues.
 -   **strideWGAP**: stride length for `WGAP`.
--   **WERR**: input array.
+-   **WERR**: errors in the approximate eigenvalues.
 -   **strideWERR**: stride length for `WERR`.
--   **spdiam**: spdiam.
--   **clgapl**: clgapl.
--   **clgapr**: clgapr.
--   **pivmin**: pivmin.
--   **sigma**: sigma.
--   **DPLUS**: input array.
+-   **spdiam**: estimate of the spectral diameter.
+-   **clgapl**: left gap of the cluster.
+-   **clgapr**: right gap of the cluster.
+-   **pivmin**: minimum allowed pivot in the Sturm sequence.
+-   **sigma**: output array (length 1); `sigma[0]` receives the chosen shift.
+-   **DPLUS**: output diagonal of the new RRR `D(+)`.
 -   **strideDPLUS**: stride length for `DPLUS`.
--   **LPLUS**: input array.
+-   **LPLUS**: output subdiagonal of the new RRR `L(+)`.
 -   **strideLPLUS**: stride length for `LPLUS`.
--   **WORK**: output array.
+-   **WORK**: workspace of length `2*N`.
 -   **strideWORK**: stride length for `WORK`.
+
+Returns an integer `info` status code (`0` on success, `1` if no acceptable shift was found).
 
 #### dlarrf.ndarray( N, d, strideD, offsetD, l, strideL, offsetL, LD, strideLD, offsetLD, clstrt, clend, w, strideW, offsetW, WGAP, strideWGAP, offsetWGAP, WERR, strideWERR, offsetWERR, spdiam, clgapl, clgapr, pivmin, sigma, DPLUS, strideDPLUS, offsetDPLUS, LPLUS, strideLPLUS, offsetLPLUS, WORK, strideWORK, offsetWORK )
 
-Finds a new relatively robust representation for eigenvalues, using alternative indexing semantics.
+Finds a new relatively robust representation for a tridiagonal cluster, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var N = 4;
+var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
+var l = new Float64Array( [ 0.1, 0.1, 0.1, 0.0 ] );
+var ld = new Float64Array( [ 0.4, 0.3, 0.2, 0.0 ] );
+var w = new Float64Array( [ 0.95, 1.95, 2.95, 4.05 ] );
+var wgap = new Float64Array( [ 0.9, 0.9, 1.0, 0.0 ] );
+var werr = new Float64Array( [ 1e-3, 1e-3, 1e-3, 1e-3 ] );
+var sigma = new Float64Array( 1 );
+var dplus = new Float64Array( N );
+var lplus = new Float64Array( N );
+var work = new Float64Array( 2 * N );
+
+var info = dlarrf.ndarray( N, d, 1, 0, l, 1, 0, ld, 1, 0, 1, 4, w, 1, 0, wgap, 1, 0, werr, 1, 0, 4.0, 1.0, 1.0, 2.2250738585072014e-308, sigma, dplus, 1, 0, lplus, 1, 0, work, 1, 0 );
+// info => 0
 ```
 
 The function has the following additional parameters:
@@ -125,7 +153,9 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   This is an auxiliary routine used within the MRRR eigenvalue algorithm. Given a parent `LDL^T` factorization of a symmetric tridiagonal matrix and a set of approximate eigenvalues forming a tight cluster, it selects a shift `sigma` and computes a new factorization `L(+) D(+) L(+)^T = L D L^T - sigma*I` such that at least one eigenvalue of the shifted matrix is relatively isolated.
+-   Two candidate shifts derived from the outer bounds of the cluster are tested, each followed by a growth-bounded differential-stationary `qd` factorization; the first to satisfy the growth heuristic is chosen.
+-   `pivmin` should be a safe pivot threshold such as a small multiple of the smallest normal double-precision number.
 
 </section>
 
@@ -136,7 +166,23 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dlarrf = require( '@stdlib/lapack/base/dlarrf' );
+
+var N = 4;
+var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
+var l = new Float64Array( [ 0.1, 0.1, 0.1, 0.0 ] );
+var ld = new Float64Array( [ 0.4, 0.3, 0.2, 0.0 ] );
+var w = new Float64Array( [ 0.95, 1.95, 2.95, 4.05 ] );
+var wgap = new Float64Array( [ 0.9, 0.9, 1.0, 0.0 ] );
+var werr = new Float64Array( [ 1e-3, 1e-3, 1e-3, 1e-3 ] );
+var sigma = new Float64Array( 1 );
+var dplus = new Float64Array( N );
+var lplus = new Float64Array( N );
+var work = new Float64Array( 2 * N );
+
+var info = dlarrf( N, d, 1, l, 1, ld, 1, 1, 4, w, 1, wgap, 1, werr, 1, 4.0, 1.0, 1.0, 2.2250738585072014e-308, sigma, dplus, 1, lplus, 1, work, 1 );
+console.log( 'info=' + info + ' sigma=' + sigma[ 0 ] );
 ```
 
 </section>

@@ -1,0 +1,168 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var format = require( '@stdlib/string/format' );
+var max = require( '@stdlib/math/base/special/fast/max' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Applies a real block reflector from an RZ factorization to a real M-by-N matrix C.
+*
+* Only `direct = 'backward'` and `storev = 'rowwise'` are supported.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} side - `'left'` or `'right'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} direct - direction (`'backward'`)
+* @param {string} storev - storage direction (`'rowwise'`)
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {NonNegativeInteger} K - order of the block reflector
+* @param {NonNegativeInteger} l - number of columns of V
+* @param {Float64Array} V - matrix of Householder vectors (K-by-L)
+* @param {PositiveInteger} LDV - leading dimension of `V`
+* @param {Float64Array} T - triangular factor (K-by-K)
+* @param {PositiveInteger} LDT - leading dimension of `T`
+* @param {Float64Array} C - M-by-N matrix, overwritten on exit
+* @param {PositiveInteger} LDC - leading dimension of `C`
+* @param {Float64Array} WORK - workspace
+* @param {PositiveInteger} LDWORK - leading dimension of `WORK`
+* @throws {TypeError} first argument must be a valid order
+* @throws {TypeError} second argument must be a valid operation side
+* @throws {TypeError} third argument must be a valid transpose operation
+* @throws {TypeError} fourth argument must be a valid direction
+* @throws {TypeError} fifth argument must be a valid storage direction
+* @throws {RangeError} sixth argument must be a nonnegative integer
+* @throws {RangeError} seventh argument must be a nonnegative integer
+* @throws {RangeError} eighth argument must be a nonnegative integer
+* @throws {RangeError} ninth argument must be a nonnegative integer
+* @throws {RangeError} eleventh argument must be greater than or equal to max(1,K)
+* @throws {RangeError} thirteenth argument must be greater than or equal to max(1,K)
+* @throws {RangeError} fifteenth argument must be greater than or equal to max(1,M)
+* @throws {RangeError} seventeenth argument must be greater than or equal to max(1,LDWORK)
+* @returns {Float64Array} `C`
+*/
+function dlarzb( order, side, trans, direct, storev, M, N, K, l, V, LDV, T, LDT, C, LDC, WORK, LDWORK ) {
+	var ldworkMin;
+	var sv1;
+	var sv2;
+	var st1;
+	var st2;
+	var sc1;
+	var sc2;
+	var sw1;
+	var sw2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( direct !== 'backward' ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid `direct` value. Value: `%s`.', direct ) );
+	}
+	if ( storev !== 'rowwise' ) {
+		throw new TypeError( format( 'invalid argument. Fifth argument must be a valid `storev` value. Value: `%s`.', storev ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( K < 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
+	if ( l < 0 ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be a nonnegative integer. Value: `%d`.', l ) );
+	}
+
+	// V is K-by-L (rowwise), so for column-major LDV >= K; for row-major LDV >= L.
+	if ( order === 'column-major' && LDV < max( 1, K ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,K). Value: `%d`.', LDV ) );
+	}
+	if ( order === 'row-major' && LDV < max( 1, l ) ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,L). Value: `%d`.', LDV ) );
+	}
+
+	// T is K-by-K: LDT >= K regardless of order.
+	if ( LDT < max( 1, K ) ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,K). Value: `%d`.', LDT ) );
+	}
+
+	// C is M-by-N.
+	if ( order === 'column-major' && LDC < max( 1, M ) ) {
+		throw new RangeError( format( 'invalid argument. Fifteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
+	}
+	if ( order === 'row-major' && LDC < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fifteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDC ) );
+	}
+
+	// WORK: column-major N-by-K (side='left') or M-by-K (side='right').
+	if ( order === 'column-major' ) {
+		ldworkMin = ( side === 'left' ) ? N : M;
+	} else {
+		ldworkMin = K;
+	}
+	if ( LDWORK < max( 1, ldworkMin ) ) {
+		throw new RangeError( format( 'invalid argument. Seventeenth argument must be greater than or equal to max(1,%d). Value: `%d`.', ldworkMin, LDWORK ) );
+	}
+
+	if ( order === 'column-major' ) {
+		sv1 = 1;
+		sv2 = LDV;
+		st1 = 1;
+		st2 = LDT;
+		sc1 = 1;
+		sc2 = LDC;
+		sw1 = 1;
+		sw2 = LDWORK;
+	} else {
+		sv1 = LDV;
+		sv2 = 1;
+		st1 = LDT;
+		st2 = 1;
+		sc1 = LDC;
+		sc2 = 1;
+		sw1 = LDWORK;
+		sw2 = 1;
+	}
+	base( side, trans, direct, storev, M, N, K, l, V, sv1, sv2, 0, T, st1, st2, 0, C, sc1, sc2, 0, WORK, sw1, sw2, 0 );
+	return C;
+}
+
+
+// EXPORTS //
+
+module.exports = dlarzb;

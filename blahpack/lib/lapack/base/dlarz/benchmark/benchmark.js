@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -26,14 +24,15 @@ var options = {
 * Creates a benchmark function.
 *
 * @private
-* @param {PositiveInteger} len - array length
+* @param {PositiveInteger} N - matrix order
 * @returns {Function} benchmark function
 */
-function createBenchmark( len ) {
-	var N = len;
-	var v = uniform( N * N, -10.0, 10.0, options );
+function createBenchmark( N ) {
+	var WORK = uniform( N, -10.0, 10.0, options );
+	var tau = 0.5;
 	var C = uniform( N * N, -10.0, 10.0, options );
-	var WORK = uniform( N * N, -10.0, 10.0, options );
+	var v = uniform( ( N / 2 ) | 0, -10.0, 10.0, options );
+	var L = ( N / 2 ) | 0;
 	return benchmark;
 
 	/**
@@ -43,18 +42,17 @@ function createBenchmark( len ) {
 	* @param {Benchmark} b - benchmark instance
 	*/
 	function benchmark( b ) {
-		var y;
 		var i;
 
 		b.tic();
 		for ( i = 0; i < b.iterations; i++ ) {
-			y = dlarz( 'row-major', 'left', N, N, N, v, N, N, C, N, WORK, N );
-			if ( isnan( y ) ) {
+			dlarz( 'column-major', 'left', N, N, L, v, 1, tau, C, N, WORK, 1 );
+			if ( isnan( C[ 0 ] ) ) {
 				b.fail( 'should not return NaN' );
 			}
 		}
 		b.toc();
-		if ( isnan( y ) ) {
+		if ( isnan( C[ 0 ] ) ) {
 			b.fail( 'should not return NaN' );
 		}
 		b.pass( 'benchmark finished' );
@@ -83,7 +81,7 @@ function main() {
 	for ( i = min; i <= max; i++ ) {
 		len = pow( 10, i );
 		f = createBenchmark( len );
-		bench( format( '%s:len=%d', pkg, len ), f );
+		bench( format( '%s:size=%d', pkg, len ), f );
 	}
 }
 

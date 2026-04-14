@@ -15,7 +15,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Applies an elementary reflector defined by RZ factorization.
+* Applies an elementary reflector from RZ factorization to a general matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
 * @param {string} side - specifies the operation type
@@ -30,10 +30,10 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - output array
 * @param {integer} strideWORK - stride length for `WORK`
 * @throws {TypeError} first argument must be a valid order
-* @throws {TypeError} Second argument must be a valid operation side
+* @throws {TypeError} second argument must be a valid operation side
 * @throws {RangeError} third argument must be a nonnegative integer
 * @throws {RangeError} fourth argument must be a nonnegative integer
-* @throws {RangeError} tenth argument must be greater than or equal to `max(1, M)` or `max(1, N)`
+* @throws {RangeError} tenth argument must be greater than or equal to `max(1,N)` (row-major) or `max(1,M)` (column-major)
 * @returns {Float64Array} `C`
 */
 function dlarz( order, side, M, N, l, v, strideV, tau, C, LDC, WORK, strideWORK ) { // eslint-disable-line max-len, max-params
@@ -65,7 +65,8 @@ function dlarz( order, side, M, N, l, v, strideV, tau, C, LDC, WORK, strideWORK 
 		sc1 = LDC;
 		sc2 = 1;
 	}
-	return base( side, M, N, l, v, strideV, 0, tau, C, sc1, sc2, 0, WORK, strideWORK, 0 ); // eslint-disable-line max-len
+	base( side, M, N, l, v, strideV, 0, tau, C, sc1, sc2, 0, WORK, strideWORK, 0 ); // eslint-disable-line max-len
+	return C;
 }
 
 

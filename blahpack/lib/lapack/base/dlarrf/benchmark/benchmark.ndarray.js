@@ -1,45 +1,79 @@
-
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
 // MODULES //
 
 var bench = require( '@stdlib/bench' );
-var uniform = require( '@stdlib/random/array/uniform' );
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
+var Float64Array = require( '@stdlib/array/float64' );
 var pkg = require( './../package.json' ).name;
 var dlarrf = require( './../lib/ndarray.js' );
 
 
 // VARIABLES //
 
-var options = {
-	'dtype': 'float64'
-};
+var PIVMIN = 2.2250738585072014e-308;
 
 
 // FUNCTIONS //
 
 /**
-* Creates a benchmark function.
+* Builds a benchmark-ready tridiagonal cluster of order `len`.
 *
 * @private
-* @param {PositiveInteger} len - array length
+* @param {PositiveInteger} len - matrix order
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
-	var N = len;
-	var d = uniform( N, -10.0, 10.0, options );
-	var l = uniform( N, -10.0, 10.0, options );
-	var LD = uniform( N, -10.0, 10.0, options );
-	var w = uniform( N, -10.0, 10.0, options );
-	var WGAP = uniform( N, -10.0, 10.0, options );
-	var WERR = uniform( N, -10.0, 10.0, options );
-	var DPLUS = uniform( N, -10.0, 10.0, options );
-	var LPLUS = uniform( N, -10.0, 10.0, options );
-	var WORK = uniform( N, -10.0, 10.0, options );
+	var sigma;
+	var dplus;
+	var lplus;
+	var werr;
+	var wgap;
+	var work;
+	var ld;
+	var d;
+	var l;
+	var w;
+	var i;
+
+	d = new Float64Array( len );
+	l = new Float64Array( len );
+	ld = new Float64Array( len );
+	w = new Float64Array( len );
+	wgap = new Float64Array( len );
+	werr = new Float64Array( len );
+	sigma = new Float64Array( 1 );
+	dplus = new Float64Array( len );
+	lplus = new Float64Array( len );
+	work = new Float64Array( 2 * len );
+	for ( i = 0; i < len; i++ ) {
+		d[ i ] = ( len - i ) + 0.5;
+		l[ i ] = 0.1;
+		ld[ i ] = d[ i ] * l[ i ];
+		w[ i ] = ( i + 1 ) + 0.01;
+		wgap[ i ] = 0.9;
+		werr[ i ] = 1e-4;
+	}
 	return benchmark;
 
 	/**
@@ -49,18 +83,19 @@ function createBenchmark( len ) {
 	* @param {Benchmark} b - benchmark instance
 	*/
 	function benchmark( b ) {
-		var y;
-		var i;
+		var info;
+		var k;
 
 		b.tic();
-		for ( i = 0; i < b.iterations; i++ ) {
-			y = dlarrf( N, d, 1, 0, l, 1, 0, LD, 1, 0, N, N, w, 1, 0, WGAP, 1, 0, WERR, 1, 0, N, N, N, N, N, DPLUS, 1, 0, LPLUS, 1, 0, WORK, 1, 0 );
-			if ( isnan( y ) ) {
+		for ( k = 0; k < b.iterations; k++ ) {
+			// eslint-disable-next-line max-len
+			info = dlarrf( len, d, 1, 0, l, 1, 0, ld, 1, 0, 1, len, w, 1, 0, wgap, 1, 0, werr, 1, 0, len + 1, 1.0, 1.0, PIVMIN, sigma, dplus, 1, 0, lplus, 1, 0, work, 1, 0 );
+			if ( isnan( info ) ) {
 				b.fail( 'should not return NaN' );
 			}
 		}
 		b.toc();
-		if ( isnan( y ) ) {
+		if ( isnan( info ) ) {
 			b.fail( 'should not return NaN' );
 		}
 		b.pass( 'benchmark finished' );
@@ -84,7 +119,7 @@ function main() {
 	var i;
 
 	min = 1; // 10^min
-	max = 6; // 10^max
+	max = 3; // 10^max
 
 	for ( i = min; i <= max; i++ ) {
 		len = pow( 10, i );

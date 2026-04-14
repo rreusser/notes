@@ -35,34 +35,44 @@ var zlarz = require( '@stdlib/lapack/base/zlarz' );
 Applies a complex elementary reflector defined by RZ factorization
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var v = new Complex128Array( [ 0.5, 0.2, -0.3, 0.4 ] );
+var tau = new Complex128Array( [ 1.2, -0.4 ] );
+var C = new Complex128Array( 12 );
+var WORK = new Complex128Array( 3 );
+
+zlarz( 'column-major', 'left', 4, 3, 2, v, 1, tau, 0, C, 4, WORK, 1 );
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **side**: specifies the operation type.
--   **M**: number of rows.
--   **N**: number of columns.
--   **l**: l.
--   **v**: input array.
--   **strideV**: stride length for `v`.
--   **tau**: tau.
--   **C**: input matrix.
+-   **side**: `'left'` applies `H` from the left; `'right'` applies `H` from the right.
+-   **M**: number of rows of the matrix `C`.
+-   **N**: number of columns of the matrix `C`.
+-   **l**: number of entries of `v` containing the meaningful (non-unit) part of the reflector.
+-   **v**: reflector vector as a `Complex128Array`.
+-   **strideV**: stride length for `v` (in complex elements).
+-   **tau**: complex scalar `tau` as a `Complex128Array` of length 1.
+-   **C**: `Complex128Array` matrix, modified in place.
 -   **LDC**: leading dimension of `C`.
--   **WORK**: output array.
--   **strideWORK**: stride length for `WORK`.
+-   **WORK**: `Complex128Array` workspace (length at least `N` if `side='left'`, else at least `M`).
+-   **strideWORK**: stride length for `WORK` (in complex elements).
 
-#### zlarz.ndarray( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+#### zlarz.ndarray( side, M, N, l, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 
 Applies a complex elementary reflector defined by RZ factorization, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-// TODO: Add usage example
+var v = new Complex128Array( [ 0.5, 0.2, -0.3, 0.4 ] );
+var tau = new Complex128Array( [ 1.2, -0.4 ] );
+var C = new Complex128Array( 12 );
+var WORK = new Complex128Array( 3 );
+
+zlarz.ndarray( 'left', 4, 3, 2, v, 1, 0, tau, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +101,8 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
+-   `zlarz` applies a complex elementary reflector `H = I - tau * v * v^H` to `C`, where `v` has the compressed form used by the `RZ` factorization (see `ztzrzf`): the first component of `v` is implicitly unity, and only the last `l` components are stored in the `v` argument.
+-   If `tau = 0`, `H` is taken to be the identity.
 
 </section>
 
@@ -102,7 +113,20 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlarz = require( '@stdlib/lapack/base/zlarz' );
+
+var v = new Complex128Array( [ 0.5, 0.2, -0.3, 0.4 ] );
+var tau = new Complex128Array( [ 1.2, -0.4 ] );
+var C = new Complex128Array( [
+	1.0, 0.0, 2.0, 1.0, 3.0, -1.0, 4.0, 0.5,
+	-1.0, 2.0, 0.5, 0.5, 1.5, -0.5, -2.0, 1.0,
+	0.0, 1.0, 1.0, 1.0, -0.5, 0.0, 2.0, -2.0
+] );
+var WORK = new Complex128Array( 3 );
+
+zlarz( 'column-major', 'left', 4, 3, 2, v, 1, tau, 0, C, 4, WORK, 1 );
+console.log( C );
 ```
 
 </section>

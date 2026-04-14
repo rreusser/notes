@@ -11,7 +11,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Applies an elementary reflector defined by RZ factorization.
+* Applies an elementary reflector from RZ factorization to a general matrix.
 *
 * @param {string} side - specifies the operation type
 * @param {NonNegativeInteger} M - number of rows
@@ -35,7 +35,8 @@ function dlarz( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, 
 	if ( !isOperationSide( side ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
 	}
-	return base( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
+	base( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
+	return C;
 }
 
 

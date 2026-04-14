@@ -53,6 +53,7 @@ var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );
 * @param {Float64Array} WORK - workspace array (length at least `N` if `side='left'`, `M` if `side='right'`)
 * @param {integer} strideWORK - stride length for `WORK`
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @returns {Float64Array} `C`
 */
 function dlarz( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var offsetCtail;
@@ -78,7 +79,7 @@ function dlarz( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, 
 				dger( l, N, -tau, v, strideV, offsetV, WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetCtail );
 			}
 		}
-		return;
+		return C;
 	}
 	// Form C * H.
 	if ( tau !== 0.0 ) {
@@ -100,6 +101,7 @@ function dlarz( side, M, N, l, v, strideV, offsetV, tau, C, strideC1, strideC2, 
 			dger( M, l, -tau, WORK, strideWORK, offsetWORK, v, strideV, offsetV, C, strideC1, strideC2, offsetCtail );
 		}
 	}
+	return C;
 }
 
 
