@@ -27,44 +27,47 @@ import { Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Computes the solution to a real system of linear equations A * X = B,.
+	* Computes the solution to a real system of linear equations `A * X = B`,
+	* where `A` is an N-by-N matrix and `X` and `B` are N-by-NRHS matrices.
 	*
 	* @param order - storage layout
-	* @param N - number of columns
+	* @param N - order of matrix A
 	* @param nrhs - number of right-hand sides
-	* @param A - `A`
+	* @param A - input/output matrix; on exit, L and U factors
 	* @param LDA - leading dimension of `A`
-	* @param IPIV - `IPIV`
+	* @param IPIV - output pivot indices (0-based)
 	* @param strideIPIV - stride of `IPIV`
-	* @param B - `B`
+	* @param B - input/output matrix; on exit, the solution X
 	* @param LDB - leading dimension of `B`
-	* @returns result
+	* @returns status code (0 = success)
 	*/
-	( order: Layout, N: number, nrhs: number, A: Float64Array, LDA: number, IPIV: Int32Array, strideIPIV: number, B: Float64Array, LDB: number ): Float64Array;
+	( order: Layout, N: number, nrhs: number, A: Float64Array, LDA: number, IPIV: Int32Array, strideIPIV: number, B: Float64Array, LDB: number ): number;
 
 	/**
-	* Computes the solution to a real system of linear equations A * X = B, using alternative indexing semantics.
+	* Computes the solution to a real system of linear equations `A * X = B`,
+	* using alternative indexing semantics.
 	*
-	* @param N - number of columns
+	* @param N - order of matrix A
 	* @param nrhs - number of right-hand sides
-	* @param A - `A`
-	* @param strideA1 - stride of `A`
-	* @param strideA2 - stride of `A`
+	* @param A - input/output matrix; on exit, L and U factors
+	* @param strideA1 - stride of the first dimension of `A`
+	* @param strideA2 - stride of the second dimension of `A`
 	* @param offsetA - starting index for `A`
-	* @param IPIV - `IPIV`
+	* @param IPIV - output pivot indices (0-based)
 	* @param strideIPIV - stride of `IPIV`
 	* @param offsetIPIV - starting index for `IPIV`
-	* @param B - `B`
-	* @param strideB1 - stride of `B`
-	* @param strideB2 - stride of `B`
+	* @param B - input/output matrix; on exit, the solution X
+	* @param strideB1 - stride of the first dimension of `B`
+	* @param strideB2 - stride of the second dimension of `B`
 	* @param offsetB - starting index for `B`
-	* @returns result
+	* @returns status code (0 = success)
 	*/
-	ndarray( N: number, nrhs: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, IPIV: Int32Array, strideIPIV: number, offsetIPIV: number, B: Float64Array, strideB1: number, strideB2: number, offsetB: number ): Float64Array;
+	ndarray( N: number, nrhs: number, A: Float64Array, strideA1: number, strideA2: number, offsetA: number, IPIV: Int32Array, strideIPIV: number, offsetIPIV: number, B: Float64Array, strideB1: number, strideB2: number, offsetB: number ): number;
 }
 
 /**
-* Computes the solution to a real system of linear equations A * X = B,.
+* Computes the solution to a real system of linear equations `A * X = B`,
+* where `A` is an N-by-N matrix and `X` and `B` are N-by-NRHS matrices.
 */
 declare var dgesv: Routine;
 

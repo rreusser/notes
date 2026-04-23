@@ -1,0 +1,5 @@
+dlamch
+dlaorhr_col_getrfnp2
+dgemm
+dscal
+dtrsm

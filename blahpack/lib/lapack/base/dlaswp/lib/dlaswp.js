@@ -23,7 +23,6 @@
 // MODULES //
 
 var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
-var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
 var max = require( '@stdlib/math/base/special/fast/max' );
 var base = require( './base.js' );
@@ -40,35 +39,45 @@ var base = require( './base.js' );
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {NonNegativeInteger} k1 - index of first row to interchange
 * @param {NonNegativeInteger} k2 - index of last row to interchange
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - `IPIV` stride length
-* @param {integer} incx - direction in which to apply pivots (-1 to apply in reverse order; otherwise, apply in provided order)
+* @param {Int32Array} IPIV - vector of pivot indices
+* @param {integer} incx - increment between successive values of `IPIV`
 * @throws {TypeError} first argument must be a valid order
-* @returns {*} result
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} fourth argument must be greater than or equal to max(1,N)
+* @returns {Float64Array} permuted matrix `A`
 */
-function dlaswp( order, N, A, LDA, k1, k2, IPIV, strideIPIV, incx ) {
+function dlaswp( order, N, A, LDA, k1, k2, IPIV, incx ) {
+	var tmp;
+	var inc;
 	var sa1;
 	var sa2;
-	var oi;
-
+	var io;
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
-	if ( N < 0 ) {
-		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	if ( order === 'row-major' && LDA < max( 1, N ) ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be greater than or equal to max(1,%d). Value: `%d`.', N, LDA ) );
 	}
-	if ( LDA < max( 1, N ) ) {
-		throw new RangeError( format( 'invalid argument. Fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
+	if ( incx > 0 ) {
+		inc = 1;
+		io = k1;
+	} else if ( incx < 0 ) {
+		inc = -1;
+		io = k1 + ( (k1-k2) * incx );
+		tmp = k1;
+		k1 = k2;
+		k2 = tmp;
+	} else {
+		return A;
 	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;
-	} else {
+	} else { // order === 'row-major'
 		sa1 = LDA;
 		sa2 = 1;
 	}
-	oi = stride2offset( N, strideIPIV );
-	return base( N, A, sa1, sa2, 0, k1, k2, IPIV, strideIPIV, oi, incx );
+	return base( N, A, sa1, sa2, 0, k1, k2, inc, IPIV, incx, io );
 }
 
 

@@ -1,0 +1,99 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zhetri3x = require( './../../../../lapack/base/zhetri_3x/lib/base.js' );
+
+
+// VARIABLES //
+
+// Block size. Reference LAPACK calls ILAENV(1,'ZHETRI_3',...), which has no entry for HE/TRI and returns the default NB = 1; we hardcode the same value to match the reference workspace-query result bit-for-bit. (`zhetri_3x` accepts any valid block size.)
+var NB = 1;
+
+
+// MAIN //
+
+/**
+* Computes the inverse of a complex Hermitian indefinite matrix `A` using the factorization `A = P*U*D*U^H*P^T` or `A = P*L*D*L^H*P^T` as computed by `zhetrf_rk`. This is the blocked driver; it picks a block size and forwards to `zhetri_3x`.
+*
+* If `lwork === -1`, performs a workspace query: writes the optimal `LWORK` (as a real value) into `WORK[offsetWORK].re` and returns `0` without touching `A`.
+*
+* @private
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix `A`
+* @param {Complex128Array} A - input/output Hermitian matrix (factored form on entry; inverse on exit)
+* @param {integer} strideA1 - first-dimension stride of `A`
+* @param {integer} strideA2 - second-dimension stride of `A`
+* @param {NonNegativeInteger} offsetA - index offset for `A`
+* @param {Complex128Array} e - super/sub-diagonal of the block diagonal matrix `D`
+* @param {integer} strideE - stride length for `e`
+* @param {NonNegativeInteger} offsetE - index offset for `e`
+* @param {Int32Array} IPIV - pivot indices from `zhetrf_rk`
+* @param {integer} strideIPIV - stride length for `IPIV`
+* @param {NonNegativeInteger} offsetIPIV - index offset for `IPIV`
+* @param {Complex128Array} WORK - workspace of length `(N+NB+1)*(NB+3)`
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - index offset for `WORK`
+* @param {integer} lwork - length of `WORK`, or `-1` for a workspace query
+* @returns {integer} status code (`0` = success; `-i` = illegal argument; `> 0` = singular diagonal block)
+*/
+function zhetri3( uplo, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	var lwkopt;
+	var lquery;
+	var wview;
+	var info;
+
+	lquery = ( lwork === -1 );
+	lwkopt = ( N + NB + 1 ) * ( NB + 3 );
+
+	if ( uplo !== 'upper' && uplo !== 'lower' ) {
+		return -1;
+	}
+	if ( N < 0 ) {
+		return -2;
+	}
+	if ( lwork < lwkopt && !lquery ) {
+		return -8;
+	}
+	if ( lquery ) {
+		wview = reinterpret( WORK, 0 );
+		wview[ 2 * offsetWORK ] = lwkopt;
+		wview[ ( 2 * offsetWORK ) + 1 ] = 0.0;
+		return 0;
+	}
+
+	if ( N === 0 ) {
+		return 0;
+	}
+
+	info = zhetri3x( uplo, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, NB ); // eslint-disable-line max-len
+
+	wview = reinterpret( WORK, 0 );
+	wview[ 2 * offsetWORK ] = lwkopt;
+	wview[ ( 2 * offsetWORK ) + 1 ] = 0.0;
+	return info;
+}
+
+
+// EXPORTS //
+
+module.exports = zhetri3;

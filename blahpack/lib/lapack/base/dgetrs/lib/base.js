@@ -60,8 +60,7 @@ function dgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 		// Solve A * X = B.
 
 		// Apply row interchanges to the right-hand sides.
-		// Dlaswp uses 0-based k1, k2
-		dlaswp( nrhs, B, strideB1, strideB2, offsetB, 0, N - 1, IPIV, strideIPIV, offsetIPIV, 1 );
+		dlaswp( nrhs, B, strideB1, strideB2, offsetB, 0, N - 1, 1, IPIV, strideIPIV, offsetIPIV );
 
 		// Solve L * Y = P * B (forward substitution, L is unit lower triangular)
 		dtrsm( 'left', 'lower', 'no-transpose', 'unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
@@ -78,7 +77,7 @@ function dgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 		dtrsm( 'left', 'lower', 'transpose', 'unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Apply row interchanges in reverse order
-		dlaswp( nrhs, B, strideB1, strideB2, offsetB, N - 1, 0, IPIV, strideIPIV, offsetIPIV, -1 );
+		dlaswp( nrhs, B, strideB1, strideB2, offsetB, N - 1, 0, -1, IPIV, -strideIPIV, offsetIPIV + ( ( N - 1 ) * strideIPIV ) );
 	}
 
 	return 0;

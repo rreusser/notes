@@ -1,0 +1,142 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dsytrs_rook
+
+> Solves a system of linear equations `A*X = B` with a real symmetric matrix `A` using the factorization computed by `dsytrf_rook` (rook pivoting Bunch-Kaufman).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dsytrsRook = require( '@stdlib/lapack/base/dsytrs-rook' );
+```
+
+#### dsytrsRook( order, uplo, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
+
+Solves a system of linear equations `A*X = B` with a real symmetric matrix `A`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 4.0, 0.0, 0.0, 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var b = new Float64Array( [ 8.0 ] );
+
+dsytrsRook( 'column-major', 'lower', 1, 1, A, 1, ipiv, 1, b, 1 );
+// b => Float64Array [ 2.0 ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangular part is referenced (`'upper'` or `'lower'`).
+-   **N**: order of the matrix `A`.
+-   **nrhs**: number of right-hand side vectors.
+-   **A**: factored matrix from `dsytrf_rook`.
+-   **LDA**: leading dimension of `A`.
+-   **IPIV**: pivot indices from `dsytrf_rook`.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **B**: input/output right-hand side / solution matrix.
+-   **LDB**: leading dimension of `B`.
+
+#### dsytrsRook.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+
+Solves a system of linear equations `A*X = B` with a real symmetric matrix `A`, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 4.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var b = new Float64Array( [ 8.0 ] );
+
+dsytrsRook.ndarray( 'lower', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0 );
+// b => Float64Array [ 2.0 ]
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A`.
+-   **strideA2**: stride of the second dimension of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **strideB1**: stride of the first dimension of `B`.
+-   **strideB2**: stride of the second dimension of `B`.
+-   **offsetB**: starting index for `B`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `IPIV` follows the 0-based JS convention used by `dsytrf_rook`: a non-negative entry indicates a 1x1 pivot block (with row swap target stored as a 0-based index); a negative entry indicates a 2x2 pivot block, encoded as `~kp` (bitwise NOT of the 0-based row index). For rook pivoting, BOTH entries of a 2x2 block are negative.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytrsRook = require( '@stdlib/lapack/base/dsytrs-rook' );
+
+var A = new Float64Array( [ 4.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var b = new Float64Array( [ 8.0 ] );
+
+dsytrsRook( 'column-major', 'lower', 1, 1, A, 1, ipiv, 1, b, 1 );
+console.log( b );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

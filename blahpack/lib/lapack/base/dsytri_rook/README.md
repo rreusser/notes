@@ -1,0 +1,151 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dsytri_rook
+
+> Compute inverse of real symmetric matrix using factorization from dsytrf_rook
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dsytri_rook = require( '@stdlib/lapack/base/dsytri_rook' );
+```
+
+#### dsytri_rook( order, uplo, N, A, LDA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK )
+
+Compute inverse of real symmetric matrix using factorization from dsytrf_rook
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 0.25, 0.0, 0.0, 0.5 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var WORK = new Float64Array( 2 );
+
+dsytriRook( 'column-major', 'upper', 2, A, 2, IPIV, 1, WORK );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+
+#### dsytri_rook.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
+
+Compute inverse of real symmetric matrix using factorization from dsytrf_rook, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 0.25, 0.0, 0.0, 0.5 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var WORK = new Float64Array( 2 );
+
+dsytriRook.ndarray( 'upper', 2, A, 1, 2, 0, IPIV, 1, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The matrix `A` must be the output of `dsytrf_rook` (or `dsytf2_rook`): it stores the block diagonal `D` and the multipliers used to obtain the factor `U` (upper) or `L` (lower).
+-   On exit (when `info === 0`), `A` is overwritten with the upper (or lower) triangular part of `inv(A)`. The opposite triangle is not referenced.
+-   `IPIV` uses the 0-based pivot convention from `dsytrf_rook`: a non-negative entry indicates a 1x1 pivot; a negative entry encodes a 2x2 pivot via bitwise NOT of the 0-based row/column that was interchanged.
+-   `WORK` is an internal workspace of length at least `N`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytriRook = require( '@stdlib/lapack/base/dsytri-rook' );
+
+// 3x3 symmetric positive definite matrix already factored by dsytrf_rook
+// (column-major):
+var A = new Float64Array( [ 4.0, 0.5, 0.25, 0.0, 4.0, 0.6875, 0.0, 0.0, 4.40625 ] );
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var WORK = new Float64Array( 3 );
+
+var info = dsytriRook( 'column-major', 'upper', 3, A, 3, IPIV, 1, WORK );
+console.log( info );
+console.log( A );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

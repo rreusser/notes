@@ -1,0 +1,156 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zhetri_3
+
+> computes the inverse of a complex Hermitian indefinite matrix using the factorization from zhetrf_rk
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zhetri_3 = require( '@stdlib/lapack/base/zhetri_3' );
+```
+
+#### zhetri_3( order, uplo, N, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, lwork )
+
+computes the inverse of a complex Hermitian indefinite matrix using the factorization from zhetrf_rk
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 5.0, 0.0 ] );
+var e = new Complex128Array( [ 0.0, 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Complex128Array( 12 );
+
+zhetri_3( 'column-major', 'lower', 1, A, 1, e, 1, ipiv, 1, 0, work, 1, 12 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **lwork**: lwork.
+
+#### zhetri_3.ndarray( uplo, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork )
+
+computes the inverse of a complex Hermitian indefinite matrix using the factorization from zhetrf_rk, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 5.0, 0.0 ] );
+var e = new Complex128Array( [ 0.0, 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Complex128Array( 12 );
+
+zhetri_3.ndarray( 'lower', 1, A, 1, 1, 0, e, 1, 0, ipiv, 1, 0, work, 1, 0, 12 );
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **offsetE**: starting index for `E`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **lwork**: lwork.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   This is the blocked driver. It selects a workspace block size and forwards to [`zhetri_3x`][@stdlib/lapack/base/zhetri_3x] (the worker). Reference LAPACK's `ILAENV` has no entry for `HETRI_3`, so it falls through to the default block size `NB = 1`; we match that here for bit-for-bit compatibility with the reference workspace-query value.
+-   If `lwork === -1`, a workspace query is performed: the routine writes the optimal `LWORK` value into `WORK[0].re` and returns `0` without touching `A`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhetri_3 = require( '@stdlib/lapack/base/zhetri_3' );
+
+var A = new Complex128Array( [ 5.0, 0.0 ] );
+var e = new Complex128Array( [ 0.0, 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Complex128Array( 12 );
+
+var info = zhetri_3( 'column-major', 'lower', 1, A, 1, e, 1, ipiv, 1, 0, work, 1, 12 );
+console.log( info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

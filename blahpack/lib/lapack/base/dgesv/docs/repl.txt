@@ -1,5 +1,6 @@
 {{alias}}( order, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
-    Computes the solution to a real system of linear equations A * X = B,.
+    Computes the solution to a real system of linear equations `A * X = B`
+    where `A` is an N-by-N matrix.
 
     Parameters
     ----------
@@ -7,92 +8,104 @@
         Row-major (C-style) or column-major (Fortran-style) order.
 
     N: integer
-        number of columns.
+        Order of matrix A (number of rows and columns).
 
     nrhs: integer
-        number of right-hand sides.
+        Number of right-hand side columns.
 
     A: Float64Array
-        `A`.
+        Input/output N-by-N matrix. On exit, L and U factors.
 
     LDA: integer
-        leading dimension of `A`.
+        Leading dimension of `A`.
 
     IPIV: Int32Array
-        `IPIV`.
+        Output pivot indices (0-based), length N.
 
     strideIPIV: integer
-        stride length for `IPIV`.
+        Stride length for `IPIV`.
 
     B: Float64Array
-        `B`.
+        Input/output N-by-NRHS matrix. On exit, the solution X.
 
     LDB: integer
-        leading dimension of `B`.
+        Leading dimension of `B`.
 
     Returns
     -------
-    out: Float64Array
-        Result.
+    info: integer
+        Status code. 0 if successful.
 
     Examples
     --------
-    // TODO: Add examples
+    > var A = new {{alias:@stdlib/array/float64}}( [ 1.0, 3.0, 2.0, 4.0 ] );
+    > var IPIV = new {{alias:@stdlib/array/int32}}( 2 );
+    > var B = new {{alias:@stdlib/array/float64}}( [ 5.0, 11.0 ] );
+    > var info = {{alias}}( 'column-major', 2, 1, A, 2, IPIV, 1, B, 2 )
+    0
+    > B
+    <Float64Array>[ 1.0, 2.0 ]
 
 
 {{alias}}.ndarray( N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
-    Computes the solution to a real system of linear equations A * X = B,
+    Computes the solution to a real system of linear equations `A * X = B`,
     using alternative indexing semantics.
 
     Parameters
     ----------
     N: integer
-        number of columns.
+        Order of matrix A (number of rows and columns).
 
     nrhs: integer
-        number of right-hand sides.
+        Number of right-hand side columns.
 
     A: Float64Array
-        `A`.
+        Input/output N-by-N matrix. On exit, L and U factors.
 
     strideA1: integer
-        stride of dimension 1 of `A`.
+        Stride of dimension 1 of `A`.
 
     strideA2: integer
-        stride of dimension 2 of `A`.
+        Stride of dimension 2 of `A`.
 
     offsetA: integer
-        starting index for `A`.
+        Starting index for `A`.
 
     IPIV: Int32Array
-        `IPIV`.
+        Output pivot indices (0-based), length N.
 
     strideIPIV: integer
-        stride length for `IPIV`.
+        Stride length for `IPIV`.
 
     offsetIPIV: integer
-        starting index for `IPIV`.
+        Starting index for `IPIV`.
 
     B: Float64Array
-        `B`.
+        Input/output N-by-NRHS matrix. On exit, the solution X.
 
     strideB1: integer
-        stride of dimension 1 of `B`.
+        Stride of dimension 1 of `B`.
 
     strideB2: integer
-        stride of dimension 2 of `B`.
+        Stride of dimension 2 of `B`.
 
     offsetB: integer
-        starting index for `B`.
+        Starting index for `B`.
 
     Returns
     -------
-    out: Float64Array
-        Result.
+    info: integer
+        Status code. 0 if successful.
 
     Examples
     --------
-    // TODO: Add examples
+    > var A = new {{alias:@stdlib/array/float64}}( [ 1.0, 3.0, 2.0, 4.0 ] );
+    > var IPIV = new {{alias:@stdlib/array/int32}}( 2 );
+    > var B = new {{alias:@stdlib/array/float64}}( [ 5.0, 11.0 ] );
+    > var info = {{alias}}.ndarray( 2, 1, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 )
+    0
+    > B
+    <Float64Array>[ 1.0, 2.0 ]
 
     See Also
     --------

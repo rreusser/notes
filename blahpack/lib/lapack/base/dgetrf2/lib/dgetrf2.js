@@ -32,17 +32,20 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes an LU factorization of a general M-by-N matrix A using partial.
+* Computes an LU factorization of a general M-by-N matrix `A` using partial pivoting with row interchanges (recursive algorithm).
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
 * @param {NonNegativeInteger} M - number of rows of matrix A
 * @param {NonNegativeInteger} N - number of columns of matrix A
-* @param {Float64Array} A - input matrix
+* @param {Float64Array} A - input/output matrix; on exit, L and U factors
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {Int32Array} IPIV - input array
+* @param {Int32Array} IPIV - output pivot indices (0-based), length min(M,N)
 * @param {integer} strideIPIV - `IPIV` stride length
 * @throws {TypeError} first argument must be a valid order
-* @returns {*} result
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @throws {RangeError} fifth argument must be greater than or equal to max(1,N) or max(1,M)
+* @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero
 */
 function dgetrf2( order, M, N, A, LDA, IPIV, strideIPIV ) {
 	var sa1;
@@ -71,7 +74,7 @@ function dgetrf2( order, M, N, A, LDA, IPIV, strideIPIV ) {
 		sa1 = LDA;
 		sa2 = 1;
 	}
-	oi = stride2offset( N, strideIPIV );
+	oi = stride2offset( Math.min( M, N ), strideIPIV );
 	return base( M, N, A, sa1, sa2, 0, IPIV, strideIPIV, oi );
 }
 

@@ -1,0 +1,170 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zlaqz1
+
+> Chases a 1x1 shift bulge in a matrix pencil down a single position (complex QZ)
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlaqz1 = require( '@stdlib/lapack/base/zlaqz1' );
+```
+
+#### zlaqz1( order, ilq, ilz, K, istartm, istopm, ihi, A, LDA, B, LDB, nq, qstart, Q, LDQ, nz, zstart, Z, LDZ )
+
+Chases a 1x1 shift bulge in a matrix pencil down a single position (complex QZ)
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( 25 );
+var B = new Complex128Array( 25 );
+var Q = new Complex128Array( 25 );
+var Z = new Complex128Array( 25 );
+
+zlaqz1( 'column-major', true, true, 1, 0, 4, 4, A, 5, B, 5, 5, 0, Q, 5, 5, 0, Z, 5 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **ilq**: whether to update the matrix `Q`.
+-   **ilz**: whether to update the matrix `Z`.
+-   **k**: 0-based index of the bulge position.
+-   **istartm**: 0-based start index for column updates.
+-   **istopm**: 0-based end index for column updates.
+-   **ihi**: 0-based upper index of the active submatrix.
+-   **A**: complex input/output matrix.
+-   **LDA**: leading dimension of `A`.
+-   **B**: complex input/output matrix.
+-   **LDB**: leading dimension of `B`.
+-   **nq**: order of the matrix `Q`.
+-   **qstart**: 0-based start index of the matrix `Q`.
+-   **Q**: complex input/output matrix.
+-   **LDQ**: leading dimension of `Q`.
+-   **nz**: order of the matrix `Z`.
+-   **zstart**: 0-based start index of the matrix `Z`.
+-   **Z**: complex input/output matrix.
+-   **LDZ**: leading dimension of `Z`.
+
+#### zlaqz1.ndarray( ilq, ilz, K, istartm, istopm, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, nq, qstart, Q, strideQ1, strideQ2, offsetQ, nz, zstart, Z, strideZ1, strideZ2, offsetZ )
+
+Chases a 1x1 shift bulge in a matrix pencil down a single position (complex QZ), using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( 25 );
+var B = new Complex128Array( 25 );
+var Q = new Complex128Array( 25 );
+var Z = new Complex128Array( 25 );
+
+zlaqz1.ndarray( true, true, 1, 0, 4, 4, A, 1, 5, 0, B, 1, 5, 0, 5, 0, Q, 1, 5, 0, 5, 0, Z, 1, 5, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **ilq**: ilq.
+-   **ilz**: ilz.
+-   **K**: number of superdiagonals.
+-   **istartm**: istartm.
+-   **istopm**: istopm.
+-   **ihi**: ihi.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **B**: input matrix.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **nq**: nq.
+-   **qstart**: qstart.
+-   **Q**: input matrix.
+-   **strideQ1**: stride of dimension 1 of `Q`.
+-   **strideQ2**: stride of dimension 2 of `Q`.
+-   **offsetQ**: starting index for `Q`.
+-   **nz**: nz.
+-   **zstart**: zstart.
+-   **Z**: output matrix.
+-   **strideZ1**: stride of dimension 1 of `Z`.
+-   **strideZ2**: stride of dimension 2 of `Z`.
+-   **offsetZ**: starting index for `Z`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `zlaqz1()` corresponds to the LAPACK routine [`zlaqz1`][lapack-zlaqz1]. It is invoked by `zlaqz0`/`zhgeqz` to chase a single 1-by-1 shift bulge through a complex matrix pencil during one step of the QZ algorithm.
+-   When `k+1 === ihi`, the routine instead removes the shift from the trailing edge of the active submatrix.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlaqz1 = require( '@stdlib/lapack/base/zlaqz1' );
+
+var A = new Complex128Array( 25 );
+var B = new Complex128Array( 25 );
+var Q = new Complex128Array( 25 );
+var Z = new Complex128Array( 25 );
+
+zlaqz1( 'column-major', true, true, 1, 0, 4, 4, A, 5, B, 5, 5, 0, Q, 5, 5, 0, Z, 5 );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[lapack-zlaqz1]: https://www.netlib.org/lapack/explore-html/
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

@@ -1,0 +1,16 @@
+dsycon_3
+dsytrs_3
+dsytrf_rk
+dlasyf_rk
+dsytf2_rk
+dlacn2
+dlansy
+dlassq
+disnan
+dlaisnan
+dlamch
+ilaenv
+ieeeck
+iparmq
+la_constants
+la_xisnan

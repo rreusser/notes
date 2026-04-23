@@ -1,0 +1,12 @@
+zhetrs_rook
+zhetrf_rook
+zhetf2_rook
+zlahef_rook
+zlacgv
+disnan
+dlaisnan
+dlapy2
+dlamch
+ilaenv
+ieeeck
+iparmq

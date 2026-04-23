@@ -1,0 +1,9 @@
+zsytrs_rook
+zsytrf_rook
+zsytf2_rook
+zlasyf_rook
+zsyr
+dlamch
+ilaenv
+ieeeck
+iparmq

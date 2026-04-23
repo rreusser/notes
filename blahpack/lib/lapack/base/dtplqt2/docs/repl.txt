@@ -1,0 +1,107 @@
+
+{{alias}}( order, M, N, l, A, LDA, B, LDB, T, LDT )
+    Computes LQ factorization of a triangular-pentagonal matrix using compact WY representation (unblocked)
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        l: integer
+            l.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        T: Float64Array
+            output matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( M, N, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, T, strideT1, strideT2, offsetT )
+    Computes LQ factorization of a triangular-pentagonal matrix using compact WY representation (unblocked), using alternative indexing semantics.
+
+    Parameters
+    ----------
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        l: integer
+            l.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        T: Float64Array
+            output matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

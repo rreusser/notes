@@ -1,0 +1,116 @@
+
+{{alias}}( order, A, LDA, B, LDB, sr1, sr2, si, beta1, beta2, v, strideV )
+    Sets v to a scalar multiple of the first column of a product (real QZ shift)
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        sr1: number
+            sr1.
+
+        sr2: number
+            sr2.
+
+        si: number
+            si.
+
+        beta1: number
+            beta1.
+
+        beta2: number
+            beta2.
+
+        v: Float64Array
+            output array.
+
+        strideV: integer
+            stride length for `v`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, sr1, sr2, si, beta1, beta2, v, strideV, offsetV )
+    Sets v to a scalar multiple of the first column of a product (real QZ shift), using alternative indexing semantics.
+
+    Parameters
+    ----------
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        sr1: number
+            sr1.
+
+        sr2: number
+            sr2.
+
+        si: number
+            si.
+
+        beta1: number
+            beta1.
+
+        beta2: number
+            beta2.
+
+        v: Float64Array
+            output array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: integer
+            starting index for `V`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,0 +1,224 @@
+
+{{alias}}( N, b1, bn, lambda, d, strideD, l, strideL, LD, strideLD, LLD, strideLLD, pivmin, gaptol, z, strideZ, wantnc, negcnt, ztz, mingma, r, ISUPPZ, strideISUPPZ, offsetISUPPZ, nrminv, resid, rqcorr, WORK, strideWORK )
+    TODO: Add description for ZLAR1V.
+
+    Parameters
+    ----------
+        N: integer
+            number of columns.
+
+        b1: integer
+            b1.
+
+        bn: integer
+            bn.
+
+        lambda: number
+            lambda.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        l: Float64Array
+            input array.
+
+        strideL: integer
+            stride length for `l`.
+
+        LD: Float64Array
+            leading dimension of ``.
+
+        strideLD: integer
+            stride length for `LD`.
+
+        LLD: Float64Array
+            input array.
+
+        strideLLD: integer
+            stride length for `LLD`.
+
+        pivmin: number
+            pivmin.
+
+        gaptol: number
+            gaptol.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        wantnc: boolean
+            wantnc.
+
+        negcnt: integer
+            negcnt.
+
+        ztz: number
+            ztz.
+
+        mingma: number
+            mingma.
+
+        r: integer
+            r.
+
+        ISUPPZ: Int32Array
+            input array.
+
+        strideISUPPZ: integer
+            stride length for `ISUPPZ`.
+
+        offsetISUPPZ: integer
+            starting index for `ISUPPZ`.
+
+        nrminv: number
+            nrminv.
+
+        resid: number
+            resid.
+
+        rqcorr: number
+            rqcorr.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( N, b1, bn, lambda, d, strideD, offsetD, l, strideL, offsetL, LD, strideLD, offsetLD, LLD, strideLLD, offsetLLD, pivmin, gaptol, z, strideZ, offsetZ, wantnc, negcnt, ztz, mingma, r, ISUPPZ, strideISUPPZ, offsetISUPPZ, nrminv, resid, rqcorr, WORK, strideWORK, offsetWORK )
+    TODO: Add description for ZLAR1V., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        N: integer
+            number of columns.
+
+        b1: integer
+            b1.
+
+        bn: integer
+            bn.
+
+        lambda: number
+            lambda.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: integer
+            starting index for `D`.
+
+        l: Float64Array
+            input array.
+
+        strideL: integer
+            stride length for `l`.
+
+        offsetL: integer
+            starting index for `L`.
+
+        LD: Float64Array
+            input array.
+
+        strideLD: integer
+            stride length for `LD`.
+
+        offsetLD: integer
+            starting index for `LD`.
+
+        LLD: Float64Array
+            input array.
+
+        strideLLD: integer
+            stride length for `LLD`.
+
+        offsetLLD: integer
+            starting index for `LLD`.
+
+        pivmin: number
+            pivmin.
+
+        gaptol: number
+            gaptol.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: integer
+            starting index for `Z`.
+
+        wantnc: boolean
+            wantnc.
+
+        negcnt: integer
+            negcnt.
+
+        ztz: number
+            ztz.
+
+        mingma: number
+            mingma.
+
+        r: integer
+            r.
+
+        ISUPPZ: Int32Array
+            input array.
+
+        strideISUPPZ: integer
+            stride length for `ISUPPZ`.
+
+        offsetISUPPZ: integer
+            starting index for `ISUPPZ`.
+
+        nrminv: number
+            nrminv.
+
+        resid: number
+            resid.
+
+        rqcorr: number
+            rqcorr.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

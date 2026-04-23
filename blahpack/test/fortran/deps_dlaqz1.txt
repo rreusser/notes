@@ -1,0 +1,7 @@
+disnan
+dlaisnan
+dlamch
+dlaqz1
+ieeeck
+ilaenv
+iparmq

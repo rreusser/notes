@@ -134,7 +134,7 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Apply row interchanges to [A12; A22]
 		// Reads IPIV at positions 0..n1-1 (offsetIPIV)
-		dlaswp( n2, A, sa1, sa2, offsetA + (n1 * sa2), 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
+		dlaswp( n2, A, sa1, sa2, offsetA + (n1 * sa2), 0, n1 - 1, 1, IPIV, strideIPIV, offsetIPIV );
 
 		// Solve A11 * A12_new = A12 (triangular solve)
 
@@ -158,7 +158,7 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Apply the second set of row interchanges to A11 columns
 		// Reads IPIV at positions n1..minMN-1 (offset by n1 from start)
-		dlaswp( n1, A, sa1, sa2, offsetA, n1, minMN - 1, IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV), 1);
+		dlaswp( n1, A, sa1, sa2, offsetA, n1, minMN - 1, 1, IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV) );
 	}
 
 	return info;

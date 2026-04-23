@@ -18,21 +18,28 @@
 
 'use strict';
 
-var discreteUniform = require( '@stdlib/random/array/discrete-uniform' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgesv = require( './../lib' );
 
-var opts = {
-	'dtype': 'float64'
-};
-var N = 3;
-var A = discreteUniform( N * N, -10, 10, opts );
-var B = discreteUniform( N * N, -10, 10, opts );
-var IPIV = discreteUniform( N, -10, 10, opts );
+// Solve: A * X = B where A is 3x3 (column-major) and B is 3x1
+var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
+var IPIV = new Int32Array( 3 );
+var B = new Float64Array( [ 4.0, 10.0, 24.0 ] );
 
 // Using the standard interface:
-var out = dgesv( 'row-major', N, N, A, N, IPIV, 1, B, N );
-console.log( out );
+var info = dgesv( 'column-major', 3, 1, A, 3, IPIV, 1, B, 3 );
+console.log( 'info:', info );
+// => info: 0
+console.log( 'solution X:', B );
+// => solution X: Float64Array [ 1.0, 1.0, 1.0 ]
 
 // Using the ndarray interface:
-out = dgesv.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
-console.log( out );
+A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
+IPIV = new Int32Array( 3 );
+B = new Float64Array( [ 4.0, 10.0, 24.0 ] );
+info = dgesv.ndarray( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+console.log( 'info:', info );
+// => info: 0
+console.log( 'solution X:', B );
+// => solution X: Float64Array [ 1.0, 1.0, 1.0 ]

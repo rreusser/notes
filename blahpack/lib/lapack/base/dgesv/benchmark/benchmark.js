@@ -46,10 +46,19 @@ var options = {
 * @returns {Function} benchmark function
 */
 function createBenchmark( len ) {
-	var N = len;
-	var A = uniform( N * N, -10.0, 10.0, options );
-	var B = uniform( N * N, -10.0, 10.0, options );
-	var IPIV = uniform( N, -10.0, 10.0, options );
+	var iopts;
+	var IPIV;
+	var N;
+	var A;
+	var B;
+
+	N = len;
+	iopts = {
+		'dtype': 'int32'
+	};
+	A = uniform( N * N, -10.0, 10.0, options );
+	B = uniform( N * N, -10.0, 10.0, options );
+	IPIV = uniform( N, 0, N - 1, iopts );
 	return benchmark;
 
 	/**

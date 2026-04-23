@@ -1,0 +1,143 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dsytri2x
+
+> Compute the inverse of a real symmetric indefinite matrix (classic Bunch-Kaufman, blocked worker)
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dsytri2x = require( '@stdlib/lapack/base/dsytri2x' );
+```
+
+#### dsytri2x( order, uplo, N, A, LDA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, nb )
+
+Compute the inverse of a real symmetric indefinite matrix (classic Bunch-Kaufman, blocked worker)
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 5.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var work = new Float64Array( 20 );
+
+dsytri2x( 'column-major', 'lower', 1, A, 1, IPIV, 1, 0, work, 1, 2 );
+// A => <Float64Array>[ 0.2 ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: `'upper'` or `'lower'`. Must match the factorization.
+-   **N**: order of the matrix `A`.
+-   **A**: input/output matrix; on entry, the factored form from `dsytrf`; on exit, the symmetric inverse.
+-   **LDA**: leading dimension of `A`.
+-   **IPIV**: pivot indices from `dsytrf`.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: workspace of length `(N+nb+1)*(nb+3)`.
+-   **strideWORK**: stride length for `WORK`.
+-   **nb**: block size.
+
+#### dsytri2x.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, nb )
+
+Compute the inverse of a real symmetric indefinite matrix (classic Bunch-Kaufman, blocked worker), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 5.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var work = new Float64Array( 20 );
+
+dsytri2x.ndarray( 'lower', 1, A, 1, 1, 0, IPIV, 1, 0, work, 1, 0, 2 );
+// A => <Float64Array>[ 0.2 ]
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A`.
+-   **strideA2**: stride of the second dimension of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `WORK` is logically a 2D array of shape `(N+nb+1) x (nb+3)` stored column-major with leading dimension `N+nb+1`.
+-   `IPIV` follows the JS convention used by `dsyconv`: non-negative entries encode `1x1` pivot blocks; negative entries `raw` encode `2x2` pivot blocks with target `~raw`.
+-   Returns `0` on success; a positive integer `k` indicates that `D[k,k] = 0` and the inverse could not be computed.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytri2x = require( '@stdlib/lapack/base/dsytri2x' );
+
+var A = new Float64Array( [ 5.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var work = new Float64Array( 20 );
+
+var info = dsytri2x( 'column-major', 'lower', 1, A, 1, IPIV, 1, 0, work, 1, 2 );
+console.log( info );
+console.log( A );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

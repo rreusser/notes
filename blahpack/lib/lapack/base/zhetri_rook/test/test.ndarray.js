@@ -1,0 +1,221 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Int32Array = require( '@stdlib/array/int32' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zhetriRook = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fix3x3UpperF = require( './fixtures/3x3_upper_factored.json' );
+var fix3x3UpperI = require( './fixtures/3x3_upper.json' );
+var fix3x3LowerF = require( './fixtures/3x3_lower_factored.json' );
+var fix3x3LowerI = require( './fixtures/3x3_lower.json' );
+var fix4x4UpperIndefF = require( './fixtures/4x4_upper_indef_factored.json' );
+var fix4x4UpperIndefI = require( './fixtures/4x4_upper_indef.json' );
+var fix4x4LowerIndefF = require( './fixtures/4x4_lower_indef_factored.json' );
+var fix4x4LowerIndefI = require( './fixtures/4x4_lower_indef.json' );
+var fix4x4UpperSwapF = require( './fixtures/4x4_upper_swap_factored.json' );
+var fix4x4UpperSwapI = require( './fixtures/4x4_upper_swap.json' );
+var fix4x4LowerSwapF = require( './fixtures/4x4_lower_swap_factored.json' );
+var fix4x4LowerSwapI = require( './fixtures/4x4_lower_swap.json' );
+var fixN1UpperF = require( './fixtures/n1_upper_factored.json' );
+var fixN1UpperI = require( './fixtures/n1_upper.json' );
+var fixN1LowerF = require( './fixtures/n1_lower_factored.json' );
+var fixN1LowerI = require( './fixtures/n1_lower.json' );
+
+
+// FUNCTIONS //
+
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Converts Fortran 1-based IPIV to JS 0-based IPIV (with bitwise NOT for negatives).
+*
+* @private
+* @param {Array} ipiv - Fortran 1-based pivot indices
+* @returns {Int32Array} 0-based pivot indices
+*/
+function convertIPIV( ipiv ) {
+	var out;
+	var i;
+	out = new Int32Array( ipiv.length );
+	for ( i = 0; i < ipiv.length; i++ ) {
+		if ( ipiv[ i ] >= 0 ) {
+			out[ i ] = ipiv[ i ] - 1;
+		} else {
+			out[ i ] = ~( ( -ipiv[ i ] ) - 1 );
+		}
+	}
+	return out;
+}
+
+/**
+* Builds a Complex128Array from flat interleaved real/imag fixture data.
+*
+* @private
+* @param {Array} arr - flat array (length `2*N*N`)
+* @param {NonNegativeInteger} N - matrix order
+* @returns {Complex128Array} complex matrix
+*/
+function complexMatFromFixture( arr, N ) {
+	var view;
+	var out;
+	var i;
+	out = new Complex128Array( N * N );
+	view = reinterpret( out, 0 );
+	for ( i = 0; i < 2 * N * N; i++ ) {
+		view[ i ] = arr[ i ];
+	}
+	return out;
+}
+
+/**
+* Slices and copies the first `2*N*N` entries of a fixture array.
+*
+* @private
+* @param {Array} arr - source array
+* @param {NonNegativeInteger} N - matrix order
+* @returns {Array} sliced expected values
+*/
+function expectedFromFixture( arr, N ) {
+	return arr.slice( 0, 2 * N * N );
+}
+
+/**
+* Runs a fixture-based test.
+*
+* @private
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - matrix order
+* @param {Object} fact - factored fixture (input)
+* @param {Object} inv - inverse fixture (expected)
+*/
+function runFixture( uplo, N, fact, inv ) {
+	var expected;
+	var ipiv;
+	var work;
+	var info;
+	var view;
+	var A;
+
+	A = complexMatFromFixture( fact.a, N );
+	ipiv = convertIPIV( fact.ipiv.slice( 0, N ) );
+	expected = expectedFromFixture( inv.a, N );
+	work = new Complex128Array( N );
+	info = zhetriRook( uplo, N, A, 1, N, 0, ipiv, 1, 0, work, 1, 0 );
+	assert.equal( info, inv.info, 'info' );
+	view = reinterpret( A, 0 );
+	assertArrayClose( Array.prototype.slice.call( view ), expected, 1e-12, 'A' );
+}
+
+
+// TESTS //
+
+test( 'zhetri_rook: n1_upper', function t() {
+	runFixture( 'upper', 1, fixN1UpperF, fixN1UpperI );
+});
+
+test( 'zhetri_rook: n1_lower', function t() {
+	runFixture( 'lower', 1, fixN1LowerF, fixN1LowerI );
+});
+
+test( 'zhetri_rook: 3x3_upper', function t() {
+	runFixture( 'upper', 3, fix3x3UpperF, fix3x3UpperI );
+});
+
+test( 'zhetri_rook: 3x3_lower', function t() {
+	runFixture( 'lower', 3, fix3x3LowerF, fix3x3LowerI );
+});
+
+test( 'zhetri_rook: 4x4_upper_indef', function t() {
+	runFixture( 'upper', 4, fix4x4UpperIndefF, fix4x4UpperIndefI );
+});
+
+test( 'zhetri_rook: 4x4_lower_indef', function t() {
+	runFixture( 'lower', 4, fix4x4LowerIndefF, fix4x4LowerIndefI );
+});
+
+test( 'zhetri_rook: 4x4_upper_swap', function t() {
+	runFixture( 'upper', 4, fix4x4UpperSwapF, fix4x4UpperSwapI );
+});
+
+test( 'zhetri_rook: 4x4_lower_swap', function t() {
+	runFixture( 'lower', 4, fix4x4LowerSwapF, fix4x4LowerSwapI );
+});
+
+test( 'zhetri_rook: n_zero', function t() {
+	var work;
+	var ipiv;
+	var info;
+	var A;
+
+	A = new Complex128Array( 1 );
+	ipiv = new Int32Array( 1 );
+	work = new Complex128Array( 1 );
+	info = zhetriRook( 'upper', 0, A, 1, 1, 0, ipiv, 1, 0, work, 1, 0 );
+	assert.equal( info, 0, 'info' );
+});
+
+test( 'zhetri_rook: singular upper returns positive info', function t() {
+	var ipiv;
+	var work;
+	var info;
+	var A;
+
+	// Diagonal D(2,2) = 0
+	A = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+	ipiv = new Int32Array( [ 0, 1 ] );
+	work = new Complex128Array( 2 );
+	info = zhetriRook( 'upper', 2, A, 1, 2, 0, ipiv, 1, 0, work, 1, 0 );
+	assert.equal( info, 2, 'info should be 2' );
+});
+
+test( 'zhetri_rook: singular lower returns positive info', function t() {
+	var ipiv;
+	var work;
+	var info;
+	var A;
+
+	A = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+	ipiv = new Int32Array( [ 0, 1 ] );
+	work = new Complex128Array( 2 );
+	info = zhetriRook( 'lower', 2, A, 1, 2, 0, ipiv, 1, 0, work, 1, 0 );
+	assert.equal( info, 1, 'info should be 1' );
+});

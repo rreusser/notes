@@ -218,7 +218,7 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			// Within the band (dlaswp)
 
 			// Dlaswp uses 0-based indices; IPIV values are relative to panel
-			dlaswp( j2, AB, sa1, sa2 - sa1, offsetAB + (( kv - jb ) * sa1) + (( j + jb ) * sa2), 0, jb - 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV), 1 );
+			dlaswp( j2, AB, sa1, sa2 - sa1, offsetAB + (( kv - jb ) * sa1) + (( j + jb ) * sa2), 0, jb - 1, 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV) );
 
 			// Adjust IPIV to global indices (add j)
 			for ( i = j; i < j + jb; i++ ) {

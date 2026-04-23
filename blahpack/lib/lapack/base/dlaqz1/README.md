@@ -1,0 +1,151 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dlaqz1
+
+> Sets v to a scalar multiple of the first column of a product (real QZ shift)
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dlaqz1 = require( '@stdlib/lapack/base/dlaqz1' );
+```
+
+#### dlaqz1( order, A, LDA, B, LDB, sr1, sr2, si, beta1, beta2, v, strideV )
+
+Sets v to a scalar multiple of the first column of a product (real QZ shift)
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 4.0, 2.0, 0.0, 1.0, 5.0, 3.0, 0.5, 1.0, 6.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 0.5, 3.0, 0.0, 0.1, 0.5, 4.0 ] );
+var v = new Float64Array( 3 );
+
+dlaqz1( 'column-major', A, 3, B, 3, 1.0, 2.0, 0.0, 1.0, 1.0, v, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **A**: 3-by-3 input matrix `A`.
+-   **LDA**: leading dimension of `A` (must be `>= 3`).
+-   **B**: 3-by-3 input matrix `B`.
+-   **LDB**: leading dimension of `B` (must be `>= 3`).
+-   **sr1**: real part of the first shift.
+-   **sr2**: real part of the second shift.
+-   **si**: imaginary part of the shift.
+-   **beta1**: first beta scalar.
+-   **beta2**: second beta scalar.
+-   **v**: output array of length `>= 3`.
+-   **strideV**: stride length for `v`.
+
+#### dlaqz1.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, sr1, sr2, si, beta1, beta2, v, strideV, offsetV )
+
+Sets v to a scalar multiple of the first column of a product (real QZ shift), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 4.0, 2.0, 0.0, 1.0, 5.0, 3.0, 0.5, 1.0, 6.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 0.5, 3.0, 0.0, 0.1, 0.5, 4.0 ] );
+var v = new Float64Array( 3 );
+
+dlaqz1.ndarray( A, 1, 3, 0, B, 1, 3, 0, 1.0, 2.0, 0.0, 1.0, 1.0, v, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **B**: input matrix.
+-   **strideB1**: stride of dimension 1 of `B`.
+-   **strideB2**: stride of dimension 2 of `B`.
+-   **offsetB**: starting index for `B`.
+-   **sr1**: sr1.
+-   **sr2**: sr2.
+-   **si**: si.
+-   **beta1**: beta1.
+-   **beta2**: beta2.
+-   **v**: output array.
+-   **strideV**: stride length for `v`.
+-   **offsetV**: starting index for `V`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `dlaqz1()` corresponds to the LAPACK routine [`dlaqz1`][lapack-dlaqz1]. It is used to seed the double implicit shift bulges in the QZ algorithm.
+-   It is assumed that either `sr1 = sr2`, or `si = 0`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlaqz1 = require( '@stdlib/lapack/base/dlaqz1' );
+
+var A = new Float64Array( [ 4.0, 2.0, 0.0, 1.0, 5.0, 3.0, 0.5, 1.0, 6.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 0.5, 3.0, 0.0, 0.1, 0.5, 4.0 ] );
+var v = new Float64Array( 3 );
+
+dlaqz1( 'column-major', A, 3, B, 3, 1.0, 2.0, 0.0, 1.0, 1.0, v, 1 );
+console.log( v );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[lapack-dlaqz1]: https://www.netlib.org/lapack/explore-html/
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

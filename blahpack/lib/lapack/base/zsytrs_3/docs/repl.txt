@@ -1,0 +1,122 @@
+
+{{alias}}( order, uplo, N, nrhs, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV, B, LDB )
+    Solve A*X = B for symmetric (non-Hermitian) complex A using factorization computed by ZSYTRF_RK
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        uplo: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: integer
+            starting index for `IPIV`.
+
+        B: Float64Array
+            output matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+    Solve A*X = B for symmetric (non-Hermitian) complex A using factorization computed by ZSYTRF_RK, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        uplo: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: integer
+            starting index for `E`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: integer
+            starting index for `IPIV`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

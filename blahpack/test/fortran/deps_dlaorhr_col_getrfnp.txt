@@ -1,0 +1,9 @@
+dlamch
+dlaorhr_col_getrfnp
+dlaorhr_col_getrfnp2
+ieeeck
+ilaenv
+iparmq
+dgemm
+dscal
+dtrsm

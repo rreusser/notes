@@ -1,0 +1,162 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dsytf2_rk
+
+> Factorizes a symmetric matrix A using the bounded Bunch-Kaufman (rook) diagonal pivoting method (_rk format).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dsytf2_rk = require( '@stdlib/lapack/base/dsytf2_rk' );
+```
+
+#### dsytf2_rk( order, uplo, N, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV )
+
+Factorizes a symmetric matrix A using the bounded Bunch-Kaufman (rook) diagonal pivoting method (_rk format).
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array([
+    4, 1, -2, 0.5,
+    0, -3, 1, 2,
+    0, 0, 5, -1,
+    0, 0, 0, 2
+]);
+var e = new Float64Array( 4 );
+var ipiv = new Int32Array( 4 );
+
+dsytf2_rk( 'column-major', 'lower', 4, A, 4, e, 1, ipiv, 1, 0 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **IPIV**: output array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+
+#### dsytf2_rk.ndarray( uplo, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV )
+
+Factorizes a symmetric matrix A using the bounded Bunch-Kaufman (rook) diagonal pivoting method (_rk format)., using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array([
+    4, 1, -2, 0.5,
+    0, -3, 1, 2,
+    0, 0, 5, -1,
+    0, 0, 0, 2
+]);
+var e = new Float64Array( 4 );
+var ipiv = new Int32Array( 4 );
+
+dsytf2_rk.ndarray( 'lower', 4, A, 1, 4, 0, e, 1, 0, ipiv, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **offsetE**: starting index for `E`.
+-   **IPIV**: output array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   This routine computes the factorization `A = P*U*D*(U^T)*(P^T)` (upper) or `A = P*L*D*(L^T)*(P^T)` (lower), where `D` is block diagonal with `1x1` and `2x2` blocks. The off-diagonal entries of `D` are returned in the `e` vector; the diagonal of `D` is stored on the diagonal of `A`.
+-   `IPIV` uses 0-based indexing: non-negative values denote `1x1` pivots (`IPIV[k]` is the swap target row), negative values denote `2x2` blocks (the target row is `~IPIV[k]`).
+-   This is the unblocked Level-2 kernel typically called by `dsytrf_rk`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytf2_rk = require( '@stdlib/lapack/base/dsytf2_rk' );
+
+var A = new Float64Array([
+    4, 1, -2, 0.5,
+    0, -3, 1, 2,
+    0, 0, 5, -1,
+    0, 0, 0, 2
+]);
+var e = new Float64Array( 4 );
+var ipiv = new Int32Array( 4 );
+
+var info = dsytf2_rk( 'column-major', 'lower', 4, A, 4, e, 1, ipiv, 1, 0 );
+console.log( info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

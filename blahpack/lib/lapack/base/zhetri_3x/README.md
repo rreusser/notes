@@ -1,0 +1,164 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zhetri_3x
+
+> Compute the inverse of a complex Hermitian indefinite matrix using the factorization computed by zhetrf_rk (worker routine called by zhetri_3)
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zhetri_3x = require( '@stdlib/lapack/base/zhetri_3x' );
+```
+
+#### zhetri_3x( order, uplo, N, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, nb )
+
+Compute the inverse of a complex Hermitian indefinite matrix using the factorization computed by zhetrf_rk (worker routine called by zhetri_3)
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+// Factored form of a 1x1 Hermitian matrix [[5+0i]]:
+var A = new Complex128Array( [ 5.0, 0.0 ] );
+var e = new Complex128Array( 1 );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Complex128Array( 6 );
+
+var info = zhetri_3x( 'column-major', 'lower', 1, A, 1, e, 1, ipiv, 1, 0, work, 1, 1 );
+// info => 0
+// A.get( 0 ) ~ 0.2 + 0i
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **nb**: nb.
+
+#### zhetri_3x.ndarray( uplo, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, nb )
+
+Compute the inverse of a complex Hermitian indefinite matrix using the factorization computed by zhetrf_rk (worker routine called by zhetri_3), using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 5.0, 0.0 ] );
+var e = new Complex128Array( 1 );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Complex128Array( 6 );
+
+var info = zhetri_3x.ndarray( 'lower', 1, A, 1, 1, 0, e, 1, 0, ipiv, 1, 0, work, 1, 0, 1 );
+// info => 0
+// A.get( 0 ) ~ 0.2 + 0i
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **offsetE**: starting index for `E`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **nb**: nb.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `zhetri_3x` inverts a complex Hermitian indefinite matrix `A` using the factorization `A = P*U*D*U^H*P^T` (if `uplo = 'upper'`) or `A = P*L*D*L^H*P^T` (if `uplo = 'lower'`) produced by `zhetrf_rk` (the rook-pivoting Bunch-Kaufman factorization). It is the worker routine called by `zhetri_3`.
+-   The `IPIV` array follows the rook convention: non-negative values are 0-based row indices for `1x1` pivots; negative values are bitwise-NOT-encoded 0-based swap rows for `2x2` pivots.
+-   The diagonal of the computed inverse is real (imaginary parts are numerically zero up to rounding).
+-   `WORK` must be at least `(N + nb + 1) * (nb + 3)` complex elements.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhetri_3x = require( '@stdlib/lapack/base/zhetri_3x' );
+
+var A = new Complex128Array( [ 5.0, 0.0 ] );
+var e = new Complex128Array( 1 );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Complex128Array( 6 );
+
+var info = zhetri_3x( 'column-major', 'lower', 1, A, 1, e, 1, ipiv, 1, 0, work, 1, 1 );
+console.log( info );
+console.log( A.get( 0 ) );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

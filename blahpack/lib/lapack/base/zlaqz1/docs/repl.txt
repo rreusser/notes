@@ -1,0 +1,167 @@
+
+{{alias}}( order, ilq, ilz, K, istartm, istopm, ihi, A, LDA, B, LDB, nq, qstart, Q, LDQ, nz, zstart, Z, LDZ )
+    Chases a 1x1 shift bulge in a matrix pencil down a single position (complex QZ)
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        ilq: boolean
+            ilq.
+
+        ilz: boolean
+            ilz.
+
+        K: integer
+            number of superdiagonals.
+
+        istartm: integer
+            istartm.
+
+        istopm: integer
+            istopm.
+
+        ihi: integer
+            ihi.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        nq: integer
+            nq.
+
+        qstart: integer
+            qstart.
+
+        Q: Float64Array
+            input matrix.
+
+        LDQ: integer
+            leading dimension of `Q`.
+
+        nz: integer
+            nz.
+
+        zstart: integer
+            zstart.
+
+        Z: Float64Array
+            output matrix.
+
+        LDZ: integer
+            leading dimension of `Z`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( ilq, ilz, K, istartm, istopm, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, nq, qstart, Q, strideQ1, strideQ2, offsetQ, nz, zstart, Z, strideZ1, strideZ2, offsetZ )
+    Chases a 1x1 shift bulge in a matrix pencil down a single position (complex QZ), using alternative indexing semantics.
+
+    Parameters
+    ----------
+        ilq: boolean
+            ilq.
+
+        ilz: boolean
+            ilz.
+
+        K: integer
+            number of superdiagonals.
+
+        istartm: integer
+            istartm.
+
+        istopm: integer
+            istopm.
+
+        ihi: integer
+            ihi.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        nq: integer
+            nq.
+
+        qstart: integer
+            qstart.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of dimension 1 of `Q`.
+
+        strideQ2: integer
+            stride of dimension 2 of `Q`.
+
+        offsetQ: integer
+            starting index for `Q`.
+
+        nz: integer
+            nz.
+
+        zstart: integer
+            zstart.
+
+        Z: Float64Array
+            output matrix.
+
+        strideZ1: integer
+            stride of dimension 1 of `Z`.
+
+        strideZ2: integer
+            stride of dimension 2 of `Z`.
+
+        offsetZ: integer
+            starting index for `Z`.
+
+    Returns
+    -------
+    out: None
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

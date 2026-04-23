@@ -1,0 +1,8 @@
+dlamch
+ieeeck
+ilaenv
+iparmq
+zgemm
+ztrsm
+zlaunhr_col_getrfnp
+zlaunhr_col_getrfnp2

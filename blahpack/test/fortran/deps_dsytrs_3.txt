@@ -1,0 +1,8 @@
+dsytrs_3
+dsytrf_rk
+dlasyf_rk
+dsytf2_rk
+dlamch
+ilaenv
+ieeeck
+iparmq

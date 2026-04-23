@@ -1,0 +1,16 @@
+zhecon_3
+zhetrs_3
+zhetrf_rk
+zlahef_rk
+zhetf2_rk
+zlacn2
+dzsum1
+izmax1
+dlamch
+ilaenv
+ieeeck
+iparmq
+disnan
+dlaisnan
+zlacgv
+dlapy2

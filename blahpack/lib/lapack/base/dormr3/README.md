@@ -1,0 +1,158 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dormr3
+
+> multiplies a general matrix by the orthogonal matrix Q from an RZ factorization
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dormr3 = require( '@stdlib/lapack/base/dormr3' );
+```
+
+#### dormr3( order, side, trans, M, N, K, l, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK )
+
+multiplies a general matrix by the orthogonal matrix Q from an RZ factorization
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( 6 );   // 2 reflectors, LDA=2
+var TAU = new Float64Array( 2 );
+var C = new Float64Array([ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]);
+var WORK = new Float64Array( 3 );
+
+dormr3( 'column-major', 'left', 'no-transpose', 3, 3, 2, 0, A, 2, TAU, 1, C, 3, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: specifies the operation type.
+-   **trans**: specifies the operation type.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **K**: number of superdiagonals.
+-   **l**: l.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: input array.
+-   **strideTAU**: stride length for `TAU`.
+-   **C**: input matrix.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+
+#### dormr3.ndarray( side, trans, M, N, K, l, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+multiplies a general matrix by the orthogonal matrix Q from an RZ factorization, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( 6 );
+var TAU = new Float64Array( 2 );
+var C = new Float64Array([ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]);
+var WORK = new Float64Array( 3 );
+
+dormr3.ndarray( 'left', 'no-transpose', 3, 3, 2, 0, A, 1, 2, 0, TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **side**: specifies the operation type.
+-   **trans**: specifies the operation type.
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **K**: number of superdiagonals.
+-   **l**: l.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **TAU**: input array.
+-   **strideTAU**: stride length for `TAU`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **C**: input matrix.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `A` contains the meaningful trailing `l`-vectors of the Householder reflectors as returned by `dtzrzf`; entries outside those positions are not accessed.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dormr3 = require( '@stdlib/lapack/base/dormr3' );
+
+var A = new Float64Array( 6 );
+var TAU = new Float64Array( 2 );
+var C = new Float64Array([ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]);
+var WORK = new Float64Array( 3 );
+
+dormr3( 'column-major', 'left', 'no-transpose', 3, 3, 2, 0, A, 2, TAU, 1, C, 3, WORK, 1 );
+console.log( C );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

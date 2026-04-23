@@ -1,0 +1,136 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zsytrs_3
+
+> Solve a system `A*X = B` for a complex symmetric (NOT Hermitian) matrix `A` using the factorization computed by `zsytrf_rk` (rook pivoting, bounded Bunch-Kaufman).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zsytrs3 = require( '@stdlib/lapack/base/zsytrs_3' );
+```
+
+#### zsytrs3( order, uplo, N, nrhs, A, LDA, e, strideE, IPIV, strideIPIV, B, LDB )
+
+Solves `A*X = B` for a complex symmetric matrix `A` using the factorization `A = P*U*D*U^T*P^T` or `A = P*L*D*L^T*P^T` returned by `zsytrf_rk`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 4.0, 1.0, 0.0, 0.0, 0.0, 0.0, 5.0, -1.0 ] );
+var e = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var B = new Complex128Array( [ 4.0, 1.0, 5.0, -1.0 ] );
+
+zsytrs3( 'column-major', 'lower', 2, 1, A, 2, e, 1, IPIV, 1, B, 2 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: matrix triangle (`'upper'` or `'lower'`); must match the factorization.
+-   **N**: order of the matrix `A`.
+-   **nrhs**: number of right-hand side vectors.
+-   **A**: factored matrix from `zsytrf_rk`.
+-   **LDA**: leading dimension of `A`.
+-   **e**: super- or sub-diagonal entries of the block diagonal matrix `D`.
+-   **strideE**: stride length for `e`.
+-   **IPIV**: pivot indices from `zsytrf_rk`.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **B**: input/output right-hand side / solution matrix.
+-   **LDB**: leading dimension of `B`.
+
+#### zsytrs3.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+
+Solves `A*X = B` using alternative indexing semantics (separate strides and offsets for each array).
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 4.0, 1.0, 0.0, 0.0, 0.0, 0.0, 5.0, -1.0 ] );
+var e = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var B = new Complex128Array( [ 4.0, 1.0, 5.0, -1.0 ] );
+
+zsytrs3.ndarray( 'lower', 2, 1, A, 1, 2, 0, e, 1, 0, IPIV, 1, 0, B, 1, 2, 0 );
+```
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   Unlike its Hermitian counterpart `zhetrs_3`, the diagonal entries of the symmetric factor `D` are fully complex; the routine performs a true complex division when scaling rows. The triangular solves use `'transpose'` (not `'conjugate-transpose'`).
+-   `IPIV` follows the bitwise-NOT encoding used by `zsytrf_rk`: positive 0-based indices for `1x1` pivot blocks, and `~kp` for `2x2` pivot blocks.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsytrs3 = require( '@stdlib/lapack/base/zsytrs_3' );
+
+var A = new Complex128Array( [ 4.0, 1.0, 0.0, 0.0, 0.0, 0.0, 5.0, -1.0 ] );
+var e = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var B = new Complex128Array( [ 4.0, 1.0, 5.0, -1.0 ] );
+
+zsytrs3( 'column-major', 'lower', 2, 1, A, 2, e, 1, IPIV, 1, B, 2 );
+console.log( B );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

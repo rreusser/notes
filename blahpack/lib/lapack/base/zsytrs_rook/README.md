@@ -1,0 +1,138 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zsytrs_rook
+
+> Solves a system of linear equations `A*X = B` with a complex symmetric matrix `A` using the factorization computed by `zsytrf_rook` (rook pivoting Bunch-Kaufman).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zsytrsRook = require( '@stdlib/lapack/base/zsytrs-rook' );
+```
+
+#### zsytrsRook( order, uplo, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
+
+Solves a system of linear equations `A*X = B` with a complex symmetric matrix `A`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 3.0, 2.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var b = new Complex128Array( [ 1.0, 1.0 ] );
+
+zsytrsRook( 'column-major', 'upper', 1, 1, A, 1, ipiv, 1, b, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: `'upper'` or `'lower'`, must match the factorization.
+-   **N**: order of the matrix `A`.
+-   **nrhs**: number of right-hand side vectors.
+-   **A**: factored matrix from `zsytrf_rook`.
+-   **LDA**: leading dimension of `A`.
+-   **IPIV**: pivot indices from `zsytrf_rook`.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **B**: input/output right-hand side / solution matrix.
+-   **LDB**: leading dimension of `B`.
+
+#### zsytrsRook.ndarray( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+
+Solves the same system using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Complex128Array( [ 3.0, 2.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var b = new Complex128Array( [ 1.0, 1.0 ] );
+
+zsytrsRook.ndarray( 'upper', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: first stride of `A` (in complex elements).
+-   **strideA2**: second stride of `A` (in complex elements).
+-   **offsetA**: offset into `A` (in complex elements).
+-   **offsetIPIV**: offset into `IPIV`.
+-   **strideB1**: first stride of `B` (in complex elements).
+-   **strideB2**: second stride of `B` (in complex elements).
+-   **offsetB**: offset into `B` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `IPIV` follows the 0-based JS convention used by `zsytrf_rook`: a non-negative entry indicates a 1x1 pivot block (with row swap target stored as a 0-based index); a negative entry indicates a 2x2 pivot block, encoded as `~kp` (bitwise NOT of the 0-based row index). For rook pivoting, BOTH entries of a 2x2 block are negative.
+-   This routine treats `A` as **complex symmetric** (not Hermitian): the diagonal entries are fully complex and there is no conjugation in the back-substitution sweep.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsytrsRook = require( '@stdlib/lapack/base/zsytrs-rook' );
+
+var A = new Complex128Array( [ 3.0, 2.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var b = new Complex128Array( [ 1.0, 1.0 ] );
+
+zsytrsRook( 'column-major', 'upper', 1, 1, A, 1, ipiv, 1, b, 1 );
+console.log( b );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

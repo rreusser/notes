@@ -1,0 +1,17 @@
+zsytri_3x
+zsytrf_rk
+zlasyf_rk
+zsytf2_rk
+zsyr
+zsyswapr
+zgemm
+ztrmm
+ztrtri
+ztrti2
+dlamch
+dlapy2
+disnan
+dlaisnan
+ilaenv
+ieeeck
+iparmq

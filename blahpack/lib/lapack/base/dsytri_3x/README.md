@@ -1,0 +1,163 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dsytri_3x
+
+> Compute the inverse of a real symmetric indefinite matrix using factorization computed by dsytrf_rk (worker routine called by dsytri_3)
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dsytri_3x = require( '@stdlib/lapack/base/dsytri_3x' );
+```
+
+#### dsytri_3x( order, uplo, N, A, LDA, e, strideE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, nb )
+
+Compute the inverse of a real symmetric indefinite matrix using factorization computed by dsytrf_rk (worker routine called by dsytri_3)
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+// Factored form of a 1x1 symmetric matrix [[5]]:
+var A = new Float64Array( [ 5.0 ] );
+var e = new Float64Array( [ 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Float64Array( 6 );
+
+var info = dsytri_3x( 'column-major', 'lower', 1, A, 1, e, 1, ipiv, 1, 0, work, 1, 1 );
+// info => 0
+// A => <Float64Array>[ 0.2 ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **nb**: nb.
+
+#### dsytri_3x.ndarray( uplo, N, A, strideA1, strideA2, offsetA, e, strideE, offsetE, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, nb )
+
+Compute the inverse of a real symmetric indefinite matrix using factorization computed by dsytrf_rk (worker routine called by dsytri_3), using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 5.0 ] );
+var e = new Float64Array( [ 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Float64Array( 6 );
+
+var info = dsytri_3x.ndarray( 'lower', 1, A, 1, 1, 0, e, 1, 0, ipiv, 1, 0, work, 1, 0, 1 );
+// info => 0
+// A => <Float64Array>[ 0.2 ]
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **e**: input array.
+-   **strideE**: stride length for `e`.
+-   **offsetE**: starting index for `E`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+-   **nb**: nb.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `dsytri_3x` inverts a real symmetric indefinite matrix `A` using the factorization `A = P*U*D*U^T*P^T` (if `uplo = 'upper'`) or `A = P*L*D*L^T*P^T` (if `uplo = 'lower'`) produced by `dsytrf_rk` (the rook-pivoting Bunch-Kaufman factorization). It is the unblocked-style worker routine called by `dsytri_3`.
+-   The `IPIV` array follows the rook convention: non-negative values are 0-based row indices for `1x1` pivots; negative values are bitwise-NOT-encoded 0-based swap rows for `2x2` pivots.
+-   `WORK` must be at least `(N + nb + 1) * (nb + 3)` elements.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytri_3x = require( '@stdlib/lapack/base/dsytri_3x' );
+
+var A = new Float64Array( [ 5.0 ] );
+var e = new Float64Array( [ 0.0 ] );
+var ipiv = new Int32Array( [ 0 ] );
+var work = new Float64Array( 6 );
+
+var info = dsytri_3x( 'column-major', 'lower', 1, A, 1, e, 1, ipiv, 1, 0, work, 1, 1 );
+console.log( info );
+console.log( A );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

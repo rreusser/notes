@@ -114,11 +114,11 @@ function dgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetI
 		}
 
 		// Apply interchanges to columns 0..j-1
-		dlaswp( j, A, sa1, sa2, offsetA, j, j + jb - 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV), 1 );
+		dlaswp( j, A, sa1, sa2, offsetA, j, j + jb - 1, 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV) );
 
 		if ( j + jb < N ) {
 			// Apply interchanges to columns j+jb..N-1
-			dlaswp( N - j - jb, A, sa1, sa2, offsetA + (( j + jb ) * sa2), j, j + jb - 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV), 1);
+			dlaswp( N - j - jb, A, sa1, sa2, offsetA + (( j + jb ) * sa2), j, j + jb - 1, 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV) );
 
 			// Compute block row of U: solve L11 * U12 = A12
 			dtrsm( 'left', 'lower', 'no-transpose', 'unit', jb, N - j - jb, 1.0, A, sa1, sa2, offsetA + (j * sa1) + (j * sa2), A, sa1, sa2, offsetA + (j * sa1) + (( j + jb ) * sa2));

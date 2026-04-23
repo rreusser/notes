@@ -1,0 +1,145 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zlacrm
+
+> Multiply a complex M-by-N matrix `A` by a real N-by-N matrix `B`.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlacrm = require( '@stdlib/lapack/base/zlacrm' );
+```
+
+#### zlacrm( order, M, N, A, LDA, B, LDB, C, LDC, RWORK )
+
+Computes `C = A * B`, where `A` and `C` are complex M-by-N matrices and `B` is a real N-by-N matrix.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Complex128Array( 2 );
+var RWORK = new Float64Array( 4 );
+
+zlacrm( 'column-major', 1, 2, A, 1, B, 2, C, 1, RWORK );
+// C => [ 1.0+2.0i, 3.0+4.0i ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `A` and `C`.
+-   **N**: number of columns of `A`, `C`, and the order of `B`.
+-   **A**: input complex matrix.
+-   **LDA**: leading dimension of `A`.
+-   **B**: input real matrix.
+-   **LDB**: leading dimension of `B`.
+-   **C**: output complex matrix.
+-   **LDC**: leading dimension of `C`.
+-   **RWORK**: real workspace of length at least `2*M*N`.
+
+#### zlacrm.ndarray( M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK )
+
+Computes `C = A * B` using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Complex128Array( 2 );
+var RWORK = new Float64Array( 4 );
+
+zlacrm.ndarray( 1, 2, A, 1, 1, 0, B, 1, 2, 0, C, 1, 1, 0, RWORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A` (in complex elements).
+-   **strideA2**: stride of the second dimension of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **strideB1**: stride of the first dimension of `B`.
+-   **strideB2**: stride of the second dimension of `B`.
+-   **offsetB**: starting index for `B`.
+-   **strideC1**: stride of the first dimension of `C` (in complex elements).
+-   **strideC2**: stride of the second dimension of `C` (in complex elements).
+-   **offsetC**: starting index for `C` (in complex elements).
+-   **strideRWORK**: stride length for `RWORK`.
+-   **offsetRWORK**: starting index for `RWORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `zlacrm` exploits the fact that `B` is purely real by extracting the real and imaginary parts of `A` separately and applying `dgemm` twice. The `RWORK` array provides scratch space for this decomposition and must hold at least `2*M*N` real values.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlacrm = require( '@stdlib/lapack/base/zlacrm' );
+
+var A = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 0.5, 2.0, -1.0, 3.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 2.0 ] );
+var C = new Complex128Array( 4 );
+var RWORK = new Float64Array( 8 );
+
+zlacrm( 'column-major', 2, 2, A, 2, B, 2, C, 2, RWORK );
+console.log( C );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

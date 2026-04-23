@@ -32,19 +32,23 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes the solution to a real system of linear equations A.
+* Computes the solution to a real system of linear equations `A * X = B` where `A` is an N-by-N matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
 * @param {NonNegativeInteger} N - order of matrix A (number of rows and columns)
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
-* @param {Float64Array} A - input matrix
+* @param {Float64Array} A - input/output matrix; on exit, L and U factors
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {Int32Array} IPIV - input array
+* @param {Int32Array} IPIV - output pivot indices (0-based), length N
 * @param {integer} strideIPIV - `IPIV` stride length
-* @param {Float64Array} B - input matrix
+* @param {Float64Array} B - input/output matrix; on exit, the solution X
 * @param {PositiveInteger} LDB - leading dimension of `B`
 * @throws {TypeError} first argument must be a valid order
-* @returns {*} result
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @throws {RangeError} fifth argument must be greater than or equal to max(1,N)
+* @throws {RangeError} ninth argument must be greater than or equal to max(1,N)
+* @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero
 */
 function dgesv( order, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB ) {
 	var sa1;

@@ -33,20 +33,25 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a system of linear equations A.
+* Solves a system of linear equations `A * X = B` or `A^T * X = B` with a general N-by-N matrix `A` using the LU factorization computed by dgetrf.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
 * @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
-* @param {Float64Array} A - input matrix
+* @param {Float64Array} A - LU-factored N-by-N matrix (from dgetrf)
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {Int32Array} IPIV - input array
+* @param {Int32Array} IPIV - pivot indices (0-based)
 * @param {integer} strideIPIV - `IPIV` stride length
-* @param {Float64Array} B - input matrix
+* @param {Float64Array} B - right-hand side matrix, overwritten with solution
 * @param {PositiveInteger} LDB - leading dimension of `B`
 * @throws {TypeError} first argument must be a valid order
-* @returns {*} result
+* @throws {TypeError} second argument must be a valid transpose operation
+* @throws {RangeError} third argument must be a nonnegative integer
+* @throws {RangeError} fourth argument must be a nonnegative integer
+* @throws {RangeError} sixth argument must be greater than or equal to max(1,N)
+* @throws {RangeError} tenth argument must be greater than or equal to max(1,N)
+* @returns {integer} info - 0 if successful
 */
 function dgetrs( order, trans, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB ) {
 	var sa1;

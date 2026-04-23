@@ -1,0 +1,66 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsytf2rk = require( './../lib' );
+
+
+// TESTS //
+
+test( 'main export is a function', function t() {
+	assert.strictEqual( typeof zsytf2rk, 'function', 'main export is a function' ); // eslint-disable-line max-len
+});
+
+test( 'main export has an ndarray method', function t() {
+	assert.strictEqual( typeof zsytf2rk.ndarray, 'function', 'has ndarray method' ); // eslint-disable-line max-len
+});
+
+test( 'main export factorizes a diagonal complex symmetric 2x2', function t() {
+	var info;
+	var ipiv;
+	var A;
+	var e;
+
+	A = new Complex128Array([
+		4,
+		0.5,
+		0,
+		0,
+		0,
+		0,
+		-3,
+		1
+	]);
+	e = new Complex128Array( 2 );
+	ipiv = new Int32Array( 2 );
+	info = zsytf2rk( 'column-major', 'lower', 2, A, 2, e, 1, ipiv, 1, 0 );
+	assert.equal( info, 0, 'info should be 0' );
+});
+
+test( 'ndarray export factorizes a diagonal complex symmetric 2x2', function t() { // eslint-disable-line max-len
+	var info;
+	var ipiv;
+	var A;
+	var e;
+
+	A = new Complex128Array([
+		4,
+		0.5,
+		0,
+		0,
+		0,
+		0,
+		-3,
+		1
+	]);
+	e = new Complex128Array( 2 );
+	ipiv = new Int32Array( 2 );
+	info = zsytf2rk.ndarray( 'lower', 2, A, 1, 2, 0, e, 1, 0, ipiv, 1, 0 );
+	assert.equal( info, 0, 'info should be 0' );
+});

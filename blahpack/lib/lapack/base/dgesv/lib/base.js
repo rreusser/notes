@@ -29,8 +29,7 @@ var dgetrs = require( '../../dgetrs/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the solution to a real system of linear equations A * X = B,.
-* where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
+* Computes the solution to a real system of linear equations `A * X = B` where `A` is an N-by-N matrix.
 *
 * The LU decomposition with partial pivoting and row interchanges is
 * used to factor A as `A = P*L*U`, then the factored form of A is

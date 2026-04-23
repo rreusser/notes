@@ -1,0 +1,16 @@
+dlacn2
+dsycon_rook
+dsytrs_rook
+dsytrf_rook
+dsytf2_rook
+dlasyf_rook
+dlansy
+dlassq
+dlamch
+disnan
+dlaisnan
+la_xisnan
+ilaenv
+iparmq
+ieeeck
+iparam2stage

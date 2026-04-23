@@ -1,0 +1,11 @@
+dsytri_3x
+dsytrf_rk
+dlasyf_rk
+dsytf2_rk
+dsyswapr
+dtrti2
+dtrtri
+dlamch
+ilaenv
+ieeeck
+iparmq

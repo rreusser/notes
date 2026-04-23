@@ -1,0 +1,14 @@
+dsytri2x
+dsytrf
+dlasyf
+dsytf2
+dsyconv
+dsyswapr
+dtrtri
+dtrti2
+dlamch
+disnan
+dlaisnan
+ilaenv
+ieeeck
+iparmq

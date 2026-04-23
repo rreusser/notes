@@ -20,7 +20,7 @@ limitations under the License.
 
 # dgesv
 
-> Computes the solution to a real system of linear equations A * X = B,.
+> Compute the solution to a real system of linear equations `A * X = B`.
 
 <section class="usage">
 
@@ -32,44 +32,60 @@ var dgesv = require( '@stdlib/lapack/base/dgesv' );
 
 #### dgesv( order, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
 
-Computes the solution to a real system of linear equations A * X = B,.
+Computes the solution to a real system of linear equations `A * X = B`, where `A` is an N-by-N matrix and `X` and `B` are N-by-NRHS matrices, using LU factorization with partial pivoting.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 3.0, 2.0, 4.0 ] );
+var IPIV = new Int32Array( 2 );
+var B = new Float64Array( [ 5.0, 11.0 ] );
+
+var info = dgesv( 'column-major', 2, 1, A, 2, IPIV, 1, B, 2 );
+// info => 0
+// B => <Float64Array>[ 1.0, 2.0 ]
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **N**: number of columns.
--   **nrhs**: number of right-hand sides.
--   **A**: input array `A`.
+-   **N**: order of matrix `A` (number of rows and columns).
+-   **nrhs**: number of right-hand side columns in `B`.
+-   **A**: input/output [`Float64Array`][mdn-float64array] containing the N-by-N matrix. On exit, contains the L and U factors from the factorization.
 -   **LDA**: leading dimension of `A`.
--   **IPIV**: input array `IPIV`.
+-   **IPIV**: output [`Int32Array`][mdn-typed-array] of length `N` containing pivot indices (0-based).
 -   **strideIPIV**: stride length for `IPIV`.
--   **B**: input array `B`.
+-   **B**: input/output [`Float64Array`][mdn-float64array] containing the N-by-NRHS matrix. On exit, contains the solution `X`.
 -   **LDB**: leading dimension of `B`.
+
+The function returns an integer `info` status code: `0` if successful, or `k` if `U(k-1,k-1)` is exactly zero (singular matrix).
 
 #### dgesv.ndarray( N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
 
-Computes the solution to a real system of linear equations A * X = B,, using alternative indexing semantics.
+Computes the solution to a real system of linear equations `A * X = B`, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 3.0, 2.0, 4.0 ] );
+var IPIV = new Int32Array( 2 );
+var B = new Float64Array( [ 5.0, 11.0 ] );
+
+var info = dgesv.ndarray( 2, 1, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+// info => 0
+// B => <Float64Array>[ 1.0, 2.0 ]
 ```
 
 The function has the following additional parameters:
 
--   **strideA1**: stride of dimension 1 of `A`.
--   **strideA2**: stride of dimension 2 of `A`.
+-   **strideA1**: stride of the first dimension of `A`.
+-   **strideA2**: stride of the second dimension of `A`.
 -   **offsetA**: starting index for `A`.
 -   **offsetIPIV**: starting index for `IPIV`.
--   **strideB1**: stride of dimension 1 of `B`.
--   **strideB2**: stride of dimension 2 of `B`.
+-   **strideB1**: stride of the first dimension of `B`.
+-   **strideB2**: stride of the second dimension of `B`.
 -   **offsetB**: starting index for `B`.
 
 </section>
@@ -80,7 +96,9 @@ The function has the following additional parameters:
 
 ## Notes
 
--   `dgesv()` corresponds to the [LAPACK][lapack] level routine [`dgesv`][lapack-dgesv].
+-   `dgesv()` corresponds to the [LAPACK][lapack] routine [`dgesv`][lapack-dgesv].
+-   The routine uses `dgetrf` for LU factorization and `dgetrs` for the subsequent solve.
+-   IPIV values are 0-based (JavaScript convention), unlike Fortran which uses 1-based indices.
 
 </section>
 
@@ -93,9 +111,20 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgesv = require( '@stdlib/lapack/base/dgesv' );
 
-// TODO: Add examples
+// Solve a 3x3 system: A * X = B
+var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
+var IPIV = new Int32Array( 3 );
+var B = new Float64Array( [ 4.0, 10.0, 24.0 ] );
+
+var info = dgesv( 'column-major', 3, 1, A, 3, IPIV, 1, B, 3 );
+console.log( 'info:', info );
+// => info: 0
+console.log( 'X:', B );
+// => X: Float64Array [ 1.0, 1.0, 1.0 ]
 ```
 
 </section>
