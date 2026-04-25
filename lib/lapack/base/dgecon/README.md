@@ -20,7 +20,7 @@ limitations under the License.
 
 # dgecon
 
-> Estimates the reciprocal of the condition number of a general real matrix A,.
+> Estimates the reciprocal of the condition number of a general real matrix A.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dgecon = require( '@stdlib/lapack/base/dgecon' );
 
 #### dgecon( order, norm, N, A, LDA, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
 
-Estimates the reciprocal of the condition number of a general real matrix A,.
+Estimates the reciprocal of the condition number of a general real matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgesvd
 
-> Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
+> Computes the singular value decomposition (SVD) of a complex M-by-N matrix A.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zgesvd = require( '@stdlib/lapack/base/zgesvd' );
 
 #### zgesvd( order, jobu, jobvt, M, N, A, LDA, s, strideS, U, LDU, VT, LDVT, WORK, strideWORK, lwork, RWORK, strideRWORK )
 
-Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
+Computes the singular value decomposition (SVD) of a complex M-by-N matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

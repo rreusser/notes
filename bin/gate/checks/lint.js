@@ -28,6 +28,7 @@ var ALLOWED_RULES = new Set([
 	'no-extra-parens',       // clarity in arithmetic
 	'camelcase',             // Fortran-style variable names
 	'no-underscore-dangle',  // internal naming conventions
+	'new-cap',               // Fortran-style uppercase helpers (e.g. Z() in dlasq*)
 
 	// Context-specific
 	'no-console',            // examples only

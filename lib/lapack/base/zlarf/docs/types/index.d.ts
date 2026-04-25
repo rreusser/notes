@@ -27,7 +27,7 @@ import { OperationSide, Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+	* Apply a complex elementary reflector H to a complex M-by-N matrix C.
 	*
 	* @param order - storage layout
 	* @param side - specifies the side of the operation
@@ -69,7 +69,7 @@ interface Routine {
 }
 
 /**
-* Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+* Apply a complex elementary reflector H to a complex M-by-N matrix C.
 */
 declare var zlarf: Routine;
 

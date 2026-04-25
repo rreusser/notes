@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlarf
 
-> Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+> Apply a complex elementary reflector H to a complex M-by-N matrix C.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zlarf = require( '@stdlib/lapack/base/zlarf' );
 
 #### zlarf( order, side, M, N, v, strideV, tau, offsetTau, C, LDC, WORK, strideWORK )
 
-Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+Apply a complex elementary reflector H to a complex M-by-N matrix C.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

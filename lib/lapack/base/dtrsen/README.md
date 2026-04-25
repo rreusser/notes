@@ -20,7 +20,7 @@ limitations under the License.
 
 # dtrsen
 
-> Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
+> Reorders the real Schur factorization of a real matrix A = Q_T_Q**T.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
 
 #### dtrsen( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, WR, strideWR, WI, strideWI, M, s, sep, WORK, strideWORK, lwork, IWORK, strideIWORK, liwork )
 
-Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
+Reorders the real Schur factorization of a real matrix A = Q_T_Q**T.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

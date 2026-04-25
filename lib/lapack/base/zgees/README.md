@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgees
 
-> Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
+> Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zgees = require( '@stdlib/lapack/base/zgees' );
 
 #### zgees( jobvs, sort, select, N, A, LDA, sdim, W, strideW, VS, LDVS, WORK, strideWORK, lwork, RWORK, strideRWORK, BWORK, strideBWORK )
 
-Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
+Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

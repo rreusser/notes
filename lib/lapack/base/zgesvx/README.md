@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgesvx
 
-> Expert driver for solving a complex system of linear equations A*X = B,.
+> Expert driver for solving a complex system of linear equations A*X = B.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zgesvx = require( '@stdlib/lapack/base/zgesvx' );
 
 #### zgesvx( fact, trans, N, nrhs, A, LDA, AF, LDAF, IPIV, strideIPIV, equed, r, strideR, c, strideC, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, RWORK, strideRWORK )
 
-Expert driver for solving a complex system of linear equations A*X = B,.
+Expert driver for solving a complex system of linear equations A*X = B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

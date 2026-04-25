@@ -27,7 +27,7 @@ import { OperationSide, TransposeOperation, Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
+	* Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H.
 	*
 	* @param order - storage layout
 	* @param side - specifies the side of the operation
@@ -75,7 +75,7 @@ interface Routine {
 }
 
 /**
-* Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
+* Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H.
 */
 declare var zunmlq: Routine;
 

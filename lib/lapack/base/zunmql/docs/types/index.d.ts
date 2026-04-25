@@ -27,7 +27,7 @@ import { OperationSide, TransposeOperation } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,.
+	* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H.
 	*
 	* @param side - specifies the side of the operation
 	* @param trans - specifies whether the matrix should be transposed
@@ -76,7 +76,7 @@ interface Routine {
 }
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,.
+* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H.
 */
 declare var zunmql: Routine;
 

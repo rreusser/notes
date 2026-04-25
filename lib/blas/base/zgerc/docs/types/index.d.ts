@@ -27,7 +27,7 @@ import { Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Perform the rank 1 operation A := alpha_x_y**H + A,.
+	* Perform the rank 1 operation A := alpha_x_y**H + A.
 	*
 	* @param order - storage layout
 	* @param M - number of rows
@@ -65,7 +65,7 @@ interface Routine {
 }
 
 /**
-* Perform the rank 1 operation A := alpha_x_y**H + A,.
+* Perform the rank 1 operation A := alpha_x_y**H + A.
 */
 declare var zgerc: Routine;
 

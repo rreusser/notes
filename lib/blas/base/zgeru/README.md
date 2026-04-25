@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgeru
 
-> Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated),.
+> Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated).
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zgeru = require( '@stdlib/blas/base/zgeru' );
 
 #### zgeru( order, M, N, alpha, x, strideX, y, strideY, A, LDA )
 
-Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated),.
+Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated).
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

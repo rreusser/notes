@@ -20,7 +20,7 @@ limitations under the License.
 
 # dposv
 
-> Computes the solution to a real system of linear equations A*X = B,.
+> Computes the solution to a real system of linear equations A*X = B.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dposv = require( '@stdlib/lapack/base/dposv' );
 
 #### dposv( order, uplo, N, nrhs, A, LDA, B, LDB )
 
-Computes the solution to a real system of linear equations A*X = B,.
+Computes the solution to a real system of linear equations A*X = B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

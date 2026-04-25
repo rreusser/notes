@@ -27,7 +27,7 @@ import { OperationSide, Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Applies a real elementary reflector H to a real M-by-N matrix C,.
+	* Applies a real elementary reflector H to a real M-by-N matrix C.
 	*
 	* @param order - storage layout
 	* @param side - specifies the side of the operation
@@ -67,7 +67,7 @@ interface Routine {
 }
 
 /**
-* Applies a real elementary reflector H to a real M-by-N matrix C,.
+* Applies a real elementary reflector H to a real M-by-N matrix C.
 */
 declare var dlarf: Routine;
 

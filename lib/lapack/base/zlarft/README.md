@@ -20,7 +20,7 @@ limitations under the License.
 
 # zlarft
 
-> Form the triangular factor T of a complex block reflector H of order N,.
+> Form the triangular factor T of a complex block reflector H of order N.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zlarft = require( '@stdlib/lapack/base/zlarft' );
 
 #### zlarft( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
 
-Form the triangular factor T of a complex block reflector H of order N,.
+Form the triangular factor T of a complex block reflector H of order N.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

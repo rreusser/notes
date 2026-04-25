@@ -23,7 +23,7 @@
 */
 interface Routine {
 	/**
-	* Computes the solution to a complex system of linear equations A * X = B,.
+	* Computes the solution to a complex system of linear equations A * X = B.
 	*
 	* @param N - number of columns
 	* @param nrhs - number of right-hand sides
@@ -59,7 +59,7 @@ interface Routine {
 }
 
 /**
-* Computes the solution to a complex system of linear equations A * X = B,.
+* Computes the solution to a complex system of linear equations A * X = B.
 */
 declare var zgesv: Routine;
 

@@ -20,7 +20,7 @@ limitations under the License.
 
 # dgesvx
 
-> Expert driver for solving a real system of linear equations A*X = B,.
+> Expert driver for solving a real system of linear equations A*X = B.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dgesvx = require( '@stdlib/lapack/base/dgesvx' );
 
 #### dgesvx( fact, trans, N, nrhs, A, LDA, AF, LDAF, IPIV, strideIPIV, equed, r, strideR, c, strideC, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR )
 
-Expert driver for solving a real system of linear equations A*X = B,.
+Expert driver for solving a real system of linear equations A*X = B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

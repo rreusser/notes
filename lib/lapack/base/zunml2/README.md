@@ -20,7 +20,7 @@ limitations under the License.
 
 # zunml2
 
-> Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
+> Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zunml2 = require( '@stdlib/lapack/base/zunml2' );
 
 #### zunml2( order, side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK )
 
-Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
+Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgerc
 
-> Perform the rank 1 operation A := alpha_x_y**H + A,.
+> Perform the rank 1 operation A := alpha_x_y**H + A.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zgerc = require( '@stdlib/blas/base/zgerc' );
 
 #### zgerc( order, M, N, alpha, x, strideX, y, strideY, A, LDA )
 
-Perform the rank 1 operation A := alpha_x_y**H + A,.
+Perform the rank 1 operation A := alpha_x_y**H + A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

@@ -1,6 +1,6 @@
 {{alias}}( norm, N, kl, ku, AB, LDAB, IPIV, strideIPIV, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
     Estimates the reciprocal of the condition number of a general band
-    matrix A,.
+    matrix A.
 
     Parameters
     ----------

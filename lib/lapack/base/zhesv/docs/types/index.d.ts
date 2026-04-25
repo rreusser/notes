@@ -27,7 +27,7 @@ import { MatrixTriangle } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Computes the solution to a complex system of linear equations A*X = B,.
+	* Computes the solution to a complex system of linear equations A*X = B.
 	*
 	* @param uplo - specifies whether the upper or lower triangular part is referenced
 	* @param N - number of columns
@@ -72,7 +72,7 @@ interface Routine {
 }
 
 /**
-* Computes the solution to a complex system of linear equations A*X = B,.
+* Computes the solution to a complex system of linear equations A*X = B.
 */
 declare var zhesv: Routine;
 

@@ -23,7 +23,7 @@
 */
 interface Routine {
 	/**
-	* Estimates the reciprocal of the condition number of a general band matrix A,.
+	* Estimates the reciprocal of the condition number of a general band matrix A.
 	*
 	* @param norm - `norm`
 	* @param N - number of columns
@@ -71,7 +71,7 @@ interface Routine {
 }
 
 /**
-* Estimates the reciprocal of the condition number of a general band matrix A,.
+* Estimates the reciprocal of the condition number of a general band matrix A.
 */
 declare var dgbcon: Routine;
 

@@ -20,7 +20,7 @@ limitations under the License.
 
 # dorg2l
 
-> Generate an M-by-N real orthogonal matrix Q with orthonormal columns,.
+> Generate an M-by-N real orthogonal matrix Q with orthonormal columns.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dorg2l = require( '@stdlib/lapack/base/dorg2l' );
 
 #### dorg2l( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
 
-Generate an M-by-N real orthogonal matrix Q with orthonormal columns,.
+Generate an M-by-N real orthogonal matrix Q with orthonormal columns.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

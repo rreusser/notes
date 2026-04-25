@@ -20,7 +20,7 @@ limitations under the License.
 
 # dgesvd
 
-> Computes the singular value decomposition (SVD) of a real M-by-N matrix A,.
+> Compute the singular value decomposition (SVD) of a real M-by-N matrix.
 
 <section class="usage">
 
@@ -32,38 +32,54 @@ var dgesvd = require( '@stdlib/lapack/base/dgesvd' );
 
 #### dgesvd( order, jobu, jobvt, M, N, A, LDA, s, strideS, U, LDU, VT, LDVT )
 
-Computes the singular value decomposition (SVD) of a real M-by-N matrix A,.
+Computes the singular value decomposition `A = U * SIGMA * V^T` of a real M-by-N matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10.0 ] );
+var s = new Float64Array( 3 );
+var U = new Float64Array( 9 );
+var VT = new Float64Array( 9 );
+
+var info = dgesvd( 'row-major', 'all', 'all', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
+// returns 0
+// s => <Float64Array>[ 17.4125..., 0.8751..., 0.1968... ]
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **jobu**: `jobu`.
--   **jobvt**: `jobvt`.
--   **M**: number of rows.
--   **N**: number of columns.
--   **A**: input array `A`.
+-   **jobu**: how to compute the left singular vectors. One of `'all'` (return all M columns of U), `'some'` (return the first min(M,N) columns), `'overwrite'` (overwrite `A` with U), or `'none'` (do not compute U).
+-   **jobvt**: how to compute the right singular vectors. One of `'all'` (return all N rows of V^T), `'some'` (return the first min(M,N) rows), `'overwrite'` (overwrite `A` with V^T), or `'none'` (do not compute V^T). At most one of `jobu` and `jobvt` may be `'overwrite'`.
+-   **M**: number of rows of `A`.
+-   **N**: number of columns of `A`.
+-   **A**: input matrix as a [`Float64Array`][mdn-float64array]; overwritten on output.
 -   **LDA**: leading dimension of `A`.
--   **s**: `s`.
--   **strideS**: stride length for `S`.
--   **U**: input array `U`.
+-   **s**: output [`Float64Array`][mdn-float64array] of length at least `min(M,N)` to receive the singular values in descending order.
+-   **strideS**: stride length for `s`.
+-   **U**: output [`Float64Array`][mdn-float64array] for the left singular vectors. Sized according to `jobu`.
 -   **LDU**: leading dimension of `U`.
--   **VT**: input array `VT`.
+-   **VT**: output [`Float64Array`][mdn-float64array] for the right singular vectors (V^T). Sized according to `jobvt`.
 -   **LDVT**: leading dimension of `VT`.
+
+The function returns an `info` status code: `0` on success; a positive value indicates that the bidiagonal QR sweep failed to converge (in which case `info` superdiagonals of an intermediate bidiagonal form did not converge to zero).
 
 #### dgesvd.ndarray( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT )
 
-Computes the singular value decomposition (SVD) of a real M-by-N matrix A,, using alternative indexing semantics.
+Computes the singular value decomposition of a real M-by-N matrix using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
 
-// TODO: Add usage example
+// 3-by-3 matrix in column-major order:
+var A = new Float64Array( [ 1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 10.0 ] );
+var s = new Float64Array( 3 );
+var U = new Float64Array( 9 );
+var VT = new Float64Array( 9 );
+
+var info = dgesvd.ndarray( 'all', 'all', 3, 3, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0 );
+// returns 0
 ```
 
 The function has the following additional parameters:
@@ -71,7 +87,7 @@ The function has the following additional parameters:
 -   **strideA1**: stride of dimension 1 of `A`.
 -   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
--   **offsetS**: starting index for `S`.
+-   **offsetS**: starting index for `s`.
 -   **strideU1**: stride of dimension 1 of `U`.
 -   **strideU2**: stride of dimension 2 of `U`.
 -   **offsetU**: starting index for `U`.
@@ -100,9 +116,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dgesvd = require( '@stdlib/lapack/base/dgesvd' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10.0 ] );
+var s = new Float64Array( 3 );
+var U = new Float64Array( 9 );
+var VT = new Float64Array( 9 );
+
+var info = dgesvd( 'row-major', 'all', 'all', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
+console.log( 'info: %d', info );
+console.log( 's: %s', s.toString() );
 ```
 
 </section>

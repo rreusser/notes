@@ -27,7 +27,7 @@ import { TransposeOperation } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Expert driver for solving a real system of linear equations A*X = B,.
+	* Expert driver for solving a real system of linear equations A*X = B.
 	*
 	* @param fact - `fact`
 	* @param trans - specifies whether the matrix should be transposed
@@ -108,7 +108,7 @@ interface Routine {
 }
 
 /**
-* Expert driver for solving a real system of linear equations A*X = B,.
+* Expert driver for solving a real system of linear equations A*X = B.
 */
 declare var dgesvx: Routine;
 

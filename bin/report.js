@@ -197,11 +197,24 @@ function covBadge( val, threshold ) {
 	return '<span class="' + cls + '">' + val.toFixed( 0 ) + '%</span>';
 }
 
+function coverageClass( lineCov ) {
+	if ( lineCov === null || lineCov === undefined ) {
+		return 'cov-unknown';
+	}
+	if ( lineCov >= 90 ) return 'cov-good';
+	if ( lineCov >= 80 ) return 'cov-warn';
+	return 'cov-bad';
+}
+
 function variantCell( variant ) {
 	var impl = getImpl( variant.name );
 	var cls = 'variant';
 	if ( impl && impl.hasImpl ) {
 		cls += ' variant-done';
+		// Tint the implemented variant by its line coverage so per-variant
+		// quality is visible at a glance instead of buried in a single
+		// algorithm-level average.
+		cls += ' variant-' + coverageClass( impl.lineCov );
 	} else if ( impl && impl.isStub ) {
 		cls += ' variant-stub';
 	} else {
@@ -209,11 +222,22 @@ function variantCell( variant ) {
 	}
 	var typeLabel = db.meta.type_prefixes[ variant.type ];
 	var tip = variant.name + ( typeLabel ? ' (' + typeLabel.label + ')' : '' );
+	if ( impl && impl.hasImpl ) {
+		if ( impl.lineCov !== null && impl.lineCov !== undefined ) {
+			tip += ' — ' + impl.lineCov.toFixed( 0 ) + '% line';
+			if ( impl.branchCov !== null && impl.branchCov !== undefined ) {
+				tip += ' / ' + impl.branchCov.toFixed( 0 ) + '% branch';
+			}
+		} else {
+			tip += ' — coverage: n/a';
+		}
+		tip += ' — tests: ' + impl.testCount;
+	}
 	var id = variant.name.toLowerCase();
 	var href = '#' + id;
 	if ( impl && impl.hasImpl ) {
 		var pkg = impl.package || 'lapack';
-		href = 'https://github.com/rreusser/notes/tree/main/blahpack/lib/' + pkg + '/base/' + id;
+		href = 'https://github.com/rreusser/notes/tree/main/lib/' + pkg + '/base/' + id;
 	}
 	return '<a id="' + id + '" href="' + href + '" class="' + cls + '" title="' + esc( tip ) + '">' + variant.type + '</a>';
 }
@@ -528,17 +552,50 @@ function algorithmRow( alg ) {
 		return impl && impl.hasImpl;
 	}).length;
 
-	// Compute average line coverage across implemented variants
-	var covSum = 0;
-	var covCount = 0;
+	// Per-variant line coverage. Show the range when implemented variants
+	// disagree (e.g. a row covering 7 variants like *mm should NOT collapse
+	// to one average — the coverage column should make per-variant gaps
+	// visible). Format:
+	//   single value         "92%"
+	//   uniform across N     "92% (n=4)"
+	//   range across N       "78–98% (n=7)"
+	//   with missing data    "78–98% (4/7)"   — only 4 of 7 measured
+	var covValues = [];
+	var implCount = 0;
 	alg.variants.forEach( function( v ) {
 		var impl = getImpl( v.name );
-		if ( impl && impl.lineCov !== null ) {
-			covSum += impl.lineCov;
-			covCount++;
+		if ( impl && impl.hasImpl ) {
+			implCount++;
+			if ( impl.lineCov !== null && impl.lineCov !== undefined ) {
+				covValues.push( impl.lineCov );
+			}
 		}
 	});
-	var covDisp = covCount > 0 ? covBadge( covSum / covCount, 90 ) : '—';
+	var covDisp;
+	if ( covValues.length === 0 ) {
+		covDisp = '—';
+	} else {
+		var covMin = Math.min.apply( null, covValues );
+		var covMax = Math.max.apply( null, covValues );
+		var covSpread = covMax - covMin;
+		var rangeStr;
+		if ( covSpread < 1 ) {
+			// Within rounding — render as a single value.
+			rangeStr = '<span class="' + coverageClass( covMin ) + '">' + covMin.toFixed( 0 ) + '%</span>';
+		} else {
+			// Color by the worst case so a single bad variant stands out.
+			rangeStr = '<span class="' + coverageClass( covMin ) + '">' + covMin.toFixed( 0 ) + '–' + covMax.toFixed( 0 ) + '%</span>';
+		}
+		var sampleSuffix;
+		if ( covValues.length < implCount ) {
+			sampleSuffix = ' <span class="cov-sample">(' + covValues.length + '/' + implCount + ')</span>';
+		} else if ( implCount > 1 ) {
+			sampleSuffix = ' <span class="cov-sample">(n=' + implCount + ')</span>';
+		} else {
+			sampleSuffix = '';
+		}
+		covDisp = rangeStr + sampleSuffix;
+	}
 
 	return '<tr' +
 		' data-algorithm="' + esc( alg.algorithm ) + '"' +
@@ -625,6 +682,15 @@ var html = '<!DOCTYPE html>\n' +
 '.variant-done { background: #dcfce7; color: #166534; }\n' +
 '.variant-stub { background: #fef9c3; color: #854d0e; }\n' +
 '.variant-none { background: #f3f4f6; color: #999; }\n' +
+// Coverage tint applied on top of variant-done so per-variant coverage is
+// visible without a separate column. Hue: green=>=90%, amber=80-89%,
+// red=<80%, light-grey=no coverage data. The base "variant-done" green
+// remains for the unknown/no-data case.
+'.variant-done.variant-cov-good { background: #bbf7d0; color: #14532d; }\n' +
+'.variant-done.variant-cov-warn { background: #fde68a; color: #78350f; }\n' +
+'.variant-done.variant-cov-bad { background: #fecaca; color: #7f1d1d; }\n' +
+'.variant-done.variant-cov-unknown { background: #dcfce7; color: #166534; }\n' +
+'.cov-sample { color: #999; font-weight: 400; font-size: 0.7rem; }\n' +
 '.tests { text-align: center; }\n' +
 '.desc { color: #555; font-size: 0.8rem; }\n' +
 '.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }\n' +

@@ -27,7 +27,7 @@ import { Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
+	* Computes the singular value decomposition (SVD) of a complex M-by-N matrix A.
 	*
 	* @param order - storage layout
 	* @param jobu - `jobu`
@@ -86,7 +86,7 @@ interface Routine {
 }
 
 /**
-* Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
+* Computes the singular value decomposition (SVD) of a complex M-by-N matrix A.
 */
 declare var zgesvd: Routine;
 

@@ -1,5 +1,5 @@
 {{alias}}( M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
-    Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
+    Generate an M-by-N complex unitary matrix Q with orthonormal columns.
 
     Parameters
     ----------

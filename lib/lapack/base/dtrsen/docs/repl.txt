@@ -1,5 +1,5 @@
 {{alias}}( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, WR, strideWR, WI, strideWI, M, s, sep, WORK, strideWORK, lwork, IWORK, strideIWORK, liwork )
-    Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
+    Reorders the real Schur factorization of a real matrix A = Q_T_Q**T.
 
     Parameters
     ----------

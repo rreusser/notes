@@ -20,7 +20,7 @@ limitations under the License.
 
 # zposv
 
-> Computes the solution to a complex system of linear equations A*X = B,.
+> Computes the solution to a complex system of linear equations A*X = B.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zposv = require( '@stdlib/lapack/base/zposv' );
 
 #### zposv( uplo, N, nrhs, A, LDA, B, LDB )
 
-Computes the solution to a complex system of linear equations A*X = B,.
+Computes the solution to a complex system of linear equations A*X = B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

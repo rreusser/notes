@@ -27,7 +27,7 @@ import { MatrixTriangle, DiagonalType } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Estimates the reciprocal of the condition number of a triangular matrix A,.
+	* Estimates the reciprocal of the condition number of a triangular matrix A.
 	*
 	* @param norm - `norm`
 	* @param uplo - specifies whether the upper or lower triangular part is referenced
@@ -68,7 +68,7 @@ interface Routine {
 }
 
 /**
-* Estimates the reciprocal of the condition number of a triangular matrix A,.
+* Estimates the reciprocal of the condition number of a triangular matrix A.
 */
 declare var dtrcon: Routine;
 

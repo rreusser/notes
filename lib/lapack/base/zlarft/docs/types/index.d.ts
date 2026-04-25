@@ -27,7 +27,7 @@ import { Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Form the triangular factor T of a complex block reflector H of order N,.
+	* Form the triangular factor T of a complex block reflector H of order N.
 	*
 	* @param order - storage layout
 	* @param direct - `direct`
@@ -68,7 +68,7 @@ interface Routine {
 }
 
 /**
-* Form the triangular factor T of a complex block reflector H of order N,.
+* Form the triangular factor T of a complex block reflector H of order N.
 */
 declare var zlarft: Routine;
 

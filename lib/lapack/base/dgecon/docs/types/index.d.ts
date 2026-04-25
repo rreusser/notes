@@ -27,7 +27,7 @@ import { Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Estimates the reciprocal of the condition number of a general real matrix A,.
+	* Estimates the reciprocal of the condition number of a general real matrix A.
 	*
 	* @param order - storage layout
 	* @param norm - `norm`
@@ -67,7 +67,7 @@ interface Routine {
 }
 
 /**
-* Estimates the reciprocal of the condition number of a general real matrix A,.
+* Estimates the reciprocal of the condition number of a general real matrix A.
 */
 declare var dgecon: Routine;
 

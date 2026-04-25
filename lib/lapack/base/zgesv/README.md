@@ -20,7 +20,7 @@ limitations under the License.
 
 # zgesv
 
-> Computes the solution to a complex system of linear equations A * X = B,.
+> Computes the solution to a complex system of linear equations A * X = B.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zgesv = require( '@stdlib/lapack/base/zgesv' );
 
 #### zgesv( N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB )
 
-Computes the solution to a complex system of linear equations A * X = B,.
+Computes the solution to a complex system of linear equations A * X = B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

@@ -1,5 +1,5 @@
 {{alias}}( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
-    Generates an M-by-N real orthogonal matrix Q with orthonormal columns,.
+    Generates an M-by-N real orthogonal matrix Q with orthonormal columns.
 
     Parameters
     ----------

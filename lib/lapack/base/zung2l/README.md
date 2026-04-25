@@ -20,7 +20,7 @@ limitations under the License.
 
 # zung2l
 
-> Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
+> Generate an M-by-N complex unitary matrix Q with orthonormal columns.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var zung2l = require( '@stdlib/lapack/base/zung2l' );
 
 #### zung2l( M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
 
-Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
+Generate an M-by-N complex unitary matrix Q with orthonormal columns.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

@@ -1,5 +1,5 @@
 {{alias}}( order, M, N, alpha, x, strideX, y, strideY, A, LDA )
-    Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated),.
+    Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated).
 
     Parameters
     ----------

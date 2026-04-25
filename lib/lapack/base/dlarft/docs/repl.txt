@@ -1,5 +1,5 @@
 {{alias}}( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
-    Forms the triangular factor T of a real block reflector H of order N,.
+    Forms the triangular factor T of a real block reflector H of order N.
 
     Parameters
     ----------

@@ -721,7 +721,15 @@ var {routine} = require( './../lib/{routine}.js' );
 
 
 def gen_test_ndarray_js(routine, package, sig, description):
-    """Generate test/test.ndarray.js — scaffold for ndarray tests."""
+    """Generate test/test.ndarray.js — scaffold for ndarray-interface tests.
+
+    IMPORTANT: this file requires lib/ndarray.js (the public ndarray
+    surface), not lib/base.js. Tests must exercise the validator —
+    bypassing it has hidden silent-correctness bugs in the past
+    (validator strings disagreeing with base.js dispatch keys).
+    If you genuinely need to drive base.js directly, create a separate
+    test.base.js for those cases.
+    """
     return f"""{LICENSE_HEADER}
 
 /* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
@@ -733,18 +741,13 @@ def gen_test_ndarray_js(routine, package, sig, description):
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
-var {routine} = require( './../lib/base.js' );
-var ndarrayFn = require( './../lib/ndarray.js' );
+var {routine} = require( './../lib/ndarray.js' );
 
 
 // TESTS //
 
-test( 'base is a function', function t() {{
+test( '{routine} ndarray is a function', function t() {{
 \tassert.strictEqual( typeof {routine}, 'function', 'is a function' );
-}});
-
-test( 'ndarray is a function', function t() {{
-\tassert.strictEqual( typeof ndarrayFn, 'function', 'is a function' );
 }});
 
 test( 'TODO: implement ndarray tests with fixtures', function t() {{

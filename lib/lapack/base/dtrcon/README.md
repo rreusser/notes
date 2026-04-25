@@ -20,7 +20,7 @@ limitations under the License.
 
 # dtrcon
 
-> Estimates the reciprocal of the condition number of a triangular matrix A,.
+> Estimates the reciprocal of the condition number of a triangular matrix A.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dtrcon = require( '@stdlib/lapack/base/dtrcon' );
 
 #### dtrcon( norm, uplo, diag, N, A, LDA, RCOND, WORK, strideWORK, IWORK, strideIWORK )
 
-Estimates the reciprocal of the condition number of a triangular matrix A,.
+Estimates the reciprocal of the condition number of a triangular matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

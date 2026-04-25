@@ -21,12 +21,26 @@ import dgesvd = require( './index' );
 
 // TESTS //
 
-// The function returns a Float64Array...
+// The function returns a number...
 {
-	dgesvd( 0 ); // $ExpectType Float64Array
+	const A = new Float64Array( 9 );
+	const s = new Float64Array( 3 );
+	const U = new Float64Array( 9 );
+	const VT = new Float64Array( 9 );
+	dgesvd( 'row-major', 'all', 'all', 3, 3, A, 3, s, 1, U, 3, VT, 3 ); // $ExpectType number
 }
 
 // The compiler throws an error if the function is provided an unsupported number of arguments...
 {
 	dgesvd(); // $ExpectError
+	dgesvd( 'row-major' ); // $ExpectError
+}
+
+// Attached to the main export is an `ndarray` method which returns a number...
+{
+	const A = new Float64Array( 9 );
+	const s = new Float64Array( 3 );
+	const U = new Float64Array( 9 );
+	const VT = new Float64Array( 9 );
+	dgesvd.ndarray( 'all', 'all', 3, 3, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0 ); // $ExpectType number
 }

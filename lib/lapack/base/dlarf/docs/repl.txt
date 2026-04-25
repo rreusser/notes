@@ -1,5 +1,5 @@
 {{alias}}( order, side, M, N, v, strideV, tau, C, LDC, WORK, strideWORK )
-    Applies a real elementary reflector H to a real M-by-N matrix C,.
+    Applies a real elementary reflector H to a real M-by-N matrix C.
 
     Parameters
     ----------

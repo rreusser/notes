@@ -1,5 +1,5 @@
 {{alias}}( order, side, M, N, v, strideV, tau, offsetTau, C, LDC, WORK, strideWORK )
-    Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+    Apply a complex elementary reflector H to a complex M-by-N matrix C.
 
     Parameters
     ----------

@@ -23,7 +23,7 @@
 */
 interface Routine {
 	/**
-	* Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
+	* Generate an M-by-N complex unitary matrix Q with orthonormal columns.
 	*
 	* @param M - number of rows
 	* @param N - number of columns
@@ -60,7 +60,7 @@ interface Routine {
 }
 
 /**
-* Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
+* Generate an M-by-N complex unitary matrix Q with orthonormal columns.
 */
 declare var zung2l: Routine;
 

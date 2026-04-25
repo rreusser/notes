@@ -27,7 +27,7 @@ import { Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Forms the triangular factor T of a real block reflector H of order N,.
+	* Forms the triangular factor T of a real block reflector H of order N.
 	*
 	* @param order - storage layout
 	* @param direct - `direct`
@@ -68,7 +68,7 @@ interface Routine {
 }
 
 /**
-* Forms the triangular factor T of a real block reflector H of order N,.
+* Forms the triangular factor T of a real block reflector H of order N.
 */
 declare var dlarft: Routine;
 

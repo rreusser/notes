@@ -23,7 +23,7 @@
 */
 interface Routine {
 	/**
-	* Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
+	* Reorders the real Schur factorization of a real matrix A = Q_T_Q**T.
 	*
 	* @param job - `job`
 	* @param compq - `compq`
@@ -91,7 +91,7 @@ interface Routine {
 }
 
 /**
-* Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
+* Reorders the real Schur factorization of a real matrix A = Q_T_Q**T.
 */
 declare var dtrsen: Routine;
 

@@ -20,7 +20,7 @@ limitations under the License.
 
 # dlarft
 
-> Forms the triangular factor T of a real block reflector H of order N,.
+> Forms the triangular factor T of a real block reflector H of order N.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dlarft = require( '@stdlib/lapack/base/dlarft' );
 
 #### dlarft( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
 
-Forms the triangular factor T of a real block reflector H of order N,.
+Forms the triangular factor T of a real block reflector H of order N.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

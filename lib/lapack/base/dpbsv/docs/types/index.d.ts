@@ -27,7 +27,7 @@ import { MatrixTriangle, Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Computes the solution to a real system of linear equations A * X = B,.
+	* Computes the solution to a real system of linear equations A * X = B.
 	*
 	* @param order - storage layout
 	* @param uplo - specifies whether the upper or lower triangular part is referenced
@@ -63,7 +63,7 @@ interface Routine {
 }
 
 /**
-* Computes the solution to a real system of linear equations A * X = B,.
+* Computes the solution to a real system of linear equations A * X = B.
 */
 declare var dpbsv: Routine;
 

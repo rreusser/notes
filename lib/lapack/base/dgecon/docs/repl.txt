@@ -1,6 +1,6 @@
 {{alias}}( order, norm, N, A, LDA, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
     Estimates the reciprocal of the condition number of a general real
-    matrix A,.
+    matrix A.
 
     Parameters
     ----------

@@ -1,5 +1,5 @@
 {{alias}}( uplo, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB, WORK, strideWORK, lwork )
-    Computes the solution to a complex system of linear equations A*X = B,.
+    Computes the solution to a complex system of linear equations A*X = B.
 
     Parameters
     ----------

@@ -27,7 +27,7 @@ import { OperationSide, MatrixTriangle, TransposeOperation } from '@stdlib/types
 */
 interface Routine {
 	/**
-	* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,.
+	* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H.
 	*
 	* @param side - specifies the side of the operation
 	* @param uplo - specifies whether the upper or lower triangular part is referenced
@@ -76,7 +76,7 @@ interface Routine {
 }
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,.
+* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H.
 */
 declare var zunmtr: Routine;
 

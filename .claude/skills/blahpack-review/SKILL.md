@@ -126,6 +126,70 @@ node bin/gate.js lib/<pkg>/base/<routine> --check conventions
 
 **`base.js` must NOT validate** — it's the hot-path computation kernel.
 
+### Validator strings MUST match what base.js dispatches on
+
+This is the silent-corruption trap that hides behind "tests pass":
+
+```js
+// ndarray.js
+if ( jobu !== 'all' && jobu !== 'some' && ... ) throw ...;
+return base( jobu, ... );    // BUG: passes 'all' through
+
+// base.js
+wantua = ( jobu === 'all-columns' );   // never matches; routine takes the no-op path
+```
+
+**Two acceptable patterns. Pick one and stick to it:**
+
+1. **Identical strings.** ndarray and base both check the same literal set
+   (`'upper'`/`'lower'`, `'no-transpose'`/`'transpose'`/`'conjugate-transpose'`).
+   This is the default. No mapping needed.
+
+2. **Explicit mapping table.** When the public API and the internal kernel
+   want different vocabularies (e.g. user-facing `'all'`/`'some'` mapping to
+   internal `'all-columns'`/`'economy'` for SVD's JOBU), declare the map at
+   module scope and apply it before the base call:
+   ```js
+   var JOBU_MAP = {
+       'all': 'all-columns', 'some': 'economy',
+       'overwrite': 'overwrite', 'none': 'none'
+   };
+   // ...
+   return base( JOBU_MAP[ jobu ], ... );
+   ```
+   Mirror the same pattern in `<routine>.js` (the layout wrapper) — both
+   public surfaces accept the user-facing strings.
+
+**Anti-pattern: single-branch validators that exclude valid values.** A real
+example from `dorgbr.js` and `dormbr.js`:
+
+```js
+if ( vect !== 'apply-Q' ) {  // BUG: rejects valid 'apply-P'
+    throw new TypeError( ... );
+}
+```
+
+This shows up when a scaffold copy-paste retains only the value that the
+first test happened to use. Whenever the Fortran spec lists multiple legal
+values for a parameter, the validator must accept all of them — write the
+condition as a positive whitelist (`!== a && !== b && !== c`), not a single
+inequality.
+
+**Verify the alignment by hand.** For each string parameter, compare the
+list of accepted values in the validator against the dispatch keys in
+base.js (the `=== '...'` checks):
+
+```bash
+# Strings the ndarray validator accepts:
+grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/ndarray.js
+
+# Strings base.js dispatches on:
+grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/base.js
+```
+
+The two sets must either be equal, or related by an explicit `*_MAP`
+table at the top of the wrapper file.
+
 ---
 
 ## 5. Consistent array parameter conventions
@@ -195,8 +259,19 @@ protection, complex square root.
 
 Tests must be split into three files:
 - `test/test.js` — export/arity checks (requires `./../lib`)
-- `test/test.<routine>.js` — layout wrapper validation (requires `./../lib/<routine>.js`)
-- `test/test.ndarray.js` — computation tests via base.js (requires `./../lib/base.js`)
+- `test/test.<routine>.js` — layout wrapper tests (requires `./../lib/<routine>.js`)
+- `test/test.ndarray.js` — ndarray-interface tests (requires `./../lib/ndarray.js`)
+
+**Tests target the public surface, not the internal kernel.** A pattern that
+has caused multiple silent-correctness bugs in this codebase: tests that
+`require( './../lib/base.js' )` bypass the ndarray validator entirely. If the
+validator and base.js disagree on accepted strings (e.g. ndarray validates
+`'all'` but base dispatches on `'all-columns'`), the bypass hides it — `info`
+returns 0 and singular values look right, but output matrices are silently
+left untouched. Always require the layer the user calls. If you genuinely
+need to drive base.js directly (hot-path benchmarks, paths that bypass
+quick-return checks), name the file `test.base.js` and require base.js
+explicitly there — don't hide it inside `test.ndarray.js`.
 
 ```bash
 # Run all test files
@@ -208,9 +283,13 @@ node --test --experimental-test-coverage lib/<pkg>/base/<routine>/test/test.js l
 
 Targets: **≥90% line coverage, ≥85% branch coverage** on base.js.
 
-Verify test.ndarray.js has substantive assertions:
+Verify test.ndarray.js has substantive assertions and routes through the
+public ndarray interface:
 
 ```bash
+# Each test file must require the layer it claims to test
+grep -nE "require\( '\\./\\./lib/(base|ndarray|<routine>)\\.js'" lib/<pkg>/base/<routine>/test/
+
 # Count real test cases (not just scaffold type checks)
 grep -c "^test(" lib/<pkg>/base/<routine>/test/test.ndarray.js
 

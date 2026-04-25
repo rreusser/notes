@@ -20,7 +20,7 @@ limitations under the License.
 
 # dgbcon
 
-> Estimates the reciprocal of the condition number of a general band matrix A,.
+> Estimates the reciprocal of the condition number of a general band matrix A.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dgbcon = require( '@stdlib/lapack/base/dgbcon' );
 
 #### dgbcon( norm, N, kl, ku, AB, LDAB, IPIV, strideIPIV, anorm, rcond, WORK, strideWORK, IWORK, strideIWORK )
 
-Estimates the reciprocal of the condition number of a general band matrix A,.
+Estimates the reciprocal of the condition number of a general band matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

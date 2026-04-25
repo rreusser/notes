@@ -20,7 +20,7 @@ limitations under the License.
 
 # dorm2l
 
-> Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+> Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T.
 
 <section class="usage">
 
@@ -32,7 +32,7 @@ var dorm2l = require( '@stdlib/lapack/base/dorm2l' );
 
 #### dorm2l( side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK )
 
-Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

@@ -27,7 +27,7 @@ import { OperationSide, TransposeOperation, Layout } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+	* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T.
 	*
 	* @param order - storage layout
 	* @param side - specifies the side of the operation
@@ -75,7 +75,7 @@ interface Routine {
 }
 
 /**
-* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T.
 */
 declare var dormqr: Routine;
 

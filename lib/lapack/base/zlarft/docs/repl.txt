@@ -1,5 +1,5 @@
 {{alias}}( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT )
-    Form the triangular factor T of a complex block reflector H of order N,.
+    Form the triangular factor T of a complex block reflector H of order N.
 
     Parameters
     ----------

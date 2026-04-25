@@ -23,7 +23,7 @@
 */
 interface Routine {
 	/**
-	* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
+	* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues.
 	*
 	* @param jobvs - `jobvs`
 	* @param sort - `sort`
@@ -82,7 +82,7 @@ interface Routine {
 }
 
 /**
-* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
+* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues.
 */
 declare var zgees: Routine;
 

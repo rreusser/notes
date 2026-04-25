@@ -1,5 +1,5 @@
 {{alias}}( order, uplo, N, nrhs, A, LDA, B, LDB )
-    Computes the solution to a real system of linear equations A*X = B,.
+    Computes the solution to a real system of linear equations A*X = B.
 
     Parameters
     ----------

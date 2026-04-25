@@ -27,7 +27,7 @@ import { OperationSide, TransposeOperation } from '@stdlib/types/blas';
 */
 interface Routine {
 	/**
-	* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+	* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T.
 	*
 	* @param side - specifies the side of the operation
 	* @param trans - specifies whether the matrix should be transposed
@@ -74,7 +74,7 @@ interface Routine {
 }
 
 /**
-* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T.
 */
 declare var dorm2l: Routine;
 

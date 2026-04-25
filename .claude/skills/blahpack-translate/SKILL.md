@@ -953,6 +953,82 @@ long-form equivalents** — single chars are NEVER acceptable. Examples:
 If a mapping isn't in the table above, create one that is self-documenting.
 Check existing modules for established conventions before inventing new ones.
 
+### Validator strings MUST match base.js dispatch keys
+
+Single-char short forms aren't the only string trap. **Long-form strings
+that don't match between the validator and base.js cause silent
+correctness bugs** — the validator passes, base never sees a string it
+recognizes, and the routine takes a no-op or wrong-mode branch while still
+returning `info=0`. This bug class has been seen in dgesvd, dorgbr, dormbr,
+and dlascl.
+
+Two acceptable patterns. **Pick one per routine and verify it.**
+
+1. **Identical strings.** ndarray and base both check the same literal set.
+   This is the default; no mapping needed.
+
+2. **Explicit mapping.** When the public API and internal kernel use
+   different vocabularies (e.g. user-facing `'all'`/`'some'` mapping to
+   internal `'all-columns'`/`'economy'` for SVD's JOBU), declare a
+   module-scope map and apply it before the base call:
+   ```js
+   var JOBU_MAP = {
+       'all': 'all-columns', 'some': 'economy',
+       'overwrite': 'overwrite', 'none': 'none'
+   };
+   // ...
+   return base( JOBU_MAP[ jobu ], ... );
+   ```
+   Mirror the same map in `<routine>.js` (the layout wrapper) so both
+   public surfaces accept the same vocabulary.
+
+**Anti-pattern: single-branch validators.** Real example from `dorgbr.js`:
+
+```js
+if ( vect !== 'apply-Q' ) {     // BUG: rejects valid 'apply-P'
+    throw new TypeError( ... );
+}
+```
+
+When the Fortran spec lists multiple legal values, the validator must be a
+positive whitelist (`!== a && !== b && !== c`), not a single inequality.
+This bug shows up when a scaffold copy-paste retains only the value the
+first test happened to use.
+
+**Verification (mandatory after every translation):**
+
+```bash
+# Strings ndarray validator accepts:
+grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/ndarray.js
+
+# Strings base.js dispatches on:
+grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/base.js
+```
+
+The two sets must either be equal, or related by an explicit `*_MAP`.
+
+### Recurring scaffold-emitted noise to scrub
+
+The scaffold leaves predictable artifacts that have shown up in nearly
+every translated module. None of these get caught by tests, so check by
+hand or by gate:
+
+- **Description trailing comma+period: `"...matrix A,."`** — sed-fixable.
+- **`@returns {*} result`** in `<routine>.js` — replace with the real type
+  (usually `{integer} info` or `{Float64Array}`).
+- **Orphan top-of-file JSDoc in `ndarray.js`** with no `@license` block,
+  followed by a second real JSDoc above the function. Drop the orphan,
+  add the license header.
+- **Stray `// Copyright (c) 2025 Ricky Reusser. Apache-2.0 License.`**
+  comment beneath the proper Apache-2.0 license block. Delete it.
+- **`examples/index.js` and `benchmark/*.js` using single-char Fortran
+  flags** (`'A'`, `'N'`, `'T'`) — these get past the gate because they're
+  not in `lib/base.js` but they DO break example execution under the new
+  validators. Convert to the long-form strings the validator accepts.
+- **`test.ndarray.js` requiring `lib/base.js`** — bypasses the validator.
+  Should require `lib/ndarray.js` (use base.js only in a separate
+  `test.base.js` if you genuinely need to bypass validation).
+
 ### Complex Number Support
 
 For z-prefix (complex) routines, see [docs/complex-numbers.md](docs/complex-numbers.md)
