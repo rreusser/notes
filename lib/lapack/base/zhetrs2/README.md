@@ -35,9 +35,15 @@ var zhetrs2 = require( '@stdlib/lapack/base/zhetrs2' );
 Complex division storing result in module-level cdR, cdI.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhetrs2 = require( '@stdlib/lapack/base/zhetrs2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhetrs2.ndarray( 'upper', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +58,15 @@ The function has the following parameters:
 Complex division storing result in module-level cdR, cdI, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhetrs2 = require( '@stdlib/lapack/base/zhetrs2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhetrs2.ndarray( 'upper', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -100,7 +112,13 @@ The function has the following additional parameters:
 ```javascript
 var zhetrs2 = require( '@stdlib/lapack/base/zhetrs2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhetrs2.ndarray( 'upper', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,17 @@ var zgebrd = require( '@stdlib/lapack/base/zgebrd' );
 Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgebrd = require( '@stdlib/lapack/base/zgebrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAUQ = discreteUniform( N, -10, 10, opts );
+var TAUP = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgebrd.ndarray( N, N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -64,9 +72,17 @@ The function has the following parameters:
 Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgebrd = require( '@stdlib/lapack/base/zgebrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAUQ = discreteUniform( N, -10, 10, opts );
+var TAUP = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgebrd.ndarray( N, N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -103,7 +119,15 @@ The function has the following additional parameters:
 ```javascript
 var zgebrd = require( '@stdlib/lapack/base/zgebrd' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAUQ = discreteUniform( N, -10, 10, opts );
+var TAUP = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgebrd.ndarray( N, N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

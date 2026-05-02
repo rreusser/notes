@@ -36,8 +36,27 @@ Expert driver for solving a complex system of linear equations A*X = B.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgbsvx = require( '@stdlib/lapack/base/zgbsvx' );
 
-// TODO: Add usage example
+var N = 3;
+var KL = 1;
+var KU = 1;
+var nrhs = 1;
+var nRows = KL + KU + 1;
+var AFB = new Complex128Array( ((2 * KL) + KU + 1) * N );
+var IPIV = new Int32Array( N );
+var r = new Float64Array( N );
+var c = new Float64Array( N );
+var B = new Complex128Array( [ 5, 0, 5, 0, 3, 0 ] );
+var X = new Complex128Array( N );
+var FERR = new Float64Array( nrhs );
+var BERR = new Float64Array( nrhs );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( N );
+
+zgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2 * KL) + KU + 1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -78,8 +97,27 @@ Expert driver for solving a complex system of linear equations A*X = B, using al
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgbsvx = require( '@stdlib/lapack/base/zgbsvx' );
 
-// TODO: Add usage example
+var N = 3;
+var KL = 1;
+var KU = 1;
+var nrhs = 1;
+var nRows = KL + KU + 1;
+var AFB = new Complex128Array( ((2 * KL) + KU + 1) * N );
+var IPIV = new Int32Array( N );
+var r = new Float64Array( N );
+var c = new Float64Array( N );
+var B = new Complex128Array( [ 5, 0, 5, 0, 3, 0 ] );
+var X = new Complex128Array( N );
+var FERR = new Float64Array( nrhs );
+var BERR = new Float64Array( nrhs );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( N );
+
+zgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2 * KL) + KU + 1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -125,9 +163,28 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgbsvx = require( '@stdlib/lapack/base/zgbsvx' );
 
-// TODO: Add examples
+var N = 3;
+var KL = 1;
+var KU = 1;
+var nrhs = 1;
+var nRows = KL + KU + 1;
+var AFB = new Complex128Array( ((2 * KL) + KU + 1) * N );
+var IPIV = new Int32Array( N );
+var r = new Float64Array( N );
+var c = new Float64Array( N );
+var B = new Complex128Array( [ 5, 0, 5, 0, 3, 0 ] );
+var X = new Complex128Array( N );
+var FERR = new Float64Array( nrhs );
+var BERR = new Float64Array( nrhs );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( N );
+
+zgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2 * KL) + KU + 1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

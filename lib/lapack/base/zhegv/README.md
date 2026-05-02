@@ -35,9 +35,16 @@ var zhegv = require( '@stdlib/lapack/base/zhegv' );
 Computes all the eigenvalues, and optionally, the eigenvectors of a complex.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhegv = require( '@stdlib/lapack/base/zhegv' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zhegv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -63,9 +70,16 @@ The function has the following parameters:
 Computes all the eigenvalues, and optionally, the eigenvectors of a complex, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhegv = require( '@stdlib/lapack/base/zhegv' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zhegv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -103,7 +117,14 @@ The function has the following additional parameters:
 ```javascript
 var zhegv = require( '@stdlib/lapack/base/zhegv' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zhegv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 </section>

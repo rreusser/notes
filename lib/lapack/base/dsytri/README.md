@@ -36,8 +36,14 @@ Computes the inverse of a real symmetric matrix using the factorization computed
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytri = require( '@stdlib/lapack/base/dsytri' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 4.0, 0.5, 0.25, 0.0, 2.0, 0.5, 0.0, 0.0, 1.0 ] );
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var WORK = new Float64Array( 3 );
+
+dsytri( 'column-major', 'upper', 3, A, 3, IPIV, 1, WORK );
 ```
 
 The function has the following parameters:
@@ -57,8 +63,14 @@ Computes the inverse of a real symmetric matrix using the factorization computed
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsytri = require( '@stdlib/lapack/base/dsytri' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 4.0, 0.5, 0.25, 0.0, 2.0, 0.5, 0.0, 0.0, 1.0 ] );
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var WORK = new Float64Array( 3 );
+
+dsytri( 'column-major', 'upper', 3, A, 3, IPIV, 1, WORK );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +103,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dsytri = require( '@stdlib/lapack/base/dsytri' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 4.0, 0.5, 0.25, 0.0, 2.0, 0.5, 0.0, 0.0, 1.0 ] );
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var WORK = new Float64Array( 3 );
+
+dsytri( 'column-major', 'upper', 3, A, 3, IPIV, 1, WORK );
 ```
 
 </section>

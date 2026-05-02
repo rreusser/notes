@@ -35,9 +35,17 @@ var dgees = require( '@stdlib/lapack/base/dgees' );
 Computes for an N-by-N real nonsymmetric matrix A, the eigenvalues, the real.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgees = require( '@stdlib/lapack/base/dgees' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VS = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var BWORK = discreteUniform( N, -10, 10, opts );
+
+dgees.ndarray( 'compute-vectors', 'no-sort', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +74,17 @@ The function has the following parameters:
 Computes for an N-by-N real nonsymmetric matrix A, the eigenvalues, the real, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgees = require( '@stdlib/lapack/base/dgees' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VS = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var BWORK = discreteUniform( N, -10, 10, opts );
+
+dgees.ndarray( 'compute-vectors', 'no-sort', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -107,7 +123,15 @@ The function has the following additional parameters:
 ```javascript
 var dgees = require( '@stdlib/lapack/base/dgees' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VS = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var BWORK = discreteUniform( N, -10, 10, opts );
+
+dgees.ndarray( 'compute-vectors', 'no-sort', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
 ```
 
 </section>

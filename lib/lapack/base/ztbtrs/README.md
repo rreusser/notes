@@ -35,9 +35,13 @@ var ztbtrs = require( '@stdlib/lapack/base/ztbtrs' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztbtrs = require( '@stdlib/lapack/base/ztbtrs' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 0, 2, 0, 5, 0 ] );
+var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
+
+ztbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
 ```
 
 The function has the following parameters:
@@ -59,9 +63,13 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztbtrs = require( '@stdlib/lapack/base/ztbtrs' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 0, 2, 0, 5, 0 ] );
+var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
+
+ztbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +102,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var ztbtrs = require( '@stdlib/lapack/base/ztbtrs' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 0, 2, 0, 5, 0 ] );
+var B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
+
+ztbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
 ```
 
 </section>

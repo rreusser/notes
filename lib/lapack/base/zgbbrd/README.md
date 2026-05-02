@@ -36,8 +36,23 @@ Reduces a complex general band matrix to real upper bidiagonal form
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgbbrd = require( '@stdlib/lapack/base/zgbbrd' );
 
-// TODO: Add usage example
+var N = 3;
+var KL = 1;
+var KU = 1;
+var LDAB = KL + KU + 1;
+var AB = new Complex128Array( LDAB * N );
+var d = new Float64Array( N );
+var e = new Float64Array( N - 1 );
+var Q = new Complex128Array( N * N );
+var PT = new Complex128Array( N * N );
+var C = new Complex128Array( 1 );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( 2 * N );
+
+zgbbrd( 'column-major', 'both', N, N, 0, KL, KU, AB, LDAB, d, 1, e, 1, Q, N, PT, N, C, 1, WORK, 1, RWORK, 1 );
 ```
 
 The function has the following parameters:
@@ -72,8 +87,23 @@ Reduces a complex general band matrix to real upper bidiagonal form, using alter
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgbbrd = require( '@stdlib/lapack/base/zgbbrd' );
 
-// TODO: Add usage example
+var N = 3;
+var KL = 1;
+var KU = 1;
+var LDAB = KL + KU + 1;
+var AB = new Complex128Array( LDAB * N );
+var d = new Float64Array( N );
+var e = new Float64Array( N - 1 );
+var Q = new Complex128Array( N * N );
+var PT = new Complex128Array( N * N );
+var C = new Complex128Array( 1 );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( 2 * N );
+
+zgbbrd( 'column-major', 'both', N, N, 0, KL, KU, AB, LDAB, d, 1, e, 1, Q, N, PT, N, C, 1, WORK, 1, RWORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -121,8 +151,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -132,7 +161,24 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgbbrd = require( '@stdlib/lapack/base/zgbbrd' );
+
+var N = 3;
+var KL = 1;
+var KU = 1;
+var LDAB = KL + KU + 1;
+var AB = new Complex128Array( LDAB * N );
+var d = new Float64Array( N );
+var e = new Float64Array( N - 1 );
+var Q = new Complex128Array( N * N );
+var PT = new Complex128Array( N * N );
+var C = new Complex128Array( 1 );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( 2 * N );
+
+zgbbrd( 'column-major', 'both', N, N, 0, KL, KU, AB, LDAB, d, 1, e, 1, Q, N, PT, N, C, 1, WORK, 1, RWORK, 1 );
 ```
 
 </section>

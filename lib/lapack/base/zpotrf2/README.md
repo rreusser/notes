@@ -35,9 +35,12 @@ var zpotrf2 = require( '@stdlib/lapack/base/zpotrf2' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpotrf2 = require( '@stdlib/lapack/base/zpotrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zpotrf2( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -72,7 +75,10 @@ The function has the following parameters:
 ```javascript
 var zpotrf2 = require( '@stdlib/lapack/base/zpotrf2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zpotrf2( 'upper', N, A, N, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,11 @@ Computes the sum of the absolute values of the real and imaginary parts of a dou
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
 
-// TODO: Add usage example
+var z = new Float64Array( [ 3.0, 4.0 ] );
+
+dcabs1.ndarray( z );
 ```
 
 The function has the following parameters:
@@ -50,8 +53,11 @@ Computes the sum of the absolute values of the real and imaginary parts of a dou
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
 
-// TODO: Add usage example
+var z = new Float64Array( [ 3.0, 4.0 ] );
+
+dcabs1.ndarray( z );
 ```
 
 The function has the following additional parameters:
@@ -78,9 +84,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
 
-// TODO: Add examples
+var z = new Float64Array( [ 3.0, 4.0 ] );
+
+dcabs1.ndarray( z );
 ```
 
 </section>

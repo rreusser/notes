@@ -35,9 +35,15 @@ var zlaqr4 = require( '@stdlib/lapack/base/zlaqr4' );
 Complex multishift QR with aggressive early deflation (non-recursive).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqr4 = require( '@stdlib/lapack/base/zlaqr4' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlaqr4.ndarray( 1, 1, N, N, N, H, N, 1, 0, w, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -50,9 +56,15 @@ The function has the following parameters:
 Complex multishift QR with aggressive early deflation (non-recursive), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqr4 = require( '@stdlib/lapack/base/zlaqr4' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlaqr4.ndarray( 1, 1, N, N, N, H, N, 1, 0, w, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -103,7 +115,13 @@ The function has the following additional parameters:
 ```javascript
 var zlaqr4 = require( '@stdlib/lapack/base/zlaqr4' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlaqr4.ndarray( 1, 1, N, N, N, H, N, 1, 0, w, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

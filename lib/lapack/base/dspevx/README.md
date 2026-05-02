@@ -36,8 +36,17 @@ Computes selected eigenvalues and, optionally, eigenvectors of a real.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dspevx = require( '@stdlib/lapack/base/dspevx' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 3.0, 0.0, 1.0, 4.0 ] );
+var w = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 24 );
+var IWORK = new Int32Array( 15 );
+var IFAIL = new Int32Array( 3 );
+
+dspevx.ndarray( 'compute-vectors', 'all', 'upper', 3, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -67,8 +76,17 @@ Computes selected eigenvalues and, optionally, eigenvectors of a real, using alt
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dspevx = require( '@stdlib/lapack/base/dspevx' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 3.0, 0.0, 1.0, 4.0 ] );
+var w = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 24 );
+var IWORK = new Int32Array( 15 );
+var IFAIL = new Int32Array( 3 );
+
+dspevx.ndarray( 'compute-vectors', 'all', 'upper', 3, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -108,9 +126,18 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dspevx = require( '@stdlib/lapack/base/dspevx' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 1.0, 3.0, 0.0, 1.0, 4.0 ] );
+var w = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 24 );
+var IWORK = new Int32Array( 15 );
+var IFAIL = new Int32Array( 3 );
+
+dspevx.ndarray( 'compute-vectors', 'all', 'upper', 3, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 </section>

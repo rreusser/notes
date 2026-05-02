@@ -36,8 +36,14 @@ Reduces a real symmetric matrix in packed storage to tridiagonal form.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsptrd = require( '@stdlib/lapack/base/dsptrd' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 3.0, 5.0, 1.0, 4.0, 8.0 ] );
+var d = new Float64Array( 3 );
+var e = new Float64Array( 2 );
+var tau = new Float64Array( 2 );
+
+dsptrd.ndarray( 'upper', 3, AP, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,8 +61,14 @@ Reduces a real symmetric matrix in packed storage to tridiagonal form, using alt
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsptrd = require( '@stdlib/lapack/base/dsptrd' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 3.0, 5.0, 1.0, 4.0, 8.0 ] );
+var d = new Float64Array( 3 );
+var e = new Float64Array( 2 );
+var tau = new Float64Array( 2 );
+
+dsptrd.ndarray( 'upper', 3, AP, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +103,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsptrd = require( '@stdlib/lapack/base/dsptrd' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 3.0, 5.0, 1.0, 4.0, 8.0 ] );
+var d = new Float64Array( 3 );
+var e = new Float64Array( 2 );
+var tau = new Float64Array( 2 );
+
+dsptrd.ndarray( 'upper', 3, AP, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
 ```
 
 </section>

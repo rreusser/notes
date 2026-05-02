@@ -35,9 +35,9 @@ var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
 Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
 
-// TODO: Add usage example
+dlapy3.ndarray( 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -51,9 +51,9 @@ The function has the following parameters:
 Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
 
-// TODO: Add usage example
+dlapy3.ndarray( 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -82,7 +82,7 @@ The function has the following additional parameters:
 ```javascript
 var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
 
-// TODO: Add examples
+dlapy3.ndarray( 1, 1, 1 );
 ```
 
 </section>

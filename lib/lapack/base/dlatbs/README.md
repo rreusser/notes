@@ -35,9 +35,14 @@ var dlatbs = require( '@stdlib/lapack/base/dlatbs' );
 Solves a triangular banded system with scaling to prevent overflow.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlatbs = require( '@stdlib/lapack/base/dlatbs' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var CNORM = discreteUniform( N, -10, 10, opts );
+
+dlatbs.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', N, 1, AB, N, 1, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +66,14 @@ The function has the following parameters:
 Solves a triangular banded system with scaling to prevent overflow, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlatbs = require( '@stdlib/lapack/base/dlatbs' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var CNORM = discreteUniform( N, -10, 10, opts );
+
+dlatbs.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', N, 1, AB, N, 1, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +107,12 @@ The function has the following additional parameters:
 ```javascript
 var dlatbs = require( '@stdlib/lapack/base/dlatbs' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var CNORM = discreteUniform( N, -10, 10, opts );
+
+dlatbs.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', N, 1, AB, N, 1, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 ```
 
 </section>

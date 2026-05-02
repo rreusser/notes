@@ -35,9 +35,17 @@ var zgesvd = require( '@stdlib/lapack/base/zgesvd' );
 Computes the singular value decomposition (SVD) of a complex M-by-N matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgesvd = require( '@stdlib/lapack/base/zgesvd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var VT = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zgesvd.ndarray( 'all-columns', 'all-rows', N, N, A, N, 1, 0, s, 1, 0, U, N, 1, 0, VT, N, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +74,17 @@ The function has the following parameters:
 Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgesvd = require( '@stdlib/lapack/base/zgesvd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var VT = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zgesvd.ndarray( 'all-columns', 'all-rows', N, N, A, N, 1, 0, s, 1, 0, U, N, 1, 0, VT, N, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -109,7 +125,15 @@ The function has the following additional parameters:
 ```javascript
 var zgesvd = require( '@stdlib/lapack/base/zgesvd' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var VT = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zgesvd.ndarray( 'all-columns', 'all-rows', N, N, A, N, 1, 0, s, 1, 0, U, N, 1, 0, VT, N, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 </section>

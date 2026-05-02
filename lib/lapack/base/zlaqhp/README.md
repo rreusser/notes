@@ -35,9 +35,9 @@ var zlaqhp = require( '@stdlib/lapack/base/zlaqhp' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqhp = require( '@stdlib/lapack/base/zlaqhp' );
 
-// TODO: Add usage example
+zlaqhp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +55,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqhp = require( '@stdlib/lapack/base/zlaqhp' );
 
-// TODO: Add usage example
+zlaqhp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
 ```
 
 The function has the following additional parameters:
@@ -89,7 +89,7 @@ The function has the following additional parameters:
 ```javascript
 var zlaqhp = require( '@stdlib/lapack/base/zlaqhp' );
 
-// TODO: Add examples
+zlaqhp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
 ```
 
 </section>

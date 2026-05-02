@@ -35,9 +35,14 @@ var zhptrf = require( '@stdlib/lapack/base/zhptrf' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhptrf = require( '@stdlib/lapack/base/zhptrf' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0 ] );
+var IPIV = new Int32Array( 3 );
+
+zhptrf( 'lower', 3, AP, IPIV );
 ```
 
 The function has the following parameters:
@@ -52,9 +57,14 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhptrf = require( '@stdlib/lapack/base/zhptrf' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0 ] );
+var IPIV = new Int32Array( 3 );
+
+zhptrf( 'lower', 3, AP, IPIV );
 ```
 
 The function has the following additional parameters:
@@ -85,9 +95,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zhptrf = require( '@stdlib/lapack/base/zhptrf' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0 ] );
+var IPIV = new Int32Array( 3 );
+
+zhptrf( 'lower', 3, AP, IPIV );
 ```
 
 </section>

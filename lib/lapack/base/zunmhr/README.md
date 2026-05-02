@@ -35,9 +35,15 @@ var zunmhr = require( '@stdlib/lapack/base/zunmhr' );
 Overwrites the general complex M-by-N matrix C with.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zunmhr = require( '@stdlib/lapack/base/zunmhr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunmhr.ndarray( 'left', 'no-transpose', N, N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -63,9 +69,15 @@ The function has the following parameters:
 Overwrites the general complex M-by-N matrix C with, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zunmhr = require( '@stdlib/lapack/base/zunmhr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunmhr.ndarray( 'left', 'no-transpose', N, N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -102,7 +114,13 @@ The function has the following additional parameters:
 ```javascript
 var zunmhr = require( '@stdlib/lapack/base/zunmhr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunmhr.ndarray( 'left', 'no-transpose', N, N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

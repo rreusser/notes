@@ -35,9 +35,12 @@ var ztptri = require( '@stdlib/lapack/base/ztptri' );
 Computes the inverse of a complex triangular matrix in packed storage.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztptri = require( '@stdlib/lapack/base/ztptri' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 0.0, 3.0, -1.0 ] );
+
+ztptri( 'upper', 'non-unit', 2, AP );
 ```
 
 The function has the following parameters:
@@ -52,9 +55,12 @@ The function has the following parameters:
 Computes the inverse of a complex triangular matrix in packed storage, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztptri = require( '@stdlib/lapack/base/ztptri' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 0.0, 3.0, -1.0 ] );
+
+ztptri( 'upper', 'non-unit', 2, AP );
 ```
 
 The function has the following additional parameters:
@@ -83,9 +89,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var ztptri = require( '@stdlib/lapack/base/ztptri' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 2.0, 1.0, 1.0, 0.0, 3.0, -1.0 ] );
+
+ztptri( 'upper', 'non-unit', 2, AP );
 ```
 
 </section>

@@ -35,9 +35,9 @@ var dpbrfs = require( '@stdlib/lapack/base/dpbrfs' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbrfs = require( '@stdlib/lapack/base/dpbrfs' );
 
-// TODO: Add usage example
+dpbrfs.ndarray( 'upper', 3, 1, 1, ab, 1, 2, 0, afb, 1, 2, 0, b, 1, 3, 0, x, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -64,9 +64,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbrfs = require( '@stdlib/lapack/base/dpbrfs' );
 
-// TODO: Add usage example
+dpbrfs.ndarray( 'upper', 3, 1, 1, ab, 1, 2, 0, afb, 1, 2, 0, b, 1, 3, 0, x, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -115,7 +115,7 @@ The function has the following additional parameters:
 ```javascript
 var dpbrfs = require( '@stdlib/lapack/base/dpbrfs' );
 
-// TODO: Add examples
+dpbrfs.ndarray( 'upper', 3, 1, 1, ab, 1, 2, 0, afb, 1, 2, 0, b, 1, 3, 0, x, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,12 @@ Performs a symmetric rank-k operation for a matrix in Rectangular Full Packed fo
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsfrk = require( '@stdlib/lapack/base/dsfrk' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+
+dsfrk.ndarray( 'no-transpose', 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 0.0, C, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +63,12 @@ Performs a symmetric rank-k operation for a matrix in Rectangular Full Packed fo
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsfrk = require( '@stdlib/lapack/base/dsfrk' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+
+dsfrk.ndarray( 'no-transpose', 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 0.0, C, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,9 +100,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsfrk = require( '@stdlib/lapack/base/dsfrk' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+
+dsfrk.ndarray( 'no-transpose', 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 0.0, C, 1, 0 );
 ```
 
 </section>

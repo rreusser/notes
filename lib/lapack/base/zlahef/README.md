@@ -35,9 +35,14 @@ var zlahef = require( '@stdlib/lapack/base/zlahef' );
 CABS1: |re(z)| + |im(z)|.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlahef = require( '@stdlib/lapack/base/zlahef' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zlahef.ndarray( 'upper', N, N, N, A, N, 1, 0, IPIV, 1, 0, W, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -50,9 +55,14 @@ The function has the following parameters:
 CABS1: |re(z)| + |im(z)|, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlahef = require( '@stdlib/lapack/base/zlahef' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zlahef.ndarray( 'upper', N, N, N, A, N, 1, 0, IPIV, 1, 0, W, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var zlahef = require( '@stdlib/lapack/base/zlahef' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zlahef.ndarray( 'upper', N, N, N, A, N, 1, 0, IPIV, 1, 0, W, N, 1, 0 );
 ```
 
 </section>

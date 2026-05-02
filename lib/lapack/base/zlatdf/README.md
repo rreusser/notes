@@ -35,9 +35,17 @@ var zlatdf = require( '@stdlib/lapack/base/zlatdf' );
 Computes a contribution to the reciprocal Dif-estimate using the LU factorization computed by zgetc2.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlatdf = require( '@stdlib/lapack/base/zlatdf' );
 
-// TODO: Add usage example
+var N = 2;
+var Z = new Complex128Array( N * N );
+var IPIV = new Int32Array( N );
+var JPIV = new Int32Array( N );
+var RHS = new Complex128Array( N );
+
+zlatdf( 2, N, Z, N, RHS, 1, 0.0, 1.0, IPIV, 1, JPIV, 1 );
 ```
 
 The function has the following parameters:
@@ -60,9 +68,17 @@ The function has the following parameters:
 Computes a contribution to the reciprocal Dif-estimate using the LU factorization computed by zgetc2, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlatdf = require( '@stdlib/lapack/base/zlatdf' );
 
-// TODO: Add usage example
+var N = 2;
+var Z = new Complex128Array( N * N );
+var IPIV = new Int32Array( N );
+var JPIV = new Int32Array( N );
+var RHS = new Complex128Array( N );
+
+zlatdf( 2, N, Z, N, RHS, 1, 0.0, 1.0, IPIV, 1, JPIV, 1 );
 ```
 
 The function has the following additional parameters:
@@ -95,9 +111,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zlatdf = require( '@stdlib/lapack/base/zlatdf' );
 
-// TODO: Add examples
+var N = 2;
+var Z = new Complex128Array( N * N );
+var IPIV = new Int32Array( N );
+var JPIV = new Int32Array( N );
+var RHS = new Complex128Array( N );
+
+zlatdf( 2, N, Z, N, RHS, 1, 0.0, 1.0, IPIV, 1, JPIV, 1 );
 ```
 
 </section>

@@ -35,9 +35,14 @@ var ztplqt2 = require( '@stdlib/lapack/base/ztplqt2' );
 Computes LQ factorization of a complex triangular-pentagonal matrix using compact WY representation (unblocked)
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztplqt2 = require( '@stdlib/lapack/base/ztplqt2' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 2.0, 0.3, 0.5, -0.2, 0.0, 0.0, 3.0, 0.4 ] );
+var B = new Complex128Array( [ 1.0, 0.2, 0.3, 0.4, 0.5, -0.1, 1.1, -0.3 ] );
+var T = new Complex128Array( 4 );
+
+ztplqt2( 'column-major', 2, 2, 2, A, 2, B, 2, T, 2 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Computes LQ factorization of a complex triangular-pentagonal matrix using compact WY representation (unblocked), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztplqt2 = require( '@stdlib/lapack/base/ztplqt2' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 2.0, 0.3, 0.5, -0.2, 0.0, 0.0, 3.0, 0.4 ] );
+var B = new Complex128Array( [ 1.0, 0.2, 0.3, 0.4, 0.5, -0.1, 1.1, -0.3 ] );
+var T = new Complex128Array( 4 );
+
+ztplqt2( 'column-major', 2, 2, 2, A, 2, B, 2, T, 2 );
 ```
 
 The function has the following additional parameters:
@@ -89,8 +99,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -100,7 +109,14 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztplqt2 = require( '@stdlib/lapack/base/ztplqt2' );
+
+var A = new Complex128Array( [ 2.0, 0.3, 0.5, -0.2, 0.0, 0.0, 3.0, 0.4 ] );
+var B = new Complex128Array( [ 1.0, 0.2, 0.3, 0.4, 0.5, -0.1, 1.1, -0.3 ] );
+var T = new Complex128Array( 4 );
+
+ztplqt2( 'column-major', 2, 2, 2, A, 2, B, 2, T, 2 );
 ```
 
 </section>

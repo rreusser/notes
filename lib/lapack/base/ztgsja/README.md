@@ -36,8 +36,26 @@ Computes the generalized singular value decomposition (GSVD) of two complex.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var ztgsja = require( '@stdlib/lapack/base/ztgsja' );
 
-// TODO: Add usage example
+var M = 2;
+var P = 2;
+var N = 2;
+var K = 0;
+var L = 2;
+var A = new Complex128Array( M * N );
+var B = new Complex128Array( P * N );
+var ALPHA = new Float64Array( N );
+var BETA = new Float64Array( N );
+var U = new Complex128Array( M * M );
+var V = new Complex128Array( P * P );
+var Q = new Complex128Array( N * N );
+var WORK = new Complex128Array( 2 * N );
+var ncycle = new Int32Array( 1 );
+
+ztgsja.ndarray( 'initialize', 'initialize', 'initialize', M, P, N, K, L, A, 1, M, 0, B, 1, P, 0, 1e-14, 1e-14, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, ncycle );
 ```
 
 The function has the following parameters:
@@ -73,8 +91,26 @@ Computes the generalized singular value decomposition (GSVD) of two complex, usi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var ztgsja = require( '@stdlib/lapack/base/ztgsja' );
 
-// TODO: Add usage example
+var M = 2;
+var P = 2;
+var N = 2;
+var K = 0;
+var L = 2;
+var A = new Complex128Array( M * N );
+var B = new Complex128Array( P * N );
+var ALPHA = new Float64Array( N );
+var BETA = new Float64Array( N );
+var U = new Complex128Array( M * M );
+var V = new Complex128Array( P * P );
+var Q = new Complex128Array( N * N );
+var WORK = new Complex128Array( 2 * N );
+var ncycle = new Int32Array( 1 );
+
+ztgsja.ndarray( 'initialize', 'initialize', 'initialize', M, P, N, K, L, A, 1, M, 0, B, 1, P, 0, 1e-14, 1e-14, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, ncycle );
 ```
 
 The function has the following additional parameters:
@@ -122,9 +158,27 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var ztgsja = require( '@stdlib/lapack/base/ztgsja' );
 
-// TODO: Add examples
+var M = 2;
+var P = 2;
+var N = 2;
+var K = 0;
+var L = 2;
+var A = new Complex128Array( M * N );
+var B = new Complex128Array( P * N );
+var ALPHA = new Float64Array( N );
+var BETA = new Float64Array( N );
+var U = new Complex128Array( M * M );
+var V = new Complex128Array( P * P );
+var Q = new Complex128Array( N * N );
+var WORK = new Complex128Array( 2 * N );
+var ncycle = new Int32Array( 1 );
+
+ztgsja.ndarray( 'initialize', 'initialize', 'initialize', M, P, N, K, L, A, 1, M, 0, B, 1, P, 0, 1e-14, 1e-14, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, ncycle );
 ```
 
 </section>

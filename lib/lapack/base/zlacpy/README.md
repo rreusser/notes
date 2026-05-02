@@ -35,9 +35,13 @@ var zlacpy = require( '@stdlib/lapack/base/zlacpy' );
 Copies all or part of a complex matrix `A` to another complex matrix `B`.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlacpy = require( '@stdlib/lapack/base/zlacpy' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+zlacpy.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +60,13 @@ The function has the following parameters:
 Copies all or part of a complex matrix `A` to another complex matrix `B`, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlacpy = require( '@stdlib/lapack/base/zlacpy' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+zlacpy.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +101,11 @@ The function has the following additional parameters:
 ```javascript
 var zlacpy = require( '@stdlib/lapack/base/zlacpy' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+zlacpy.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

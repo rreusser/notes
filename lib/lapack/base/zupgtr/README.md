@@ -35,9 +35,15 @@ var zupgtr = require( '@stdlib/lapack/base/zupgtr' );
 Generates an orthogonal matrix Q which is defined as the product of n-1 elementary reflectors of order n, as returned by zhptrd.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zupgtr = require( '@stdlib/lapack/base/zupgtr' );
 
-// TODO: Add usage example
+var N = 3;
+var TAU = new Complex128Array( N - 1 );
+var Q = new Complex128Array( N * N );
+var WORK = new Complex128Array( N );
+
+zupgtr( 'column-major', 'upper', N, AP, TAU, Q, N, WORK );
 ```
 
 The function has the following parameters:
@@ -56,9 +62,15 @@ The function has the following parameters:
 Generates an orthogonal matrix Q which is defined as the product of n-1 elementary reflectors of order n, as returned by zhptrd, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zupgtr = require( '@stdlib/lapack/base/zupgtr' );
 
-// TODO: Add usage example
+var N = 3;
+var TAU = new Complex128Array( N - 1 );
+var Q = new Complex128Array( N * N );
+var WORK = new Complex128Array( N );
+
+zupgtr( 'column-major', 'upper', N, AP, TAU, Q, N, WORK );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +106,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zupgtr = require( '@stdlib/lapack/base/zupgtr' );
 
-// TODO: Add examples
+var N = 3;
+var TAU = new Complex128Array( N - 1 );
+var Q = new Complex128Array( N * N );
+var WORK = new Complex128Array( N );
+
+zupgtr( 'column-major', 'upper', N, AP, TAU, Q, N, WORK );
 ```
 
 </section>

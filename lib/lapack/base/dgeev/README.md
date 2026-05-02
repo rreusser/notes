@@ -35,9 +35,17 @@ var dgeev = require( '@stdlib/lapack/base/dgeev' );
 Computes the eigenvalues and, optionally, the left and/or right eigenvectors.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgeev = require( '@stdlib/lapack/base/dgeev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgeev.ndarray( 'compute-vectors', 'compute-vectors', N, A, N, 1, 0, WR, 1, 0, WI, 1, 0, VL, N, 1, 0, VR, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -61,9 +69,17 @@ The function has the following parameters:
 Computes the eigenvalues and, optionally, the left and/or right eigenvectors, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgeev = require( '@stdlib/lapack/base/dgeev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgeev.ndarray( 'compute-vectors', 'compute-vectors', N, A, N, 1, 0, WR, 1, 0, WI, 1, 0, VL, N, 1, 0, VR, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -107,7 +123,15 @@ The function has the following additional parameters:
 ```javascript
 var dgeev = require( '@stdlib/lapack/base/dgeev' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgeev.ndarray( 'compute-vectors', 'compute-vectors', N, A, N, 1, 0, WR, 1, 0, WI, 1, 0, VL, N, 1, 0, VR, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

@@ -36,8 +36,12 @@ Copy a complex double-precision vector.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zcopy = require( '@stdlib/blas/base/zcopy' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( 4 );
+
+zcopy.ndarray( 2, zx, 1, 0, zy, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,8 +58,12 @@ Copy a complex double-precision vector, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zcopy = require( '@stdlib/blas/base/zcopy' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( 4 );
+
+zcopy.ndarray( 2, zx, 1, 0, zy, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -84,9 +92,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zcopy = require( '@stdlib/blas/base/zcopy' );
 
-// TODO: Add examples
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( 4 );
+
+zcopy.ndarray( 2, zx, 1, 0, zy, 1, 0 );
 ```
 
 </section>

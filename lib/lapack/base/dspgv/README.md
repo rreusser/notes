@@ -36,8 +36,15 @@ var dspgv = require( '@stdlib/lapack/base/dspgv' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspgv = require( '@stdlib/lapack/base/dspgv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+var BP = new Float64Array( [ 4.0, 2.0, 5.0, 0.0, 1.0, 3.0 ] );
+var W = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dspgv( 'column-major', 1, 'compute-vectors', 'upper', 3, AP, BP, W, Z, 3, WORK );
 ```
 
 The function has the following parameters:
@@ -60,8 +67,15 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspgv = require( '@stdlib/lapack/base/dspgv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+var BP = new Float64Array( [ 4.0, 2.0, 5.0, 0.0, 1.0, 3.0 ] );
+var W = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dspgv( 'column-major', 1, 'compute-vectors', 'upper', 3, AP, BP, W, Z, 3, WORK );
 ```
 
 The function has the following additional parameters:
@@ -99,9 +113,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dspgv = require( '@stdlib/lapack/base/dspgv' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+var BP = new Float64Array( [ 4.0, 2.0, 5.0, 0.0, 1.0, 3.0 ] );
+var W = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dspgv( 'column-major', 1, 'compute-vectors', 'upper', 3, AP, BP, W, Z, 3, WORK );
 ```
 
 </section>

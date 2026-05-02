@@ -35,9 +35,18 @@ var dgtcon = require( '@stdlib/lapack/base/dgtcon' );
 Estimates the reciprocal of the condition number of a real general tridiagonal.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgtcon = require( '@stdlib/lapack/base/dgtcon' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgtcon.ndarray( '1', N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +75,18 @@ The function has the following parameters:
 Estimates the reciprocal of the condition number of a real general tridiagonal, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgtcon = require( '@stdlib/lapack/base/dgtcon' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgtcon.ndarray( '1', N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -104,7 +122,16 @@ The function has the following additional parameters:
 ```javascript
 var dgtcon = require( '@stdlib/lapack/base/dgtcon' );
 
-// TODO: Add examples
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgtcon.ndarray( '1', N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

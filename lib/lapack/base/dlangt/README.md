@@ -35,9 +35,14 @@ var dlangt = require( '@stdlib/lapack/base/dlangt' );
 Computes the norm of a real general tridiagonal matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlangt = require( '@stdlib/lapack/base/dlangt' );
 
-// TODO: Add usage example
+var N = 3;
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+dlangt.ndarray( '1', N, DL, 1, 0, d, 1, 0, DU, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +61,14 @@ The function has the following parameters:
 Computes the norm of a real general tridiagonal matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlangt = require( '@stdlib/lapack/base/dlangt' );
 
-// TODO: Add usage example
+var N = 3;
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+dlangt.ndarray( '1', N, DL, 1, 0, d, 1, 0, DU, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +100,12 @@ The function has the following additional parameters:
 ```javascript
 var dlangt = require( '@stdlib/lapack/base/dlangt' );
 
-// TODO: Add examples
+var N = 3;
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+dlangt.ndarray( '1', N, DL, 1, 0, d, 1, 0, DU, 1, 0 );
 ```
 
 </section>

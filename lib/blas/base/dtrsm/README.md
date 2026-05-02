@@ -36,8 +36,12 @@ Solves one of the matrix equations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtrsm = require( '@stdlib/blas/base/dtrsm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 0.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 4.0, 0.0, 11.0, 4.0 ] );
+
+dtrsm.ndarray( 'left', 'lower', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,8 +65,12 @@ Solves one of the matrix equations:, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtrsm = require( '@stdlib/blas/base/dtrsm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 0.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 4.0, 0.0, 11.0, 4.0 ] );
+
+dtrsm.ndarray( 'left', 'lower', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,9 +103,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dtrsm = require( '@stdlib/blas/base/dtrsm' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 2.0, 0.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 4.0, 0.0, 11.0, 4.0 ] );
+
+dtrsm.ndarray( 'left', 'lower', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0 );
 ```
 
 </section>

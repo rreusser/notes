@@ -35,9 +35,13 @@ var dlaed5 = require( '@stdlib/lapack/base/dlaed5' );
 Solves the 2-by-2 secular equation.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaed5 = require( '@stdlib/lapack/base/dlaed5' );
 
-// TODO: Add usage example
+var D = discreteUniform( N, -10, 10, opts );
+var Z = discreteUniform( N, -10, 10, opts );
+var DELTA = discreteUniform( N, -10, 10, opts );
+
+dlaed5.ndarray( 1, D, 1, 0, Z, 1, 0, DELTA, 1, 0, 1.0, 1 );
 ```
 
 The function has the following parameters:
@@ -54,9 +58,13 @@ The function has the following parameters:
 Solves the 2-by-2 secular equation, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaed5 = require( '@stdlib/lapack/base/dlaed5' );
 
-// TODO: Add usage example
+var D = discreteUniform( N, -10, 10, opts );
+var Z = discreteUniform( N, -10, 10, opts );
+var DELTA = discreteUniform( N, -10, 10, opts );
+
+dlaed5.ndarray( 1, D, 1, 0, Z, 1, 0, DELTA, 1, 0, 1.0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +99,11 @@ The function has the following additional parameters:
 ```javascript
 var dlaed5 = require( '@stdlib/lapack/base/dlaed5' );
 
-// TODO: Add examples
+var D = discreteUniform( N, -10, 10, opts );
+var Z = discreteUniform( N, -10, 10, opts );
+var DELTA = discreteUniform( N, -10, 10, opts );
+
+dlaed5.ndarray( 1, D, 1, 0, Z, 1, 0, DELTA, 1, 0, 1.0, 1 );
 ```
 
 </section>

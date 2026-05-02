@@ -35,9 +35,12 @@ var zlauum = require( '@stdlib/lapack/base/zlauum' );
 Computes the product of a complex triangular matrix with its conjugate.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlauum = require( '@stdlib/lapack/base/zlauum' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlauum.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +56,12 @@ The function has the following parameters:
 Computes the product of a complex triangular matrix with its conjugate, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlauum = require( '@stdlib/lapack/base/zlauum' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlauum.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var zlauum = require( '@stdlib/lapack/base/zlauum' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlauum.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 </section>

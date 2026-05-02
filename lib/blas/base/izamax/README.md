@@ -36,8 +36,11 @@ Finds the index of the element having the maximum sum of absolute values of.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var izamax = require( '@stdlib/blas/base/izamax' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 5.0, 1.0, 3.0, 4.0 ] );
+
+izamax.ndarray( 3, zx, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,8 +55,11 @@ Finds the index of the element having the maximum sum of absolute values of, usi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var izamax = require( '@stdlib/blas/base/izamax' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 5.0, 1.0, 3.0, 4.0 ] );
+
+izamax.ndarray( 3, zx, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -81,9 +87,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var izamax = require( '@stdlib/blas/base/izamax' );
 
-// TODO: Add examples
+var zx = new Float64Array( [ 1.0, 2.0, 5.0, 1.0, 3.0, 4.0 ] );
+
+izamax.ndarray( 3, zx, 1, 0 );
 ```
 
 </section>

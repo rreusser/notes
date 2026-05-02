@@ -36,8 +36,11 @@ Finds the index of the first element having the maximum absolute value.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var idamax = require( '@stdlib/blas/base/idamax' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, -4.0, 3.0, 2.0 ] );
+
+idamax.ndarray( 4, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,8 +55,11 @@ Finds the index of the first element having the maximum absolute value, using al
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var idamax = require( '@stdlib/blas/base/idamax' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, -4.0, 3.0, 2.0 ] );
+
+idamax.ndarray( 4, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -81,9 +87,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var idamax = require( '@stdlib/blas/base/idamax' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, -4.0, 3.0, 2.0 ] );
+
+idamax.ndarray( 4, x, 1, 0 );
 ```
 
 </section>

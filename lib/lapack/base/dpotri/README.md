@@ -35,9 +35,12 @@ var dpotri = require( '@stdlib/lapack/base/dpotri' );
 Computes the inverse of a real symmetric positive definite matrix using.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpotri = require( '@stdlib/lapack/base/dpotri' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dpotri.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +56,12 @@ The function has the following parameters:
 Computes the inverse of a real symmetric positive definite matrix using, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpotri = require( '@stdlib/lapack/base/dpotri' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dpotri.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var dpotri = require( '@stdlib/lapack/base/dpotri' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dpotri.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 </section>

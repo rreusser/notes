@@ -35,9 +35,14 @@ var dgehd2 = require( '@stdlib/lapack/base/dgehd2' );
 Reduce a general matrix to upper Hessenberg form (unblocked).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgehd2 = require( '@stdlib/lapack/base/dgehd2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgehd2.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Reduce a general matrix to upper Hessenberg form (unblocked), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgehd2 = require( '@stdlib/lapack/base/dgehd2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgehd2.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +104,12 @@ The function has the following additional parameters:
 ```javascript
 var dgehd2 = require( '@stdlib/lapack/base/dgehd2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgehd2.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

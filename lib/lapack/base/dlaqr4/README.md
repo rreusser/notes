@@ -35,9 +35,16 @@ var dlaqr4 = require( '@stdlib/lapack/base/dlaqr4' );
 Implements one level of recursion for DLAQR0. It is a complete implementation.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr4 = require( '@stdlib/lapack/base/dlaqr4' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr4.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -66,9 +73,16 @@ The function has the following parameters:
 Implements one level of recursion for DLAQR0. It is a complete implementation, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr4 = require( '@stdlib/lapack/base/dlaqr4' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr4.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -106,7 +120,14 @@ The function has the following additional parameters:
 ```javascript
 var dlaqr4 = require( '@stdlib/lapack/base/dlaqr4' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr4.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

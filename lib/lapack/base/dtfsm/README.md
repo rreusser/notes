@@ -36,8 +36,12 @@ Solves a matrix equation with a triangular matrix in Rectangular Full Packed for
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtfsm = require( '@stdlib/lapack/base/dtfsm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 4.0, 0.5, 1.0, 6.0, 5.0, 1.5 ] );
+var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+dtfsm.ndarray( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 2, 1.0, A, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following parameters:
@@ -60,8 +64,12 @@ Solves a matrix equation with a triangular matrix in Rectangular Full Packed for
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtfsm = require( '@stdlib/lapack/base/dtfsm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 4.0, 0.5, 1.0, 6.0, 5.0, 1.5 ] );
+var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+dtfsm.ndarray( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 2, 1.0, A, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,9 +101,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dtfsm = require( '@stdlib/lapack/base/dtfsm' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 4.0, 0.5, 1.0, 6.0, 5.0, 1.5 ] );
+var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+dtfsm.ndarray( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 2, 1.0, A, 1, 0, B, 1, 3, 0 );
 ```
 
 </section>

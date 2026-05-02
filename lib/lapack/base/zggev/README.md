@@ -35,9 +35,17 @@ var zggev = require( '@stdlib/lapack/base/zggev' );
 ABS1: |re| + |im| (cheap complex absolute value).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zggev = require( '@stdlib/lapack/base/zggev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+
+zggev.ndarray( 'compute', 'compute', N, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, VL, N, 1, 0, VR, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -64,9 +72,17 @@ The function has the following parameters:
 ABS1: |re| + |im| (cheap complex absolute value), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zggev = require( '@stdlib/lapack/base/zggev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+
+zggev.ndarray( 'compute', 'compute', N, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, VL, N, 1, 0, VR, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -109,7 +125,15 @@ The function has the following additional parameters:
 ```javascript
 var zggev = require( '@stdlib/lapack/base/zggev' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+
+zggev.ndarray( 'compute', 'compute', N, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, VL, N, 1, 0, VR, N, 1, 0 );
 ```
 
 </section>

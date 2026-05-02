@@ -36,8 +36,14 @@ Generates a real orthogonal matrix Q from the elementary reflectors returned by 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dopgtr = require( '@stdlib/lapack/base/dopgtr' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 5.3, -0.1, 1.7, -0.72, 3.16, 4.0 ] );
+var TAU = new Float64Array( [ 0.0, 1.316 ] );
+var Q = new Float64Array( 9 );
+var WORK = new Float64Array( 3 );
+
+dopgtr.ndarray( 'upper', 3, AP, 1, 0, TAU, 1, 0, Q, 1, 3, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +63,14 @@ Generates a real orthogonal matrix Q from the elementary reflectors returned by 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dopgtr = require( '@stdlib/lapack/base/dopgtr' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 5.3, -0.1, 1.7, -0.72, 3.16, 4.0 ] );
+var TAU = new Float64Array( [ 0.0, 1.316 ] );
+var Q = new Float64Array( 9 );
+var WORK = new Float64Array( 3 );
+
+dopgtr.ndarray( 'upper', 3, AP, 1, 0, TAU, 1, 0, Q, 1, 3, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +106,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dopgtr = require( '@stdlib/lapack/base/dopgtr' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 5.3, -0.1, 1.7, -0.72, 3.16, 4.0 ] );
+var TAU = new Float64Array( [ 0.0, 1.316 ] );
+var Q = new Float64Array( 9 );
+var WORK = new Float64Array( 3 );
+
+dopgtr.ndarray( 'upper', 3, AP, 1, 0, TAU, 1, 0, Q, 1, 3, 0, WORK, 1, 0 );
 ```
 
 </section>

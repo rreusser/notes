@@ -36,8 +36,13 @@ Constructs a modified Givens plane rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var drotmg = require( '@stdlib/blas/base/drotmg' );
 
-// TODO: Add usage example
+var D = new Float64Array( [ 1.0, 1.0 ] );
+var x1 = new Float64Array( [ 3.0 ] );
+var param = new Float64Array( 5 );
+
+drotmg.ndarray( D, 1, 0, x1, 1, 0, 4.0, param, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,8 +58,13 @@ Constructs a modified Givens plane rotation, using alternative indexing semantic
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var drotmg = require( '@stdlib/blas/base/drotmg' );
 
-// TODO: Add usage example
+var D = new Float64Array( [ 1.0, 1.0 ] );
+var x1 = new Float64Array( [ 3.0 ] );
+var param = new Float64Array( 5 );
+
+drotmg.ndarray( D, 1, 0, x1, 1, 0, 4.0, param, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +97,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var drotmg = require( '@stdlib/blas/base/drotmg' );
 
-// TODO: Add examples
+var D = new Float64Array( [ 1.0, 1.0 ] );
+var x1 = new Float64Array( [ 3.0 ] );
+var param = new Float64Array( 5 );
+
+drotmg.ndarray( D, 1, 0, x1, 1, 0, 4.0, param, 1, 0 );
 ```
 
 </section>

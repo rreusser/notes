@@ -35,9 +35,16 @@ var zgeql2 = require( '@stdlib/lapack/base/zgeql2' );
 Compute a QL factorization of a complex M-by-N matrix
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgeql2 = require( '@stdlib/lapack/base/zgeql2' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 2;
+var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1 ] );
+var TAU = new Complex128Array( N );
+var WORK = new Complex128Array( N );
+
+zgeql2( 'column-major', M, N, A, M, TAU, 1, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -57,9 +64,16 @@ The function has the following parameters:
 Compute a QL factorization of a complex M-by-N matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgeql2 = require( '@stdlib/lapack/base/zgeql2' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 2;
+var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1 ] );
+var TAU = new Complex128Array( N );
+var WORK = new Complex128Array( N );
+
+zgeql2( 'column-major', M, N, A, M, TAU, 1, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -85,8 +99,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -96,7 +109,16 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgeql2 = require( '@stdlib/lapack/base/zgeql2' );
+
+var M = 3;
+var N = 2;
+var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1 ] );
+var TAU = new Complex128Array( N );
+var WORK = new Complex128Array( N );
+
+zgeql2( 'column-major', M, N, A, M, TAU, 1, WORK, 1 );
 ```
 
 </section>

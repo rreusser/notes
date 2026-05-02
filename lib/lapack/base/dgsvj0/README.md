@@ -36,8 +36,20 @@ Pre-processor for dgesvj performing Jacobi rotations
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgsvj0 = require( '@stdlib/lapack/base/dgsvj0' );
 
-// TODO: Add usage example
+var EPS = 2.220446049250313e-16;
+var SFMIN = 2.2250738585072014e-308;
+var TOL = 1.0e-10;
+var M = 4;
+var N = 3;
+var A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
+var d = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var sva = new Float64Array( N );
+var V = new Float64Array( M );
+var work = new Float64Array( M );
+
+dgsvj0.ndarray( 'no-v', M, N, A, 1, M, 0, d, 1, 0, sva, 1, 0, 0, V, 1, 1, 0, EPS, SFMIN, TOL, 5, work, 1, 0, M );
 ```
 
 The function has the following parameters:
@@ -69,8 +81,20 @@ Pre-processor for dgesvj performing Jacobi rotations, using alternative indexing
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgsvj0 = require( '@stdlib/lapack/base/dgsvj0' );
 
-// TODO: Add usage example
+var EPS = 2.220446049250313e-16;
+var SFMIN = 2.2250738585072014e-308;
+var TOL = 1.0e-10;
+var M = 4;
+var N = 3;
+var A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
+var d = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var sva = new Float64Array( N );
+var V = new Float64Array( M );
+var work = new Float64Array( M );
+
+dgsvj0.ndarray( 'no-v', M, N, A, 1, M, 0, d, 1, 0, sva, 1, 0, 0, V, 1, 1, 0, EPS, SFMIN, TOL, 5, work, 1, 0, M );
 ```
 
 The function has the following additional parameters:
@@ -110,8 +134,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -121,7 +144,21 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dgsvj0 = require( '@stdlib/lapack/base/dgsvj0' );
+
+var EPS = 2.220446049250313e-16;
+var SFMIN = 2.2250738585072014e-308;
+var TOL = 1.0e-10;
+var M = 4;
+var N = 3;
+var A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
+var d = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var sva = new Float64Array( N );
+var V = new Float64Array( M );
+var work = new Float64Array( M );
+
+dgsvj0.ndarray( 'no-v', M, N, A, 1, M, 0, d, 1, 0, sva, 1, 0, 0, V, 1, 1, 0, EPS, SFMIN, TOL, 5, work, 1, 0, M );
 ```
 
 </section>

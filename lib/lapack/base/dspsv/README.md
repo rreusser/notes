@@ -36,8 +36,14 @@ var dspsv = require( '@stdlib/lapack/base/dspsv' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dspsv = require( '@stdlib/lapack/base/dspsv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+var IPIV = new Int32Array( 3 );
+var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+
+dspsv( 'upper', 3, 1, AP, IPIV, B, 3 );
 ```
 
 The function has the following parameters:
@@ -56,8 +62,14 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dspsv = require( '@stdlib/lapack/base/dspsv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+var IPIV = new Int32Array( 3 );
+var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+
+dspsv( 'upper', 3, 1, AP, IPIV, B, 3 );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +103,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dspsv = require( '@stdlib/lapack/base/dspsv' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+var IPIV = new Int32Array( 3 );
+var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+
+dspsv( 'upper', 3, 1, AP, IPIV, B, 3 );
 ```
 
 </section>

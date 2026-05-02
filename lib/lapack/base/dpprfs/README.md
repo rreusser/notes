@@ -35,9 +35,9 @@ var dpprfs = require( '@stdlib/lapack/base/dpprfs' );
 Improves the computed solution to a real system A * X = B where A is symmetric positive definite in packed storage and provides error bounds.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpprfs = require( '@stdlib/lapack/base/dpprfs' );
 
-// TODO: Add usage example
+dpprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +61,9 @@ The function has the following parameters:
 Improves the computed solution to a real system A * X = B where A is symmetric positive definite in packed storage and provides error bounds, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpprfs = require( '@stdlib/lapack/base/dpprfs' );
 
-// TODO: Add usage example
+dpprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -110,7 +110,7 @@ The function has the following additional parameters:
 ```javascript
 var dpprfs = require( '@stdlib/lapack/base/dpprfs' );
 
-// TODO: Add examples
+dpprfs.ndarray( 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

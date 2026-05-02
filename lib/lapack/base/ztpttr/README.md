@@ -35,9 +35,13 @@ var ztpttr = require( '@stdlib/lapack/base/ztpttr' );
 Copies a complex triangular matrix from standard packed format (TP) to full format (TR).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztpttr = require( '@stdlib/lapack/base/ztpttr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AP = discreteUniform( N, -10, 10, opts );
+
+ztpttr.ndarray( 'upper', N, AP, 1, 0, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +58,13 @@ The function has the following parameters:
 Copies a complex triangular matrix from standard packed format (TP) to full format (TR), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztpttr = require( '@stdlib/lapack/base/ztpttr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AP = discreteUniform( N, -10, 10, opts );
+
+ztpttr.ndarray( 'upper', N, AP, 1, 0, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var ztpttr = require( '@stdlib/lapack/base/ztpttr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AP = discreteUniform( N, -10, 10, opts );
+
+ztpttr.ndarray( 'upper', N, AP, 1, 0, A, N, 1, 0 );
 ```
 
 </section>

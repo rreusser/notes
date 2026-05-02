@@ -35,9 +35,9 @@ var dspgst = require( '@stdlib/lapack/base/dspgst' );
 Reduces a real symmetric-definite generalized eigenproblem to standard form using packed storage.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dspgst = require( '@stdlib/lapack/base/dspgst' );
 
-// TODO: Add usage example
+dspgst( 1, 'upper', 3, AP, BP );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Reduces a real symmetric-definite generalized eigenproblem to standard form using packed storage, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dspgst = require( '@stdlib/lapack/base/dspgst' );
 
-// TODO: Add usage example
+dspgst( 1, 'upper', 3, AP, BP );
 ```
 
 The function has the following additional parameters:
@@ -88,7 +88,7 @@ The function has the following additional parameters:
 ```javascript
 var dspgst = require( '@stdlib/lapack/base/dspgst' );
 
-// TODO: Add examples
+dspgst( 1, 'upper', 3, AP, BP );
 ```
 
 </section>

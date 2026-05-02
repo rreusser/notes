@@ -35,9 +35,14 @@ var zptts2 = require( '@stdlib/lapack/base/zptts2' );
 Solves a complex Hermitian positive definite tridiagonal system of the form.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zptts2 = require( '@stdlib/lapack/base/zptts2' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+zptts2.ndarray( 1, N, N, d, 1, 0, e, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Solves a complex Hermitian positive definite tridiagonal system of the form, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zptts2 = require( '@stdlib/lapack/base/zptts2' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+zptts2.ndarray( 1, N, N, d, 1, 0, e, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +103,12 @@ The function has the following additional parameters:
 ```javascript
 var zptts2 = require( '@stdlib/lapack/base/zptts2' );
 
-// TODO: Add examples
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+zptts2.ndarray( 1, N, N, d, 1, 0, e, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

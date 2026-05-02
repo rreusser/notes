@@ -35,9 +35,9 @@ var zpftrs = require( '@stdlib/lapack/base/zpftrs' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpftrs = require( '@stdlib/lapack/base/zpftrs' );
 
-// TODO: Add usage example
+zpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +54,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpftrs = require( '@stdlib/lapack/base/zpftrs' );
 
-// TODO: Add usage example
+zpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +90,7 @@ The function has the following additional parameters:
 ```javascript
 var zpftrs = require( '@stdlib/lapack/base/zpftrs' );
 
-// TODO: Add examples
+zpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
 ```
 
 </section>

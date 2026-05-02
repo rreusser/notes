@@ -35,9 +35,13 @@ var zsytf2 = require( '@stdlib/lapack/base/zsytf2' );
 Computes the factorization of a complex symmetric matrix A using the.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsytf2 = require( '@stdlib/lapack/base/zsytf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zsytf2.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Computes the factorization of a complex symmetric matrix A using the, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsytf2 = require( '@stdlib/lapack/base/zsytf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zsytf2.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zsytf2 = require( '@stdlib/lapack/base/zsytf2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zsytf2.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 </section>

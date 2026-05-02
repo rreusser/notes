@@ -35,9 +35,14 @@ var dgelqf = require( '@stdlib/lapack/base/dgelqf' );
 Computes an LQ factorization of a real M-by-N matrix A = L * Q.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgelqf = require( '@stdlib/lapack/base/dgelqf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgelqf.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Computes an LQ factorization of a real M-by-N matrix A = L * Q, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgelqf = require( '@stdlib/lapack/base/dgelqf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgelqf.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +103,12 @@ The function has the following additional parameters:
 ```javascript
 var dgelqf = require( '@stdlib/lapack/base/dgelqf' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgelqf.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

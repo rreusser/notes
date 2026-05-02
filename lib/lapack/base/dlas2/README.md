@@ -35,9 +35,9 @@ var dlas2 = require( '@stdlib/lapack/base/dlas2' );
 Computes the singular values of a 2-by-2 triangular matrix:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlas2 = require( '@stdlib/lapack/base/dlas2' );
 
-// TODO: Add usage example
+dlas2.ndarray( 1, 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -52,9 +52,9 @@ The function has the following parameters:
 Computes the singular values of a 2-by-2 triangular matrix:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlas2 = require( '@stdlib/lapack/base/dlas2' );
 
-// TODO: Add usage example
+dlas2.ndarray( 1, 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -83,7 +83,7 @@ The function has the following additional parameters:
 ```javascript
 var dlas2 = require( '@stdlib/lapack/base/dlas2' );
 
-// TODO: Add examples
+dlas2.ndarray( 1, 1, 1, 1 );
 ```
 
 </section>

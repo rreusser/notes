@@ -36,8 +36,22 @@ var dpbsvx = require( '@stdlib/lapack/base/dpbsvx' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dpbsvx = require( '@stdlib/lapack/base/dpbsvx' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 0.0, 6.0, 0.0, 0.0 ] );
+var AFB = new Float64Array( 9 );
+var S = new Float64Array( 3 );
+var equed = [ 'none' ];
+var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+var X = new Float64Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Float64Array( 9 );
+var IWORK = new Int32Array( 3 );
+
+dpbsvx.ndarray( 'not-factored', 'lower', 3, 2, 1, AB, 1, 3, 0, AFB, 1, 3, 0, equed, S, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -74,8 +88,22 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dpbsvx = require( '@stdlib/lapack/base/dpbsvx' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 0.0, 6.0, 0.0, 0.0 ] );
+var AFB = new Float64Array( 9 );
+var S = new Float64Array( 3 );
+var equed = [ 'none' ];
+var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+var X = new Float64Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Float64Array( 9 );
+var IWORK = new Int32Array( 3 );
+
+dpbsvx.ndarray( 'not-factored', 'lower', 3, 2, 1, AB, 1, 3, 0, AFB, 1, 3, 0, equed, S, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -119,9 +147,23 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dpbsvx = require( '@stdlib/lapack/base/dpbsvx' );
 
-// TODO: Add examples
+var AB = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 0.0, 6.0, 0.0, 0.0 ] );
+var AFB = new Float64Array( 9 );
+var S = new Float64Array( 3 );
+var equed = [ 'none' ];
+var B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+var X = new Float64Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Float64Array( 9 );
+var IWORK = new Int32Array( 3 );
+
+dpbsvx.ndarray( 'not-factored', 'lower', 3, 2, 1, AB, 1, 3, 0, AFB, 1, 3, 0, equed, S, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

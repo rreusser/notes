@@ -35,9 +35,9 @@ var dlasq6 = require( '@stdlib/lapack/base/dlasq6' );
 Computes one dqds transform in ping-pong form without a shift.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq6 = require( '@stdlib/lapack/base/dlasq6' );
 
-// TODO: Add usage example
+dlasq6.ndarray( 1, 1, 1, 1, 0, 1 );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Computes one dqds transform in ping-pong form without a shift, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq6 = require( '@stdlib/lapack/base/dlasq6' );
 
-// TODO: Add usage example
+dlasq6.ndarray( 1, 1, 1, 1, 0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var dlasq6 = require( '@stdlib/lapack/base/dlasq6' );
 
-// TODO: Add examples
+dlasq6.ndarray( 1, 1, 1, 1, 0, 1 );
 ```
 
 </section>

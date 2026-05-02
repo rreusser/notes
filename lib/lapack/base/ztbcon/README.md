@@ -36,8 +36,15 @@ Estimates the reciprocal condition number of a complex triangular band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztbcon = require( '@stdlib/lapack/base/ztbcon' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
+var RCOND = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztbcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, 0, AB, 1, 1, 0, RCOND, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,8 +68,15 @@ Estimates the reciprocal condition number of a complex triangular band matrix, u
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztbcon = require( '@stdlib/lapack/base/ztbcon' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
+var RCOND = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztbcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, 0, AB, 1, 1, 0, RCOND, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +108,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var ztbcon = require( '@stdlib/lapack/base/ztbcon' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
+var RCOND = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztbcon.ndarray( 'one-norm', 'upper', 'non-unit', 3, 0, AB, 1, 1, 0, RCOND, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

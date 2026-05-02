@@ -36,8 +36,14 @@ Computes row and column scalings intended to equilibrate an M-by-N complex band 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgbequ = require( '@stdlib/lapack/base/zgbequ' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 3, 4, 1, 0, 0, 2 ] );
+var r = new Float64Array( 3 );
+var c = new Float64Array( 3 );
+
+zgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +65,14 @@ Computes row and column scalings intended to equilibrate an M-by-N complex band 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgbequ = require( '@stdlib/lapack/base/zgbequ' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 3, 4, 1, 0, 0, 2 ] );
+var r = new Float64Array( 3 );
+var c = new Float64Array( 3 );
+
+zgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,9 +104,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zgbequ = require( '@stdlib/lapack/base/zgbequ' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 3, 4, 1, 0, 0, 2 ] );
+var r = new Float64Array( 3 );
+var c = new Float64Array( 3 );
+
+zgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
 ```
 
 </section>

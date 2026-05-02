@@ -36,8 +36,14 @@ Equilibrates a complex general band matrix using row and column scaling factors.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlaqgb = require( '@stdlib/lapack/base/zlaqgb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 3.0, 1.0, 4.0, 2.0 ] );
+var r = new Float64Array( [ 0.5, 2.0 ] );
+var c = new Float64Array( [ 1.0, 1.0 ] );
+
+zlaqgb.ndarray( 2, 2, 1, 0, AB, 1, 2, 0, r, 1, 0, c, 1, 0, 0.01, 1.0, 5.0 );
 ```
 
 The function has the following parameters:
@@ -62,8 +68,14 @@ Equilibrates a complex general band matrix using row and column scaling factors,
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlaqgb = require( '@stdlib/lapack/base/zlaqgb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 3.0, 1.0, 4.0, 2.0 ] );
+var r = new Float64Array( [ 0.5, 2.0 ] );
+var c = new Float64Array( [ 1.0, 1.0 ] );
+
+zlaqgb.ndarray( 2, 2, 1, 0, AB, 1, 2, 0, r, 1, 0, c, 1, 0, 0.01, 1.0, 5.0 );
 ```
 
 The function has the following additional parameters:
@@ -95,9 +107,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlaqgb = require( '@stdlib/lapack/base/zlaqgb' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 3.0, 1.0, 4.0, 2.0 ] );
+var r = new Float64Array( [ 0.5, 2.0 ] );
+var c = new Float64Array( [ 1.0, 1.0 ] );
+
+zlaqgb.ndarray( 2, 2, 1, 0, AB, 1, 2, 0, r, 1, 0, c, 1, 0, 0.01, 1.0, 5.0 );
 ```
 
 </section>

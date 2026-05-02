@@ -35,9 +35,14 @@ var dorgbr = require( '@stdlib/lapack/base/dorgbr' );
 Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dorgbr = require( '@stdlib/lapack/base/dorgbr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorgbr.ndarray( 'q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +64,14 @@ The function has the following parameters:
 Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dorgbr = require( '@stdlib/lapack/base/dorgbr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorgbr.ndarray( 'q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +105,12 @@ The function has the following additional parameters:
 ```javascript
 var dorgbr = require( '@stdlib/lapack/base/dorgbr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorgbr.ndarray( 'q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,9 @@ var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );
 Returns sqrt(x**2 + y**2), taking care not to cause unnecessary.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );
 
-// TODO: Add usage example
+dlapy2.ndarray( 1, 1 );
 ```
 
 The function has the following parameters:
@@ -50,9 +50,9 @@ The function has the following parameters:
 Returns sqrt(x**2 + y**2), taking care not to cause unnecessary, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );
 
-// TODO: Add usage example
+dlapy2.ndarray( 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -81,7 +81,7 @@ The function has the following additional parameters:
 ```javascript
 var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );
 
-// TODO: Add examples
+dlapy2.ndarray( 1, 1 );
 ```
 
 </section>

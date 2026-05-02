@@ -36,8 +36,15 @@ Estimates the reciprocal condition number of a complex Hermitian positive defini
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zppcon = require( '@stdlib/lapack/base/zppcon' );
 
-// TODO: Add usage example
+var anorm = 5.41421356237309492;
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+var rcond = new Float64Array( 1 );
+
+zppcon.ndarray( 'upper', 3, AP, 1, 0, anorm, rcond, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +63,15 @@ Estimates the reciprocal condition number of a complex Hermitian positive defini
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zppcon = require( '@stdlib/lapack/base/zppcon' );
 
-// TODO: Add usage example
+var anorm = 5.41421356237309492;
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+var rcond = new Float64Array( 1 );
+
+zppcon.ndarray( 'upper', 3, AP, 1, 0, anorm, rcond, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +104,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zppcon = require( '@stdlib/lapack/base/zppcon' );
 
-// TODO: Add examples
+var anorm = 5.41421356237309492;
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+var rcond = new Float64Array( 1 );
+
+zppcon.ndarray( 'upper', 3, AP, 1, 0, anorm, rcond, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

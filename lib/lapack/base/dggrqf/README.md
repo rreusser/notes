@@ -36,8 +36,14 @@ Computes a generalized RQ factorization of an M-by-N matrix A and a.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dggrqf = require( '@stdlib/lapack/base/dggrqf' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 4.0, 2.0, 3.0, 2.0, 5.0 ] );
+var B = new Float64Array( [ 1.0, 2.0, 1.0, 3.0, 1.0, 2.0, 2.0, 3.0, 1.0 ] );
+var TAUA = new Float64Array( 3 );
+var TAUB = new Float64Array( 3 );
+
+dggrqf( 3, 3, 3, A, 3, TAUA, 1, B, 3, TAUB, 1 );
 ```
 
 The function has the following parameters:
@@ -60,8 +66,14 @@ Computes a generalized RQ factorization of an M-by-N matrix A and a, using alter
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dggrqf = require( '@stdlib/lapack/base/dggrqf' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 4.0, 2.0, 3.0, 2.0, 5.0 ] );
+var B = new Float64Array( [ 1.0, 2.0, 1.0, 3.0, 1.0, 2.0, 2.0, 3.0, 1.0 ] );
+var TAUA = new Float64Array( 3 );
+var TAUB = new Float64Array( 3 );
+
+dggrqf( 3, 3, 3, A, 3, TAUA, 1, B, 3, TAUB, 1 );
 ```
 
 The function has the following additional parameters:
@@ -96,9 +108,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dggrqf = require( '@stdlib/lapack/base/dggrqf' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 4.0, 2.0, 3.0, 2.0, 5.0 ] );
+var B = new Float64Array( [ 1.0, 2.0, 1.0, 3.0, 1.0, 2.0, 2.0, 3.0, 1.0 ] );
+var TAUA = new Float64Array( 3 );
+var TAUB = new Float64Array( 3 );
+
+dggrqf( 3, 3, 3, A, 3, TAUA, 1, B, 3, TAUB, 1 );
 ```
 
 </section>

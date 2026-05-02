@@ -35,9 +35,16 @@ var zgttrf = require( '@stdlib/lapack/base/zgttrf' );
 CABS1: |re(z)| + |im(z)|.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgttrf = require( '@stdlib/lapack/base/zgttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgttrf.ndarray( N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -50,9 +57,16 @@ The function has the following parameters:
 CABS1: |re(z)| + |im(z)|, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgttrf = require( '@stdlib/lapack/base/zgttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgttrf.ndarray( N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +111,14 @@ The function has the following additional parameters:
 ```javascript
 var zgttrf = require( '@stdlib/lapack/base/zgttrf' );
 
-// TODO: Add examples
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgttrf.ndarray( N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0 );
 ```
 
 </section>

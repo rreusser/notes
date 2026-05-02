@@ -35,9 +35,13 @@ var zpoequ = require( '@stdlib/lapack/base/zpoequ' );
 Computes row and column scalings intended to equilibrate a Hermitian positive.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpoequ = require( '@stdlib/lapack/base/zpoequ' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zpoequ.ndarray( N, A, N, 1, 0, s, 1, 0, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -53,9 +57,13 @@ The function has the following parameters:
 Computes row and column scalings intended to equilibrate a Hermitian positive, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpoequ = require( '@stdlib/lapack/base/zpoequ' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zpoequ.ndarray( N, A, N, 1, 0, s, 1, 0, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zpoequ = require( '@stdlib/lapack/base/zpoequ' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zpoequ.ndarray( N, A, N, 1, 0, s, 1, 0, 1, 1 );
 ```
 
 </section>

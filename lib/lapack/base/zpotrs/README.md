@@ -35,9 +35,13 @@ var zpotrs = require( '@stdlib/lapack/base/zpotrs' );
 Solves a system of linear equations A_X = B with a Hermitian positive.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpotrs = require( '@stdlib/lapack/base/zpotrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+zpotrs.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +60,13 @@ The function has the following parameters:
 Solves a system of linear equations A_X = B with a Hermitian positive, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpotrs = require( '@stdlib/lapack/base/zpotrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+zpotrs.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +101,11 @@ The function has the following additional parameters:
 ```javascript
 var zpotrs = require( '@stdlib/lapack/base/zpotrs' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+zpotrs.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

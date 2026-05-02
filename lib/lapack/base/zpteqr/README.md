@@ -36,8 +36,15 @@ var zpteqr = require( '@stdlib/lapack/base/zpteqr' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zpteqr = require( '@stdlib/lapack/base/zpteqr' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
+var e = new Float64Array( [ 1.0, 1.0 ] );
+var Z = new Complex128Array( 9 );
+var WORK = new Float64Array( 12 );
+
+zpteqr( 'column-major', 'initialize', 3, d, 1, e, 1, Z, 3, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -60,8 +67,15 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zpteqr = require( '@stdlib/lapack/base/zpteqr' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
+var e = new Float64Array( [ 1.0, 1.0 ] );
+var Z = new Complex128Array( 9 );
+var WORK = new Float64Array( 12 );
+
+zpteqr( 'column-major', 'initialize', 3, d, 1, e, 1, Z, 3, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +108,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zpteqr = require( '@stdlib/lapack/base/zpteqr' );
 
-// TODO: Add examples
+var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
+var e = new Float64Array( [ 1.0, 1.0 ] );
+var Z = new Complex128Array( 9 );
+var WORK = new Float64Array( 12 );
+
+zpteqr( 'column-major', 'initialize', 3, d, 1, e, 1, Z, 3, WORK, 1 );
 ```
 
 </section>

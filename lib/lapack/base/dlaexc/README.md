@@ -35,9 +35,14 @@ var dlaexc = require( '@stdlib/lapack/base/dlaexc' );
 Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaexc = require( '@stdlib/lapack/base/dlaexc' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaexc.ndarray( 1, N, T, N, 1, 0, Q, N, 1, 0, 1, 1, 1, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +64,14 @@ The function has the following parameters:
 Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaexc = require( '@stdlib/lapack/base/dlaexc' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaexc.ndarray( 1, N, T, N, 1, 0, Q, N, 1, 0, 1, 1, 1, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +107,12 @@ The function has the following additional parameters:
 ```javascript
 var dlaexc = require( '@stdlib/lapack/base/dlaexc' );
 
-// TODO: Add examples
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaexc.ndarray( 1, N, T, N, 1, 0, Q, N, 1, 0, 1, 1, 1, WORK, 1, 0 );
 ```
 
 </section>

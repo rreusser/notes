@@ -35,9 +35,9 @@ var dladiv = require( '@stdlib/lapack/base/dladiv' );
 Internal helper: DLADIV2.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dladiv = require( '@stdlib/lapack/base/dladiv' );
 
-// TODO: Add usage example
+dladiv.ndarray( 1, 1, 1.0, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Internal helper: DLADIV2, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dladiv = require( '@stdlib/lapack/base/dladiv' );
 
-// TODO: Add usage example
+dladiv.ndarray( 1, 1, 1.0, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -84,7 +84,7 @@ The function has the following additional parameters:
 ```javascript
 var dladiv = require( '@stdlib/lapack/base/dladiv' );
 
-// TODO: Add examples
+dladiv.ndarray( 1, 1, 1.0, 1, 1 );
 ```
 
 </section>

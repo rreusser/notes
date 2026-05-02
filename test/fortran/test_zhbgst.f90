@@ -255,4 +255,413 @@ program test_zhbgst
   call print_array('X', X_r, N * LDX * 2)
   call end_test()
 
+  ! =====================================================================
+  ! Test 10: UPLO='U', N=6, KA=2, KB=2 (KA == KB) with VECT='V'
+  ! =====================================================================
+  N = 6; KA = 2; KB = 2; LDAB = 3; LDBB = 3; LDX = 6
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(3 + (I-1)*LDAB) = dcmplx(dble(8+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + I*LDAB) = dcmplx(0.4d0*dble(I), 0.2d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(1 + (I+1)*LDAB) = dcmplx(0.2d0*dble(I), -0.1d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(3 + (I-1)*LDBB) = dcmplx(dble(4+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + I*LDBB) = dcmplx(0.1d0*dble(I), 0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(1 + (I+1)*LDBB) = dcmplx(0.05d0*dble(I), 0.02d0*dble(mod(I,3)-1))
+  end do
+
+  call ZPBSTF('U', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'U', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('upper_n6_ka2_kb2_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 11: UPLO='L', N=6, KA=2, KB=2 with VECT='V'
+  ! =====================================================================
+  N = 6; KA = 2; KB = 2; LDAB = 3; LDBB = 3; LDX = 6
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(1 + (I-1)*LDAB) = dcmplx(dble(8+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + (I-1)*LDAB) = dcmplx(0.4d0*dble(I), -0.2d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(3 + (I-1)*LDAB) = dcmplx(0.2d0*dble(I), 0.1d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(1 + (I-1)*LDBB) = dcmplx(dble(4+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + (I-1)*LDBB) = dcmplx(0.1d0*dble(I), -0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(3 + (I-1)*LDBB) = dcmplx(0.05d0*dble(I), -0.02d0*dble(mod(I,3)-1))
+  end do
+
+  call ZPBSTF('L', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'L', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('lower_n6_ka2_kb2_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 12: UPLO='U', N=10, KA=4, KB=1, VECT='V' (very wide A, narrow B)
+  ! =====================================================================
+  N = 10; KA = 4; KB = 1; LDAB = 5; LDBB = 2; LDX = 10
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(5 + (I-1)*LDAB) = dcmplx(dble(15+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(4 + I*LDAB) = dcmplx(0.5d0*dble(I), 0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(3 + (I+1)*LDAB) = dcmplx(0.3d0*dble(I), -0.1d0*dble(mod(I,2)))
+  end do
+  do I = 1, N-3
+    AB(2 + (I+2)*LDAB) = dcmplx(0.15d0*dble(I), 0.05d0*dble(mod(I,2)))
+  end do
+  do I = 1, N-4
+    AB(1 + (I+3)*LDAB) = dcmplx(0.08d0*dble(I), -0.03d0*dble(mod(I,3)))
+  end do
+
+  do I = 1, N
+    BB(2 + (I-1)*LDBB) = dcmplx(dble(8+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(1 + I*LDBB) = dcmplx(0.15d0*dble(I), 0.07d0*dble(mod(I,2)-1))
+  end do
+
+  call ZPBSTF('U', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'U', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('upper_n10_ka4_kb1_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 13: UPLO='L', N=10, KA=4, KB=1, VECT='V'
+  ! =====================================================================
+  N = 10; KA = 4; KB = 1; LDAB = 5; LDBB = 2; LDX = 10
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(1 + (I-1)*LDAB) = dcmplx(dble(15+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + (I-1)*LDAB) = dcmplx(0.5d0*dble(I), -0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(3 + (I-1)*LDAB) = dcmplx(0.3d0*dble(I), 0.1d0*dble(mod(I,2)))
+  end do
+  do I = 1, N-3
+    AB(4 + (I-1)*LDAB) = dcmplx(0.15d0*dble(I), -0.05d0*dble(mod(I,2)))
+  end do
+  do I = 1, N-4
+    AB(5 + (I-1)*LDAB) = dcmplx(0.08d0*dble(I), 0.03d0*dble(mod(I,3)))
+  end do
+
+  do I = 1, N
+    BB(1 + (I-1)*LDBB) = dcmplx(dble(8+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + (I-1)*LDBB) = dcmplx(0.15d0*dble(I), -0.07d0*dble(mod(I,2)-1))
+  end do
+
+  call ZPBSTF('L', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'L', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('lower_n10_ka4_kb1_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 14a: UPLO='U', N=7, KA=2, KB=2, VECT='V' (smallest that hits inner kb-loop)
+  ! =====================================================================
+  N = 7; KA = 2; KB = 2; LDAB = 3; LDBB = 3; LDX = 7
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(3 + (I-1)*LDAB) = dcmplx(dble(12+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + I*LDAB) = dcmplx(0.5d0*dble(I), 0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(1 + (I+1)*LDAB) = dcmplx(0.3d0*dble(I), -0.1d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(3 + (I-1)*LDBB) = dcmplx(dble(6+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + I*LDBB) = dcmplx(0.1d0*dble(I), 0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(1 + (I+1)*LDBB) = dcmplx(0.05d0*dble(I), 0.02d0*dble(mod(I,3)-1))
+  end do
+
+  call ZPBSTF('U', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'U', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('upper_n7_ka2_kb2_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 14a-L: UPLO='L', N=7, KA=2, KB=2, VECT='V'
+  ! =====================================================================
+  N = 7; KA = 2; KB = 2; LDAB = 3; LDBB = 3; LDX = 7
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(1 + (I-1)*LDAB) = dcmplx(dble(12+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + (I-1)*LDAB) = dcmplx(0.5d0*dble(I), -0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(3 + (I-1)*LDAB) = dcmplx(0.3d0*dble(I), 0.1d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(1 + (I-1)*LDBB) = dcmplx(dble(6+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + (I-1)*LDBB) = dcmplx(0.1d0*dble(I), -0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(3 + (I-1)*LDBB) = dcmplx(0.05d0*dble(I), -0.02d0*dble(mod(I,3)-1))
+  end do
+
+  call ZPBSTF('L', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'L', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('lower_n7_ka2_kb2_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 14b: UPLO='U', N=10, KA=2, KB=2, VECT='V' (hits inner kb-loop)
+  ! =====================================================================
+  N = 10; KA = 2; KB = 2; LDAB = 3; LDBB = 3; LDX = 10
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(3 + (I-1)*LDAB) = dcmplx(dble(15+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + I*LDAB) = dcmplx(0.5d0*dble(I), 0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(1 + (I+1)*LDAB) = dcmplx(0.3d0*dble(I), -0.1d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(3 + (I-1)*LDBB) = dcmplx(dble(8+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + I*LDBB) = dcmplx(0.1d0*dble(I), 0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(1 + (I+1)*LDBB) = dcmplx(0.05d0*dble(I), 0.02d0*dble(mod(I,3)-1))
+  end do
+
+  call ZPBSTF('U', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'U', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('upper_n10_ka2_kb2_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 14c: UPLO='L', N=10, KA=2, KB=2, VECT='V'
+  ! =====================================================================
+  N = 10; KA = 2; KB = 2; LDAB = 3; LDBB = 3; LDX = 10
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(1 + (I-1)*LDAB) = dcmplx(dble(15+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + (I-1)*LDAB) = dcmplx(0.5d0*dble(I), -0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(3 + (I-1)*LDAB) = dcmplx(0.3d0*dble(I), 0.1d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(1 + (I-1)*LDBB) = dcmplx(dble(8+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + (I-1)*LDBB) = dcmplx(0.1d0*dble(I), -0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(3 + (I-1)*LDBB) = dcmplx(0.05d0*dble(I), -0.02d0*dble(mod(I,3)-1))
+  end do
+
+  call ZPBSTF('L', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'L', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('lower_n10_ka2_kb2_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 14: UPLO='U', N=12, KA=3, KB=3 (KA == KB), VECT='V'
+  ! Hits inner `for k=1..kb-1` loop and the `i-k+ka<N && i-k>1` branch
+  ! =====================================================================
+  N = 12; KA = 3; KB = 3; LDAB = 4; LDBB = 4; LDX = 12
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(4 + (I-1)*LDAB) = dcmplx(dble(20+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(3 + I*LDAB) = dcmplx(0.5d0*dble(I), 0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(2 + (I+1)*LDAB) = dcmplx(0.3d0*dble(I), -0.1d0*dble(mod(I,2)))
+  end do
+  do I = 1, N-3
+    AB(1 + (I+2)*LDAB) = dcmplx(0.15d0*dble(I), 0.07d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(4 + (I-1)*LDBB) = dcmplx(dble(10+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(3 + I*LDBB) = dcmplx(0.1d0*dble(I), 0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(2 + (I+1)*LDBB) = dcmplx(0.05d0*dble(I), 0.02d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-3
+    BB(1 + (I+2)*LDBB) = dcmplx(0.025d0*dble(I), -0.01d0*dble(mod(I,2)))
+  end do
+
+  call ZPBSTF('U', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'U', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('upper_n12_ka3_kb3_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
+  ! =====================================================================
+  ! Test 15: UPLO='L', N=12, KA=3, KB=3 (mirror of test 14)
+  ! =====================================================================
+  N = 12; KA = 3; KB = 3; LDAB = 4; LDBB = 4; LDX = 12
+  AB = (0.0d0, 0.0d0); BB = (0.0d0, 0.0d0); X = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0); RWORK = 0.0d0
+
+  do I = 1, N
+    AB(1 + (I-1)*LDAB) = dcmplx(dble(20+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    AB(2 + (I-1)*LDAB) = dcmplx(0.5d0*dble(I), -0.3d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-2
+    AB(3 + (I-1)*LDAB) = dcmplx(0.3d0*dble(I), 0.1d0*dble(mod(I,2)))
+  end do
+  do I = 1, N-3
+    AB(4 + (I-1)*LDAB) = dcmplx(0.15d0*dble(I), -0.07d0*dble(mod(I,2)))
+  end do
+
+  do I = 1, N
+    BB(1 + (I-1)*LDBB) = dcmplx(dble(10+I), 0.0d0)
+  end do
+  do I = 1, N-1
+    BB(2 + (I-1)*LDBB) = dcmplx(0.1d0*dble(I), -0.05d0*dble(mod(I,2)-1))
+  end do
+  do I = 1, N-2
+    BB(3 + (I-1)*LDBB) = dcmplx(0.05d0*dble(I), -0.02d0*dble(mod(I,3)-1))
+  end do
+  do I = 1, N-3
+    BB(4 + (I-1)*LDBB) = dcmplx(0.025d0*dble(I), 0.01d0*dble(mod(I,2)))
+  end do
+
+  call ZPBSTF('L', N, KB, BB, LDBB, INFO)
+  AB_save(1:N*LDAB) = AB(1:N*LDAB)
+
+  call ZHBGST('V', 'L', N, KA, KB, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK, INFO)
+  call begin_test('lower_n12_ka3_kb3_vect')
+  call print_int('info', INFO)
+  call print_array('AB_in', AB_save_r, N * LDAB * 2)
+  call print_array('BB', BB_r, N * LDBB * 2)
+  call print_array('AB', AB_r, N * LDAB * 2)
+  call print_array('X', X_r, N * LDX * 2)
+  call end_test()
+
 end program

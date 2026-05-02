@@ -35,9 +35,16 @@ var ztrsen = require( '@stdlib/lapack/base/ztrsen' );
 Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so that a.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrsen = require( '@stdlib/lapack/base/ztrsen' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var W = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+ztrsen.ndarray( 'both', 'update', SELECT, 1, 0, N, T, N, 1, 0, Q, N, 1, 0, W, 1, 0, N, 1.0, 1, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -65,9 +72,16 @@ The function has the following parameters:
 Reorders the Schur factorization of a complex matrix A = Q*T*Q**H so that a, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrsen = require( '@stdlib/lapack/base/ztrsen' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var W = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+ztrsen.ndarray( 'both', 'update', SELECT, 1, 0, N, T, N, 1, 0, Q, N, 1, 0, W, 1, 0, N, 1.0, 1, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -105,7 +119,14 @@ The function has the following additional parameters:
 ```javascript
 var ztrsen = require( '@stdlib/lapack/base/ztrsen' );
 
-// TODO: Add examples
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var W = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+ztrsen.ndarray( 'both', 'update', SELECT, 1, 0, N, T, N, 1, 0, Q, N, 1, 0, W, 1, 0, N, 1.0, 1, WORK, 1, 0, N );
 ```
 
 </section>

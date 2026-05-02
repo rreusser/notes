@@ -35,9 +35,15 @@ var zsytri = require( '@stdlib/lapack/base/zsytri' );
 Computes the inverse of a complex symmetric matrix using the factorization computed by zsytrf.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsytri = require( '@stdlib/lapack/base/zsytri' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 4.0, 1.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var WORK = new Complex128Array( 1 );
+
+zsytri.ndarray( 'upper', 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +59,15 @@ The function has the following parameters:
 Computes the inverse of a complex symmetric matrix using the factorization computed by zsytrf, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsytri = require( '@stdlib/lapack/base/zsytri' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 4.0, 1.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var WORK = new Complex128Array( 1 );
+
+zsytri.ndarray( 'upper', 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +102,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zsytri = require( '@stdlib/lapack/base/zsytri' );
 
-// TODO: Add examples
+var A = new Complex128Array( [ 4.0, 1.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var WORK = new Complex128Array( 1 );
+
+zsytri.ndarray( 'upper', 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

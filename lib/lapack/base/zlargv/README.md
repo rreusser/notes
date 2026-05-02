@@ -36,8 +36,14 @@ Generates a vector of complex plane rotations with real cosines and complex sine
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlargv = require( '@stdlib/lapack/base/zlargv' );
 
-// TODO: Add usage example
+var x = new Complex128Array( [ 3.0, 1.0, 1.0, 2.0 ] );
+var y = new Complex128Array( [ 4.0, 0.0, 3.0, 1.0 ] );
+var c = new Float64Array( 2 );
+
+zlargv.ndarray( 2, x, 1, 0, y, 1, 0, c, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +62,14 @@ Generates a vector of complex plane rotations with real cosines and complex sine
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlargv = require( '@stdlib/lapack/base/zlargv' );
 
-// TODO: Add usage example
+var x = new Complex128Array( [ 3.0, 1.0, 1.0, 2.0 ] );
+var y = new Complex128Array( [ 4.0, 0.0, 3.0, 1.0 ] );
+var c = new Float64Array( 2 );
+
+zlargv.ndarray( 2, x, 1, 0, y, 1, 0, c, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +99,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlargv = require( '@stdlib/lapack/base/zlargv' );
 
-// TODO: Add examples
+var x = new Complex128Array( [ 3.0, 1.0, 1.0, 2.0 ] );
+var y = new Complex128Array( [ 4.0, 0.0, 3.0, 1.0 ] );
+var c = new Float64Array( 2 );
+
+zlargv.ndarray( 2, x, 1, 0, y, 1, 0, c, 1, 0 );
 ```
 
 </section>

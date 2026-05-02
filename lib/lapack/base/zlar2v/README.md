@@ -35,9 +35,16 @@ var zlar2v = require( '@stdlib/lapack/base/zlar2v' );
 Apply a vector of complex plane rotations with real cosines from both sides to a sequence of 2-by-2 complex Hermitian matrices.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlar2v = require( '@stdlib/lapack/base/zlar2v' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlar2v.ndarray( N, x, 1, 0, y, 1, 0, z, 1, 0, c, 1, 0, s, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +63,16 @@ The function has the following parameters:
 Apply a vector of complex plane rotations with real cosines from both sides to a sequence of 2-by-2 complex Hermitian matrices, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlar2v = require( '@stdlib/lapack/base/zlar2v' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlar2v.ndarray( N, x, 1, 0, y, 1, 0, z, 1, 0, c, 1, 0, s, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +111,14 @@ The function has the following additional parameters:
 ```javascript
 var zlar2v = require( '@stdlib/lapack/base/zlar2v' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlar2v.ndarray( N, x, 1, 0, y, 1, 0, z, 1, 0, c, 1, 0, s, 1, 0 );
 ```
 
 </section>

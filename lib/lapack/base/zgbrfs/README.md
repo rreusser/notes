@@ -36,8 +36,21 @@ var zgbrfs = require( '@stdlib/lapack/base/zgbrfs' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgbrfs = require( '@stdlib/lapack/base/zgbrfs' );
 
-// TODO: Add usage example
+var ab = new Complex128Array( 1 );
+var afb = new Complex128Array( 1 );
+var ipiv = new Int32Array( 1 );
+var b = new Complex128Array( 1 );
+var x = new Complex128Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Complex128Array( 2 );
+var rwork = new Float64Array( 1 );
+
+zgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, ab, 1, 1, 0, afb, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -67,8 +80,21 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgbrfs = require( '@stdlib/lapack/base/zgbrfs' );
 
-// TODO: Add usage example
+var ab = new Complex128Array( 1 );
+var afb = new Complex128Array( 1 );
+var ipiv = new Int32Array( 1 );
+var b = new Complex128Array( 1 );
+var x = new Complex128Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Complex128Array( 2 );
+var rwork = new Float64Array( 1 );
+
+zgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, ab, 1, 1, 0, afb, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -117,9 +143,22 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgbrfs = require( '@stdlib/lapack/base/zgbrfs' );
 
-// TODO: Add examples
+var ab = new Complex128Array( 1 );
+var afb = new Complex128Array( 1 );
+var ipiv = new Int32Array( 1 );
+var b = new Complex128Array( 1 );
+var x = new Complex128Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Complex128Array( 2 );
+var rwork = new Float64Array( 1 );
+
+zgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, ab, 1, 1, 0, afb, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 ```
 
 </section>

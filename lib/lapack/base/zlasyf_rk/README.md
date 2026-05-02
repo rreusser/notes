@@ -35,9 +35,17 @@ var zlasyf_rk = require( '@stdlib/lapack/base/zlasyf_rk' );
 ZLASYF_RK computes a partial factorization of a complex symmetric indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivoting method, producing _rk format output
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlasyf_rk = require( '@stdlib/lapack/base/zlasyf_rk' );
 
-// TODO: Add usage example
+var N = 3;
+var nb = 3;
+var e = new Complex128Array( N );
+var IPIV = new Int32Array( N );
+var W = new Complex128Array( N * nb );
+
+zlasyf_rk( 'column-major', 'lower', N, nb, A, N, e, IPIV, W, N );
 ```
 
 The function has the following parameters:
@@ -62,9 +70,17 @@ The function has the following parameters:
 ZLASYF_RK computes a partial factorization of a complex symmetric indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivoting method, producing _rk format output, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlasyf_rk = require( '@stdlib/lapack/base/zlasyf_rk' );
 
-// TODO: Add usage example
+var N = 3;
+var nb = 3;
+var e = new Complex128Array( N );
+var IPIV = new Int32Array( N );
+var W = new Complex128Array( N * nb );
+
+zlasyf_rk( 'column-major', 'lower', N, nb, A, N, e, IPIV, W, N );
 ```
 
 The function has the following additional parameters:
@@ -96,8 +112,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -107,7 +122,17 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlasyf_rk = require( '@stdlib/lapack/base/zlasyf_rk' );
+
+var N = 3;
+var nb = 3;
+var e = new Complex128Array( N );
+var IPIV = new Int32Array( N );
+var W = new Complex128Array( N * nb );
+
+zlasyf_rk( 'column-major', 'lower', N, nb, A, N, e, IPIV, W, N );
 ```
 
 </section>

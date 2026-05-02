@@ -35,9 +35,12 @@ var zpotri = require( '@stdlib/lapack/base/zpotri' );
 Computes the inverse of a complex Hermitian positive definite matrix using.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpotri = require( '@stdlib/lapack/base/zpotri' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zpotri.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +56,12 @@ The function has the following parameters:
 Computes the inverse of a complex Hermitian positive definite matrix using, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpotri = require( '@stdlib/lapack/base/zpotri' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zpotri.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var zpotri = require( '@stdlib/lapack/base/zpotri' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zpotri.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 </section>

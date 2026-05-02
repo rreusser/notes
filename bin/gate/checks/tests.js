@@ -8,11 +8,33 @@ var ID = 'tests';
 
 function check( mod, opts ) {
 	var results = [];
-	var testPath = path.join( mod.dir, 'test', 'test.js' );
-	var testContent = util.readFile( testPath );
+	var testDir = path.join( mod.dir, 'test' );
+	var testJsPath = path.join( testDir, 'test.js' );
+	var testJsContent = util.readFile( testJsPath );
 
-	if ( !testContent ) {
-		results.push( util.skip( ID + '.assertion-count', 'No test.js' ) );
+	// Aggregate assertions across all test/*.js files. The export-shape file
+	// `test.js` conventionally only has 2 assertions ("exports a function",
+	// "has .ndarray"); the substantive routine tests live in
+	// `test.<routine>.js` and `test.ndarray.js`. Treating just `test.js`
+	// caused ~665 fully-implemented modules to misclassify as `scaffold`.
+	var fs = require( 'fs' );
+	var assertCalls = 0;
+	var ASSERT_PAT = /assert\.(strictEqual|deepStrictEqual|ok|equal|notEqual|notStrictEqual|throws|doesNotThrow|rejects|doesNotReject|match|doesNotMatch)\s*\(/g;
+	if ( fs.existsSync( testDir ) ) {
+		var entries = fs.readdirSync( testDir );
+		var i;
+		for ( i = 0; i < entries.length; i++ ) {
+			if ( !/^test(\..+)?\.js$/.test( entries[ i ] ) ) {
+				continue;
+			}
+			var content = util.readFile( path.join( testDir, entries[ i ] ) );
+			if ( !content ) continue;
+			assertCalls += ( content.match( ASSERT_PAT ) || [] ).length;
+		}
+	}
+
+	if ( !testJsContent && assertCalls === 0 ) {
+		results.push( util.skip( ID + '.assertion-count', 'No test files' ) );
 		results.push( util.skip( ID + '.no-scaffold-markers', 'No test.js' ) );
 		if ( opts && opts.coverage ) {
 			results.push( util.skip( ID + '.coverage-line', 'No test.js' ) );
@@ -21,19 +43,29 @@ function check( mod, opts ) {
 		return results;
 	}
 
-	// 1. Test file has >2 substantive assertions
-	// Count assert.* calls (excluding assert.fail which are scaffold markers)
-	var assertCalls = ( testContent.match( /assert\.(strictEqual|deepStrictEqual|ok|equal|notEqual|notStrictEqual|throws|doesNotThrow|rejects|doesNotReject|match|doesNotMatch)\s*\(/g ) || [] ).length;
+	// 1. Test files have >2 substantive assertions (counted across the whole
+	// test/ directory, not just test.js).
 	if ( assertCalls > 2 ) {
 		results.push( util.pass( ID + '.assertion-count', 'Tests have >2 assertions (' + assertCalls + ')' ) );
 	} else {
 		results.push( util.fail(
 			ID + '.assertion-count',
 			'Tests have >2 assertions',
-			1, [ 'test.js' ],
-			'Only ' + assertCalls + ' assertion(s) — likely scaffold'
+			1, [ 'test/' ],
+			'Only ' + assertCalls + ' assertion(s) across test/*.js — likely scaffold'
 		));
 	}
+
+	if ( !testJsContent ) {
+		results.push( util.skip( ID + '.no-scaffold-markers', 'No test.js' ) );
+		if ( opts && opts.coverage ) {
+			results.push( util.skip( ID + '.coverage-line', 'No test.js' ) );
+			results.push( util.skip( ID + '.coverage-branch', 'No test.js' ) );
+		}
+		return results;
+	}
+	var testContent = testJsContent;
+	var testPath = testJsPath;
 
 	// 2. No scaffold markers
 	var scaffoldHits = util.grepFile( testPath, /assert\.fail\s*\(\s*['"]TODO/ );

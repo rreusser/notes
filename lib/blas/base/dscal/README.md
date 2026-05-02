@@ -35,9 +35,12 @@ var dscal = require( '@stdlib/blas/base/dscal' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dscal = require( '@stdlib/blas/base/dscal' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+dscal( N, 1.0, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -71,7 +74,10 @@ The function has the following parameters:
 ```javascript
 var dscal = require( '@stdlib/blas/base/dscal' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+dscal( N, 1.0, x, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,15 @@ Compute a QL factorization of a real M-by-N matrix
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgeql2 = require( '@stdlib/lapack/base/dgeql2' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 3;
+var A = discreteUniform( M * N, -10, 10, opts );
+var TAU = new Float64Array( Math.min( M, N ) );
+var WORK = new Float64Array( N );
+
+dgeql2( 'column-major', M, N, A, M, TAU, 1, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -58,8 +65,15 @@ Compute a QL factorization of a real M-by-N matrix, using alternative indexing s
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgeql2 = require( '@stdlib/lapack/base/dgeql2' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 3;
+var A = discreteUniform( M * N, -10, 10, opts );
+var TAU = new Float64Array( Math.min( M, N ) );
+var WORK = new Float64Array( N );
+
+dgeql2( 'column-major', M, N, A, M, TAU, 1, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -85,8 +99,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -96,7 +109,16 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dgeql2 = require( '@stdlib/lapack/base/dgeql2' );
+
+var M = 3;
+var N = 3;
+var A = discreteUniform( M * N, -10, 10, opts );
+var TAU = new Float64Array( Math.min( M, N ) );
+var WORK = new Float64Array( N );
+
+dgeql2( 'column-major', M, N, A, M, TAU, 1, WORK, 1 );
 ```
 
 </section>

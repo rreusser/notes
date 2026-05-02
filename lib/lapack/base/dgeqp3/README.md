@@ -35,9 +35,15 @@ var dgeqp3 = require( '@stdlib/lapack/base/dgeqp3' );
 Computes a QR factorization with column pivoting of a real M-by-N matrix:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgeqp3 = require( '@stdlib/lapack/base/dgeqp3' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var JPVT = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgeqp3.ndarray( N, N, A, N, 1, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -56,9 +62,15 @@ The function has the following parameters:
 Computes a QR factorization with column pivoting of a real M-by-N matrix:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgeqp3 = require( '@stdlib/lapack/base/dgeqp3' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var JPVT = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgeqp3.ndarray( N, N, A, N, 1, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +108,13 @@ The function has the following additional parameters:
 ```javascript
 var dgeqp3 = require( '@stdlib/lapack/base/dgeqp3' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var JPVT = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dgeqp3.ndarray( N, N, A, N, 1, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

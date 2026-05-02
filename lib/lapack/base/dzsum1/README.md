@@ -35,9 +35,12 @@ var dzsum1 = require( '@stdlib/lapack/base/dzsum1' );
 Takes the sum of the absolute values of a complex vector and returns a.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dzsum1 = require( '@stdlib/lapack/base/dzsum1' );
 
-// TODO: Add usage example
+var N = 3;
+var CX = discreteUniform( N, -10, 10, opts );
+
+dzsum1.ndarray( N, CX, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -51,9 +54,12 @@ The function has the following parameters:
 Takes the sum of the absolute values of a complex vector and returns a, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dzsum1 = require( '@stdlib/lapack/base/dzsum1' );
 
-// TODO: Add usage example
+var N = 3;
+var CX = discreteUniform( N, -10, 10, opts );
+
+dzsum1.ndarray( N, CX, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -83,7 +89,10 @@ The function has the following additional parameters:
 ```javascript
 var dzsum1 = require( '@stdlib/lapack/base/dzsum1' );
 
-// TODO: Add examples
+var N = 3;
+var CX = discreteUniform( N, -10, 10, opts );
+
+dzsum1.ndarray( N, CX, 1, 0 );
 ```
 
 </section>

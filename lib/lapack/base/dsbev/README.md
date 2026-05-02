@@ -36,8 +36,13 @@ Computes all eigenvalues and optionally eigenvectors of a real symmetric band ma
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbev = require( '@stdlib/lapack/base/dsbev' );
 
-// TODO: Add usage example
+var W = new Float64Array( 4 );
+var Z = new Float64Array( 16 );
+var WORK = new Float64Array( 10 );
+
+dsbev( 'column-major', 'compute-vectors', 'lower', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -62,8 +67,13 @@ Computes all eigenvalues and optionally eigenvectors of a real symmetric band ma
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbev = require( '@stdlib/lapack/base/dsbev' );
 
-// TODO: Add usage example
+var W = new Float64Array( 4 );
+var Z = new Float64Array( 16 );
+var WORK = new Float64Array( 10 );
+
+dsbev( 'column-major', 'compute-vectors', 'lower', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -98,9 +108,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsbev = require( '@stdlib/lapack/base/dsbev' );
 
-// TODO: Add examples
+var W = new Float64Array( 4 );
+var Z = new Float64Array( 16 );
+var WORK = new Float64Array( 10 );
+
+dsbev( 'column-major', 'compute-vectors', 'lower', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1 );
 ```
 
 </section>

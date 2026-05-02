@@ -36,8 +36,17 @@ var dsbgvx = require( '@stdlib/lapack/base/dsbgvx' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsbgvx = require( '@stdlib/lapack/base/dsbgvx' );
 
-// TODO: Add usage example
+var Q = new Float64Array( 25 );
+var W = new Float64Array( 5 );
+var Z = new Float64Array( 25 );
+var WORK = new Float64Array( 50 );
+var IWORK = new Int32Array( 30 );
+var IFAIL = new Int32Array( 5 );
+
+dsbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -77,8 +86,17 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsbgvx = require( '@stdlib/lapack/base/dsbgvx' );
 
-// TODO: Add usage example
+var Q = new Float64Array( 25 );
+var W = new Float64Array( 5 );
+var Z = new Float64Array( 25 );
+var WORK = new Float64Array( 50 );
+var IWORK = new Int32Array( 30 );
+var IFAIL = new Int32Array( 5 );
+
+dsbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -121,9 +139,18 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dsbgvx = require( '@stdlib/lapack/base/dsbgvx' );
 
-// TODO: Add examples
+var Q = new Float64Array( 25 );
+var W = new Float64Array( 5 );
+var Z = new Float64Array( 25 );
+var WORK = new Float64Array( 50 );
+var IWORK = new Int32Array( 30 );
+var IFAIL = new Int32Array( 5 );
+
+dsbgvx.ndarray( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, 1, 3, 0, BB, 1, 2, 0, Q, 1, 5, 0, 0, 0, 0, 0, 0, out, W, 1, 0, Z, 1, 5, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,14 @@ var zgeequ = require( '@stdlib/lapack/base/zgeequ' );
 CABS1: |re(z)| + |im(z)|.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgeequ = require( '@stdlib/lapack/base/zgeequ' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+zgeequ.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -50,9 +55,14 @@ The function has the following parameters:
 CABS1: |re(z)| + |im(z)|, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgeequ = require( '@stdlib/lapack/base/zgeequ' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+zgeequ.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var zgeequ = require( '@stdlib/lapack/base/zgeequ' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+zgeequ.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1 );
 ```
 
 </section>

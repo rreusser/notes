@@ -36,8 +36,13 @@ Returns the norm of a complex symmetric band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlansb = require( '@stdlib/lapack/base/zlansb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 2, 1, -3, 1, 4, -2, 1, 2, -5, 1, 6, -3, 7, 2 ] );
+var WORK = new Float64Array( 4 );
+
+zlansb.ndarray( 'max', 'upper', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +61,13 @@ Returns the norm of a complex symmetric band matrix, using alternative indexing 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlansb = require( '@stdlib/lapack/base/zlansb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 2, 1, -3, 1, 4, -2, 1, 2, -5, 1, 6, -3, 7, 2 ] );
+var WORK = new Float64Array( 4 );
+
+zlansb.ndarray( 'max', 'upper', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +99,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlansb = require( '@stdlib/lapack/base/zlansb' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 0, 0, 2, 1, -3, 1, 4, -2, 1, 2, -5, 1, 6, -3, 7, 2 ] );
+var WORK = new Float64Array( 4 );
+
+zlansb.ndarray( 'max', 'upper', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 </section>

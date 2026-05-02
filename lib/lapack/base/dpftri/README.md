@@ -35,9 +35,9 @@ var dpftri = require( '@stdlib/lapack/base/dpftri' );
 Computes the inverse of A real symmetric positive definite matrix in Rectangular Full Packed format.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpftri = require( '@stdlib/lapack/base/dpftri' );
 
-// TODO: Add usage example
+dpftri.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +52,9 @@ The function has the following parameters:
 Computes the inverse of A real symmetric positive definite matrix in Rectangular Full Packed format, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpftri = require( '@stdlib/lapack/base/dpftri' );
 
-// TODO: Add usage example
+dpftri.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var dpftri = require( '@stdlib/lapack/base/dpftri' );
 
-// TODO: Add examples
+dpftri.ndarray( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 </section>

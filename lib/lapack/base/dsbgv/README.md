@@ -36,8 +36,15 @@ var dsbgv = require( '@stdlib/lapack/base/dsbgv' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbgv = require( '@stdlib/lapack/base/dsbgv' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 5.0, 6.0, 7.0 ] );
+var BB = new Float64Array( [ 2.0, 3.0, 4.0 ] );
+var W = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dsbgv( 'column-major', 'compute-vectors', 'upper', 3, 0, 0, AB, 1, BB, 1, W, 1, Z, 3, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -65,8 +72,15 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbgv = require( '@stdlib/lapack/base/dsbgv' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 5.0, 6.0, 7.0 ] );
+var BB = new Float64Array( [ 2.0, 3.0, 4.0 ] );
+var W = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dsbgv( 'column-major', 'compute-vectors', 'upper', 3, 0, 0, AB, 1, BB, 1, W, 1, Z, 3, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -104,9 +118,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsbgv = require( '@stdlib/lapack/base/dsbgv' );
 
-// TODO: Add examples
+var AB = new Float64Array( [ 5.0, 6.0, 7.0 ] );
+var BB = new Float64Array( [ 2.0, 3.0, 4.0 ] );
+var W = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dsbgv( 'column-major', 'compute-vectors', 'upper', 3, 0, 0, AB, 1, BB, 1, W, 1, Z, 3, WORK, 1 );
 ```
 
 </section>

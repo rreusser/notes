@@ -35,9 +35,12 @@ var zlaset = require( '@stdlib/lapack/base/zlaset' );
 Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaset = require( '@stdlib/lapack/base/zlaset' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlaset.ndarray( 'upper', N, N, 1.0, 1.0, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +59,12 @@ The function has the following parameters:
 Initializes a complex matrix to BETA on the diagonal and ALPHA on the, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaset = require( '@stdlib/lapack/base/zlaset' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlaset.ndarray( 'upper', N, N, 1.0, 1.0, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +96,10 @@ The function has the following additional parameters:
 ```javascript
 var zlaset = require( '@stdlib/lapack/base/zlaset' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlaset.ndarray( 'upper', N, N, 1.0, 1.0, A, N, 1, 0 );
 ```
 
 </section>

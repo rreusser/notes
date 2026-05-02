@@ -35,9 +35,17 @@ var zgtts2 = require( '@stdlib/lapack/base/zgtts2' );
 Solves one of the systems of equations A_X = B, A^T_X = B, or A^H*X = B.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgtts2 = require( '@stdlib/lapack/base/zgtts2' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgtts2.ndarray( 1, N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -63,9 +71,17 @@ The function has the following parameters:
 Solves one of the systems of equations A_X = B, A^T_X = B, or A^H*X = B, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgtts2 = require( '@stdlib/lapack/base/zgtts2' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgtts2.ndarray( 1, N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -102,7 +118,15 @@ The function has the following additional parameters:
 ```javascript
 var zgtts2 = require( '@stdlib/lapack/base/zgtts2' );
 
-// TODO: Add examples
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgtts2.ndarray( 1, N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

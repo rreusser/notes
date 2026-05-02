@@ -36,8 +36,13 @@ Performs one of the symmetric rank-2k operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsyr2k = require( '@stdlib/blas/base/dsyr2k' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0 ] );
+var B = new Float64Array( [ 3.0, 4.0 ] );
+var C = new Float64Array( [ 0.0 ] );
+
+dsyr2k.ndarray( 'upper', 'no-transpose', 1, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 1, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,8 +67,13 @@ Performs one of the symmetric rank-2k operations:, using alternative indexing se
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsyr2k = require( '@stdlib/blas/base/dsyr2k' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0 ] );
+var B = new Float64Array( [ 3.0, 4.0 ] );
+var C = new Float64Array( [ 0.0 ] );
+
+dsyr2k.ndarray( 'upper', 'no-transpose', 1, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 1, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -99,9 +109,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsyr2k = require( '@stdlib/blas/base/dsyr2k' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0 ] );
+var B = new Float64Array( [ 3.0, 4.0 ] );
+var C = new Float64Array( [ 0.0 ] );
+
+dsyr2k.ndarray( 'upper', 'no-transpose', 1, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 1, 1, 0 );
 ```
 
 </section>

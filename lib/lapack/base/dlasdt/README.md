@@ -35,9 +35,14 @@ var dlasdt = require( '@stdlib/lapack/base/dlasdt' );
 Create a tree of subproblems for bidiagonal divide and conquer.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasdt = require( '@stdlib/lapack/base/dlasdt' );
 
-// TODO: Add usage example
+var N = 3;
+var INODE = discreteUniform( N, -10, 10, opts );
+var NDIML = discreteUniform( N, -10, 10, opts );
+var NDIMR = discreteUniform( N, -10, 10, opts );
+
+dlasdt.ndarray( N, 1, 1, INODE, 1, 0, NDIML, 1, 0, NDIMR, 1, 0, 1 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Create a tree of subproblems for bidiagonal divide and conquer, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasdt = require( '@stdlib/lapack/base/dlasdt' );
 
-// TODO: Add usage example
+var N = 3;
+var INODE = discreteUniform( N, -10, 10, opts );
+var NDIML = discreteUniform( N, -10, 10, opts );
+var NDIMR = discreteUniform( N, -10, 10, opts );
+
+dlasdt.ndarray( N, 1, 1, INODE, 1, 0, NDIML, 1, 0, NDIMR, 1, 0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +102,12 @@ The function has the following additional parameters:
 ```javascript
 var dlasdt = require( '@stdlib/lapack/base/dlasdt' );
 
-// TODO: Add examples
+var N = 3;
+var INODE = discreteUniform( N, -10, 10, opts );
+var NDIML = discreteUniform( N, -10, 10, opts );
+var NDIMR = discreteUniform( N, -10, 10, opts );
+
+dlasdt.ndarray( N, 1, 1, INODE, 1, 0, NDIML, 1, 0, NDIMR, 1, 0, 1 );
 ```
 
 </section>

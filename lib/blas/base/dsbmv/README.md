@@ -36,8 +36,13 @@ Performs the matrix-vector operation `y := alpha*A*x + beta*y`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbmv = require( '@stdlib/blas/base/dsbmv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+dsbmv.ndarray( 'upper', 2, 1, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,8 +66,13 @@ Performs the matrix-vector operation `y := alpha*A*x + beta*y`, using alternativ
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbmv = require( '@stdlib/blas/base/dsbmv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+dsbmv.ndarray( 'upper', 2, 1, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +104,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsbmv = require( '@stdlib/blas/base/dsbmv' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+dsbmv.ndarray( 'upper', 2, 1, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 ```
 
 </section>

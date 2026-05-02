@@ -36,8 +36,14 @@ var dlatps = require( '@stdlib/lapack/base/dlatps' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlatps = require( '@stdlib/lapack/base/dlatps' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 2.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var scale = new Float64Array( 1 );
+var CNORM = new Float64Array( 3 );
+
+dlatps( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, x, 1, scale, CNORM, 1 );
 ```
 
 The function has the following parameters:
@@ -60,8 +66,14 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlatps = require( '@stdlib/lapack/base/dlatps' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 2.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var scale = new Float64Array( 1 );
+var CNORM = new Float64Array( 3 );
+
+dlatps( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, x, 1, scale, CNORM, 1 );
 ```
 
 The function has the following additional parameters:
@@ -92,9 +104,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlatps = require( '@stdlib/lapack/base/dlatps' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 2.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var scale = new Float64Array( 1 );
+var CNORM = new Float64Array( 3 );
+
+dlatps( 'upper', 'no-transpose', 'non-unit', 'no', 3, AP, x, 1, scale, CNORM, 1 );
 ```
 
 </section>

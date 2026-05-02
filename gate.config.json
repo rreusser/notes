@@ -46,9 +46,10 @@
             "lint.eslint-pass",
             "scaffolding.no-todo-readme",
             "scaffolding.index-example",
-            "scaffolding.examples-filled"
+            "scaffolding.examples-filled",
+            "scaffold-noise.ndarray-test-routes-through-validator"
         ],
-        "reason": "zhsein is a driver-level routine invoked via zhseqr/eigenvalue-solver pipelines; the scaffold-generated wrapper files (README, index.js @example, examples/index.js) are not yet authored. base.js is fully implemented and validated against Fortran fixtures. The only remaining ESLint output on base.js is a signature-conformance warning because WORK/RWORK are retained as positional workspace parameters (scaffold expected them to be consumed), matching the pattern used for other workspace-carrying routines like zlaein."
+        "reason": "zhsein is a driver-level routine invoked via zhseqr/eigenvalue-solver pipelines; the scaffold-generated wrapper files (README, index.js @example, examples/index.js) are not yet authored. base.js is fully implemented and validated against Fortran fixtures. test.ndarray.js requires lib/base.js because the primary correctness tests (Fortran fixture cases via runFortranCase) intentionally exercise base() directly, plus three INFO=-i contract tests at the tail; the validator wrapper exists but adds no fixture-relevant coverage. The only remaining ESLint output on base.js is a signature-conformance warning because WORK/RWORK are retained as positional workspace parameters (scaffold expected them to be consumed), matching the pattern used for other workspace-carrying routines like zlaein."
     },
     "lib/lapack/base/zggsvp3": {
         "skip": [
@@ -749,6 +750,13 @@
             "lint.eslint-pass"
         ],
         "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dsfrk (not in stdlib checkout)"
+    },
+    "lib/lapack/base/dlarrd": {
+        "skip": [
+            "conventions.routine-string-validation",
+            "conventions.ndarray-no-order"
+        ],
+        "reason": "dlarrd's `order` parameter means `'block'`/`'entire'` eigenvalue ordering mode (sibling routine to dstebz), NOT the standard stdlib row/column-major layout. The gate's hardcoded STRING_VALIDATORS['order'] = 'is-layout' mapping is a false positive for this routine; ndarray.js validates `range` ('all'/'value'/'index') and `order` ('block'/'entire') explicitly."
     },
     "lib/lapack/base/dstebz": {
         "skip": [

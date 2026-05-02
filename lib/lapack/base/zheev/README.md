@@ -35,9 +35,15 @@ var zheev = require( '@stdlib/lapack/base/zheev' );
 Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zheev = require( '@stdlib/lapack/base/zheev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zheev.ndarray( 'compute', 'upper', N, A, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +67,15 @@ The function has the following parameters:
 Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zheev = require( '@stdlib/lapack/base/zheev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zheev.ndarray( 'compute', 'upper', N, A, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -98,7 +110,13 @@ The function has the following additional parameters:
 ```javascript
 var zheev = require( '@stdlib/lapack/base/zheev' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zheev.ndarray( 'compute', 'upper', N, A, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,12 @@ Compute the reciprocal condition numbers for the eigenvectors of a real symmetri
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ddisna = require( '@stdlib/lapack/base/ddisna' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 1.0, 2.0, 4.0, 8.0 ] );
+var SEP = new Float64Array( 4 );
+
+ddisna( 'eigenvalues', 4, 4, d, 1, SEP, 1 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ Compute the reciprocal condition numbers for the eigenvectors of a real symmetri
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ddisna = require( '@stdlib/lapack/base/ddisna' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 1.0, 2.0, 4.0, 8.0 ] );
+var SEP = new Float64Array( 4 );
+
+ddisna( 'eigenvalues', 4, 4, d, 1, SEP, 1 );
 ```
 
 The function has the following additional parameters:
@@ -80,8 +88,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -91,7 +98,13 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var ddisna = require( '@stdlib/lapack/base/ddisna' );
+
+var d = new Float64Array( [ 1.0, 2.0, 4.0, 8.0 ] );
+var SEP = new Float64Array( 4 );
+
+ddisna( 'eigenvalues', 4, 4, d, 1, SEP, 1 );
 ```
 
 </section>

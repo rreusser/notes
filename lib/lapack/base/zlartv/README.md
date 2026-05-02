@@ -35,9 +35,15 @@ var zlartv = require( '@stdlib/lapack/base/zlartv' );
 Apply a vector of complex plane rotations with real cosines to two complex vectors.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlartv = require( '@stdlib/lapack/base/zlartv' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlartv.ndarray( N, x, 1, 0, y, 1, 0, c, 1, 0, s, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +62,15 @@ The function has the following parameters:
 Apply a vector of complex plane rotations with real cosines to two complex vectors, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlartv = require( '@stdlib/lapack/base/zlartv' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlartv.ndarray( N, x, 1, 0, y, 1, 0, c, 1, 0, s, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +105,13 @@ The function has the following additional parameters:
 ```javascript
 var zlartv = require( '@stdlib/lapack/base/zlartv' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlartv.ndarray( N, x, 1, 0, y, 1, 0, c, 1, 0, s, 1, 0 );
 ```
 
 </section>

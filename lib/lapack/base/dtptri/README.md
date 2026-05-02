@@ -36,8 +36,11 @@ Computes the inverse of a real upper or lower triangular matrix in packed storag
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtptri = require( '@stdlib/lapack/base/dtptri' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
+
+dtptri( 'upper', 'non-unit', 3, AP );
 ```
 
 The function has the following parameters:
@@ -53,8 +56,11 @@ Computes the inverse of a real upper or lower triangular matrix in packed storag
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtptri = require( '@stdlib/lapack/base/dtptri' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
+
+dtptri( 'upper', 'non-unit', 3, AP );
 ```
 
 The function has the following additional parameters:
@@ -83,9 +89,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dtptri = require( '@stdlib/lapack/base/dtptri' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
+
+dtptri( 'upper', 'non-unit', 3, AP );
 ```
 
 </section>

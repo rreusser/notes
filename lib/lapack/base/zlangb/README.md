@@ -36,8 +36,13 @@ Returns the norm of a complex general band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlangb = require( '@stdlib/lapack/base/zlangb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 3.0, 4.0, 1.0, 1.0, 2.0, 2.0 ] );
+var WORK = new Float64Array( 3 );
+
+zlangb.ndarray( 'frobenius', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +62,13 @@ Returns the norm of a complex general band matrix, using alternative indexing se
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlangb = require( '@stdlib/lapack/base/zlangb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 3.0, 4.0, 1.0, 1.0, 2.0, 2.0 ] );
+var WORK = new Float64Array( 3 );
+
+zlangb.ndarray( 'frobenius', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +99,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlangb = require( '@stdlib/lapack/base/zlangb' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 3.0, 4.0, 1.0, 1.0, 2.0, 2.0 ] );
+var WORK = new Float64Array( 3 );
+
+zlangb.ndarray( 'frobenius', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

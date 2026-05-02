@@ -35,9 +35,13 @@ var zhfrk = require( '@stdlib/lapack/base/zhfrk' );
 Performs a Hermitian rank-k operation for a matrix in Rectangular Full Packed format.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhfrk = require( '@stdlib/lapack/base/zhfrk' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 0.5, 3.0, 0.5, 1.0, 1.0, 2.0, 1.0, 3.0, 1.0 ] );
+var C = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+
+zhfrk.ndarray( 'no-transpose', 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 0.0, C, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +62,13 @@ The function has the following parameters:
 Performs a Hermitian rank-k operation for a matrix in Rectangular Full Packed format, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhfrk = require( '@stdlib/lapack/base/zhfrk' );
 
-// TODO: Add usage example
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 0.5, 3.0, 0.5, 1.0, 1.0, 2.0, 1.0, 3.0, 1.0 ] );
+var C = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+
+zhfrk.ndarray( 'no-transpose', 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 0.0, C, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,9 +100,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zhfrk = require( '@stdlib/lapack/base/zhfrk' );
 
-// TODO: Add examples
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 0.5, 3.0, 0.5, 1.0, 1.0, 2.0, 1.0, 3.0, 1.0 ] );
+var C = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
+
+zhfrk.ndarray( 'no-transpose', 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 0.0, C, 1, 0 );
 ```
 
 </section>

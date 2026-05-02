@@ -35,9 +35,15 @@ var zsteqr = require( '@stdlib/lapack/base/zsteqr' );
 Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsteqr = require( '@stdlib/lapack/base/zsteqr' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zsteqr.ndarray( 'update', N, d, 1, 0, e, 1, 0, Z, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +65,15 @@ The function has the following parameters:
 Computes all eigenvalues and, optionally, eigenvectors of a real symmetric, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsteqr = require( '@stdlib/lapack/base/zsteqr' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zsteqr.ndarray( 'update', N, d, 1, 0, e, 1, 0, Z, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +108,13 @@ The function has the following additional parameters:
 ```javascript
 var zsteqr = require( '@stdlib/lapack/base/zsteqr' );
 
-// TODO: Add examples
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zsteqr.ndarray( 'update', N, d, 1, 0, e, 1, 0, Z, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

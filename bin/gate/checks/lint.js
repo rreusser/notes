@@ -29,6 +29,9 @@ var ALLOWED_RULES = new Set([
 	'camelcase',             // Fortran-style variable names
 	'no-underscore-dangle',  // internal naming conventions
 	'new-cap',               // Fortran-style uppercase helpers (e.g. Z() in dlasq*)
+	'no-shadow',             // nested helpers inside translated routines reuse names from outer scope (e.g. abs1 helper alongside main routine)
+	'no-unmodified-loop-condition', // ESLint can't trace `i--` inside conditional branches in translated GOTO loops (e.g. zlahqr's QZ iteration)
+	'@cspell/spellchecker',  // Fortran routine names and acronyms (DLABAD, DLARRJ, GERSCHGORIN) routinely trigger spellchecker false positives
 
 	// Context-specific
 	'no-console',            // examples only
@@ -50,6 +53,19 @@ var ALLOWED_RULES = new Set([
 	'function-call-argument-newline',
 	'function-paren-newline',
 	'require-jsdoc'
+]);
+
+// Rules legitimate to disable ONLY in test files. Test code translated from
+// Fortran often declares fixtures and locals interleaved with code rather
+// than all-at-the-top, which mirrors the original Fortran block structure
+// and keeps related setup/use close together. Keep this list narrow: any
+// rule here should make sense for tests but not for shipped library code.
+var TEST_ONLY_RULES = new Set([
+	'vars-on-top',
+	'stdlib/vars-order',
+	'stdlib/empty-line-before-comment',
+	'stdlib/line-closing-bracket-spacing',
+	'stdlib/capitalized-comments'
 ]);
 
 // Pattern to extract rule names from eslint-disable directives
@@ -160,7 +176,9 @@ function scanFile( filePath, context, violations ) {
 				violations.push({ file: fileName, line: i + 1, rule: rule + ' (not in examples)' });
 			} else if ( rule === 'node/no-sync' && context !== 'test' ) {
 				violations.push({ file: fileName, line: i + 1, rule: rule + ' (not in test)' });
-			} else if ( !ALLOWED_RULES.has( rule ) ) {
+			} else if ( TEST_ONLY_RULES.has( rule ) && context !== 'test' ) {
+				violations.push({ file: fileName, line: i + 1, rule: rule + ' (not in test)' });
+			} else if ( !ALLOWED_RULES.has( rule ) && !TEST_ONLY_RULES.has( rule ) ) {
 				violations.push({ file: fileName, line: i + 1, rule: rule });
 			}
 		}

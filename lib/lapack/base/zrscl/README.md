@@ -35,9 +35,9 @@ var zrscl = require( '@stdlib/lapack/base/zrscl' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zrscl = require( '@stdlib/lapack/base/zrscl' );
 
-// TODO: Add usage example
+zrscl( 2, a, x, 1 );
 ```
 
 The function has the following parameters:
@@ -52,9 +52,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zrscl = require( '@stdlib/lapack/base/zrscl' );
 
-// TODO: Add usage example
+zrscl( 2, a, x, 1 );
 ```
 
 The function has the following additional parameters:
@@ -84,7 +84,7 @@ The function has the following additional parameters:
 ```javascript
 var zrscl = require( '@stdlib/lapack/base/zrscl' );
 
-// TODO: Add examples
+zrscl( 2, a, x, 1 );
 ```
 
 </section>

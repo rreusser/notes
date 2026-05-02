@@ -35,9 +35,13 @@ var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
 Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dlaswp.ndarray( N, A, N, 1, 0, 1, 1, IPIV, 1, 0, 1 );
 ```
 
 The function has the following parameters:
@@ -57,9 +61,13 @@ The function has the following parameters:
 Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dlaswp.ndarray( N, A, N, 1, 0, 1, 1, IPIV, 1, 0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +100,11 @@ The function has the following additional parameters:
 ```javascript
 var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dlaswp.ndarray( N, A, N, 1, 0, 1, 1, IPIV, 1, 0, 1 );
 ```
 
 </section>

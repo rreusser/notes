@@ -35,9 +35,14 @@ var zgehrd = require( '@stdlib/lapack/base/zgehrd' );
 Reduces a complex general matrix to upper Hessenberg form using blocked algorithm.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgehrd = require( '@stdlib/lapack/base/zgehrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgehrd.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +66,14 @@ The function has the following parameters:
 Reduces a complex general matrix to upper Hessenberg form using blocked algorithm, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgehrd = require( '@stdlib/lapack/base/zgehrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgehrd.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +102,12 @@ The function has the following additional parameters:
 ```javascript
 var zgehrd = require( '@stdlib/lapack/base/zgehrd' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgehrd.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

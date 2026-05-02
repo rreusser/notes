@@ -1,6 +1,6 @@
 # dgbmv: Translation Learnings
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
+_(Translator notes were not captured for this module. See `git log` and the Fortran reference for implementation details.)_
 
 ## Translation pitfalls
 

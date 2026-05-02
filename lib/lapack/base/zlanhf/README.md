@@ -36,8 +36,11 @@ var zlanhf = require( '@stdlib/lapack/base/zlanhf' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlanhf = require( '@stdlib/lapack/base/zlanhf' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlanhf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 The function has the following parameters:
@@ -55,8 +58,11 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlanhf = require( '@stdlib/lapack/base/zlanhf' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlanhf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +93,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zlanhf = require( '@stdlib/lapack/base/zlanhf' );
 
-// TODO: Add examples
+var WORK = new Float64Array( 3 );
+
+zlanhf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 </section>

@@ -35,9 +35,18 @@ var zlaqr3 = require( '@stdlib/lapack/base/zlaqr3' );
 Complex aggressive early deflation (recursive).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqr3 = require( '@stdlib/lapack/base/zlaqr3' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var WV = discreteUniform( N * N, -10, 10, opts );
+var SH = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlaqr3.ndarray( 1, 1, N, 1, 1, 1, H, N, 1, 0, 1, 1, Z, N, 1, 0, 1, 1, SH, 1, 0, V, N, 1, 0, 1, T, N, 1, 0, 1, WV, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -50,9 +59,18 @@ The function has the following parameters:
 Complex aggressive early deflation (recursive), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqr3 = require( '@stdlib/lapack/base/zlaqr3' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var WV = discreteUniform( N * N, -10, 10, opts );
+var SH = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlaqr3.ndarray( 1, 1, N, 1, 1, 1, H, N, 1, 0, 1, 1, Z, N, 1, 0, 1, 1, SH, 1, 0, V, N, 1, 0, 1, T, N, 1, 0, 1, WV, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -120,7 +138,16 @@ The function has the following additional parameters:
 ```javascript
 var zlaqr3 = require( '@stdlib/lapack/base/zlaqr3' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var WV = discreteUniform( N * N, -10, 10, opts );
+var SH = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlaqr3.ndarray( 1, 1, N, 1, 1, 1, H, N, 1, 0, 1, 1, Z, N, 1, 0, 1, 1, SH, 1, 0, V, N, 1, 0, 1, T, N, 1, 0, 1, WV, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

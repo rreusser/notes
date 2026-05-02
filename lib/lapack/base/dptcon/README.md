@@ -35,9 +35,14 @@ var dptcon = require( '@stdlib/lapack/base/dptcon' );
 Computes the reciprocal of the condition number (in the 1-norm) of a real.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dptcon = require( '@stdlib/lapack/base/dptcon' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dptcon.ndarray( N, d, 1, 0, e, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Computes the reciprocal of the condition number (in the 1-norm) of a real, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dptcon = require( '@stdlib/lapack/base/dptcon' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dptcon.ndarray( N, d, 1, 0, e, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +101,12 @@ The function has the following additional parameters:
 ```javascript
 var dptcon = require( '@stdlib/lapack/base/dptcon' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dptcon.ndarray( N, d, 1, 0, e, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 </section>

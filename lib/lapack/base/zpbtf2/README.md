@@ -35,9 +35,12 @@ var zpbtf2 = require( '@stdlib/lapack/base/zpbtf2' );
 Computes the Cholesky factorization of a complex Hermitian positive definite.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpbtf2 = require( '@stdlib/lapack/base/zpbtf2' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+
+zpbtf2.ndarray( 'upper', N, 1, AB, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +57,12 @@ The function has the following parameters:
 Computes the Cholesky factorization of a complex Hermitian positive definite, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpbtf2 = require( '@stdlib/lapack/base/zpbtf2' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+
+zpbtf2.ndarray( 'upper', N, 1, AB, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -88,7 +94,10 @@ The function has the following additional parameters:
 ```javascript
 var zpbtf2 = require( '@stdlib/lapack/base/zpbtf2' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+
+zpbtf2.ndarray( 'upper', N, 1, AB, N, 1, 0 );
 ```
 
 </section>

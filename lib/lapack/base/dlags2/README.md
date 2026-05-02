@@ -35,9 +35,9 @@ var dlags2 = require( '@stdlib/lapack/base/dlags2' );
 Computes 2-by-2 orthogonal matrices U, V, and Q, such that if UPPER is true:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlags2 = require( '@stdlib/lapack/base/dlags2' );
 
-// TODO: Add usage example
+dlags2.ndarray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -55,9 +55,9 @@ The function has the following parameters:
 Computes 2-by-2 orthogonal matrices U, V, and Q, such that if UPPER is true:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlags2 = require( '@stdlib/lapack/base/dlags2' );
 
-// TODO: Add usage example
+dlags2.ndarray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +92,7 @@ The function has the following additional parameters:
 ```javascript
 var dlags2 = require( '@stdlib/lapack/base/dlags2' );
 
-// TODO: Add examples
+dlags2.ndarray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
 ```
 
 </section>

@@ -35,9 +35,9 @@ var zlags2 = require( '@stdlib/lapack/base/zlags2' );
 Computes 2-by-2 unitary matrices U, V, and Q for the generalized upper (lower) triangular form.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlags2 = require( '@stdlib/lapack/base/zlags2' );
 
-// TODO: Add usage example
+zlags2( true, 4.0, new Complex128( 2.0, 1.0 ), 3.0, 1.0, new Complex128( 0.5, 0.25 ), 2.0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +55,9 @@ The function has the following parameters:
 Computes 2-by-2 unitary matrices U, V, and Q for the generalized upper (lower) triangular form, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlags2 = require( '@stdlib/lapack/base/zlags2' );
 
-// TODO: Add usage example
+zlags2( true, 4.0, new Complex128( 2.0, 1.0 ), 3.0, 1.0, new Complex128( 0.5, 0.25 ), 2.0 );
 ```
 
 The function has the following additional parameters:
@@ -86,7 +86,7 @@ The function has the following additional parameters:
 ```javascript
 var zlags2 = require( '@stdlib/lapack/base/zlags2' );
 
-// TODO: Add examples
+zlags2( true, 4.0, new Complex128( 2.0, 1.0 ), 3.0, 1.0, new Complex128( 0.5, 0.25 ), 2.0 );
 ```
 
 </section>

@@ -35,9 +35,17 @@ var zgges = require( '@stdlib/lapack/base/zgges' );
 Computes generalized eigenvalues and Schur form for a pair of complex nonsymmetric matrices
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgges = require( '@stdlib/lapack/base/zgges' );
 
-// TODO: Add usage example
+var A = new Complex128Array( Adata.slice() );
+var B = new Complex128Array( Bdata.slice() );
+var ALPHA = new Complex128Array( 3 );
+var BETA = new Complex128Array( 3 );
+var VSL = new Complex128Array( 9 );
+var VSR = new Complex128Array( 9 );
+
+zgges( 'column-major', 'compute-vectors', 'compute-vectors', 'not-sorted', noop, 3, A, 3, B, 3, ALPHA, BETA, VSL, 3, VSR, 3 );
 ```
 
 The function has the following parameters:
@@ -74,9 +82,17 @@ The function has the following parameters:
 Computes generalized eigenvalues and Schur form for a pair of complex nonsymmetric matrices, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgges = require( '@stdlib/lapack/base/zgges' );
 
-// TODO: Add usage example
+var A = new Complex128Array( Adata.slice() );
+var B = new Complex128Array( Bdata.slice() );
+var ALPHA = new Complex128Array( 3 );
+var BETA = new Complex128Array( 3 );
+var VSL = new Complex128Array( 9 );
+var VSR = new Complex128Array( 9 );
+
+zgges( 'column-major', 'compute-vectors', 'compute-vectors', 'not-sorted', noop, 3, A, 3, B, 3, ALPHA, BETA, VSL, 3, VSR, 3 );
 ```
 
 The function has the following additional parameters:
@@ -128,8 +144,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -139,7 +154,17 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgges = require( '@stdlib/lapack/base/zgges' );
+
+var A = new Complex128Array( Adata.slice() );
+var B = new Complex128Array( Bdata.slice() );
+var ALPHA = new Complex128Array( 3 );
+var BETA = new Complex128Array( 3 );
+var VSL = new Complex128Array( 9 );
+var VSR = new Complex128Array( 9 );
+
+zgges( 'column-major', 'compute-vectors', 'compute-vectors', 'not-sorted', noop, 3, A, 3, B, 3, ALPHA, BETA, VSL, 3, VSR, 3 );
 ```
 
 </section>

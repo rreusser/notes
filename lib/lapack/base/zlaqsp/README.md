@@ -36,8 +36,11 @@ var zlaqsp = require( '@stdlib/lapack/base/zlaqsp' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlaqsp = require( '@stdlib/lapack/base/zlaqsp' );
 
-// TODO: Add usage example
+var S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
+
+zlaqsp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +59,11 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlaqsp = require( '@stdlib/lapack/base/zlaqsp' );
 
-// TODO: Add usage example
+var S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
+
+zlaqsp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +93,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zlaqsp = require( '@stdlib/lapack/base/zlaqsp' );
 
-// TODO: Add examples
+var S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
+
+zlaqsp( 'upper', 3, AP, S, 1, 0.05, 16.0 );
 ```
 
 </section>

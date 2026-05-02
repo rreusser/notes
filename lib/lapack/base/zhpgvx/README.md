@@ -36,8 +36,20 @@ var zhpgvx = require( '@stdlib/lapack/base/zhpgvx' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpgvx = require( '@stdlib/lapack/base/zhpgvx' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4, 0, 1, -1, 5, 0 ] );
+var BP = new Complex128Array( [ 2, 0, 0, 0, 3, 0 ] );
+var W = new Float64Array( 2 );
+var Z = new Complex128Array( 4 );
+var WORK = new Complex128Array( 10 );
+var RWORK = new Float64Array( 20 );
+var IWORK = new Int32Array( 15 );
+var IFAIL = new Int32Array( 2 );
+
+zhpgvx( 'column-major', 1, 'compute-vectors', 'all', 'upper', 2, AP, BP, 0, 0, 0, 0, 0, out, W, Z, 2, WORK, RWORK, IWORK, IFAIL );
 ```
 
 The function has the following parameters:
@@ -70,8 +82,20 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpgvx = require( '@stdlib/lapack/base/zhpgvx' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4, 0, 1, -1, 5, 0 ] );
+var BP = new Complex128Array( [ 2, 0, 0, 0, 3, 0 ] );
+var W = new Float64Array( 2 );
+var Z = new Complex128Array( 4 );
+var WORK = new Complex128Array( 10 );
+var RWORK = new Float64Array( 20 );
+var IWORK = new Int32Array( 15 );
+var IFAIL = new Int32Array( 2 );
+
+zhpgvx( 'column-major', 1, 'compute-vectors', 'all', 'upper', 2, AP, BP, 0, 0, 0, 0, 0, out, W, Z, 2, WORK, RWORK, IWORK, IFAIL );
 ```
 
 The function has the following additional parameters:
@@ -115,9 +139,21 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zhpgvx = require( '@stdlib/lapack/base/zhpgvx' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 4, 0, 1, -1, 5, 0 ] );
+var BP = new Complex128Array( [ 2, 0, 0, 0, 3, 0 ] );
+var W = new Float64Array( 2 );
+var Z = new Complex128Array( 4 );
+var WORK = new Complex128Array( 10 );
+var RWORK = new Float64Array( 20 );
+var IWORK = new Int32Array( 15 );
+var IFAIL = new Int32Array( 2 );
+
+zhpgvx( 'column-major', 1, 'compute-vectors', 'all', 'upper', 2, AP, BP, 0, 0, 0, 0, 0, out, W, Z, 2, WORK, RWORK, IWORK, IFAIL );
 ```
 
 </section>

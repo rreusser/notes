@@ -35,9 +35,13 @@ var dlanst = require( '@stdlib/lapack/base/dlanst' );
 Computes the value of the one norm, or the Frobenius norm, or the infinity.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlanst = require( '@stdlib/lapack/base/dlanst' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+dlanst.ndarray( '1', N, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +58,13 @@ The function has the following parameters:
 Computes the value of the one norm, or the Frobenius norm, or the infinity, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlanst = require( '@stdlib/lapack/base/dlanst' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+dlanst.ndarray( '1', N, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +95,11 @@ The function has the following additional parameters:
 ```javascript
 var dlanst = require( '@stdlib/lapack/base/dlanst' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+dlanst.ndarray( '1', N, d, 1, 0, e, 1, 0 );
 ```
 
 </section>

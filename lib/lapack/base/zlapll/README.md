@@ -36,8 +36,14 @@ var zlapll = require( '@stdlib/lapack/base/zlapll' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlapll = require( '@stdlib/lapack/base/zlapll' );
 
-// TODO: Add usage example
+var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+var y = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0 ] );
+var ssmin = new Float64Array( 1 );
+
+zlapll( 4, x, 1, y, 1, ssmin );
 ```
 
 The function has the following parameters:
@@ -55,8 +61,14 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlapll = require( '@stdlib/lapack/base/zlapll' );
 
-// TODO: Add usage example
+var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+var y = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0 ] );
+var ssmin = new Float64Array( 1 );
+
+zlapll( 4, x, 1, y, 1, ssmin );
 ```
 
 The function has the following additional parameters:
@@ -85,9 +97,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlapll = require( '@stdlib/lapack/base/zlapll' );
 
-// TODO: Add examples
+var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+var y = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0 ] );
+var ssmin = new Float64Array( 1 );
+
+zlapll( 4, x, 1, y, 1, ssmin );
 ```
 
 </section>

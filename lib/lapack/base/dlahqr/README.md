@@ -35,9 +35,15 @@ var dlahqr = require( '@stdlib/lapack/base/dlahqr' );
 Computes the eigenvalues and optionally the Schur factorization of an upper.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlahqr = require( '@stdlib/lapack/base/dlahqr' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+
+dlahqr.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -63,9 +69,15 @@ The function has the following parameters:
 Computes the eigenvalues and optionally the Schur factorization of an upper, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlahqr = require( '@stdlib/lapack/base/dlahqr' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+
+dlahqr.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -102,7 +114,13 @@ The function has the following additional parameters:
 ```javascript
 var dlahqr = require( '@stdlib/lapack/base/dlahqr' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+
+dlahqr.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0 );
 ```
 
 </section>

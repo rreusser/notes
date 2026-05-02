@@ -36,8 +36,12 @@ var dlansf = require( '@stdlib/lapack/base/dlansf' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlansf = require( '@stdlib/lapack/base/dlansf' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 5.0, 4.0, 1.0, 3.0, 6.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 The function has the following parameters:
@@ -55,8 +59,12 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlansf = require( '@stdlib/lapack/base/dlansf' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 5.0, 4.0, 1.0, 3.0, 6.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +95,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlansf = require( '@stdlib/lapack/base/dlansf' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 2.0, 5.0, 4.0, 1.0, 3.0, 6.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 </section>

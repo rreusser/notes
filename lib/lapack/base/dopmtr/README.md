@@ -36,8 +36,12 @@ Overwrites a general matrix with a transformation from the orthogonal matrix Q r
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
 
-// TODO: Add usage example
+var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
+var WORK = new Float64Array( 4 );
+
+dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +63,12 @@ Overwrites a general matrix with a transformation from the orthogonal matrix Q r
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
 
-// TODO: Add usage example
+var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
+var WORK = new Float64Array( 4 );
+
+dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,9 +104,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
 
-// TODO: Add examples
+var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
+var WORK = new Float64Array( 4 );
+
+dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 </section>

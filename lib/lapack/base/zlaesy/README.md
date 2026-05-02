@@ -35,9 +35,9 @@ var zlaesy = require( '@stdlib/lapack/base/zlaesy' );
 Compute the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaesy = require( '@stdlib/lapack/base/zlaesy' );
 
-// TODO: Add usage example
+zlaesy.ndarray( 1, 1, 1.0 );
 ```
 
 The function has the following parameters:
@@ -51,9 +51,9 @@ The function has the following parameters:
 Compute the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaesy = require( '@stdlib/lapack/base/zlaesy' );
 
-// TODO: Add usage example
+zlaesy.ndarray( 1, 1, 1.0 );
 ```
 
 The function has the following additional parameters:
@@ -82,7 +82,7 @@ The function has the following additional parameters:
 ```javascript
 var zlaesy = require( '@stdlib/lapack/base/zlaesy' );
 
-// TODO: Add examples
+zlaesy.ndarray( 1, 1, 1.0 );
 ```
 
 </section>

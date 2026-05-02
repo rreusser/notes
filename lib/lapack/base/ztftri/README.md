@@ -35,9 +35,9 @@ var ztftri = require( '@stdlib/lapack/base/ztftri' );
 Computes the inverse of A complex triangular matrix in Rectangular Full Packed format.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztftri = require( '@stdlib/lapack/base/ztftri' );
 
-// TODO: Add usage example
+ztftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, a, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Computes the inverse of A complex triangular matrix in Rectangular Full Packed format, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztftri = require( '@stdlib/lapack/base/ztftri' );
 
-// TODO: Add usage example
+ztftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, a, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -86,7 +86,7 @@ The function has the following additional parameters:
 ```javascript
 var ztftri = require( '@stdlib/lapack/base/ztftri' );
 
-// TODO: Add examples
+ztftri.ndarray( 'no-transpose', 'lower', 'non-unit', 3, a, 1, 0 );
 ```
 
 </section>

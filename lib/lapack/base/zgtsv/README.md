@@ -35,9 +35,15 @@ var zgtsv = require( '@stdlib/lapack/base/zgtsv' );
 Solves a complex general tridiagonal system of linear equations A * X = B.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgtsv = require( '@stdlib/lapack/base/zgtsv' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+zgtsv.ndarray( N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +64,15 @@ The function has the following parameters:
 Solves a complex general tridiagonal system of linear equations A * X = B, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgtsv = require( '@stdlib/lapack/base/zgtsv' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+zgtsv.ndarray( N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +107,13 @@ The function has the following additional parameters:
 ```javascript
 var zgtsv = require( '@stdlib/lapack/base/zgtsv' );
 
-// TODO: Add examples
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+zgtsv.ndarray( N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

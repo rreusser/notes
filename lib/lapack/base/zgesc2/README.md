@@ -36,8 +36,16 @@ Solves a system of linear equations `A * X = scale * RHS` with a general.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgesc2 = require( '@stdlib/lapack/base/zgesc2' );
 
-// TODO: Add usage example
+var RHS = new Complex128Array( [ 10.0, 3.0, 7.0, 4.0 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var JPIV = new Int32Array( [ 0, 1 ] );
+var scale = new Float64Array( 1 );
+
+zgesc2.ndarray( 2, A, 1, 2, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, scale );
 ```
 
 The function has the following parameters:
@@ -59,8 +67,16 @@ Solves a system of linear equations `A * X = scale * RHS` with a general, using 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgesc2 = require( '@stdlib/lapack/base/zgesc2' );
 
-// TODO: Add usage example
+var RHS = new Complex128Array( [ 10.0, 3.0, 7.0, 4.0 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var JPIV = new Int32Array( [ 0, 1 ] );
+var scale = new Float64Array( 1 );
+
+zgesc2.ndarray( 2, A, 1, 2, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, scale );
 ```
 
 The function has the following additional parameters:
@@ -93,9 +109,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgesc2 = require( '@stdlib/lapack/base/zgesc2' );
 
-// TODO: Add examples
+var RHS = new Complex128Array( [ 10.0, 3.0, 7.0, 4.0 ] );
+var IPIV = new Int32Array( [ 0, 1 ] );
+var JPIV = new Int32Array( [ 0, 1 ] );
+var scale = new Float64Array( 1 );
+
+zgesc2.ndarray( 2, A, 1, 2, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, scale );
 ```
 
 </section>

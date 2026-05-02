@@ -36,8 +36,15 @@ Performs the symmetric matrix-matrix operation `C := α*A*B + β*C` or `C := α*
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zsymm = require( '@stdlib/blas/base/zsymm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ] );
+var C = new Float64Array( 8 );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+var beta = new Float64Array( [ 0.0, 0.0 ] );
+
+zsymm.ndarray( 'left', 'upper', 2, 2, alpha, A, 2, 1, 0, B, 2, 1, 0, beta, C, 2, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,8 +69,15 @@ Performs the symmetric matrix-matrix operation `C := α*A*B + β*C` or `C := α*
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zsymm = require( '@stdlib/blas/base/zsymm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ] );
+var C = new Float64Array( 8 );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+var beta = new Float64Array( [ 0.0, 0.0 ] );
+
+zsymm.ndarray( 'left', 'upper', 2, 2, alpha, A, 2, 1, 0, B, 2, 1, 0, beta, C, 2, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -99,9 +113,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zsymm = require( '@stdlib/blas/base/zsymm' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var B = new Float64Array( [ 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ] );
+var C = new Float64Array( 8 );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+var beta = new Float64Array( [ 0.0, 0.0 ] );
+
+zsymm.ndarray( 'left', 'upper', 2, 2, alpha, A, 2, 1, 0, B, 2, 1, 0, beta, C, 2, 1, 0 );
 ```
 
 </section>

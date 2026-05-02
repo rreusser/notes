@@ -35,9 +35,14 @@ var zhetrf = require( '@stdlib/lapack/base/zhetrf' );
 Computes the factorization of a complex Hermitian matrix using Bunch-Kaufman.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhetrf = require( '@stdlib/lapack/base/zhetrf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhetrf.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -54,9 +59,14 @@ The function has the following parameters:
 Computes the factorization of a complex Hermitian matrix using Bunch-Kaufman, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhetrf = require( '@stdlib/lapack/base/zhetrf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhetrf.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +103,12 @@ The function has the following additional parameters:
 ```javascript
 var zhetrf = require( '@stdlib/lapack/base/zhetrf' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhetrf.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

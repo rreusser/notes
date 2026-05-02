@@ -35,9 +35,16 @@ var dtrevc3 = require( '@stdlib/lapack/base/dtrevc3' );
 Computes some or all of the right and/or left eigenvectors of a real.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtrevc3 = require( '@stdlib/lapack/base/dtrevc3' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dtrevc3.ndarray( 'left', 'all', SELECT, 1, 0, N, T, N, 1, 0, VL, N, 1, 0, VR, N, 1, 0, N, N, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -64,9 +71,16 @@ The function has the following parameters:
 Computes some or all of the right and/or left eigenvectors of a real, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtrevc3 = require( '@stdlib/lapack/base/dtrevc3' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dtrevc3.ndarray( 'left', 'all', SELECT, 1, 0, N, T, N, 1, 0, VL, N, 1, 0, VR, N, 1, 0, N, N, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -106,7 +120,14 @@ The function has the following additional parameters:
 ```javascript
 var dtrevc3 = require( '@stdlib/lapack/base/dtrevc3' );
 
-// TODO: Add examples
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dtrevc3.ndarray( 'left', 'all', SELECT, 1, 0, N, T, N, 1, 0, VL, N, 1, 0, VR, N, 1, 0, N, N, WORK, 1, 0, N );
 ```
 
 </section>

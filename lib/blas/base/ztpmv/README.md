@@ -36,8 +36,12 @@ Performs one of the matrix-vector operations `x := A*x`, `x := A**T*x`, or `x :=
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ztpmv = require( '@stdlib/blas/base/ztpmv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztpmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +61,12 @@ Performs one of the matrix-vector operations `x := A*x`, `x := A**T*x`, or `x :=
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ztpmv = require( '@stdlib/blas/base/ztpmv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztpmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +95,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var ztpmv = require( '@stdlib/blas/base/ztpmv' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztpmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
 ```
 
 </section>

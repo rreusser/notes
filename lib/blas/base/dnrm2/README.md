@@ -36,8 +36,11 @@ Computes the Euclidean norm of a real double-precision vector.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 3.0, 4.0 ] );
+
+dnrm2.ndarray( 2, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,8 +55,11 @@ Computes the Euclidean norm of a real double-precision vector, using alternative
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 3.0, 4.0 ] );
+
+dnrm2.ndarray( 2, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -81,9 +87,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 3.0, 4.0 ] );
+
+dnrm2.ndarray( 2, x, 1, 0 );
 ```
 
 </section>

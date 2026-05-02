@@ -35,9 +35,9 @@ var disnan = require( '@stdlib/lapack/base/disnan' );
 Tests whether a double-precision floating-point number is NaN.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var disnan = require( '@stdlib/lapack/base/disnan' );
 
-// TODO: Add usage example
+disnan.ndarray( 1 );
 ```
 
 The function has the following parameters:
@@ -49,9 +49,9 @@ The function has the following parameters:
 Tests whether a double-precision floating-point number is NaN, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var disnan = require( '@stdlib/lapack/base/disnan' );
 
-// TODO: Add usage example
+disnan.ndarray( 1 );
 ```
 
 The function has the following additional parameters:
@@ -80,7 +80,7 @@ The function has the following additional parameters:
 ```javascript
 var disnan = require( '@stdlib/lapack/base/disnan' );
 
-// TODO: Add examples
+disnan.ndarray( 1 );
 ```
 
 </section>

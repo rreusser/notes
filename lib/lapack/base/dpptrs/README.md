@@ -36,8 +36,12 @@ var dpptrs = require( '@stdlib/lapack/base/dpptrs' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpptrs = require( '@stdlib/lapack/base/dpptrs' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.68095132369090194 ] );
+var B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+
+dpptrs.ndarray( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpptrs = require( '@stdlib/lapack/base/dpptrs' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.68095132369090194 ] );
+var B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+
+dpptrs.ndarray( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +97,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dpptrs = require( '@stdlib/lapack/base/dpptrs' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.68095132369090194 ] );
+var B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+
+dpptrs.ndarray( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
 ```
 
 </section>

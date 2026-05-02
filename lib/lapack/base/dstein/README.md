@@ -35,9 +35,20 @@ var dstein = require( '@stdlib/lapack/base/dstein' );
 Computes the eigenvectors of a real symmetric tridiagonal matrix T.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dstein = require( '@stdlib/lapack/base/dstein' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var IBLOCK = discreteUniform( N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dstein.ndarray( N, d, 1, 0, e, 1, 0, N, w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0, Z, N, 1, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -68,9 +79,20 @@ The function has the following parameters:
 Computes the eigenvectors of a real symmetric tridiagonal matrix T, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dstein = require( '@stdlib/lapack/base/dstein' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var IBLOCK = discreteUniform( N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dstein.ndarray( N, d, 1, 0, e, 1, 0, N, w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0, Z, N, 1, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -110,7 +132,18 @@ The function has the following additional parameters:
 ```javascript
 var dstein = require( '@stdlib/lapack/base/dstein' );
 
-// TODO: Add examples
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var IBLOCK = discreteUniform( N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dstein.ndarray( N, d, 1, 0, e, 1, 0, N, w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0, Z, N, 1, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,14 @@ var zlacn2 = require( '@stdlib/lapack/base/zlacn2' );
 Estimates the 1-norm of a square complex matrix A using reverse communication.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlacn2 = require( '@stdlib/lapack/base/zlacn2' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N, -10, 10, opts );
+var X = discreteUniform( N, -10, 10, opts );
+var ISAVE = discreteUniform( N, -10, 10, opts );
+
+zlacn2.ndarray( N, V, 1, 0, X, 1, 0, 1, 1, ISAVE, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Estimates the 1-norm of a square complex matrix A using reverse communication, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlacn2 = require( '@stdlib/lapack/base/zlacn2' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N, -10, 10, opts );
+var X = discreteUniform( N, -10, 10, opts );
+var ISAVE = discreteUniform( N, -10, 10, opts );
+
+zlacn2.ndarray( N, V, 1, 0, X, 1, 0, 1, 1, ISAVE, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +101,12 @@ The function has the following additional parameters:
 ```javascript
 var zlacn2 = require( '@stdlib/lapack/base/zlacn2' );
 
-// TODO: Add examples
+var N = 3;
+var V = discreteUniform( N, -10, 10, opts );
+var X = discreteUniform( N, -10, 10, opts );
+var ISAVE = discreteUniform( N, -10, 10, opts );
+
+zlacn2.ndarray( N, V, 1, 0, X, 1, 0, 1, 1, ISAVE, 1, 0 );
 ```
 
 </section>

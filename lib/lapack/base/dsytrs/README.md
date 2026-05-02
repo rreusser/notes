@@ -35,9 +35,14 @@ var dsytrs = require( '@stdlib/lapack/base/dsytrs' );
 Solves a system of linear equations A_X = B with a real symmetric matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsytrs = require( '@stdlib/lapack/base/dsytrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dsytrs.ndarray( 'upper', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Solves a system of linear equations A_X = B with a real symmetric matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsytrs = require( '@stdlib/lapack/base/dsytrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dsytrs.ndarray( 'upper', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var dsytrs = require( '@stdlib/lapack/base/dsytrs' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dsytrs.ndarray( 'upper', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

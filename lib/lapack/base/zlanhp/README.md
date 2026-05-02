@@ -36,8 +36,11 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlanhp = require( '@stdlib/lapack/base/zlanhp' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlanhp( 'max', 'upper', 3, AP, WORK );
 ```
 
 The function has the following parameters:
@@ -54,8 +57,11 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlanhp = require( '@stdlib/lapack/base/zlanhp' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlanhp( 'max', 'upper', 3, AP, WORK );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +92,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zlanhp = require( '@stdlib/lapack/base/zlanhp' );
 
-// TODO: Add examples
+var WORK = new Float64Array( 3 );
+
+zlanhp( 'max', 'upper', 3, AP, WORK );
 ```
 
 </section>

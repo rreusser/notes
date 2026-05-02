@@ -35,9 +35,15 @@ var dlatdf = require( '@stdlib/lapack/base/dlatdf' );
 Uses the LU factorization of the n-by-n matrix Z computed by dgetc2.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlatdf = require( '@stdlib/lapack/base/dlatdf' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var RHS = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var JPIV = discreteUniform( N, -10, 10, opts );
+
+dlatdf.ndarray( 1, N, Z, N, 1, 0, RHS, 1, 0, 1, 1, IPIV, 1, 0, JPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -60,9 +66,15 @@ The function has the following parameters:
 Uses the LU factorization of the n-by-n matrix Z computed by dgetc2, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlatdf = require( '@stdlib/lapack/base/dlatdf' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var RHS = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var JPIV = discreteUniform( N, -10, 10, opts );
+
+dlatdf.ndarray( 1, N, Z, N, 1, 0, RHS, 1, 0, 1, 1, IPIV, 1, 0, JPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +109,13 @@ The function has the following additional parameters:
 ```javascript
 var dlatdf = require( '@stdlib/lapack/base/dlatdf' );
 
-// TODO: Add examples
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var RHS = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var JPIV = discreteUniform( N, -10, 10, opts );
+
+dlatdf.ndarray( 1, N, Z, N, 1, 0, RHS, 1, 0, 1, 1, IPIV, 1, 0, JPIV, 1, 0 );
 ```
 
 </section>

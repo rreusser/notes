@@ -35,9 +35,14 @@ var dlarft = require( '@stdlib/lapack/base/dlarft' );
 Forms the triangular factor T of a real block reflector H of order N.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarft = require( '@stdlib/lapack/base/dlarft' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+dlarft.ndarray( 'forward', 'columnwise', N, N, V, N, 1, 0, TAU, 1, 0, T, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +64,14 @@ The function has the following parameters:
 Forms the triangular factor T of a real block reflector H of order N,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarft = require( '@stdlib/lapack/base/dlarft' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+dlarft.ndarray( 'forward', 'columnwise', N, N, V, N, 1, 0, TAU, 1, 0, T, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +107,12 @@ The function has the following additional parameters:
 ```javascript
 var dlarft = require( '@stdlib/lapack/base/dlarft' );
 
-// TODO: Add examples
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+dlarft.ndarray( 'forward', 'columnwise', N, N, V, N, 1, 0, TAU, 1, 0, T, N, 1, 0 );
 ```
 
 </section>

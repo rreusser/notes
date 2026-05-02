@@ -35,9 +35,20 @@ var dptrfs = require( '@stdlib/lapack/base/dptrfs' );
 Improves the computed solution to a real symmetric positive definite.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dptrfs = require( '@stdlib/lapack/base/dptrfs' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var DF = discreteUniform( N, -10, 10, opts );
+var EF = discreteUniform( N, -10, 10, opts );
+var FERR = discreteUniform( N, -10, 10, opts );
+var BERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dptrfs.ndarray( N, N, d, 1, 0, e, 1, 0, DF, 1, 0, EF, 1, 0, B, N, 1, 0, X, N, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -68,9 +79,20 @@ The function has the following parameters:
 Improves the computed solution to a real symmetric positive definite, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dptrfs = require( '@stdlib/lapack/base/dptrfs' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var DF = discreteUniform( N, -10, 10, opts );
+var EF = discreteUniform( N, -10, 10, opts );
+var FERR = discreteUniform( N, -10, 10, opts );
+var BERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dptrfs.ndarray( N, N, d, 1, 0, e, 1, 0, DF, 1, 0, EF, 1, 0, B, N, 1, 0, X, N, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -112,7 +134,18 @@ The function has the following additional parameters:
 ```javascript
 var dptrfs = require( '@stdlib/lapack/base/dptrfs' );
 
-// TODO: Add examples
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var DF = discreteUniform( N, -10, 10, opts );
+var EF = discreteUniform( N, -10, 10, opts );
+var FERR = discreteUniform( N, -10, 10, opts );
+var BERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dptrfs.ndarray( N, N, d, 1, 0, e, 1, 0, DF, 1, 0, EF, 1, 0, B, N, 1, 0, X, N, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,15 @@ var zhpsv = require( '@stdlib/lapack/base/zhpsv' );
 Computes the solution to a complex system of linear equations A * X = B where A is Hermitian in packed storage.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpsv = require( '@stdlib/lapack/base/zhpsv' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4, 0, 1, 2, 5, 0, 2, -1, 3, 1, 6, 0 ] );
+var B = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
+var IPIV = new Int32Array( 3 );
+
+zhpsv( 'upper', 3, 1, AP, IPIV, B, 3 );
 ```
 
 The function has the following parameters:
@@ -57,9 +63,15 @@ The function has the following parameters:
 Computes the solution to a complex system of linear equations A * X = B where A is Hermitian in packed storage, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpsv = require( '@stdlib/lapack/base/zhpsv' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4, 0, 1, 2, 5, 0, 2, -1, 3, 1, 6, 0 ] );
+var B = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
+var IPIV = new Int32Array( 3 );
+
+zhpsv( 'upper', 3, 1, AP, IPIV, B, 3 );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +103,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zhpsv = require( '@stdlib/lapack/base/zhpsv' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 4, 0, 1, 2, 5, 0, 2, -1, 3, 1, 6, 0 ] );
+var B = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
+var IPIV = new Int32Array( 3 );
+
+zhpsv( 'upper', 3, 1, AP, IPIV, B, 3 );
 ```
 
 </section>

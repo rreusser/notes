@@ -35,9 +35,9 @@ var dznrm2 = require( '@stdlib/blas/base/dznrm2' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dznrm2 = require( '@stdlib/blas/base/dznrm2' );
 
-// TODO: Add usage example
+dznrm2( N, 1, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -70,7 +70,7 @@ The function has the following parameters:
 ```javascript
 var dznrm2 = require( '@stdlib/blas/base/dznrm2' );
 
-// TODO: Add examples
+dznrm2( N, 1, 1, 0 );
 ```
 
 </section>

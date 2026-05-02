@@ -35,9 +35,16 @@ var zgetc2 = require( '@stdlib/lapack/base/zgetc2' );
 Computes an LU factorization with complete pivoting of a general N-by-N complex matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgetc2 = require( '@stdlib/lapack/base/zgetc2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = new Complex128Array( N * N );
+var IPIV = new Int32Array( N );
+var JPIV = new Int32Array( N );
+
+zgetc2( N, A, N, IPIV, 1, JPIV, 1 );
 ```
 
 The function has the following parameters:
@@ -55,9 +62,16 @@ The function has the following parameters:
 Computes an LU factorization with complete pivoting of a general N-by-N complex matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zgetc2 = require( '@stdlib/lapack/base/zgetc2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = new Complex128Array( N * N );
+var IPIV = new Int32Array( N );
+var JPIV = new Int32Array( N );
+
+zgetc2( N, A, N, IPIV, 1, JPIV, 1 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +103,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgetc2 = require( '@stdlib/lapack/base/zgetc2' );
 
-// TODO: Add examples
+var N = 3;
+var A = new Complex128Array( N * N );
+var IPIV = new Int32Array( N );
+var JPIV = new Int32Array( N );
+
+zgetc2( N, A, N, IPIV, 1, JPIV, 1 );
 ```
 
 </section>

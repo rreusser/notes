@@ -35,9 +35,12 @@ var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );
 Computes the product of an upper or lower triangular matrix with its.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dlauu2.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +56,12 @@ The function has the following parameters:
 Computes the product of an upper or lower triangular matrix with its, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dlauu2.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dlauu2.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 </section>

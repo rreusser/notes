@@ -35,9 +35,13 @@ var dgebak = require( '@stdlib/lapack/base/dgebak' );
 Back-transforms eigenvectors after balancing by dgebal.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgebak = require( '@stdlib/lapack/base/dgebak' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var SCALE = discreteUniform( N, -10, 10, opts );
+
+dgebak.ndarray( 'both', 'left', N, N, N, SCALE, 1, 0, N, V, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +62,13 @@ The function has the following parameters:
 Back-transforms eigenvectors after balancing by dgebal, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgebak = require( '@stdlib/lapack/base/dgebak' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var SCALE = discreteUniform( N, -10, 10, opts );
+
+dgebak.ndarray( 'both', 'left', N, N, N, SCALE, 1, 0, N, V, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +101,11 @@ The function has the following additional parameters:
 ```javascript
 var dgebak = require( '@stdlib/lapack/base/dgebak' );
 
-// TODO: Add examples
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var SCALE = discreteUniform( N, -10, 10, opts );
+
+dgebak.ndarray( 'both', 'left', N, N, N, SCALE, 1, 0, N, V, N, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,13 @@ Performs one of the symmetric matrix-matrix operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsymm = require( '@stdlib/blas/base/dsymm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 2.0, 3.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dsymm.ndarray( 'left', 'upper', 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 2, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,8 +67,13 @@ Performs one of the symmetric matrix-matrix operations:, using alternative index
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsymm = require( '@stdlib/blas/base/dsymm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 2.0, 3.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dsymm.ndarray( 'left', 'upper', 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 2, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -99,9 +109,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsymm = require( '@stdlib/blas/base/dsymm' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 2.0, 3.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dsymm.ndarray( 'left', 'upper', 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 2, 1, 0 );
 ```
 
 </section>

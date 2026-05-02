@@ -35,9 +35,9 @@ var dlasq2 = require( '@stdlib/lapack/base/dlasq2' );
 Computes all the eigenvalues of the symmetric positive definite tridiagonal.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq2 = require( '@stdlib/lapack/base/dlasq2' );
 
-// TODO: Add usage example
+dlasq2.ndarray( N, 1, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -51,9 +51,9 @@ The function has the following parameters:
 Computes all the eigenvalues of the symmetric positive definite tridiagonal, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq2 = require( '@stdlib/lapack/base/dlasq2' );
 
-// TODO: Add usage example
+dlasq2.ndarray( N, 1, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -83,7 +83,7 @@ The function has the following additional parameters:
 ```javascript
 var dlasq2 = require( '@stdlib/lapack/base/dlasq2' );
 
-// TODO: Add examples
+dlasq2.ndarray( N, 1, 1, 0 );
 ```
 
 </section>

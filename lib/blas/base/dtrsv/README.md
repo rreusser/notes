@@ -36,8 +36,12 @@ Solves one of the systems of equations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtrsv = require( '@stdlib/blas/base/dtrsv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 3.0, 0.0, 4.0 ] );
+var x = new Float64Array( [ 5.0, 4.0 ] );
+
+dtrsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 2, 1, 0, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,8 +62,12 @@ Solves one of the systems of equations:, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtrsv = require( '@stdlib/blas/base/dtrsv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 2.0, 3.0, 0.0, 4.0 ] );
+var x = new Float64Array( [ 5.0, 4.0 ] );
+
+dtrsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 2, 1, 0, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +98,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dtrsv = require( '@stdlib/blas/base/dtrsv' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 2.0, 3.0, 0.0, 4.0 ] );
+var x = new Float64Array( [ 5.0, 4.0 ] );
+
+dtrsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 2, 1, 0, x, 1, 0 );
 ```
 
 </section>

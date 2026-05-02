@@ -36,8 +36,15 @@ Computes the Cholesky factorization with complete pivoting of a real symmetric p
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dpstrf = require( '@stdlib/lapack/base/dpstrf' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 6.0, 3.0, 1.0, 3.0, 5.0, 2.0, 1.0, 2.0, 4.0 ] );
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+dpstrf( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
 ```
 
 The function has the following parameters:
@@ -58,8 +65,15 @@ Computes the Cholesky factorization with complete pivoting of a real symmetric p
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dpstrf = require( '@stdlib/lapack/base/dpstrf' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 6.0, 3.0, 1.0, 3.0, 5.0, 2.0, 1.0, 2.0, 4.0 ] );
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+dpstrf( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +105,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dpstrf = require( '@stdlib/lapack/base/dpstrf' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 6.0, 3.0, 1.0, 3.0, 5.0, 2.0, 1.0, 2.0, 4.0 ] );
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+dpstrf( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
 ```
 
 </section>

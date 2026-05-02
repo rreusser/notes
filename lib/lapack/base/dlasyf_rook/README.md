@@ -36,8 +36,14 @@ Compute a partial factorization of a real symmetric matrix using the bounded Bun
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_rook = require( '@stdlib/lapack/base/dlasyf_rook' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 4.0, 1.0, 1.0, 3.0 ] );
+var IPIV = new Int32Array( 2 );
+var W = new Float64Array( 4 );
+
+dlasyf_rook( 'column-major', 'lower', 2, 2, A, 2, IPIV, W, 2 );
 ```
 
 The function has the following parameters:
@@ -61,8 +67,14 @@ Compute a partial factorization of a real symmetric matrix using the bounded Bun
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_rook = require( '@stdlib/lapack/base/dlasyf_rook' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 4.0, 1.0, 1.0, 3.0 ] );
+var IPIV = new Int32Array( 2 );
+var W = new Float64Array( 4 );
+
+dlasyf_rook( 'column-major', 'lower', 2, 2, A, 2, IPIV, W, 2 );
 ```
 
 The function has the following additional parameters:
@@ -91,8 +103,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -102,7 +113,15 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_rook = require( '@stdlib/lapack/base/dlasyf_rook' );
+
+var A = new Float64Array( [ 4.0, 1.0, 1.0, 3.0 ] );
+var IPIV = new Int32Array( 2 );
+var W = new Float64Array( 4 );
+
+dlasyf_rook( 'column-major', 'lower', 2, 2, A, 2, IPIV, W, 2 );
 ```
 
 </section>

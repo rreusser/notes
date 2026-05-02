@@ -36,8 +36,14 @@ var dsbtrd = require( '@stdlib/lapack/base/dsbtrd' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbtrd = require( '@stdlib/lapack/base/dsbtrd' );
 
-// TODO: Add usage example
+var d = new Float64Array( 4 );
+var e = new Float64Array( 3 );
+var Q = new Float64Array( 16 );
+var WORK = new Float64Array( 4 );
+
+dsbtrd( 'column-major', 'initialize', 'lower', 4, 2, AB, 3, d, e, Q, 4, WORK );
 ```
 
 The function has the following parameters:
@@ -61,8 +67,14 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsbtrd = require( '@stdlib/lapack/base/dsbtrd' );
 
-// TODO: Add usage example
+var d = new Float64Array( 4 );
+var e = new Float64Array( 3 );
+var Q = new Float64Array( 16 );
+var WORK = new Float64Array( 4 );
+
+dsbtrd( 'column-major', 'initialize', 'lower', 4, 2, AB, 3, d, e, Q, 4, WORK );
 ```
 
 The function has the following additional parameters:
@@ -101,9 +113,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsbtrd = require( '@stdlib/lapack/base/dsbtrd' );
 
-// TODO: Add examples
+var d = new Float64Array( 4 );
+var e = new Float64Array( 3 );
+var Q = new Float64Array( 16 );
+var WORK = new Float64Array( 4 );
+
+dsbtrd( 'column-major', 'initialize', 'lower', 4, 2, AB, 3, d, e, Q, 4, WORK );
 ```
 
 </section>

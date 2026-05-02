@@ -35,9 +35,15 @@ var dlarfb = require( '@stdlib/lapack/base/dlarfb' );
 Applies a real block reflector H or its transpose H**T to a.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarfb = require( '@stdlib/lapack/base/dlarfb' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N * N, -10, 10, opts );
+
+dlarfb.ndarray( 'left', 'no-transpose', 'forward', 'columnwise', N, N, N, V, N, 1, 0, T, N, 1, 0, C, N, 1, 0, WORK, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -64,9 +70,15 @@ The function has the following parameters:
 Applies a real block reflector H or its transpose H**T to a, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarfb = require( '@stdlib/lapack/base/dlarfb' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N * N, -10, 10, opts );
+
+dlarfb.ndarray( 'left', 'no-transpose', 'forward', 'columnwise', N, N, N, V, N, 1, 0, T, N, 1, 0, C, N, 1, 0, WORK, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -107,7 +119,13 @@ The function has the following additional parameters:
 ```javascript
 var dlarfb = require( '@stdlib/lapack/base/dlarfb' );
 
-// TODO: Add examples
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N * N, -10, 10, opts );
+
+dlarfb.ndarray( 'left', 'no-transpose', 'forward', 'columnwise', N, N, N, V, N, 1, 0, T, N, 1, 0, C, N, 1, 0, WORK, N, 1, 0 );
 ```
 
 </section>

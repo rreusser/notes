@@ -35,9 +35,14 @@ var dsyev = require( '@stdlib/lapack/base/dsyev' );
 Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsyev = require( '@stdlib/lapack/base/dsyev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dsyev.ndarray( 'compute', 'upper', N, A, N, 1, 0, w, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Computes all eigenvalues and, optionally, eigenvectors of a real symmetric, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsyev = require( '@stdlib/lapack/base/dsyev' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dsyev.ndarray( 'compute', 'upper', N, A, N, 1, 0, w, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +104,12 @@ The function has the following additional parameters:
 ```javascript
 var dsyev = require( '@stdlib/lapack/base/dsyev' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dsyev.ndarray( 'compute', 'upper', N, A, N, 1, 0, w, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

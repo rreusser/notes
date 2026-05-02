@@ -35,9 +35,13 @@ var dgetrf2 = require( '@stdlib/lapack/base/dgetrf2' );
 Computes an LU factorization of a general M-by-N matrix A using partial.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgetrf2 = require( '@stdlib/lapack/base/dgetrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgetrf2.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Computes an LU factorization of a general M-by-N matrix A using partial, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgetrf2 = require( '@stdlib/lapack/base/dgetrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgetrf2.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var dgetrf2 = require( '@stdlib/lapack/base/dgetrf2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgetrf2.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 </section>

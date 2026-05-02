@@ -1,6 +1,27 @@
 {
+  "name": "@stdlib/blas/base/ddot",
+  "version": "0.0.0",
+  "description": "Compute the dot product of two double-precision floating-point vectors",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Stdlib Authors",
+    "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+  },
+  "contributors": [
+    {
+      "name": "The Stdlib Authors",
+      "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+    }
+  ],
   "main": "./lib",
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./test"
+  },
   "types": "./docs/types",
+  "scripts": {},
   "homepage": "https://github.com/stdlib-js/stdlib",
   "repository": {
     "type": "git",
@@ -34,6 +55,8 @@
     "blas",
     "level 1",
     "ddot",
+    "dot",
+    "dot product",
     "linear",
     "algebra",
     "subroutines",

@@ -35,9 +35,14 @@ var dlasd5 = require( '@stdlib/lapack/base/dlasd5' );
 Compute the square root of the i-th eigenvalue of a positive symmetric rank-one modification of a 2-by-2 diagonal matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasd5 = require( '@stdlib/lapack/base/dlasd5' );
 
-// TODO: Add usage example
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DELTA = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlasd5.ndarray( 1, d, 1, 0, z, 1, 0, DELTA, 1, 0, 1.0, 1, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +64,14 @@ The function has the following parameters:
 Compute the square root of the i-th eigenvalue of a positive symmetric rank-one modification of a 2-by-2 diagonal matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasd5 = require( '@stdlib/lapack/base/dlasd5' );
 
-// TODO: Add usage example
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DELTA = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlasd5.ndarray( 1, d, 1, 0, z, 1, 0, DELTA, 1, 0, 1.0, 1, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var dlasd5 = require( '@stdlib/lapack/base/dlasd5' );
 
-// TODO: Add examples
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DELTA = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlasd5.ndarray( 1, d, 1, 0, z, 1, 0, DELTA, 1, 0, 1.0, 1, WORK, 1, 0 );
 ```
 
 </section>

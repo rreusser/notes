@@ -36,8 +36,21 @@ var zptsvx = require( '@stdlib/lapack/base/zptsvx' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zptsvx = require( '@stdlib/lapack/base/zptsvx' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
+var e = new Complex128Array( [ 1.0, 0.5, 0.5, -0.3, 0.2, 0.1 ] );
+var df = new Float64Array( 4 );
+var ef = new Complex128Array( 3 );
+var x = new Complex128Array( 4 );
+var rcond = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Complex128Array( 4 );
+var rwork = new Float64Array( 4 );
+
+zptsvx.ndarray( 'not-factored', 4, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 4, 0, x, 1, 4, 0, rcond, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -65,8 +78,21 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zptsvx = require( '@stdlib/lapack/base/zptsvx' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
+var e = new Complex128Array( [ 1.0, 0.5, 0.5, -0.3, 0.2, 0.1 ] );
+var df = new Float64Array( 4 );
+var ef = new Complex128Array( 3 );
+var x = new Complex128Array( 4 );
+var rcond = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Complex128Array( 4 );
+var rwork = new Float64Array( 4 );
+
+zptsvx.ndarray( 'not-factored', 4, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 4, 0, x, 1, 4, 0, rcond, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -115,9 +141,22 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zptsvx = require( '@stdlib/lapack/base/zptsvx' );
 
-// TODO: Add examples
+var d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
+var e = new Complex128Array( [ 1.0, 0.5, 0.5, -0.3, 0.2, 0.1 ] );
+var df = new Float64Array( 4 );
+var ef = new Complex128Array( 3 );
+var x = new Complex128Array( 4 );
+var rcond = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Complex128Array( 4 );
+var rwork = new Float64Array( 4 );
+
+zptsvx.ndarray( 'not-factored', 4, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 4, 0, x, 1, 4, 0, rcond, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 ```
 
 </section>

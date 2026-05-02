@@ -36,8 +36,12 @@ var dtbtrs = require( '@stdlib/lapack/base/dtbtrs' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtbtrs = require( '@stdlib/lapack/base/dtbtrs' );
 
-// TODO: Add usage example
+var AB = new Float64Array([ 0, 3, 1, 4, 2, 5 ]);
+var B = new Float64Array([ 1, 2, 3 ]);
+
+dtbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
 ```
 
 The function has the following parameters:
@@ -60,8 +64,12 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dtbtrs = require( '@stdlib/lapack/base/dtbtrs' );
 
-// TODO: Add usage example
+var AB = new Float64Array([ 0, 3, 1, 4, 2, 5 ]);
+var B = new Float64Array([ 1, 2, 3 ]);
+
+dtbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +102,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dtbtrs = require( '@stdlib/lapack/base/dtbtrs' );
 
-// TODO: Add examples
+var AB = new Float64Array([ 0, 3, 1, 4, 2, 5 ]);
+var B = new Float64Array([ 1, 2, 3 ]);
+
+dtbtrs( 'column-major', 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 2, B, 3 );
 ```
 
 </section>

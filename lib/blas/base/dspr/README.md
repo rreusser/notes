@@ -36,8 +36,12 @@ Performs the symmetric rank-1 update `A := alpha*x*x^T + A`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspr = require( '@stdlib/blas/base/dspr' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr.ndarray( 'upper', 2, 1.0, x, 1, 0, AP, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ Performs the symmetric rank-1 update `A := alpha*x*x^T + A`, using alternative i
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspr = require( '@stdlib/blas/base/dspr' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr.ndarray( 'upper', 2, 1.0, x, 1, 0, AP, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +94,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dspr = require( '@stdlib/blas/base/dspr' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr.ndarray( 'upper', 2, 1.0, x, 1, 0, AP, 1, 0 );
 ```
 
 </section>

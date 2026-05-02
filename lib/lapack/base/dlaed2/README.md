@@ -35,9 +35,22 @@ var dlaed2 = require( '@stdlib/lapack/base/dlaed2' );
 Merges the two sets of eigenvalues together into a single sorted set, then tries to deflate the size of the problem.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaed2 = require( '@stdlib/lapack/base/dlaed2' );
 
-// TODO: Add usage example
+var N = 3;
+var Q = discreteUniform( N * N, -10, 10, opts );
+var Q2 = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var INDXQ = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DLAMBDA = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var INDX = discreteUniform( N, -10, 10, opts );
+var INDXC = discreteUniform( N, -10, 10, opts );
+var INDXP = discreteUniform( N, -10, 10, opts );
+var COLTYP = discreteUniform( N, -10, 10, opts );
+
+dlaed2.ndarray( N, 1, d, 1, 0, Q, N, 1, 0, INDXQ, 1, 0, 1.0, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, N, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -63,9 +76,22 @@ The function has the following parameters:
 Merges the two sets of eigenvalues together into a single sorted set, then tries to deflate the size of the problem, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaed2 = require( '@stdlib/lapack/base/dlaed2' );
 
-// TODO: Add usage example
+var N = 3;
+var Q = discreteUniform( N * N, -10, 10, opts );
+var Q2 = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var INDXQ = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DLAMBDA = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var INDX = discreteUniform( N, -10, 10, opts );
+var INDXC = discreteUniform( N, -10, 10, opts );
+var INDXP = discreteUniform( N, -10, 10, opts );
+var COLTYP = discreteUniform( N, -10, 10, opts );
+
+dlaed2.ndarray( N, 1, d, 1, 0, Q, N, 1, 0, INDXQ, 1, 0, 1.0, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, N, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -117,7 +143,20 @@ The function has the following additional parameters:
 ```javascript
 var dlaed2 = require( '@stdlib/lapack/base/dlaed2' );
 
-// TODO: Add examples
+var N = 3;
+var Q = discreteUniform( N * N, -10, 10, opts );
+var Q2 = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var INDXQ = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DLAMBDA = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var INDX = discreteUniform( N, -10, 10, opts );
+var INDXC = discreteUniform( N, -10, 10, opts );
+var INDXP = discreteUniform( N, -10, 10, opts );
+var COLTYP = discreteUniform( N, -10, 10, opts );
+
+dlaed2.ndarray( N, 1, d, 1, 0, Q, N, 1, 0, INDXQ, 1, 0, 1.0, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, N, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 );
 ```
 
 </section>

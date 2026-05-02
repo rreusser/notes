@@ -36,8 +36,20 @@ var dgbrfs = require( '@stdlib/lapack/base/dgbrfs' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dgbrfs = require( '@stdlib/lapack/base/dgbrfs' );
 
-// TODO: Add usage example
+var ab = new Float64Array( [ 3.0 ] );
+var afb = new Float64Array( [ 3.0 ] );
+var ipiv = new Int32Array( 1 );
+var b = new Float64Array( [ 5.0 ] );
+var x = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Float64Array( 3 );
+var iwork = new Int32Array( 1 );
+
+dgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, ab, 1, 1, 0, afb, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, iwork, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -67,8 +79,20 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dgbrfs = require( '@stdlib/lapack/base/dgbrfs' );
 
-// TODO: Add usage example
+var ab = new Float64Array( [ 3.0 ] );
+var afb = new Float64Array( [ 3.0 ] );
+var ipiv = new Int32Array( 1 );
+var b = new Float64Array( [ 5.0 ] );
+var x = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Float64Array( 3 );
+var iwork = new Int32Array( 1 );
+
+dgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, ab, 1, 1, 0, afb, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, iwork, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -117,9 +141,21 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgbrfs = require( '@stdlib/lapack/base/dgbrfs' );
 
-// TODO: Add examples
+var ab = new Float64Array( [ 3.0 ] );
+var afb = new Float64Array( [ 3.0 ] );
+var ipiv = new Int32Array( 1 );
+var b = new Float64Array( [ 5.0 ] );
+var x = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Float64Array( 3 );
+var iwork = new Int32Array( 1 );
+
+dgbrfs.ndarray( 'no-transpose', 1, 0, 0, 1, ab, 1, 1, 0, afb, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, iwork, 1, 0 );
 ```
 
 </section>

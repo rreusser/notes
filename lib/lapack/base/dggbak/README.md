@@ -36,8 +36,13 @@ var dggbak = require( '@stdlib/lapack/base/dggbak' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dggbak = require( '@stdlib/lapack/base/dggbak' );
 
-// TODO: Add usage example
+var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
+var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+dggbak( 'column-major', 'scale', 'right', 3, 1, 3, LSCALE, 1, RSCALE, 1, 2, V, 3 );
 ```
 
 The function has the following parameters:
@@ -62,8 +67,13 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dggbak = require( '@stdlib/lapack/base/dggbak' );
 
-// TODO: Add usage example
+var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
+var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+dggbak( 'column-major', 'scale', 'right', 3, 1, 3, LSCALE, 1, RSCALE, 1, 2, V, 3 );
 ```
 
 The function has the following additional parameters:
@@ -95,9 +105,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dggbak = require( '@stdlib/lapack/base/dggbak' );
 
-// TODO: Add examples
+var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
+var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+dggbak( 'column-major', 'scale', 'right', 3, 1, 3, LSCALE, 1, RSCALE, 1, 2, V, 3 );
 ```
 
 </section>

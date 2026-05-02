@@ -35,9 +35,16 @@ var dlagtf = require( '@stdlib/lapack/base/dlagtf' );
 Computes an LU factorization of the matrix (T - lambda_I), where T is an.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlagtf = require( '@stdlib/lapack/base/dlagtf' );
 
-// TODO: Add usage example
+var N = 3;
+var a = discreteUniform( N, -10, 10, opts );
+var b = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var IN = discreteUniform( N, -10, 10, opts );
+
+dlagtf.ndarray( N, a, 1, 0, 1, b, 1, 0, c, 1, 0, 1.0, d, 1, 0, IN, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +68,16 @@ The function has the following parameters:
 Computes an LU factorization of the matrix (T - lambda_I), where T is an, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlagtf = require( '@stdlib/lapack/base/dlagtf' );
 
-// TODO: Add usage example
+var N = 3;
+var a = discreteUniform( N, -10, 10, opts );
+var b = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var IN = discreteUniform( N, -10, 10, opts );
+
+dlagtf.ndarray( N, a, 1, 0, 1, b, 1, 0, c, 1, 0, 1.0, d, 1, 0, IN, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +111,14 @@ The function has the following additional parameters:
 ```javascript
 var dlagtf = require( '@stdlib/lapack/base/dlagtf' );
 
-// TODO: Add examples
+var N = 3;
+var a = discreteUniform( N, -10, 10, opts );
+var b = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var IN = discreteUniform( N, -10, 10, opts );
+
+dlagtf.ndarray( N, a, 1, 0, 1, b, 1, 0, c, 1, 0, 1.0, d, 1, 0, IN, 1, 0 );
 ```
 
 </section>

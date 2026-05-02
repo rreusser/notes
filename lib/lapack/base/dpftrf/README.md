@@ -35,9 +35,9 @@ var dpftrf = require( '@stdlib/lapack/base/dpftrf' );
 Computes the Cholesky factorization of a real symmetric positive definite matrix in Rectangular Full Packed format.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpftrf = require( '@stdlib/lapack/base/dpftrf' );
 
-// TODO: Add usage example
+dpftrf( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +52,9 @@ The function has the following parameters:
 Computes the Cholesky factorization of a real symmetric positive definite matrix in Rectangular Full Packed format, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpftrf = require( '@stdlib/lapack/base/dpftrf' );
 
-// TODO: Add usage example
+dpftrf( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var dpftrf = require( '@stdlib/lapack/base/dpftrf' );
 
-// TODO: Add examples
+dpftrf( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 </section>

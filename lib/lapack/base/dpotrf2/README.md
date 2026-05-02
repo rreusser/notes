@@ -35,9 +35,12 @@ var dpotrf2 = require( '@stdlib/lapack/base/dpotrf2' );
 Computes the Cholesky factorization of a real symmetric positive definite.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpotrf2 = require( '@stdlib/lapack/base/dpotrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dpotrf2.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +56,12 @@ The function has the following parameters:
 Computes the Cholesky factorization of a real symmetric positive definite, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpotrf2 = require( '@stdlib/lapack/base/dpotrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dpotrf2.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var dpotrf2 = require( '@stdlib/lapack/base/dpotrf2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dpotrf2.ndarray( 'upper', N, A, N, 1, 0 );
 ```
 
 </section>

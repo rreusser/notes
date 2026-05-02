@@ -35,9 +35,9 @@ var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
 Tests for NaN by comparing two arguments for inequality.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
 
-// TODO: Add usage example
+dlaisnan.ndarray( 1, 1 );
 ```
 
 The function has the following parameters:
@@ -50,9 +50,9 @@ The function has the following parameters:
 Tests for NaN by comparing two arguments for inequality, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
 
-// TODO: Add usage example
+dlaisnan.ndarray( 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -81,7 +81,7 @@ The function has the following additional parameters:
 ```javascript
 var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
 
-// TODO: Add examples
+dlaisnan.ndarray( 1, 1 );
 ```
 
 </section>

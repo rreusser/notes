@@ -36,8 +36,26 @@ Solves a real system of linear equations `A * X = B` where A is a general band m
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dgbsvx = require( '@stdlib/lapack/base/dgbsvx' );
 
-// TODO: Add usage example
+var N = 3;
+var KL = 1;
+var KU = 1;
+var nrhs = 1;
+var nRows = KL + KU + 1;
+var AFB = new Float64Array( ((2 * KL) + KU + 1) * N );
+var IPIV = new Int32Array( N );
+var r = new Float64Array( N );
+var c = new Float64Array( N );
+var B = new Float64Array( [ 5, 5, 3 ] );
+var X = new Float64Array( N );
+var FERR = new Float64Array( nrhs );
+var BERR = new Float64Array( nrhs );
+var WORK = new Float64Array( 3 * N );
+var IWORK = new Int32Array( N );
+
+dgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2 * KL) + KU + 1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -78,8 +96,26 @@ Solves a real system of linear equations `A * X = B` where A is a general band m
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dgbsvx = require( '@stdlib/lapack/base/dgbsvx' );
 
-// TODO: Add usage example
+var N = 3;
+var KL = 1;
+var KU = 1;
+var nrhs = 1;
+var nRows = KL + KU + 1;
+var AFB = new Float64Array( ((2 * KL) + KU + 1) * N );
+var IPIV = new Int32Array( N );
+var r = new Float64Array( N );
+var c = new Float64Array( N );
+var B = new Float64Array( [ 5, 5, 3 ] );
+var X = new Float64Array( N );
+var FERR = new Float64Array( nrhs );
+var BERR = new Float64Array( nrhs );
+var WORK = new Float64Array( 3 * N );
+var IWORK = new Int32Array( N );
+
+dgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2 * KL) + KU + 1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -125,9 +161,27 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgbsvx = require( '@stdlib/lapack/base/dgbsvx' );
 
-// TODO: Add examples
+var N = 3;
+var KL = 1;
+var KU = 1;
+var nrhs = 1;
+var nRows = KL + KU + 1;
+var AFB = new Float64Array( ((2 * KL) + KU + 1) * N );
+var IPIV = new Int32Array( N );
+var r = new Float64Array( N );
+var c = new Float64Array( N );
+var B = new Float64Array( [ 5, 5, 3 ] );
+var X = new Float64Array( N );
+var FERR = new Float64Array( nrhs );
+var BERR = new Float64Array( nrhs );
+var WORK = new Float64Array( 3 * N );
+var IWORK = new Int32Array( N );
+
+dgbsvx.ndarray( 'not-factored', 'no-transpose', N, KL, KU, nrhs, AB, 1, nRows, 0, AFB, 1, (2 * KL) + KU + 1, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, N, 0, X, 1, N, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

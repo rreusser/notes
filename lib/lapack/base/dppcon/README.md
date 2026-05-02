@@ -36,8 +36,15 @@ var dppcon = require( '@stdlib/lapack/base/dppcon' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dppcon = require( '@stdlib/lapack/base/dppcon' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 1.0, 3.0, 1.0, 1.0, 2.0 ] );
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 9 );
+var IWORK = new Int32Array( 3 );
+
+dppcon.ndarray( 'upper', 3, AP, 1, 0, 6.0, rcond, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +63,15 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dppcon = require( '@stdlib/lapack/base/dppcon' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 1.0, 3.0, 1.0, 1.0, 2.0 ] );
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 9 );
+var IWORK = new Int32Array( 3 );
+
+dppcon.ndarray( 'upper', 3, AP, 1, 0, 6.0, rcond, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +104,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dppcon = require( '@stdlib/lapack/base/dppcon' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 4.0, 1.0, 3.0, 1.0, 1.0, 2.0 ] );
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 9 );
+var IWORK = new Int32Array( 3 );
+
+dppcon.ndarray( 'upper', 3, AP, 1, 0, 6.0, rcond, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

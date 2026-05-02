@@ -35,9 +35,19 @@ var dlaqr3 = require( '@stdlib/lapack/base/dlaqr3' );
 Performs aggressive early deflation on an upper Hessenberg matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr3 = require( '@stdlib/lapack/base/dlaqr3' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var WV = discreteUniform( N * N, -10, 10, opts );
+var SR = discreteUniform( N, -10, 10, opts );
+var SI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr3.ndarray( 1, 1, N, 1, 1, 1, H, N, 1, 0, 1, 1, Z, N, 1, 0, 1, 1, SR, 1, 0, SI, 1, 0, V, N, 1, 0, 1, T, N, 1, 0, 1, WV, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -75,9 +85,19 @@ The function has the following parameters:
 Performs aggressive early deflation on an upper Hessenberg matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr3 = require( '@stdlib/lapack/base/dlaqr3' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var WV = discreteUniform( N * N, -10, 10, opts );
+var SR = discreteUniform( N, -10, 10, opts );
+var SI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr3.ndarray( 1, 1, N, 1, 1, 1, H, N, 1, 0, 1, 1, Z, N, 1, 0, 1, 1, SR, 1, 0, SI, 1, 0, V, N, 1, 0, 1, T, N, 1, 0, 1, WV, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -126,7 +146,17 @@ The function has the following additional parameters:
 ```javascript
 var dlaqr3 = require( '@stdlib/lapack/base/dlaqr3' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var WV = discreteUniform( N * N, -10, 10, opts );
+var SR = discreteUniform( N, -10, 10, opts );
+var SI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr3.ndarray( 1, 1, N, 1, 1, 1, H, N, 1, 0, 1, 1, Z, N, 1, 0, 1, 1, SR, 1, 0, SI, 1, 0, V, N, 1, 0, 1, T, N, 1, 0, 1, WV, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

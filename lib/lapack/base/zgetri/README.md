@@ -35,9 +35,14 @@ var zgetri = require( '@stdlib/lapack/base/zgetri' );
 Computes the inverse of a matrix using the LU factorization computed by zgetrf.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgetri = require( '@stdlib/lapack/base/zgetri' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgetri.ndarray( N, A, N, 1, 0, IPIV, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Computes the inverse of a matrix using the LU factorization computed by zgetrf, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgetri = require( '@stdlib/lapack/base/zgetri' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgetri.ndarray( N, A, N, 1, 0, IPIV, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +103,12 @@ The function has the following additional parameters:
 ```javascript
 var zgetri = require( '@stdlib/lapack/base/zgetri' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zgetri.ndarray( N, A, N, 1, 0, IPIV, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

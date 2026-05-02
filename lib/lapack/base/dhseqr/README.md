@@ -35,9 +35,16 @@ var dhseqr = require( '@stdlib/lapack/base/dhseqr' );
 Computes the eigenvalues of a real upper Hessenberg matrix H, and.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dhseqr = require( '@stdlib/lapack/base/dhseqr' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dhseqr.ndarray( 'both', 'update', N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -61,9 +68,16 @@ The function has the following parameters:
 Computes the eigenvalues of a real upper Hessenberg matrix H, and, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dhseqr = require( '@stdlib/lapack/base/dhseqr' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dhseqr.ndarray( 'both', 'update', N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -104,7 +118,14 @@ The function has the following additional parameters:
 ```javascript
 var dhseqr = require( '@stdlib/lapack/base/dhseqr' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dhseqr.ndarray( 'both', 'update', N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

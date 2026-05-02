@@ -35,9 +35,9 @@ var dlamch = require( '@stdlib/lapack/base/dlamch' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlamch = require( '@stdlib/lapack/base/dlamch' );
 
-// TODO: Add usage example
+dlamch( 'epsilon' );
 ```
 
 The function has the following parameters:
@@ -67,7 +67,7 @@ The function has the following parameters:
 ```javascript
 var dlamch = require( '@stdlib/lapack/base/dlamch' );
 
-// TODO: Add examples
+dlamch( 'epsilon' );
 ```
 
 </section>

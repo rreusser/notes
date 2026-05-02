@@ -35,9 +35,14 @@ var zhecon = require( '@stdlib/lapack/base/zhecon' );
 Estimates the reciprocal of the condition number (in the 1-norm) of a.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhecon = require( '@stdlib/lapack/base/zhecon' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhecon.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Estimates the reciprocal of the condition number (in the 1-norm) of a, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhecon = require( '@stdlib/lapack/base/zhecon' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhecon.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +104,12 @@ The function has the following additional parameters:
 ```javascript
 var zhecon = require( '@stdlib/lapack/base/zhecon' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zhecon.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 </section>

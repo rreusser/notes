@@ -35,9 +35,25 @@ var dgtsvx = require( '@stdlib/lapack/base/dgtsvx' );
 Uses the LU factorization to compute the solution to a real system of.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgtsvx = require( '@stdlib/lapack/base/dgtsvx' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DLF = discreteUniform( N, -10, 10, opts );
+var DF = discreteUniform( N, -10, 10, opts );
+var DUF = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var FERR = discreteUniform( N, -10, 10, opts );
+var BERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgtsvx.ndarray( 'not-factored', 'no-transpose', N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, DLF, 1, 0, DF, 1, 0, DUF, 1, 0, 1, 1, 0, IPIV, 1, 0, B, N, 1, 0, X, N, 1, 0, 1.0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -81,9 +97,25 @@ The function has the following parameters:
 Uses the LU factorization to compute the solution to a real system of, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgtsvx = require( '@stdlib/lapack/base/dgtsvx' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DLF = discreteUniform( N, -10, 10, opts );
+var DF = discreteUniform( N, -10, 10, opts );
+var DUF = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var FERR = discreteUniform( N, -10, 10, opts );
+var BERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgtsvx.ndarray( 'not-factored', 'no-transpose', N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, DLF, 1, 0, DF, 1, 0, DUF, 1, 0, 1, 1, 0, IPIV, 1, 0, B, N, 1, 0, X, N, 1, 0, 1.0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -130,7 +162,23 @@ The function has the following additional parameters:
 ```javascript
 var dgtsvx = require( '@stdlib/lapack/base/dgtsvx' );
 
-// TODO: Add examples
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DLF = discreteUniform( N, -10, 10, opts );
+var DF = discreteUniform( N, -10, 10, opts );
+var DUF = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var FERR = discreteUniform( N, -10, 10, opts );
+var BERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgtsvx.ndarray( 'not-factored', 'no-transpose', N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, DLF, 1, 0, DF, 1, 0, DUF, 1, 0, 1, 1, 0, IPIV, 1, 0, B, N, 1, 0, X, N, 1, 0, 1.0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,9 @@ var zlartg = require( '@stdlib/lapack/base/zlartg' );
 Compute |re|^2 + |im|^2.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlartg = require( '@stdlib/lapack/base/zlartg' );
 
-// TODO: Add usage example
+zlartg.ndarray( 1, 0, 1, 0, 1.0, 0, 1.0, 0, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +58,9 @@ The function has the following parameters:
 Compute |re|^2 + |im|^2, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlartg = require( '@stdlib/lapack/base/zlartg' );
 
-// TODO: Add usage example
+zlartg.ndarray( 1, 0, 1, 0, 1.0, 0, 1.0, 0, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,7 +89,7 @@ The function has the following additional parameters:
 ```javascript
 var zlartg = require( '@stdlib/lapack/base/zlartg' );
 
-// TODO: Add examples
+zlartg.ndarray( 1, 0, 1, 0, 1.0, 0, 1.0, 0, 1, 0 );
 ```
 
 </section>

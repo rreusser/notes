@@ -36,8 +36,12 @@ Returns the norm of a real symmetric band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlansb = require( '@stdlib/lapack/base/dlansb' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 0, 2, -3, 4, 1, -5, 6, 7 ] );
+var WORK = new Float64Array( 4 );
+
+dlansb.ndarray( 'max', 'upper', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ Returns the norm of a real symmetric band matrix, using alternative indexing sem
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlansb = require( '@stdlib/lapack/base/dlansb' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 0, 2, -3, 4, 1, -5, 6, 7 ] );
+var WORK = new Float64Array( 4 );
+
+dlansb.ndarray( 'max', 'upper', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +97,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlansb = require( '@stdlib/lapack/base/dlansb' );
 
-// TODO: Add examples
+var AB = new Float64Array( [ 0, 2, -3, 4, 1, -5, 6, 7 ] );
+var WORK = new Float64Array( 4 );
+
+dlansb.ndarray( 'max', 'upper', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 </section>

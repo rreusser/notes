@@ -35,9 +35,16 @@ var dgttrf = require( '@stdlib/lapack/base/dgttrf' );
 Computes an LU factorization of a real tridiagonal matrix A using.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgttrf = require( '@stdlib/lapack/base/dgttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgttrf.ndarray( N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +66,16 @@ The function has the following parameters:
 Computes an LU factorization of a real tridiagonal matrix A using, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgttrf = require( '@stdlib/lapack/base/dgttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgttrf.ndarray( N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +109,14 @@ The function has the following additional parameters:
 ```javascript
 var dgttrf = require( '@stdlib/lapack/base/dgttrf' );
 
-// TODO: Add examples
+var N = 3;
+var DU = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgttrf.ndarray( N, DL, 1, 0, d, 1, 0, DU, 1, 0, 1, 1, 0, IPIV, 1, 0 );
 ```
 
 </section>

@@ -20,7 +20,7 @@ limitations under the License.
 
 # zunhr_col
 
-> TODO: Add description for ZUNHR_COL.
+> Reconstructs Householder reflector vectors and block reflector triangular factors from a unitary-on-input matrix `Q_in` (output of `zlatsqr`).
 
 <section class="usage">
 
@@ -32,12 +32,21 @@ var zunhr_col = require( '@stdlib/lapack/base/zunhr_col' );
 
 #### zunhr_col( order, M, N, nb, A, LDA, T, LDT, d, strideD )
 
-TODO: Add description for ZUNHR_COL.
+Recovers the Householder vectors `V` (in-place in `A`) and block reflector matrices `T` from the columns of an M-by-N matrix that satisfies `Q_in^H * Q_in = I` (i.e. has orthonormal columns), splitting them into `nb`-column blocks. The diagonal sign vector `d` records the sign chosen for each column's reflector so that the original matrix can be reconstructed.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zunhr_col = require( '@stdlib/lapack/base/zunhr_col' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 3;
+var nb = 1;
+var A = new Complex128Array( M * N );
+var T = new Complex128Array( M * N );
+var d = new Float64Array( N );
+
+zunhr_col( 'column-major', M, N, nb, A, M, T, M, d, 1 );
 ```
 
 The function has the following parameters:
@@ -55,12 +64,21 @@ The function has the following parameters:
 
 #### zunhr_col.ndarray( M, N, nb, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, d, strideD, offsetD )
 
-TODO: Add description for ZUNHR_COL., using alternative indexing semantics.
+Recovers the Householder vectors and block reflector matrices, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zunhr_col = require( '@stdlib/lapack/base/zunhr_col' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 3;
+var nb = 1;
+var A = new Complex128Array( M * N );
+var T = new Complex128Array( M * N );
+var d = new Float64Array( N );
+
+zunhr_col( 'column-major', M, N, nb, A, M, T, M, d, 1 );
 ```
 
 The function has the following additional parameters:
@@ -88,8 +106,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -99,7 +116,18 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zunhr_col = require( '@stdlib/lapack/base/zunhr_col' );
+
+var M = 3;
+var N = 3;
+var nb = 1;
+var A = new Complex128Array( M * N );
+var T = new Complex128Array( M * N );
+var d = new Float64Array( N );
+
+zunhr_col( 'column-major', M, N, nb, A, M, T, M, d, 1 );
 ```
 
 </section>

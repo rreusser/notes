@@ -35,9 +35,15 @@ var dlasy2 = require( '@stdlib/lapack/base/dlasy2' );
 Solves for the N1-by-N2 matrix X in:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasy2 = require( '@stdlib/lapack/base/dlasy2' );
 
-// TODO: Add usage example
+var N = 3;
+var TL = discreteUniform( N * N, -10, 10, opts );
+var TR = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+
+dlasy2.ndarray( 1, 1, 1, 1, 1, TL, N, 1, 0, TR, N, 1, 0, B, N, 1, 0, 1.0, X, N, 1, 0, 1 );
 ```
 
 The function has the following parameters:
@@ -63,9 +69,15 @@ The function has the following parameters:
 Solves for the N1-by-N2 matrix X in:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasy2 = require( '@stdlib/lapack/base/dlasy2' );
 
-// TODO: Add usage example
+var N = 3;
+var TL = discreteUniform( N * N, -10, 10, opts );
+var TR = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+
+dlasy2.ndarray( 1, 1, 1, 1, 1, TL, N, 1, 0, TR, N, 1, 0, B, N, 1, 0, 1.0, X, N, 1, 0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -106,7 +118,13 @@ The function has the following additional parameters:
 ```javascript
 var dlasy2 = require( '@stdlib/lapack/base/dlasy2' );
 
-// TODO: Add examples
+var N = 3;
+var TL = discreteUniform( N * N, -10, 10, opts );
+var TR = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+
+dlasy2.ndarray( 1, 1, 1, 1, 1, TL, N, 1, 0, TR, N, 1, 0, B, N, 1, 0, 1.0, X, N, 1, 0, 1 );
 ```
 
 </section>

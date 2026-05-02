@@ -35,9 +35,18 @@ var dstebz = require( '@stdlib/lapack/base/dstebz' );
 Computes selected eigenvalues of a real symmetric tridiagonal matrix T.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dstebz = require( '@stdlib/lapack/base/dstebz' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var IBLOCK = discreteUniform( N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dstebz.ndarray( 'all', 'row-major', N, 1.0, 1.0, N, N, 1.0, d, 1, 0, e, 1, 0, N, 1, w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -72,9 +81,18 @@ The function has the following parameters:
 Computes selected eigenvalues of a real symmetric tridiagonal matrix T, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dstebz = require( '@stdlib/lapack/base/dstebz' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var IBLOCK = discreteUniform( N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dstebz.ndarray( 'all', 'row-major', N, 1.0, 1.0, N, N, 1.0, d, 1, 0, e, 1, 0, N, 1, w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -110,7 +128,16 @@ The function has the following additional parameters:
 ```javascript
 var dstebz = require( '@stdlib/lapack/base/dstebz' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var IBLOCK = discreteUniform( N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dstebz.ndarray( 'all', 'row-major', N, 1.0, 1.0, N, N, 1.0, d, 1, 0, e, 1, 0, N, 1, w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

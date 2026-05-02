@@ -35,9 +35,9 @@ var dlassq = require( '@stdlib/lapack/base/dlassq' );
 Returns updated scale and sum-of-squares in scaled form.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlassq = require( '@stdlib/lapack/base/dlassq' );
 
-// TODO: Add usage example
+dlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Returns updated scale and sum-of-squares in scaled form, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlassq = require( '@stdlib/lapack/base/dlassq' );
 
-// TODO: Add usage example
+dlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var dlassq = require( '@stdlib/lapack/base/dlassq' );
 
-// TODO: Add examples
+dlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
 ```
 
 </section>

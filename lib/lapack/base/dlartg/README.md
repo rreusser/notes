@@ -35,9 +35,9 @@ var dlartg = require( '@stdlib/lapack/base/dlartg' );
 Generates a plane rotation so that:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlartg = require( '@stdlib/lapack/base/dlartg' );
 
-// TODO: Add usage example
+dlartg.ndarray( 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -50,9 +50,9 @@ The function has the following parameters:
 Generates a plane rotation so that:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlartg = require( '@stdlib/lapack/base/dlartg' );
 
-// TODO: Add usage example
+dlartg.ndarray( 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -82,7 +82,7 @@ The function has the following additional parameters:
 ```javascript
 var dlartg = require( '@stdlib/lapack/base/dlartg' );
 
-// TODO: Add examples
+dlartg.ndarray( 1, 1, 1 );
 ```
 
 </section>

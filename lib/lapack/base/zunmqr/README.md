@@ -35,9 +35,15 @@ var zunmqr = require( '@stdlib/lapack/base/zunmqr' );
 Overwrites the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zunmqr = require( '@stdlib/lapack/base/zunmqr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunmqr.ndarray( 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,9 +68,15 @@ The function has the following parameters:
 Overwrites the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zunmqr = require( '@stdlib/lapack/base/zunmqr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunmqr.ndarray( 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -101,7 +113,13 @@ The function has the following additional parameters:
 ```javascript
 var zunmqr = require( '@stdlib/lapack/base/zunmqr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunmqr.ndarray( 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

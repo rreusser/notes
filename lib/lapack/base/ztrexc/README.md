@@ -35,9 +35,13 @@ var ztrexc = require( '@stdlib/lapack/base/ztrexc' );
 Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so that.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrexc = require( '@stdlib/lapack/base/ztrexc' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+
+ztrexc.ndarray( 'update', N, T, N, 1, 0, Q, N, 1, 0, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -56,9 +60,13 @@ The function has the following parameters:
 Reorders the Schur factorization of a complex matrix A = Q*T*Q^H, so that, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrexc = require( '@stdlib/lapack/base/ztrexc' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+
+ztrexc.ndarray( 'update', N, T, N, 1, 0, Q, N, 1, 0, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +101,11 @@ The function has the following additional parameters:
 ```javascript
 var ztrexc = require( '@stdlib/lapack/base/ztrexc' );
 
-// TODO: Add examples
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+
+ztrexc.ndarray( 'update', N, T, N, 1, 0, Q, N, 1, 0, 1, 1 );
 ```
 
 </section>

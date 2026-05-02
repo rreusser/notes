@@ -35,9 +35,17 @@ var zgees = require( '@stdlib/lapack/base/zgees' );
 Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgees = require( '@stdlib/lapack/base/zgees' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VS = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+var BWORK = discreteUniform( N, -10, 10, opts );
+
+zgees.ndarray( 'compute-vectors', 'none', 1, N, A, N, 1, 0, 1, W, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, RWORK, 1, 0, BWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +74,17 @@ The function has the following parameters:
 Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgees = require( '@stdlib/lapack/base/zgees' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VS = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+var BWORK = discreteUniform( N, -10, 10, opts );
+
+zgees.ndarray( 'compute-vectors', 'none', 1, N, A, N, 1, 0, 1, W, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, RWORK, 1, 0, BWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -107,7 +123,15 @@ The function has the following additional parameters:
 ```javascript
 var zgees = require( '@stdlib/lapack/base/zgees' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var VS = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+var BWORK = discreteUniform( N, -10, 10, opts );
+
+zgees.ndarray( 'compute-vectors', 'none', 1, N, A, N, 1, 0, 1, W, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, RWORK, 1, 0, BWORK, 1, 0 );
 ```
 
 </section>

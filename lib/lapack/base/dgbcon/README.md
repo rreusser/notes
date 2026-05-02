@@ -35,9 +35,15 @@ var dgbcon = require( '@stdlib/lapack/base/dgbcon' );
 Estimates the reciprocal of the condition number of a general band matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgbcon = require( '@stdlib/lapack/base/dgbcon' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgbcon.ndarray( '1', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,9 +68,15 @@ The function has the following parameters:
 Estimates the reciprocal of the condition number of a general band matrix A,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgbcon = require( '@stdlib/lapack/base/dgbcon' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgbcon.ndarray( '1', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -99,7 +111,13 @@ The function has the following additional parameters:
 ```javascript
 var dgbcon = require( '@stdlib/lapack/base/dgbcon' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dgbcon.ndarray( '1', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

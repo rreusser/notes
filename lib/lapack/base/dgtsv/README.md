@@ -35,9 +35,15 @@ var dgtsv = require( '@stdlib/lapack/base/dgtsv' );
 Solves a general real tridiagonal system of linear equations A * X = B.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgtsv = require( '@stdlib/lapack/base/dgtsv' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+dgtsv.ndarray( N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +64,15 @@ The function has the following parameters:
 Solves a general real tridiagonal system of linear equations A * X = B, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgtsv = require( '@stdlib/lapack/base/dgtsv' );
 
-// TODO: Add usage example
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+dgtsv.ndarray( N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +107,13 @@ The function has the following additional parameters:
 ```javascript
 var dgtsv = require( '@stdlib/lapack/base/dgtsv' );
 
-// TODO: Add examples
+var N = 3;
+var B = discreteUniform( N * N, -10, 10, opts );
+var DL = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var DU = discreteUniform( N, -10, 10, opts );
+
+dgtsv.ndarray( N, N, DL, 1, 0, d, 1, 0, DU, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

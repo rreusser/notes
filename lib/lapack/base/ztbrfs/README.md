@@ -36,8 +36,18 @@ Provides error bounds for the solution to a system with a complex triangular ban
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztbrfs = require( '@stdlib/lapack/base/ztbrfs' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 1, 2, -1, 5, -1 ] );
+var B = new Complex128Array( [ 4, 1, 6, 0, 5, -1 ] );
+var X = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -50,8 +60,18 @@ Provides error bounds for the solution to a system with a complex triangular ban
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztbrfs = require( '@stdlib/lapack/base/ztbrfs' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 1, 2, -1, 5, -1 ] );
+var B = new Complex128Array( [ 4, 1, 6, 0, 5, -1 ] );
+var X = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -108,9 +128,19 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var ztbrfs = require( '@stdlib/lapack/base/ztbrfs' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 0, 0, 3, 0, 1, 1, 4, 1, 2, -1, 5, -1 ] );
+var B = new Complex128Array( [ 4, 1, 6, 0, 5, -1 ] );
+var X = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztbrfs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, AB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

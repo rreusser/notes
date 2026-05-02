@@ -35,9 +35,12 @@ var zdrscl = require( '@stdlib/lapack/base/zdrscl' );
 Scales a complex vector by the reciprocal of a real scalar, performing the.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zdrscl = require( '@stdlib/lapack/base/zdrscl' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+zdrscl.ndarray( N, 1, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +55,12 @@ The function has the following parameters:
 Scales a complex vector by the reciprocal of a real scalar, performing the, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zdrscl = require( '@stdlib/lapack/base/zdrscl' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+zdrscl.ndarray( N, 1, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -84,7 +90,10 @@ The function has the following additional parameters:
 ```javascript
 var zdrscl = require( '@stdlib/lapack/base/zdrscl' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+zdrscl.ndarray( N, 1, x, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,14 @@ var dlarfx = require( '@stdlib/lapack/base/dlarfx' );
 Applies an elementary reflector H to a real M-by-N matrix C, from either.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarfx = require( '@stdlib/lapack/base/dlarfx' );
 
-// TODO: Add usage example
+var N = 3;
+var C = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlarfx.ndarray( 'left', N, N, v, 1, 0, 1.0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Applies an elementary reflector H to a real M-by-N matrix C, from either, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarfx = require( '@stdlib/lapack/base/dlarfx' );
 
-// TODO: Add usage example
+var N = 3;
+var C = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlarfx.ndarray( 'left', N, N, v, 1, 0, 1.0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +104,12 @@ The function has the following additional parameters:
 ```javascript
 var dlarfx = require( '@stdlib/lapack/base/dlarfx' );
 
-// TODO: Add examples
+var N = 3;
+var C = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlarfx.ndarray( 'left', N, N, v, 1, 0, 1.0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

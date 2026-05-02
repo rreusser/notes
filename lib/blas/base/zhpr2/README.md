@@ -36,8 +36,14 @@ Performs the Hermitian packed rank-2 update `A := alpha*x*y**H + conj(alpha)*y*x
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zhpr2 = require( '@stdlib/blas/base/zhpr2' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var y = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+
+zhpr2.ndarray( 'upper', 2, alpha, x, 1, 0, y, 1, 0, AP, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,8 +64,14 @@ Performs the Hermitian packed rank-2 update `A := alpha*x*y**H + conj(alpha)*y*x
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zhpr2 = require( '@stdlib/blas/base/zhpr2' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var y = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+
+zhpr2.ndarray( 'upper', 2, alpha, x, 1, 0, y, 1, 0, AP, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +101,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zhpr2 = require( '@stdlib/blas/base/zhpr2' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var y = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+
+zhpr2.ndarray( 'upper', 2, alpha, x, 1, 0, y, 1, 0, AP, 1, 0 );
 ```
 
 </section>

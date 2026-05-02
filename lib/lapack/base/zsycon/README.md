@@ -35,9 +35,14 @@ var zsycon = require( '@stdlib/lapack/base/zsycon' );
 Estimates the reciprocal of the condition number (in the 1-norm) of a complex.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsycon = require( '@stdlib/lapack/base/zsycon' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zsycon.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Estimates the reciprocal of the condition number (in the 1-norm) of a complex, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsycon = require( '@stdlib/lapack/base/zsycon' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zsycon.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +104,12 @@ The function has the following additional parameters:
 ```javascript
 var zsycon = require( '@stdlib/lapack/base/zsycon' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zsycon.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,16 @@ var dlarrj = require( '@stdlib/lapack/base/dlarrj' );
 Refine eigenvalue approximations using bisection given initial intervals.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarrj = require( '@stdlib/lapack/base/dlarrj' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dlarrj.ndarray( N, d, 1, 0, 1, 1, 0, 1, 1, 1, 0, w, 1, 0, WERR, 1, 0, WORK, 1, 0, IWORK, 1, 0, 1.0, 1 );
 ```
 
 The function has the following parameters:
@@ -67,9 +74,16 @@ The function has the following parameters:
 Refine eigenvalue approximations using bisection given initial intervals, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarrj = require( '@stdlib/lapack/base/dlarrj' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dlarrj.ndarray( N, d, 1, 0, 1, 1, 0, 1, 1, 1, 0, w, 1, 0, WERR, 1, 0, WORK, 1, 0, IWORK, 1, 0, 1.0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -104,7 +118,14 @@ The function has the following additional parameters:
 ```javascript
 var dlarrj = require( '@stdlib/lapack/base/dlarrj' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WERR = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dlarrj.ndarray( N, d, 1, 0, 1, 1, 0, 1, 1, 1, 0, w, 1, 0, WERR, 1, 0, WORK, 1, 0, IWORK, 1, 0, 1.0, 1 );
 ```
 
 </section>

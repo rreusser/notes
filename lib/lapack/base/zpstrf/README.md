@@ -36,8 +36,14 @@ Computes the Cholesky factorization with complete pivoting of a complex Hermitia
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zpstrf = require( '@stdlib/lapack/base/zpstrf' );
 
-// TODO: Add usage example
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+zpstrf( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
 ```
 
 The function has the following parameters:
@@ -58,8 +64,14 @@ Computes the Cholesky factorization with complete pivoting of a complex Hermitia
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zpstrf = require( '@stdlib/lapack/base/zpstrf' );
 
-// TODO: Add usage example
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+zpstrf( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +103,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zpstrf = require( '@stdlib/lapack/base/zpstrf' );
 
-// TODO: Add examples
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+zpstrf( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
 ```
 
 </section>

@@ -36,8 +36,15 @@ Estimates the reciprocal condition number of a complex triangular matrix in pack
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztpcon = require( '@stdlib/lapack/base/ztpcon' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.5, 0.0, 1.0, -1.0, 2.0, 1.0 ] );
+var RCOND = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztpcon( 'one-norm', 'upper', 'non-unit', 3, AP, RCOND, WORK, RWORK );
 ```
 
 The function has the following parameters:
@@ -57,8 +64,15 @@ Estimates the reciprocal condition number of a complex triangular matrix in pack
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztpcon = require( '@stdlib/lapack/base/ztpcon' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.5, 0.0, 1.0, -1.0, 2.0, 1.0 ] );
+var RCOND = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztpcon( 'one-norm', 'upper', 'non-unit', 3, AP, RCOND, WORK, RWORK );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +105,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var ztpcon = require( '@stdlib/lapack/base/ztpcon' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.5, 0.0, 1.0, -1.0, 2.0, 1.0 ] );
+var RCOND = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+ztpcon( 'one-norm', 'upper', 'non-unit', 3, AP, RCOND, WORK, RWORK );
 ```
 
 </section>

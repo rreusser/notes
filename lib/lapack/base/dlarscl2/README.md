@@ -35,9 +35,13 @@ var dlarscl2 = require( '@stdlib/lapack/base/dlarscl2' );
 Performs reciprocal diagonal scaling on a matrix: `X = D^{-1} * X` where `D` is a diagonal matrix stored as a vector.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarscl2 = require( '@stdlib/lapack/base/dlarscl2' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+
+dlarscl2.ndarray( N, N, d, 1, 0, X, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +58,13 @@ The function has the following parameters:
 Performs reciprocal diagonal scaling on a matrix: `X = D^{-1} * X` where `D` is a diagonal matrix stored as a vector, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarscl2 = require( '@stdlib/lapack/base/dlarscl2' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+
+dlarscl2.ndarray( N, N, d, 1, 0, X, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var dlarscl2 = require( '@stdlib/lapack/base/dlarscl2' );
 
-// TODO: Add examples
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+
+dlarscl2.ndarray( N, N, d, 1, 0, X, N, 1, 0 );
 ```
 
 </section>

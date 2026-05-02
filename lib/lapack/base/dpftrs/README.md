@@ -36,8 +36,12 @@ Solves a system of linear equations `A * X = B` with a symmetric positive defini
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpftrs = require( '@stdlib/lapack/base/dpftrs' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 10, 3, 1, 6, 8, 2 ] );
+var B = new Float64Array( [ 33.0, 38.0, 32.0 ] );
+
+dpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ Solves a system of linear equations `A * X = B` with a symmetric positive defini
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpftrs = require( '@stdlib/lapack/base/dpftrs' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 10, 3, 1, 6, 8, 2 ] );
+var B = new Float64Array( [ 33.0, 38.0, 32.0 ] );
+
+dpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +97,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dpftrs = require( '@stdlib/lapack/base/dpftrs' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 10, 3, 1, 6, 8, 2 ] );
+var B = new Float64Array( [ 33.0, 38.0, 32.0 ] );
+
+dpftrs.ndarray( 'no-transpose', 'lower', 3, 1, A, 1, 0, B, 1, 3, 0 );
 ```
 
 </section>

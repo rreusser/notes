@@ -36,8 +36,11 @@ Computes the sum of the absolute values of the real and imaginary components of 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dzasum = require( '@stdlib/blas/base/dzasum' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+
+dzasum.ndarray( 2, zx, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,8 +56,11 @@ Computes the sum of the absolute values of the real and imaginary components of 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dzasum = require( '@stdlib/blas/base/dzasum' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+
+dzasum.ndarray( 2, zx, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -81,9 +87,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dzasum = require( '@stdlib/blas/base/dzasum' );
 
-// TODO: Add examples
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+
+dzasum.ndarray( 2, zx, 1, 0 );
 ```
 
 </section>

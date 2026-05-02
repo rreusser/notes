@@ -35,9 +35,18 @@ var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
 Reorders the real Schur factorization of a real matrix A = Q_T_Q**T.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dtrsen.ndarray( 'both', 'update', SELECT, 1, 0, N, T, N, 1, 0, Q, N, 1, 0, WR, 1, 0, WI, 1, 0, N, 1.0, 1, WORK, 1, 0, N, IWORK, 1, 0, 1 );
 ```
 
 The function has the following parameters:
@@ -70,9 +79,18 @@ The function has the following parameters:
 Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
 
-// TODO: Add usage example
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dtrsen.ndarray( 'both', 'update', SELECT, 1, 0, N, T, N, 1, 0, Q, N, 1, 0, WR, 1, 0, WI, 1, 0, N, 1.0, 1, WORK, 1, 0, N, IWORK, 1, 0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -112,7 +130,16 @@ The function has the following additional parameters:
 ```javascript
 var dtrsen = require( '@stdlib/lapack/base/dtrsen' );
 
-// TODO: Add examples
+var N = 3;
+var T = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dtrsen.ndarray( 'both', 'update', SELECT, 1, 0, N, T, N, 1, 0, Q, N, 1, 0, WR, 1, 0, WI, 1, 0, N, 1.0, 1, WORK, 1, 0, N, IWORK, 1, 0, 1 );
 ```
 
 </section>

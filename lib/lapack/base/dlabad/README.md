@@ -35,9 +35,9 @@ var dlabad = require( '@stdlib/lapack/base/dlabad' );
 Adjusts the underflow and overflow thresholds if the exponent range is very large (no-op on IEEE-754 machines).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlabad = require( '@stdlib/lapack/base/dlabad' );
 
-// TODO: Add usage example
+dlabad.ndarray( 1, 1 );
 ```
 
 The function has the following parameters:
@@ -50,9 +50,9 @@ The function has the following parameters:
 Adjusts the underflow and overflow thresholds if the exponent range is very large (no-op on IEEE-754 machines), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlabad = require( '@stdlib/lapack/base/dlabad' );
 
-// TODO: Add usage example
+dlabad.ndarray( 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -81,7 +81,7 @@ The function has the following additional parameters:
 ```javascript
 var dlabad = require( '@stdlib/lapack/base/dlabad' );
 
-// TODO: Add examples
+dlabad.ndarray( 1, 1 );
 ```
 
 </section>

@@ -36,8 +36,16 @@ Computes all eigenvalues and optionally eigenvectors of a complex Hermitian matr
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhpev = require( '@stdlib/lapack/base/zhpev' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 5, 0, 1, 1, 2, -1, 4, 0, 1, 0, 6, 0 ] );
+var w = new Float64Array( 3 );
+var Z = new Complex128Array( 9 );
+var WORK = new Complex128Array( 10 );
+var RWORK = new Float64Array( 10 );
+
+zhpev.ndarray( 'compute-vectors', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +67,16 @@ Computes all eigenvalues and optionally eigenvectors of a complex Hermitian matr
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhpev = require( '@stdlib/lapack/base/zhpev' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 5, 0, 1, 1, 2, -1, 4, 0, 1, 0, 6, 0 ] );
+var w = new Float64Array( 3 );
+var Z = new Complex128Array( 9 );
+var WORK = new Complex128Array( 10 );
+var RWORK = new Float64Array( 10 );
+
+zhpev.ndarray( 'compute-vectors', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -98,9 +114,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zhpev = require( '@stdlib/lapack/base/zhpev' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 5, 0, 1, 1, 2, -1, 4, 0, 1, 0, 6, 0 ] );
+var w = new Float64Array( 3 );
+var Z = new Complex128Array( 9 );
+var WORK = new Complex128Array( 10 );
+var RWORK = new Float64Array( 10 );
+
+zhpev.ndarray( 'compute-vectors', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,17 @@ var dlagts = require( '@stdlib/lapack/base/dlagts' );
 Solves the system (T - lambda_I)_x = y or (T - lambda_I)__T_x = y using.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlagts = require( '@stdlib/lapack/base/dlagts' );
 
-// TODO: Add usage example
+var N = 3;
+var a = discreteUniform( N, -10, 10, opts );
+var b = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var IN = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+
+dlagts.ndarray( 'both', N, a, 1, 0, b, 1, 0, c, 1, 0, d, 1, 0, IN, 1, 0, y, 1, 0, 1.0 );
 ```
 
 The function has the following parameters:
@@ -63,9 +71,17 @@ The function has the following parameters:
 Solves the system (T - lambda_I)_x = y or (T - lambda_I)__T_x = y using, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlagts = require( '@stdlib/lapack/base/dlagts' );
 
-// TODO: Add usage example
+var N = 3;
+var a = discreteUniform( N, -10, 10, opts );
+var b = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var IN = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+
+dlagts.ndarray( 'both', N, a, 1, 0, b, 1, 0, c, 1, 0, d, 1, 0, IN, 1, 0, y, 1, 0, 1.0 );
 ```
 
 The function has the following additional parameters:
@@ -100,7 +116,15 @@ The function has the following additional parameters:
 ```javascript
 var dlagts = require( '@stdlib/lapack/base/dlagts' );
 
-// TODO: Add examples
+var N = 3;
+var a = discreteUniform( N, -10, 10, opts );
+var b = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var IN = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+
+dlagts.ndarray( 'both', N, a, 1, 0, b, 1, 0, c, 1, 0, d, 1, 0, IN, 1, 0, y, 1, 0, 1.0 );
 ```
 
 </section>

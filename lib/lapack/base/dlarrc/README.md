@@ -35,9 +35,13 @@ var dlarrc = require( '@stdlib/lapack/base/dlarrc' );
 Counts the number of eigenvalues of a symmetric tridiagonal matrix in an interval.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarrc = require( '@stdlib/lapack/base/dlarrc' );
 
-// TODO: Add usage example
+var N = 3;
+var D = discreteUniform( N, -10, 10, opts );
+var E = discreteUniform( N, -10, 10, opts );
+
+dlarrc.ndarray( 1, N, 1.0, 1.0, D, 1, 0, E, 1, 0, 1.0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Counts the number of eigenvalues of a symmetric tridiagonal matrix in an interval, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarrc = require( '@stdlib/lapack/base/dlarrc' );
 
-// TODO: Add usage example
+var N = 3;
+var D = discreteUniform( N, -10, 10, opts );
+var E = discreteUniform( N, -10, 10, opts );
+
+dlarrc.ndarray( 1, N, 1.0, 1.0, D, 1, 0, E, 1, 0, 1.0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var dlarrc = require( '@stdlib/lapack/base/dlarrc' );
 
-// TODO: Add examples
+var N = 3;
+var D = discreteUniform( N, -10, 10, opts );
+var E = discreteUniform( N, -10, 10, opts );
+
+dlarrc.ndarray( 1, N, 1.0, 1.0, D, 1, 0, E, 1, 0, 1.0 );
 ```
 
 </section>

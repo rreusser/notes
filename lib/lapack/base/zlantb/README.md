@@ -36,8 +36,14 @@ Returns the norm of a complex triangular band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlantb = require( '@stdlib/lapack/base/zlantb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 ] );
+var WORK = new Float64Array( 3 );
+var norms = [ 'max', 'one-norm', 'inf-norm', 'frobenius' ];
+
+zlantb.ndarray( norms[ i ], 'upper', 'non-unit', 3, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,8 +64,14 @@ Returns the norm of a complex triangular band matrix, using alternative indexing
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlantb = require( '@stdlib/lapack/base/zlantb' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( [ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 ] );
+var WORK = new Float64Array( 3 );
+var norms = [ 'max', 'one-norm', 'inf-norm', 'frobenius' ];
+
+zlantb.ndarray( norms[ i ], 'upper', 'non-unit', 3, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +102,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlantb = require( '@stdlib/lapack/base/zlantb' );
 
-// TODO: Add examples
+var AB = new Complex128Array( [ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 ] );
+var WORK = new Float64Array( 3 );
+var norms = [ 'max', 'one-norm', 'inf-norm', 'frobenius' ];
+
+zlantb.ndarray( norms[ i ], 'upper', 'non-unit', 3, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 </section>

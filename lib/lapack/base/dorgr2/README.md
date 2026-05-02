@@ -36,8 +36,15 @@ Generate an M-by-N real matrix Q with orthonormal rows from an RQ factorization
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dorgr2 = require( '@stdlib/lapack/base/dorgr2' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 5;
+var K = 3;
+var TAU = new Float64Array( Math.min( M, N ) );
+var WORK = new Float64Array( M );
+
+dorgr2( 'column-major', M, N, K, A, M, TAU, 1, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -59,8 +66,15 @@ Generate an M-by-N real matrix Q with orthonormal rows from an RQ factorization,
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dorgr2 = require( '@stdlib/lapack/base/dorgr2' );
 
-// TODO: Add usage example
+var M = 3;
+var N = 5;
+var K = 3;
+var TAU = new Float64Array( Math.min( M, N ) );
+var WORK = new Float64Array( M );
+
+dorgr2( 'column-major', M, N, K, A, M, TAU, 1, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -87,8 +101,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -98,7 +111,16 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var dorgr2 = require( '@stdlib/lapack/base/dorgr2' );
+
+var M = 3;
+var N = 5;
+var K = 3;
+var TAU = new Float64Array( Math.min( M, N ) );
+var WORK = new Float64Array( M );
+
+dorgr2( 'column-major', M, N, K, A, M, TAU, 1, WORK, 1 );
 ```
 
 </section>

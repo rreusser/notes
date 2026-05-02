@@ -36,8 +36,13 @@ Performs the symmetric rank-2 operation `A := alpha*x*y^T + alpha*y*x^T + A`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspr2 = require( '@stdlib/blas/base/dspr2' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var y = new Float64Array( [ 3.0, 4.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr2.ndarray( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, AP, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,8 +63,13 @@ Performs the symmetric rank-2 operation `A := alpha*x*y^T + alpha*y*x^T + A`, us
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspr2 = require( '@stdlib/blas/base/dspr2' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var y = new Float64Array( [ 3.0, 4.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr2.ndarray( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, AP, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +99,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dspr2 = require( '@stdlib/blas/base/dspr2' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var y = new Float64Array( [ 3.0, 4.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr2.ndarray( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, AP, 1, 0 );
 ```
 
 </section>

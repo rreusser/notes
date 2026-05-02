@@ -36,8 +36,15 @@ var dggbal = require( '@stdlib/lapack/base/dggbal' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dggbal = require( '@stdlib/lapack/base/dggbal' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var LSCALE = new Float64Array( 2 );
+var RSCALE = new Float64Array( 2 );
+var WORK = new Float64Array( 12 );
+
+dggbal.ndarray( 'both', 2, A, 1, 2, 0, B, 1, 2, 0, LSCALE, 1, 0, RSCALE, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,8 +69,15 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dggbal = require( '@stdlib/lapack/base/dggbal' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var LSCALE = new Float64Array( 2 );
+var RSCALE = new Float64Array( 2 );
+var WORK = new Float64Array( 12 );
+
+dggbal.ndarray( 'both', 2, A, 1, 2, 0, B, 1, 2, 0, LSCALE, 1, 0, RSCALE, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -99,9 +113,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dggbal = require( '@stdlib/lapack/base/dggbal' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var LSCALE = new Float64Array( 2 );
+var RSCALE = new Float64Array( 2 );
+var WORK = new Float64Array( 12 );
+
+dggbal.ndarray( 'both', 2, A, 1, 2, 0, B, 1, 2, 0, LSCALE, 1, 0, RSCALE, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

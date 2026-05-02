@@ -35,9 +35,13 @@ var dpbequ = require( '@stdlib/lapack/base/dpbequ' );
 Computes row and column scalings intended to equilibrate a symmetric positive definite band matrix and reduce its condition number.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbequ = require( '@stdlib/lapack/base/dpbequ' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+dpbequ.ndarray( 'upper', N, 1, AB, N, 1, 0, s, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Computes row and column scalings intended to equilibrate a symmetric positive definite band matrix and reduce its condition number, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbequ = require( '@stdlib/lapack/base/dpbequ' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+dpbequ.ndarray( 'upper', N, 1, AB, N, 1, 0, s, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var dpbequ = require( '@stdlib/lapack/base/dpbequ' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+dpbequ.ndarray( 'upper', N, 1, AB, N, 1, 0, s, 1, 0 );
 ```
 
 </section>

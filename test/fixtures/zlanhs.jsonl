@@ -1,0 +1,5 @@
+{"name":"max_norm","result": 8.24621125123532117E+000}
+{"name":"one_norm","result": 1.72462112512353229E+001}
+{"name":"inf_norm","result": 1.58619843570992298E+001}
+{"name":"frob_norm","result": 1.49331845230680784E+001}
+{"name":"n_zero","result": 0.00000000000000000E+000}

@@ -35,9 +35,17 @@ var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
 Returns |a| with the sign of b (Fortran SIGN intrinsic).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
 
-// TODO: Add usage example
+var N = 3;
+var VT = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zbdsqr.ndarray( 'upper', N, N, N, N, d, 1, 0, e, 1, 0, VT, N, 1, 0, U, N, 1, 0, C, N, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +74,17 @@ The function has the following parameters:
 Returns |a| with the sign of b (Fortran SIGN intrinsic), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
 
-// TODO: Add usage example
+var N = 3;
+var VT = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zbdsqr.ndarray( 'upper', N, N, N, N, d, 1, 0, e, 1, 0, VT, N, 1, 0, U, N, 1, 0, C, N, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -109,7 +125,15 @@ The function has the following additional parameters:
 ```javascript
 var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
 
-// TODO: Add examples
+var N = 3;
+var VT = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zbdsqr.ndarray( 'upper', N, N, N, N, d, 1, 0, e, 1, 0, VT, N, 1, 0, U, N, 1, 0, C, N, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,13 @@ var dla_gbrpvgrw = require( '@stdlib/lapack/base/dla_gbrpvgrw' );
 Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dla_gbrpvgrw = require( '@stdlib/lapack/base/dla_gbrpvgrw' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var AFB = discreteUniform( N * N, -10, 10, opts );
+
+dla_gbrpvgrw.ndarray( N, N, N, 1, AB, N, 1, 0, AFB, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +61,13 @@ The function has the following parameters:
 Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dla_gbrpvgrw = require( '@stdlib/lapack/base/dla_gbrpvgrw' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var AFB = discreteUniform( N * N, -10, 10, opts );
+
+dla_gbrpvgrw.ndarray( N, N, N, 1, AB, N, 1, 0, AFB, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +102,11 @@ The function has the following additional parameters:
 ```javascript
 var dla_gbrpvgrw = require( '@stdlib/lapack/base/dla_gbrpvgrw' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var AFB = discreteUniform( N * N, -10, 10, opts );
+
+dla_gbrpvgrw.ndarray( N, N, N, 1, AB, N, 1, 0, AFB, N, 1, 0 );
 ```
 
 </section>

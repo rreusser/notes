@@ -35,9 +35,18 @@ var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
 ABS1: |re| + |im| (cheap complex absolute value).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
 
-// TODO: Add usage example
+var N = 3;
+var S = discreteUniform( N * N, -10, 10, opts );
+var P = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+ztgevc.ndarray( 'left', 'all', SELECT, 1, 0, N, S, N, 1, 0, P, N, 1, 0, VL, N, 1, 0, VR, N, 1, 0, N, N, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -69,9 +78,18 @@ The function has the following parameters:
 ABS1: |re| + |im| (cheap complex absolute value), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
 
-// TODO: Add usage example
+var N = 3;
+var S = discreteUniform( N * N, -10, 10, opts );
+var P = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+ztgevc.ndarray( 'left', 'all', SELECT, 1, 0, N, S, N, 1, 0, P, N, 1, 0, VL, N, 1, 0, VR, N, 1, 0, N, N, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -114,7 +132,16 @@ The function has the following additional parameters:
 ```javascript
 var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
 
-// TODO: Add examples
+var N = 3;
+var S = discreteUniform( N * N, -10, 10, opts );
+var P = discreteUniform( N * N, -10, 10, opts );
+var VL = discreteUniform( N * N, -10, 10, opts );
+var VR = discreteUniform( N * N, -10, 10, opts );
+var SELECT = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+ztgevc.ndarray( 'left', 'all', SELECT, 1, 0, N, S, N, 1, 0, P, N, 1, 0, VL, N, 1, 0, VR, N, 1, 0, N, N, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

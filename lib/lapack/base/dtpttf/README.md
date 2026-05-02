@@ -35,9 +35,13 @@ var dtpttf = require( '@stdlib/lapack/base/dtpttf' );
 Copy a triangular matrix from standard packed format (TP) to Rectangular Full Packed format (RFP).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtpttf = require( '@stdlib/lapack/base/dtpttf' );
 
-// TODO: Add usage example
+var N = 3;
+var AP = discreteUniform( N, -10, 10, opts );
+var ARF = discreteUniform( N, -10, 10, opts );
+
+dtpttf.ndarray( 'no-transpose', 'upper', N, AP, 1, 0, ARF, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +57,13 @@ The function has the following parameters:
 Copy a triangular matrix from standard packed format (TP) to Rectangular Full Packed format (RFP), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtpttf = require( '@stdlib/lapack/base/dtpttf' );
 
-// TODO: Add usage example
+var N = 3;
+var AP = discreteUniform( N, -10, 10, opts );
+var ARF = discreteUniform( N, -10, 10, opts );
+
+dtpttf.ndarray( 'no-transpose', 'upper', N, AP, 1, 0, ARF, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -88,7 +96,11 @@ The function has the following additional parameters:
 ```javascript
 var dtpttf = require( '@stdlib/lapack/base/dtpttf' );
 
-// TODO: Add examples
+var N = 3;
+var AP = discreteUniform( N, -10, 10, opts );
+var ARF = discreteUniform( N, -10, 10, opts );
+
+dtpttf.ndarray( 'no-transpose', 'upper', N, AP, 1, 0, ARF, 1, 0 );
 ```
 
 </section>

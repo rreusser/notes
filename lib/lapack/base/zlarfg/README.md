@@ -35,9 +35,12 @@ var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
 Generate a complex elementary reflector H of order N, such that.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+zlarfg.ndarray( N, 1.0, 0, x, 1, 0, 1.0, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +58,12 @@ The function has the following parameters:
 Generate a complex elementary reflector H of order N, such that, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+zlarfg.ndarray( N, 1.0, 0, x, 1, 0, 1.0, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+
+zlarfg.ndarray( N, 1.0, 0, x, 1, 0, 1.0, 0 );
 ```
 
 </section>

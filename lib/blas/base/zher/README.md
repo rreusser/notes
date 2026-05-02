@@ -36,8 +36,12 @@ Perform Hermitian rank-1 update:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zher = require( '@stdlib/blas/base/zher' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+
+zher.ndarray( 'upper', 2, 1.0, x, 1, 0, A, 2, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +61,12 @@ Perform Hermitian rank-1 update:, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zher = require( '@stdlib/blas/base/zher' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+
+zher.ndarray( 'upper', 2, 1.0, x, 1, 0, A, 2, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +97,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zher = require( '@stdlib/blas/base/zher' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+
+zher.ndarray( 'upper', 2, 1.0, x, 1, 0, A, 2, 1, 0 );
 ```
 
 </section>

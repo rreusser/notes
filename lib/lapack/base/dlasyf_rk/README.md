@@ -36,8 +36,16 @@ DLASYF_RK computes a partial factorization of a real symmetric indefinite matrix
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_rk = require( '@stdlib/lapack/base/dlasyf_rk' );
 
-// TODO: Add usage example
+var N = 4;
+var nb = 4;
+var e = new Float64Array( N );
+var IPIV = new Int32Array( N );
+var W = new Float64Array( N * nb );
+
+dlasyf_rk( 'column-major', 'lower', N, nb, A, N, e, IPIV, W, N );
 ```
 
 The function has the following parameters:
@@ -63,8 +71,16 @@ DLASYF_RK computes a partial factorization of a real symmetric indefinite matrix
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_rk = require( '@stdlib/lapack/base/dlasyf_rk' );
 
-// TODO: Add usage example
+var N = 4;
+var nb = 4;
+var e = new Float64Array( N );
+var IPIV = new Int32Array( N );
+var W = new Float64Array( N * nb );
+
+dlasyf_rk( 'column-major', 'lower', N, nb, A, N, e, IPIV, W, N );
 ```
 
 The function has the following additional parameters:
@@ -96,8 +112,7 @@ The function has the following additional parameters:
 
 ## Notes
 
--   TODO: Add notes.
-
+-   See LAPACK reference documentation for full algorithmic details.
 </section>
 
 <!-- /.notes -->
@@ -107,7 +122,17 @@ The function has the following additional parameters:
 ## Examples
 
 ```javascript
-// TODO: Add examples
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_rk = require( '@stdlib/lapack/base/dlasyf_rk' );
+
+var N = 4;
+var nb = 4;
+var e = new Float64Array( N );
+var IPIV = new Int32Array( N );
+var W = new Float64Array( N * nb );
+
+dlasyf_rk( 'column-major', 'lower', N, nb, A, N, e, IPIV, W, N );
 ```
 
 </section>

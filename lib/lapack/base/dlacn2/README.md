@@ -35,9 +35,15 @@ var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );
 Estimates the 1-norm of a square matrix using reverse communication.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );
 
-// TODO: Add usage example
+var N = 3;
+var v = discreteUniform( N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var ISGN = discreteUniform( N, -10, 10, opts );
+var ISAVE = discreteUniform( N, -10, 10, opts );
+
+dlacn2.ndarray( N, v, 1, 0, x, 1, 0, ISGN, 1, 0, 1, 1, ISAVE, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +65,15 @@ The function has the following parameters:
 Estimates the 1-norm of a square matrix using reverse communication, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );
 
-// TODO: Add usage example
+var N = 3;
+var v = discreteUniform( N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var ISGN = discreteUniform( N, -10, 10, opts );
+var ISAVE = discreteUniform( N, -10, 10, opts );
+
+dlacn2.ndarray( N, v, 1, 0, x, 1, 0, ISGN, 1, 0, 1, 1, ISAVE, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +106,13 @@ The function has the following additional parameters:
 ```javascript
 var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );
 
-// TODO: Add examples
+var N = 3;
+var v = discreteUniform( N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var ISGN = discreteUniform( N, -10, 10, opts );
+var ISAVE = discreteUniform( N, -10, 10, opts );
+
+dlacn2.ndarray( N, v, 1, 0, x, 1, 0, ISGN, 1, 0, 1, 1, ISAVE, 1, 0 );
 ```
 
 </section>

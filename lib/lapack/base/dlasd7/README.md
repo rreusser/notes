@@ -35,9 +35,25 @@ var dlasd7 = require( '@stdlib/lapack/base/dlasd7' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasd7 = require( '@stdlib/lapack/base/dlasd7' );
 
-// TODO: Add usage example
+var N = 3;
+var GIVCOL = discreteUniform( N * N, -10, 10, opts );
+var GIVNUM = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var ZW = discreteUniform( N, -10, 10, opts );
+var VF = discreteUniform( N, -10, 10, opts );
+var VFW = discreteUniform( N, -10, 10, opts );
+var VL = discreteUniform( N, -10, 10, opts );
+var VLW = discreteUniform( N, -10, 10, opts );
+var DSIGMA = discreteUniform( N, -10, 10, opts );
+var IDX = discreteUniform( N, -10, 10, opts );
+var IDXP = discreteUniform( N, -10, 10, opts );
+var IDXQ = discreteUniform( N, -10, 10, opts );
+var PERM = discreteUniform( N, -10, 10, opts );
+
+dlasd7.ndarray( 1, 1, 1, 1, d, 1, 0, z, 1, 0, ZW, 1, 0, VF, 1, 0, VFW, 1, 0, VL, 1, 0, VLW, 1, 0, 1.0, 1.0, DSIGMA, 1, 0, IDX, 1, 0, IDXP, 1, 0, IDXQ, 1, 0, PERM, 1, 0, GIVCOL, N, 1, 0, GIVNUM, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -70,9 +86,25 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasd7 = require( '@stdlib/lapack/base/dlasd7' );
 
-// TODO: Add usage example
+var N = 3;
+var GIVCOL = discreteUniform( N * N, -10, 10, opts );
+var GIVNUM = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var ZW = discreteUniform( N, -10, 10, opts );
+var VF = discreteUniform( N, -10, 10, opts );
+var VFW = discreteUniform( N, -10, 10, opts );
+var VL = discreteUniform( N, -10, 10, opts );
+var VLW = discreteUniform( N, -10, 10, opts );
+var DSIGMA = discreteUniform( N, -10, 10, opts );
+var IDX = discreteUniform( N, -10, 10, opts );
+var IDXP = discreteUniform( N, -10, 10, opts );
+var IDXQ = discreteUniform( N, -10, 10, opts );
+var PERM = discreteUniform( N, -10, 10, opts );
+
+dlasd7.ndarray( 1, 1, 1, 1, d, 1, 0, z, 1, 0, ZW, 1, 0, VF, 1, 0, VFW, 1, 0, VL, 1, 0, VLW, 1, 0, 1.0, 1.0, DSIGMA, 1, 0, IDX, 1, 0, IDXP, 1, 0, IDXQ, 1, 0, PERM, 1, 0, GIVCOL, N, 1, 0, GIVNUM, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -131,7 +163,23 @@ The function has the following additional parameters:
 ```javascript
 var dlasd7 = require( '@stdlib/lapack/base/dlasd7' );
 
-// TODO: Add examples
+var N = 3;
+var GIVCOL = discreteUniform( N * N, -10, 10, opts );
+var GIVNUM = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var ZW = discreteUniform( N, -10, 10, opts );
+var VF = discreteUniform( N, -10, 10, opts );
+var VFW = discreteUniform( N, -10, 10, opts );
+var VL = discreteUniform( N, -10, 10, opts );
+var VLW = discreteUniform( N, -10, 10, opts );
+var DSIGMA = discreteUniform( N, -10, 10, opts );
+var IDX = discreteUniform( N, -10, 10, opts );
+var IDXP = discreteUniform( N, -10, 10, opts );
+var IDXQ = discreteUniform( N, -10, 10, opts );
+var PERM = discreteUniform( N, -10, 10, opts );
+
+dlasd7.ndarray( 1, 1, 1, 1, d, 1, 0, z, 1, 0, ZW, 1, 0, VF, 1, 0, VFW, 1, 0, VL, 1, 0, VLW, 1, 0, 1.0, 1.0, DSIGMA, 1, 0, IDX, 1, 0, IDXP, 1, 0, IDXQ, 1, 0, PERM, 1, 0, GIVCOL, N, 1, 0, GIVNUM, N, 1, 0 );
 ```
 
 </section>

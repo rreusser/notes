@@ -35,9 +35,9 @@ var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 
-// TODO: Add usage example
+dlaev2.ndarray( 2.0, 1.0, 3.0 );
 ```
 
 The function has the following parameters:
@@ -51,9 +51,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 
-// TODO: Add usage example
+dlaev2.ndarray( 2.0, 1.0, 3.0 );
 ```
 
 The function has the following additional parameters:
@@ -82,7 +82,7 @@ The function has the following additional parameters:
 ```javascript
 var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 
-// TODO: Add examples
+dlaev2.ndarray( 2.0, 1.0, 3.0 );
 ```
 
 </section>

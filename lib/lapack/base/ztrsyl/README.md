@@ -35,9 +35,14 @@ var ztrsyl = require( '@stdlib/lapack/base/ztrsyl' );
 Solves the complex Sylvester matrix equation:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrsyl = require( '@stdlib/lapack/base/ztrsyl' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+
+ztrsyl.ndarray( 1, 1, 1, N, N, A, N, 1, 0, B, N, 1, 0, C, N, 1, 0, 1.0 );
 ```
 
 The function has the following parameters:
@@ -60,9 +65,14 @@ The function has the following parameters:
 Solves the complex Sylvester matrix equation:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrsyl = require( '@stdlib/lapack/base/ztrsyl' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+
+ztrsyl.ndarray( 1, 1, 1, N, N, A, N, 1, 0, B, N, 1, 0, C, N, 1, 0, 1.0 );
 ```
 
 The function has the following additional parameters:
@@ -100,7 +110,12 @@ The function has the following additional parameters:
 ```javascript
 var ztrsyl = require( '@stdlib/lapack/base/ztrsyl' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+
+ztrsyl.ndarray( 1, 1, 1, N, N, A, N, 1, 0, B, N, 1, 0, C, N, 1, 0, 1.0 );
 ```
 
 </section>

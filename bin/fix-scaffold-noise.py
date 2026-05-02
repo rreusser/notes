@@ -85,25 +85,30 @@ def fix_stray_copyright(content):
     return content
 
 
-# Match a `@returns {*} ...` JSDoc tag.
+# Match a `@returns {*} ...` JSDoc tag, including the line indent + `* ` prefix
+# so we can delete the entire line for void-return functions.
 STAR_RETURN = re.compile(r'@returns\s*\{\*\}\s*([^\n]*)')
+STAR_RETURN_LINE = re.compile(r'^[ \t]*\*[ \t]*@returns\s*\{\*\}\s*[^\n]*\n', re.MULTILINE)
 
 # Detect the function's actual return value by looking at its `return`
 # statements. We classify into:
 #   integer  — `return 0;` / `return INFO`/`return info`/`return -1`
 #   array    — `return <Capitalized>` / `return <single-letter>` (most BLAS)
 #   number   — `return <number-named-thing>` like nrm, sum (uncommon)
+#   void     — no `return X;` statements at all (in-place mutation)
 #
-# When the return type is ambiguous, leave the `{*}` unchanged and report.
+# When the return type is ambiguous (mixed integer + array, or only
+# unparseable expressions), leave the `{*}` unchanged and report.
 RETURN_STMT = re.compile(r'^\s*return\s+([^;]+);', re.MULTILINE)
 
 
 def detect_return_type(content):
     """Inspect `return ...;` statements; return one of 'integer', 'array',
-    or None if ambiguous.
+    'void', or None if ambiguous.
     """
     integer_returns = 0
     array_returns = 0
+    other_returns = 0
     for m in RETURN_STMT.finditer(content):
         expr = m.group(1).strip()
         if expr in ('0', '-1', '1') or re.match(r'^-?\d+$', expr):
@@ -118,6 +123,9 @@ def detect_return_type(content):
                 array_returns += 1
             continue
         # Anything else (function call, expression): can't classify simply.
+        other_returns += 1
+    if integer_returns == 0 and array_returns == 0 and other_returns == 0:
+        return 'void'
     if integer_returns > 0 and array_returns == 0:
         return 'integer'
     if array_returns > 0 and integer_returns == 0:
@@ -175,6 +183,11 @@ def fix_star_return(content, mod_dir, routine):
         return_kind = detect_return_type(base_content)
         if return_kind is None:
             return content   # leave `{*}` alone for manual review
+        if return_kind == 'void':
+            # Void function: drop the entire `@returns {*}` line. Some other
+            # JSDoc files (the wrapper) may still have a meaningful @returns
+            # later — only matches the {*} placeholder.
+            return STAR_RETURN_LINE.sub('', content)
         if return_kind == 'integer':
             replacement_type = 'integer'
             default_desc = 'info status code'

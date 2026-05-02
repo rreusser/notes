@@ -35,9 +35,13 @@ var dpbtrs = require( '@stdlib/lapack/base/dpbtrs' );
 Solves a system of linear equations A_X = B with a symmetric positive.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbtrs = require( '@stdlib/lapack/base/dpbtrs' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dpbtrs.ndarray( 'upper', N, 1, N, AB, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +61,13 @@ The function has the following parameters:
 Solves a system of linear equations A_X = B with a symmetric positive, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbtrs = require( '@stdlib/lapack/base/dpbtrs' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dpbtrs.ndarray( 'upper', N, 1, N, AB, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +102,11 @@ The function has the following additional parameters:
 ```javascript
 var dpbtrs = require( '@stdlib/lapack/base/dpbtrs' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dpbtrs.ndarray( 'upper', N, 1, N, AB, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

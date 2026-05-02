@@ -35,9 +35,14 @@ var zsptrf = require( '@stdlib/lapack/base/zsptrf' );
 Computes the Bunch-Kaufman factorization of a complex symmetric matrix in packed storage.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsptrf = require( '@stdlib/lapack/base/zsptrf' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4.0, 1.0, 2.0, -1.0, 1.0, 2.0, 5.0, 0.5, 3.0, -1.0, 6.0, 1.0 ] );
+var IPIV = new Int32Array( 3 );
+
+zsptrf( 'lower', 3, AP, IPIV );
 ```
 
 The function has the following parameters:
@@ -52,9 +57,14 @@ The function has the following parameters:
 Computes the Bunch-Kaufman factorization of a complex symmetric matrix in packed storage, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zsptrf = require( '@stdlib/lapack/base/zsptrf' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( [ 4.0, 1.0, 2.0, -1.0, 1.0, 2.0, 5.0, 0.5, 3.0, -1.0, 6.0, 1.0 ] );
+var IPIV = new Int32Array( 3 );
+
+zsptrf( 'lower', 3, AP, IPIV );
 ```
 
 The function has the following additional parameters:
@@ -85,9 +95,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zsptrf = require( '@stdlib/lapack/base/zsptrf' );
 
-// TODO: Add examples
+var AP = new Complex128Array( [ 4.0, 1.0, 2.0, -1.0, 1.0, 2.0, 5.0, 0.5, 3.0, -1.0, 6.0, 1.0 ] );
+var IPIV = new Int32Array( 3 );
+
+zsptrf( 'lower', 3, AP, IPIV );
 ```
 
 </section>

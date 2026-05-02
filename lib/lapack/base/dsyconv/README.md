@@ -35,9 +35,14 @@ var dsyconv = require( '@stdlib/lapack/base/dsyconv' );
 Converts a symmetric matrix given by `dsytrf` (Bunch-Kaufman factorization).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsyconv = require( '@stdlib/lapack/base/dsyconv' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var E = discreteUniform( N, -10, 10, opts );
+
+dsyconv.ndarray( 'upper', '1', N, A, N, 1, 0, IPIV, 1, 0, E, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Converts a symmetric matrix given by `dsytrf` (Bunch-Kaufman factorization), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsyconv = require( '@stdlib/lapack/base/dsyconv' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var E = discreteUniform( N, -10, 10, opts );
+
+dsyconv.ndarray( 'upper', '1', N, A, N, 1, 0, IPIV, 1, 0, E, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +103,12 @@ The function has the following additional parameters:
 ```javascript
 var dsyconv = require( '@stdlib/lapack/base/dsyconv' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var E = discreteUniform( N, -10, 10, opts );
+
+dsyconv.ndarray( 'upper', '1', N, A, N, 1, 0, IPIV, 1, 0, E, 1, 0 );
 ```
 
 </section>

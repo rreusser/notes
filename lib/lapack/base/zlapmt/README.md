@@ -35,9 +35,13 @@ var zlapmt = require( '@stdlib/lapack/base/zlapmt' );
 Rearrange columns of a complex matrix as specified by a permutation vector.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlapmt = require( '@stdlib/lapack/base/zlapmt' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+zlapmt.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Rearrange columns of a complex matrix as specified by a permutation vector, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlapmt = require( '@stdlib/lapack/base/zlapmt' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+zlapmt.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zlapmt = require( '@stdlib/lapack/base/zlapmt' );
 
-// TODO: Add examples
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+zlapmt.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,13 @@ var dlaqsy = require( '@stdlib/lapack/base/dlaqsy' );
 Equilibrates a symmetric matrix A using the scaling factors in the vector S.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqsy = require( '@stdlib/lapack/base/dlaqsy' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+dlaqsy.ndarray( 'upper', N, A, N, 1, 0, s, 1, 0, 1, 1, 'none' );
 ```
 
 The function has the following parameters:
@@ -56,9 +60,13 @@ The function has the following parameters:
 Equilibrates a symmetric matrix A using the scaling factors in the vector S, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqsy = require( '@stdlib/lapack/base/dlaqsy' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+dlaqsy.ndarray( 'upper', N, A, N, 1, 0, s, 1, 0, 1, 1, 'none' );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +100,11 @@ The function has the following additional parameters:
 ```javascript
 var dlaqsy = require( '@stdlib/lapack/base/dlaqsy' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+dlaqsy.ndarray( 'upper', N, A, N, 1, 0, s, 1, 0, 1, 1, 'none' );
 ```
 
 </section>

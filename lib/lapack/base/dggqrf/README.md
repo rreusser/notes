@@ -35,9 +35,16 @@ var dggqrf = require( '@stdlib/lapack/base/dggqrf' );
 Computes a generalized QR factorization of an N-by-M matrix A and an.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dggqrf = require( '@stdlib/lapack/base/dggqrf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var TAUA = discreteUniform( N, -10, 10, opts );
+var TAUB = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dggqrf.ndarray( N, N, 1, A, N, 1, 0, TAUA, 1, 0, B, N, 1, 0, TAUB, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -62,9 +69,16 @@ The function has the following parameters:
 Computes a generalized QR factorization of an N-by-M matrix A and an, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dggqrf = require( '@stdlib/lapack/base/dggqrf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var TAUA = discreteUniform( N, -10, 10, opts );
+var TAUB = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dggqrf.ndarray( N, N, 1, A, N, 1, 0, TAUA, 1, 0, B, N, 1, 0, TAUB, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -102,7 +116,14 @@ The function has the following additional parameters:
 ```javascript
 var dggqrf = require( '@stdlib/lapack/base/dggqrf' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var TAUA = discreteUniform( N, -10, 10, opts );
+var TAUB = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dggqrf.ndarray( N, N, 1, A, N, 1, 0, TAUA, 1, 0, B, N, 1, 0, TAUB, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

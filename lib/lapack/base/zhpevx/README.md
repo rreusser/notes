@@ -36,8 +36,19 @@ Computes selected eigenvalues and optionally eigenvectors of a complex Hermitian
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpevx = require( '@stdlib/lapack/base/zhpevx' );
 
-// TODO: Add usage example
+var N = 3;
+var w = new Float64Array( N );
+var Z = new Complex128Array( N * N );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( 7 * N );
+var IWORK = new Int32Array( 5 * N );
+var IFAIL = new Int32Array( N );
+
+zhpevx.ndarray( 'compute-vectors', 'all', 'upper', N, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, N, 0, WORK, 1, 0, RWORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -68,8 +79,19 @@ Computes selected eigenvalues and optionally eigenvectors of a complex Hermitian
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpevx = require( '@stdlib/lapack/base/zhpevx' );
 
-// TODO: Add usage example
+var N = 3;
+var w = new Float64Array( N );
+var Z = new Complex128Array( N * N );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( 7 * N );
+var IWORK = new Int32Array( 5 * N );
+var IFAIL = new Int32Array( N );
+
+zhpevx.ndarray( 'compute-vectors', 'all', 'upper', N, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, N, 0, WORK, 1, 0, RWORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -111,9 +133,20 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zhpevx = require( '@stdlib/lapack/base/zhpevx' );
 
-// TODO: Add examples
+var N = 3;
+var w = new Float64Array( N );
+var Z = new Complex128Array( N * N );
+var WORK = new Complex128Array( 2 * N );
+var RWORK = new Float64Array( 7 * N );
+var IWORK = new Int32Array( 5 * N );
+var IFAIL = new Int32Array( N );
+
+zhpevx.ndarray( 'compute-vectors', 'all', 'upper', N, AP, 1, 0, 0, 0, 0, 0, 0, out, w, 1, 0, Z, 1, N, 0, WORK, 1, 0, RWORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 </section>

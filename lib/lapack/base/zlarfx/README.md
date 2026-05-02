@@ -35,9 +35,9 @@ var zlarfx = require( '@stdlib/lapack/base/zlarfx' );
 Applies an elementary reflector H to a complex M-by-N matrix C, from either the left or the right.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarfx = require( '@stdlib/lapack/base/zlarfx' );
 
-// TODO: Add usage example
+zlarfx.ndarray( 'left', 2, 3, v, 1, 0, tau, C, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +58,9 @@ The function has the following parameters:
 Applies an elementary reflector H to a complex M-by-N matrix C, from either the left or the right, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarfx = require( '@stdlib/lapack/base/zlarfx' );
 
-// TODO: Add usage example
+zlarfx.ndarray( 'left', 2, 3, v, 1, 0, tau, C, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +94,7 @@ The function has the following additional parameters:
 ```javascript
 var zlarfx = require( '@stdlib/lapack/base/zlarfx' );
 
-// TODO: Add examples
+zlarfx.ndarray( 'left', 2, 3, v, 1, 0, tau, C, 1, 2, 0, WORK, 1, 0 );
 ```
 
 </section>

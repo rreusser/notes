@@ -36,8 +36,15 @@ Reduces a complex Hermitian matrix stored in packed form to real symmetric tridi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhptrd = require( '@stdlib/lapack/base/zhptrd' );
 
-// TODO: Add usage example
+var N = 3;
+var d = new Float64Array( N );
+var e = new Float64Array( N - 1 );
+var TAU = new Complex128Array( N - 1 );
+
+zhptrd( 'upper', N, AP, d, e, TAU );
 ```
 
 The function has the following parameters:
@@ -55,8 +62,15 @@ Reduces a complex Hermitian matrix stored in packed form to real symmetric tridi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhptrd = require( '@stdlib/lapack/base/zhptrd' );
 
-// TODO: Add usage example
+var N = 3;
+var d = new Float64Array( N );
+var e = new Float64Array( N - 1 );
+var TAU = new Complex128Array( N - 1 );
+
+zhptrd( 'upper', N, AP, d, e, TAU );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +105,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zhptrd = require( '@stdlib/lapack/base/zhptrd' );
 
-// TODO: Add examples
+var N = 3;
+var d = new Float64Array( N );
+var e = new Float64Array( N - 1 );
+var TAU = new Complex128Array( N - 1 );
+
+zhptrd( 'upper', N, AP, d, e, TAU );
 ```
 
 </section>

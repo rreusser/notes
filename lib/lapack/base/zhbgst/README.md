@@ -35,9 +35,9 @@ var zhbgst = require( '@stdlib/lapack/base/zhbgst' );
 Reduces a complex Hermitian-definite banded generalized eigenproblem to standard form.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhbgst = require( '@stdlib/lapack/base/zhbgst' );
 
-// TODO: Add usage example
+zhbgst.ndarray( 'none', 'upper', N, ka, kb, AB, 1, LDAB, 0, BB, 1, LDBB, 0, X, 1, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +61,9 @@ The function has the following parameters:
 Reduces a complex Hermitian-definite banded generalized eigenproblem to standard form, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhbgst = require( '@stdlib/lapack/base/zhbgst' );
 
-// TODO: Add usage example
+zhbgst.ndarray( 'none', 'upper', N, ka, kb, AB, 1, LDAB, 0, BB, 1, LDBB, 0, X, 1, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -105,7 +105,7 @@ The function has the following additional parameters:
 ```javascript
 var zhbgst = require( '@stdlib/lapack/base/zhbgst' );
 
-// TODO: Add examples
+zhbgst.ndarray( 'none', 'upper', N, ka, kb, AB, 1, LDAB, 0, BB, 1, LDBB, 0, X, 1, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,9 @@ var zlassq = require( '@stdlib/lapack/base/zlassq' );
 Updates a sum of squares represented in scaled form.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlassq = require( '@stdlib/lapack/base/zlassq' );
 
-// TODO: Add usage example
+zlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Updates a sum of squares represented in scaled form, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlassq = require( '@stdlib/lapack/base/zlassq' );
 
-// TODO: Add usage example
+zlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var zlassq = require( '@stdlib/lapack/base/zlassq' );
 
-// TODO: Add examples
+zlassq.ndarray( N, 1, 1, 0, 1.0, 1 );
 ```
 
 </section>

@@ -36,8 +36,12 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlantp = require( '@stdlib/lapack/base/dlantp' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlantp( 'one-norm', 'upper', 'non-unit', 3, AP, WORK );
 ```
 
 The function has the following parameters:
@@ -55,8 +59,12 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlantp = require( '@stdlib/lapack/base/dlantp' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlantp( 'one-norm', 'upper', 'non-unit', 3, AP, WORK );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +95,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlantp = require( '@stdlib/lapack/base/dlantp' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlantp( 'one-norm', 'upper', 'non-unit', 3, AP, WORK );
 ```
 
 </section>

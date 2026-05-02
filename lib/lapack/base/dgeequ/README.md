@@ -35,9 +35,14 @@ var dgeequ = require( '@stdlib/lapack/base/dgeequ' );
 Computes row and column scalings intended to equilibrate an M-by-N matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgeequ = require( '@stdlib/lapack/base/dgeequ' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+dgeequ.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -56,9 +61,14 @@ The function has the following parameters:
 Computes row and column scalings intended to equilibrate an M-by-N matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgeequ = require( '@stdlib/lapack/base/dgeequ' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+dgeequ.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +105,12 @@ The function has the following additional parameters:
 ```javascript
 var dgeequ = require( '@stdlib/lapack/base/dgeequ' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+dgeequ.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1 );
 ```
 
 </section>

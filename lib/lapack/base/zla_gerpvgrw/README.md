@@ -35,9 +35,13 @@ var zla_gerpvgrw = require( '@stdlib/lapack/base/zla_gerpvgrw' );
 Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a complex general matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zla_gerpvgrw = require( '@stdlib/lapack/base/zla_gerpvgrw' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AF = discreteUniform( N * N, -10, 10, opts );
+
+zla_gerpvgrw.ndarray( N, 1, A, N, 1, 0, AF, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +58,13 @@ The function has the following parameters:
 Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a complex general matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zla_gerpvgrw = require( '@stdlib/lapack/base/zla_gerpvgrw' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AF = discreteUniform( N * N, -10, 10, opts );
+
+zla_gerpvgrw.ndarray( N, 1, A, N, 1, 0, AF, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +99,11 @@ The function has the following additional parameters:
 ```javascript
 var zla_gerpvgrw = require( '@stdlib/lapack/base/zla_gerpvgrw' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AF = discreteUniform( N * N, -10, 10, opts );
+
+zla_gerpvgrw.ndarray( N, 1, A, N, 1, 0, AF, N, 1, 0 );
 ```
 
 </section>

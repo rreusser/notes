@@ -36,8 +36,11 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlansf = require( '@stdlib/lapack/base/zlansf' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 The function has the following parameters:
@@ -55,8 +58,11 @@ Returns the value of the one-norm, Frobenius norm, infinity-norm, or the, using 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlansf = require( '@stdlib/lapack/base/zlansf' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +93,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zlansf = require( '@stdlib/lapack/base/zlansf' );
 
-// TODO: Add examples
+var WORK = new Float64Array( 3 );
+
+zlansf( 'one-norm', 'no-transpose', 'upper', 3, A, WORK );
 ```
 
 </section>

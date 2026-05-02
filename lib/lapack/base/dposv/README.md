@@ -35,9 +35,13 @@ var dposv = require( '@stdlib/lapack/base/dposv' );
 Computes the solution to a real system of linear equations A*X = B.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dposv = require( '@stdlib/lapack/base/dposv' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dposv.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +60,13 @@ The function has the following parameters:
 Computes the solution to a real system of linear equations A*X = B,, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dposv = require( '@stdlib/lapack/base/dposv' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dposv.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,7 +101,11 @@ The function has the following additional parameters:
 ```javascript
 var dposv = require( '@stdlib/lapack/base/dposv' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dposv.ndarray( 'upper', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

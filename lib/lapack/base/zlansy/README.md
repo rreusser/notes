@@ -35,9 +35,13 @@ var zlansy = require( '@stdlib/lapack/base/zlansy' );
 Returns the value of the one-norm, Frobenius norm, infinity-norm, or the.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlansy = require( '@stdlib/lapack/base/zlansy' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlansy.ndarray( '1', 'upper', N, A, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Returns the value of the one-norm, Frobenius norm, infinity-norm, or the, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlansy = require( '@stdlib/lapack/base/zlansy' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlansy.ndarray( '1', 'upper', N, A, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zlansy = require( '@stdlib/lapack/base/zlansy' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlansy.ndarray( '1', 'upper', N, A, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

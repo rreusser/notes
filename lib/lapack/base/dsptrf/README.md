@@ -36,8 +36,13 @@ Computes the Bunch-Kaufman factorization of a real symmetric matrix in packed st
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsptrf = require( '@stdlib/lapack/base/dsptrf' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
+var IPIV = new Int32Array( 3 );
+
+dsptrf( 'lower', 3, AP, IPIV );
 ```
 
 The function has the following parameters:
@@ -53,8 +58,13 @@ Computes the Bunch-Kaufman factorization of a real symmetric matrix in packed st
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dsptrf = require( '@stdlib/lapack/base/dsptrf' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
+var IPIV = new Int32Array( 3 );
+
+dsptrf( 'lower', 3, AP, IPIV );
 ```
 
 The function has the following additional parameters:
@@ -85,9 +95,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dsptrf = require( '@stdlib/lapack/base/dsptrf' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
+var IPIV = new Int32Array( 3 );
+
+dsptrf( 'lower', 3, AP, IPIV );
 ```
 
 </section>

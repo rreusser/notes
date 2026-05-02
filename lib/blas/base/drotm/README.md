@@ -36,8 +36,13 @@ Applies a modified Givens plane rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var drotm = require( '@stdlib/blas/base/drotm' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
+var param = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0 ] );
+
+drotm.ndarray( 3, x, 1, 0, y, 1, 0, param, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,8 +60,13 @@ Applies a modified Givens plane rotation, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var drotm = require( '@stdlib/blas/base/drotm' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
+var param = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0 ] );
+
+drotm.ndarray( 3, x, 1, 0, y, 1, 0, param, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +97,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var drotm = require( '@stdlib/blas/base/drotm' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
+var param = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0 ] );
+
+drotm.ndarray( 3, x, 1, 0, y, 1, 0, param, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,13 @@ Computes the norm of a complex Hermitian tridiagonal matrix A.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlanht = require( '@stdlib/lapack/base/zlanht' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 2.0, -4.0, 6.0, -1.0, 3.0 ] );
+var e = new Complex128Array( [ 1.0, 2.0, -2.0, 3.0, 3.0, -1.0, 5.0, 4.0 ] );
+
+zlanht.ndarray( 'max', 5, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,8 +60,13 @@ Computes the norm of a complex Hermitian tridiagonal matrix A, using alternative
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlanht = require( '@stdlib/lapack/base/zlanht' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 2.0, -4.0, 6.0, -1.0, 3.0 ] );
+var e = new Complex128Array( [ 1.0, 2.0, -2.0, 3.0, 3.0, -1.0, 5.0, 4.0 ] );
+
+zlanht.ndarray( 'max', 5, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -85,9 +95,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlanht = require( '@stdlib/lapack/base/zlanht' );
 
-// TODO: Add examples
+var d = new Float64Array( [ 2.0, -4.0, 6.0, -1.0, 3.0 ] );
+var e = new Complex128Array( [ 1.0, 2.0, -2.0, 3.0, 3.0, -1.0, 5.0, 4.0 ] );
+
+zlanht.ndarray( 'max', 5, d, 1, 0, e, 1, 0 );
 ```
 
 </section>

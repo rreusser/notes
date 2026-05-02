@@ -35,9 +35,13 @@ var zppequ = require( '@stdlib/lapack/base/zppequ' );
 Computes row and column scalings intended to equilibrate a complex Hermitian positive definite matrix in packed storage and reduce its condition number.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zppequ = require( '@stdlib/lapack/base/zppequ' );
 
-// TODO: Add usage example
+var N = 3;
+var AP = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zppequ.ndarray( 'upper', N, AP, 1, 0, s, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +56,13 @@ The function has the following parameters:
 Computes row and column scalings intended to equilibrate a complex Hermitian positive definite matrix in packed storage and reduce its condition number, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zppequ = require( '@stdlib/lapack/base/zppequ' );
 
-// TODO: Add usage example
+var N = 3;
+var AP = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zppequ.ndarray( 'upper', N, AP, 1, 0, s, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +95,11 @@ The function has the following additional parameters:
 ```javascript
 var zppequ = require( '@stdlib/lapack/base/zppequ' );
 
-// TODO: Add examples
+var N = 3;
+var AP = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zppequ.ndarray( 'upper', N, AP, 1, 0, s, 1, 0 );
 ```
 
 </section>

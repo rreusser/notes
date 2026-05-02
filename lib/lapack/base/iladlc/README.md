@@ -35,9 +35,12 @@ var iladlc = require( '@stdlib/lapack/base/iladlc' );
 Scans a real matrix for its last non-zero column.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var iladlc = require( '@stdlib/lapack/base/iladlc' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+iladlc.ndarray( N, N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +56,12 @@ The function has the following parameters:
 Scans a real matrix for its last non-zero column, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var iladlc = require( '@stdlib/lapack/base/iladlc' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+iladlc.ndarray( N, N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +93,10 @@ The function has the following additional parameters:
 ```javascript
 var iladlc = require( '@stdlib/lapack/base/iladlc' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+iladlc.ndarray( N, N, A, N, 1, 0 );
 ```
 
 </section>

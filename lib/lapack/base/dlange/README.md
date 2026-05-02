@@ -35,9 +35,9 @@ var dlange = require( '@stdlib/lapack/base/dlange' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlange = require( '@stdlib/lapack/base/dlange' );
 
-// TODO: Add usage example
+dlange( 'column-major', 'max', 3, 4, A, 3, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -56,9 +56,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlange = require( '@stdlib/lapack/base/dlange' );
 
-// TODO: Add usage example
+dlange( 'column-major', 'max', 3, 4, A, 3, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +91,7 @@ The function has the following additional parameters:
 ```javascript
 var dlange = require( '@stdlib/lapack/base/dlange' );
 
-// TODO: Add examples
+dlange( 'column-major', 'max', 3, 4, A, 3, WORK, 1 );
 ```
 
 </section>

@@ -35,9 +35,14 @@ var zlangt = require( '@stdlib/lapack/base/zlangt' );
 Returns the norm of a complex general tridiagonal matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlangt = require( '@stdlib/lapack/base/zlangt' );
 
-// TODO: Add usage example
+var dl = new Complex128Array( [ 3.0, 2.0, 1.0, 4.0, 2.0, 1.0 ] );
+var d = new Complex128Array( [ 2.0, 1.0, 4.0, 2.0, 5.0, 3.0, 6.0, 1.0 ] );
+var du = new Complex128Array( [ -1.0, 3.0, -2.0, 1.0, -3.0, 2.0 ] );
+
+zlangt.ndarray( 'max', 4, dl, 1, 0, d, 1, 0, du, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +61,14 @@ The function has the following parameters:
 Returns the norm of a complex general tridiagonal matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlangt = require( '@stdlib/lapack/base/zlangt' );
 
-// TODO: Add usage example
+var dl = new Complex128Array( [ 3.0, 2.0, 1.0, 4.0, 2.0, 1.0 ] );
+var d = new Complex128Array( [ 2.0, 1.0, 4.0, 2.0, 5.0, 3.0, 6.0, 1.0 ] );
+var du = new Complex128Array( [ -1.0, 3.0, -2.0, 1.0, -3.0, 2.0 ] );
+
+zlangt.ndarray( 'max', 4, dl, 1, 0, d, 1, 0, du, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -88,9 +98,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlangt = require( '@stdlib/lapack/base/zlangt' );
 
-// TODO: Add examples
+var dl = new Complex128Array( [ 3.0, 2.0, 1.0, 4.0, 2.0, 1.0 ] );
+var d = new Complex128Array( [ 2.0, 1.0, 4.0, 2.0, 5.0, 3.0, 6.0, 1.0 ] );
+var du = new Complex128Array( [ -1.0, 3.0, -2.0, 1.0, -3.0, 2.0 ] );
+
+zlangt.ndarray( 'max', 4, dl, 1, 0, d, 1, 0, du, 1, 0 );
 ```
 
 </section>

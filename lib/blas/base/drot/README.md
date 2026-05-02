@@ -36,8 +36,12 @@ Applies a plane rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var drot = require( '@stdlib/blas/base/drot' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
+
+drot.ndarray( 3, x, 1, 0, y, 1, 0, 0.8, 0.6 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ Applies a plane rotation, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var drot = require( '@stdlib/blas/base/drot' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
+
+drot.ndarray( 3, x, 1, 0, y, 1, 0, 0.8, 0.6 );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +94,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var drot = require( '@stdlib/blas/base/drot' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
+
+drot.ndarray( 3, x, 1, 0, y, 1, 0, 0.8, 0.6 );
 ```
 
 </section>

@@ -35,9 +35,15 @@ var zlarfb = require( '@stdlib/lapack/base/zlarfb' );
 Apply a complex block reflector H or its conjugate-transpose H^H to a.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarfb = require( '@stdlib/lapack/base/zlarfb' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N * N, -10, 10, opts );
+
+zlarfb.ndarray( 'left', 'no-transpose', 'forward', 'columnwise', N, N, N, V, N, 1, 0, T, N, 1, 0, C, N, 1, 0, WORK, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -64,9 +70,15 @@ The function has the following parameters:
 Apply a complex block reflector H or its conjugate-transpose H^H to a, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarfb = require( '@stdlib/lapack/base/zlarfb' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N * N, -10, 10, opts );
+
+zlarfb.ndarray( 'left', 'no-transpose', 'forward', 'columnwise', N, N, N, V, N, 1, 0, T, N, 1, 0, C, N, 1, 0, WORK, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -107,7 +119,13 @@ The function has the following additional parameters:
 ```javascript
 var zlarfb = require( '@stdlib/lapack/base/zlarfb' );
 
-// TODO: Add examples
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var T = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N * N, -10, 10, opts );
+
+zlarfb.ndarray( 'left', 'no-transpose', 'forward', 'columnwise', N, N, N, V, N, 1, 0, T, N, 1, 0, C, N, 1, 0, WORK, N, 1, 0 );
 ```
 
 </section>

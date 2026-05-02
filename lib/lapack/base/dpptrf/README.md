@@ -36,8 +36,11 @@ Compute the Cholesky factorization of a real symmetric positive definite matrix 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpptrf = require( '@stdlib/lapack/base/dpptrf' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 25.0, 5.0, 10.0, -5.0, 2.0, 6.0 ] );
+
+dpptrf( 'upper', 3, AP );
 ```
 
 The function has the following parameters:
@@ -52,8 +55,11 @@ Compute the Cholesky factorization of a real symmetric positive definite matrix 
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpptrf = require( '@stdlib/lapack/base/dpptrf' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 25.0, 5.0, 10.0, -5.0, 2.0, 6.0 ] );
+
+dpptrf( 'upper', 3, AP );
 ```
 
 The function has the following additional parameters:
@@ -82,9 +88,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dpptrf = require( '@stdlib/lapack/base/dpptrf' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 25.0, 5.0, 10.0, -5.0, 2.0, 6.0 ] );
+
+dpptrf( 'upper', 3, AP );
 ```
 
 </section>

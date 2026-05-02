@@ -36,8 +36,16 @@ Reduces a complex Hermitian band matrix to real tridiagonal form by unitary simi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhbtrd = require( '@stdlib/lapack/base/zhbtrd' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( 8 );
+var d = new Float64Array( 4 );
+var e = new Float64Array( 3 );
+var Q = new Complex128Array( 16 );
+var WORK = new Complex128Array( 4 );
+
+zhbtrd( 'column-major', 'initialize', 'upper', 4, 1, AB, 2, d, e, Q, 4, WORK );
 ```
 
 The function has the following parameters:
@@ -61,8 +69,16 @@ Reduces a complex Hermitian band matrix to real tridiagonal form by unitary simi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhbtrd = require( '@stdlib/lapack/base/zhbtrd' );
 
-// TODO: Add usage example
+var AB = new Complex128Array( 8 );
+var d = new Float64Array( 4 );
+var e = new Float64Array( 3 );
+var Q = new Complex128Array( 16 );
+var WORK = new Complex128Array( 4 );
+
+zhbtrd( 'column-major', 'initialize', 'upper', 4, 1, AB, 2, d, e, Q, 4, WORK );
 ```
 
 The function has the following additional parameters:
@@ -101,9 +117,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zhbtrd = require( '@stdlib/lapack/base/zhbtrd' );
 
-// TODO: Add examples
+var AB = new Complex128Array( 8 );
+var d = new Float64Array( 4 );
+var e = new Float64Array( 3 );
+var Q = new Complex128Array( 16 );
+var WORK = new Complex128Array( 4 );
+
+zhbtrd( 'column-major', 'initialize', 'upper', 4, 1, AB, 2, d, e, Q, 4, WORK );
 ```
 
 </section>

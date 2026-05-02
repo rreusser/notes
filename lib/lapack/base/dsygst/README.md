@@ -35,9 +35,13 @@ var dsygst = require( '@stdlib/lapack/base/dsygst' );
 Reduces a real symmetric-definite generalized eigenproblem to standard form.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsygst = require( '@stdlib/lapack/base/dsygst' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dsygst.ndarray( N, 'upper', N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Reduces a real symmetric-definite generalized eigenproblem to standard form, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsygst = require( '@stdlib/lapack/base/dsygst' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dsygst.ndarray( N, 'upper', N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +100,11 @@ The function has the following additional parameters:
 ```javascript
 var dsygst = require( '@stdlib/lapack/base/dsygst' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dsygst.ndarray( N, 'upper', N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

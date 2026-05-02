@@ -36,8 +36,14 @@ Estimates the reciprocal condition number of a real triangular band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dtbcon = require( '@stdlib/lapack/base/dtbcon' );
 
-// TODO: Add usage example
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 12 );
+var IWORK = new Int32Array( 4 );
+
+dtbcon( 'inf-norm', 'upper', 'non-unit', 4, 2, AB, 3, rcond, WORK, IWORK );
 ```
 
 The function has the following parameters:
@@ -59,8 +65,14 @@ Estimates the reciprocal condition number of a real triangular band matrix, usin
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dtbcon = require( '@stdlib/lapack/base/dtbcon' );
 
-// TODO: Add usage example
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 12 );
+var IWORK = new Int32Array( 4 );
+
+dtbcon( 'inf-norm', 'upper', 'non-unit', 4, 2, AB, 3, rcond, WORK, IWORK );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +106,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dtbcon = require( '@stdlib/lapack/base/dtbcon' );
 
-// TODO: Add examples
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 12 );
+var IWORK = new Int32Array( 4 );
+
+dtbcon( 'inf-norm', 'upper', 'non-unit', 4, 2, AB, 3, rcond, WORK, IWORK );
 ```
 
 </section>

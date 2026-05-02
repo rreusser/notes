@@ -36,8 +36,12 @@ var dgghrd = require( '@stdlib/lapack/base/dgghrd' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgghrd = require( '@stdlib/lapack/base/dgghrd' );
 
-// TODO: Add usage example
+var Q = new Float64Array( 9 );
+var Z = new Float64Array( 9 );
+
+dgghrd( 'column-major', 'initialize', 'initialize', 3, 1, 3, A, 3, B, 3, Q, 3, Z, 3 );
 ```
 
 The function has the following parameters:
@@ -63,8 +67,12 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgghrd = require( '@stdlib/lapack/base/dgghrd' );
 
-// TODO: Add usage example
+var Q = new Float64Array( 9 );
+var Z = new Float64Array( 9 );
+
+dgghrd( 'column-major', 'initialize', 'initialize', 3, 1, 3, A, 3, B, 3, Q, 3, Z, 3 );
 ```
 
 The function has the following additional parameters:
@@ -103,9 +111,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dgghrd = require( '@stdlib/lapack/base/dgghrd' );
 
-// TODO: Add examples
+var Q = new Float64Array( 9 );
+var Z = new Float64Array( 9 );
+
+dgghrd( 'column-major', 'initialize', 'initialize', 3, 1, 3, A, 3, B, 3, Q, 3, Z, 3 );
 ```
 
 </section>

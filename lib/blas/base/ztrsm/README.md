@@ -35,9 +35,13 @@ var ztrsm = require( '@stdlib/blas/base/ztrsm' );
 Solves one of the matrix equations:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrsm = require( '@stdlib/blas/base/ztrsm' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+ztrsm.ndarray( 'left', 'upper', 'no-transpose', 'non-unit', N, N, 1.0, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -60,9 +64,13 @@ The function has the following parameters:
 Solves one of the matrix equations:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztrsm = require( '@stdlib/blas/base/ztrsm' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+ztrsm.ndarray( 'left', 'upper', 'no-transpose', 'non-unit', N, N, 1.0, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +105,11 @@ The function has the following additional parameters:
 ```javascript
 var ztrsm = require( '@stdlib/blas/base/ztrsm' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+ztrsm.ndarray( 'left', 'upper', 'no-transpose', 'non-unit', N, N, 1.0, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

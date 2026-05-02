@@ -36,8 +36,17 @@ var dlacon = require( '@stdlib/lapack/base/dlacon' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlacon = require( '@stdlib/lapack/base/dlacon' );
 
-// TODO: Add usage example
+var n = 3;
+var v = new Float64Array( n );
+var x = new Float64Array( n );
+var ISGN = new Int32Array( n );
+var EST = new Float64Array( 1 );
+var KASE = new Int32Array( 1 );
+
+dlacon.ndarray( n, v, 1, 0, x, 1, 0, ISGN, 1, 0, EST, KASE );
 ```
 
 The function has the following parameters:
@@ -58,8 +67,17 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlacon = require( '@stdlib/lapack/base/dlacon' );
 
-// TODO: Add usage example
+var n = 3;
+var v = new Float64Array( n );
+var x = new Float64Array( n );
+var ISGN = new Int32Array( n );
+var EST = new Float64Array( 1 );
+var KASE = new Int32Array( 1 );
+
+dlacon.ndarray( n, v, 1, 0, x, 1, 0, ISGN, 1, 0, EST, KASE );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +107,18 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dlacon = require( '@stdlib/lapack/base/dlacon' );
 
-// TODO: Add examples
+var n = 3;
+var v = new Float64Array( n );
+var x = new Float64Array( n );
+var ISGN = new Int32Array( n );
+var EST = new Float64Array( 1 );
+var KASE = new Int32Array( 1 );
+
+dlacon.ndarray( n, v, 1, 0, x, 1, 0, ISGN, 1, 0, EST, KASE );
 ```
 
 </section>

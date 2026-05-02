@@ -35,9 +35,15 @@ var dorm2r = require( '@stdlib/lapack/base/dorm2r' );
 Overwrites the M-by-N matrix C with Q_C, Q__T_C, C_Q, or `C_Q*_T`.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dorm2r = require( '@stdlib/lapack/base/dorm2r' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorm2r.ndarray( 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -62,9 +68,15 @@ The function has the following parameters:
 Overwrites the M-by-N matrix C with Q_C, Q__T_C, C_Q, or `C_Q*_T`, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dorm2r = require( '@stdlib/lapack/base/dorm2r' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorm2r.ndarray( 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -101,7 +113,13 @@ The function has the following additional parameters:
 ```javascript
 var dorm2r = require( '@stdlib/lapack/base/dorm2r' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var C = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorm2r.ndarray( 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

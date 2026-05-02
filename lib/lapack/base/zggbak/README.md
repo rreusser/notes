@@ -35,9 +35,14 @@ var zggbak = require( '@stdlib/lapack/base/zggbak' );
 Back-transform eigenvectors of a balanced pair of general real matrices.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zggbak = require( '@stdlib/lapack/base/zggbak' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var LSCALE = discreteUniform( N, -10, 10, opts );
+var RSCALE = discreteUniform( N, -10, 10, opts );
+
+zggbak.ndarray( 'both', 'left', N, N, N, LSCALE, 1, 0, RSCALE, 1, 0, N, V, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,9 +66,14 @@ The function has the following parameters:
 Back-transform eigenvectors of a balanced pair of general real matrices, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zggbak = require( '@stdlib/lapack/base/zggbak' );
 
-// TODO: Add usage example
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var LSCALE = discreteUniform( N, -10, 10, opts );
+var RSCALE = discreteUniform( N, -10, 10, opts );
+
+zggbak.ndarray( 'both', 'left', N, N, N, LSCALE, 1, 0, RSCALE, 1, 0, N, V, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +107,12 @@ The function has the following additional parameters:
 ```javascript
 var zggbak = require( '@stdlib/lapack/base/zggbak' );
 
-// TODO: Add examples
+var N = 3;
+var V = discreteUniform( N * N, -10, 10, opts );
+var LSCALE = discreteUniform( N, -10, 10, opts );
+var RSCALE = discreteUniform( N, -10, 10, opts );
+
+zggbak.ndarray( 'both', 'left', N, N, N, LSCALE, 1, 0, RSCALE, 1, 0, N, V, N, 1, 0 );
 ```
 
 </section>

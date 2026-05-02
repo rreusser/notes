@@ -35,9 +35,13 @@ var ddot = require( '@stdlib/blas/base/ddot' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ddot = require( '@stdlib/blas/base/ddot' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+
+ddot( N, x, 1, 0, y, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -73,7 +77,11 @@ The function has the following parameters:
 ```javascript
 var ddot = require( '@stdlib/blas/base/ddot' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+
+ddot( N, x, 1, 0, y, 1, 0 );
 ```
 
 </section>

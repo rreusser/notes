@@ -35,9 +35,9 @@ var dtftri = require( '@stdlib/lapack/base/dtftri' );
 Computes the inverse of a real triangular matrix in Rectangular Full Packed format.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtftri = require( '@stdlib/lapack/base/dtftri' );
 
-// TODO: Add usage example
+dtftri( 'no-transpose', 'lower', 'non-unit', 3, A );
 ```
 
 The function has the following parameters:
@@ -53,9 +53,9 @@ The function has the following parameters:
 Computes the inverse of a real triangular matrix in Rectangular Full Packed format, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtftri = require( '@stdlib/lapack/base/dtftri' );
 
-// TODO: Add usage example
+dtftri( 'no-transpose', 'lower', 'non-unit', 3, A );
 ```
 
 The function has the following additional parameters:
@@ -86,7 +86,7 @@ The function has the following additional parameters:
 ```javascript
 var dtftri = require( '@stdlib/lapack/base/dtftri' );
 
-// TODO: Add examples
+dtftri( 'no-transpose', 'lower', 'non-unit', 3, A );
 ```
 
 </section>

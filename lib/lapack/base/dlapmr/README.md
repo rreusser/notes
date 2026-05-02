@@ -35,9 +35,13 @@ var dlapmr = require( '@stdlib/lapack/base/dlapmr' );
 Rearranges the rows of an M-by-N matrix X as specified by a permutation vector.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlapmr = require( '@stdlib/lapack/base/dlapmr' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+dlapmr.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Rearranges the rows of an M-by-N matrix X as specified by a permutation vector, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlapmr = require( '@stdlib/lapack/base/dlapmr' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+dlapmr.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var dlapmr = require( '@stdlib/lapack/base/dlapmr' );
 
-// TODO: Add examples
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+dlapmr.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 </section>

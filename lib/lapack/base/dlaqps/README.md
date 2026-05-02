@@ -35,9 +35,16 @@ var dlaqps = require( '@stdlib/lapack/base/dlaqps' );
 Computes a step of QR factorization with column pivoting of a.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqps = require( '@stdlib/lapack/base/dlaqps' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var F = discreteUniform( N * N, -10, 10, opts );
+var JPVT = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var AUXV = discreteUniform( N, -10, 10, opts );
+
+dlaqps.ndarray( N, N, 0, N, N, A, N, 1, 0, JPVT, 1, 0, TAU, 1, 0, 1, N, 0, 1, 1, 0, AUXV, 1, 0, F, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +73,16 @@ The function has the following parameters:
 Computes a step of QR factorization with column pivoting of a, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqps = require( '@stdlib/lapack/base/dlaqps' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var F = discreteUniform( N * N, -10, 10, opts );
+var JPVT = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var AUXV = discreteUniform( N, -10, 10, opts );
+
+dlaqps.ndarray( N, N, 0, N, N, A, N, 1, 0, JPVT, 1, 0, TAU, 1, 0, 1, N, 0, 1, 1, 0, AUXV, 1, 0, F, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -109,7 +123,14 @@ The function has the following additional parameters:
 ```javascript
 var dlaqps = require( '@stdlib/lapack/base/dlaqps' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var F = discreteUniform( N * N, -10, 10, opts );
+var JPVT = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var AUXV = discreteUniform( N, -10, 10, opts );
+
+dlaqps.ndarray( N, N, 0, N, N, A, N, 1, 0, JPVT, 1, 0, TAU, 1, 0, 1, N, 0, 1, 1, 0, AUXV, 1, 0, F, N, 1, 0 );
 ```
 
 </section>

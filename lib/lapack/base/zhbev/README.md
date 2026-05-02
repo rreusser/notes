@@ -36,8 +36,16 @@ Computes all eigenvalues and optionally eigenvectors of a complex Hermitian band
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhbev = require( '@stdlib/lapack/base/zhbev' );
 
-// TODO: Add usage example
+var RWORK = new Float64Array( 10 );
+var WORK = new Complex128Array( 4 );
+var AB = new Complex128Array( 2 * 4 );
+var W = new Float64Array( 4 );
+var Z = new Complex128Array( 16 );
+
+zhbev( 'column-major', 'compute-vectors', 'lower', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1, RWORK, 1 );
 ```
 
 The function has the following parameters:
@@ -64,8 +72,16 @@ Computes all eigenvalues and optionally eigenvectors of a complex Hermitian band
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhbev = require( '@stdlib/lapack/base/zhbev' );
 
-// TODO: Add usage example
+var RWORK = new Float64Array( 10 );
+var WORK = new Complex128Array( 4 );
+var AB = new Complex128Array( 2 * 4 );
+var W = new Float64Array( 4 );
+var Z = new Complex128Array( 16 );
+
+zhbev( 'column-major', 'compute-vectors', 'lower', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1, RWORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -101,9 +117,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zhbev = require( '@stdlib/lapack/base/zhbev' );
 
-// TODO: Add examples
+var RWORK = new Float64Array( 10 );
+var WORK = new Complex128Array( 4 );
+var AB = new Complex128Array( 2 * 4 );
+var W = new Float64Array( 4 );
+var Z = new Complex128Array( 16 );
+
+zhbev( 'column-major', 'compute-vectors', 'lower', 4, 1, AB, 2, W, 1, Z, 4, WORK, 1, RWORK, 1 );
 ```
 
 </section>

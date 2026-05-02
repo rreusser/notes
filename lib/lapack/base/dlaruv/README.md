@@ -35,9 +35,13 @@ var dlaruv = require( '@stdlib/lapack/base/dlaruv' );
 Returns a vector of n random real numbers from a uniform (0,1) distribution.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaruv = require( '@stdlib/lapack/base/dlaruv' );
 
-// TODO: Add usage example
+var N = 3;
+var iseed = discreteUniform( N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+
+dlaruv.ndarray( iseed, 1, 0, N, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +57,13 @@ The function has the following parameters:
 Returns a vector of n random real numbers from a uniform (0,1) distribution, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaruv = require( '@stdlib/lapack/base/dlaruv' );
 
-// TODO: Add usage example
+var N = 3;
+var iseed = discreteUniform( N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+
+dlaruv.ndarray( iseed, 1, 0, N, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -86,7 +94,11 @@ The function has the following additional parameters:
 ```javascript
 var dlaruv = require( '@stdlib/lapack/base/dlaruv' );
 
-// TODO: Add examples
+var N = 3;
+var iseed = discreteUniform( N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+
+dlaruv.ndarray( iseed, 1, 0, N, x, 1, 0 );
 ```
 
 </section>

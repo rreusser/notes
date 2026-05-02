@@ -35,9 +35,16 @@ var dlaqr0 = require( '@stdlib/lapack/base/dlaqr0' );
 Compute the number of simultaneous shifts (ISPEC=15) per iparmq.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr0 = require( '@stdlib/lapack/base/dlaqr0' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr0.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -49,9 +56,16 @@ The function has the following parameters:
 Compute the number of simultaneous shifts (ISPEC=15) per iparmq, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr0 = require( '@stdlib/lapack/base/dlaqr0' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr0.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -105,7 +119,14 @@ The function has the following additional parameters:
 ```javascript
 var dlaqr0 = require( '@stdlib/lapack/base/dlaqr0' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var WR = discreteUniform( N, -10, 10, opts );
+var WI = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dlaqr0.ndarray( 1, 1, N, N, N, H, N, 1, 0, WR, 1, 0, WI, 1, 0, 1, 1, Z, N, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

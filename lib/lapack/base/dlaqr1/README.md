@@ -35,9 +35,13 @@ var dlaqr1 = require( '@stdlib/lapack/base/dlaqr1' );
 Sets a scalar multiple of the first column of the product.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr1 = require( '@stdlib/lapack/base/dlaqr1' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+
+dlaqr1.ndarray( N, H, N, 1, 0, 1, 1, 1, 1, v, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +61,13 @@ The function has the following parameters:
 Sets a scalar multiple of the first column of the product, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaqr1 = require( '@stdlib/lapack/base/dlaqr1' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+
+dlaqr1.ndarray( N, H, N, 1, 0, 1, 1, 1, 1, v, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +100,11 @@ The function has the following additional parameters:
 ```javascript
 var dlaqr1 = require( '@stdlib/lapack/base/dlaqr1' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+
+dlaqr1.ndarray( N, H, N, 1, 0, 1, 1, 1, 1, v, 1, 0 );
 ```
 
 </section>

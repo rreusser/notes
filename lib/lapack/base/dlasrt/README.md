@@ -35,9 +35,9 @@ var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
 Sort an array of doubles in increasing or decreasing order using quicksort.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
 
-// TODO: Add usage example
+dlasrt.ndarray( 1, N, 1, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +52,9 @@ The function has the following parameters:
 Sort an array of doubles in increasing or decreasing order using quicksort, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
 
-// TODO: Add usage example
+dlasrt.ndarray( 1, N, 1, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -84,7 +84,7 @@ The function has the following additional parameters:
 ```javascript
 var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
 
-// TODO: Add examples
+dlasrt.ndarray( 1, N, 1, 1, 0 );
 ```
 
 </section>

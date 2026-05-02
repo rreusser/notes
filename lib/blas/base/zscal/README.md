@@ -36,8 +36,12 @@ Scale a complex double-precision vector by a complex constant.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zscal = require( '@stdlib/blas/base/zscal' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var za = new Float64Array( [ 2.0, 0.0 ] );
+
+zscal.ndarray( 2, za, zx, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,8 +57,12 @@ Scale a complex double-precision vector by a complex constant, using alternative
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zscal = require( '@stdlib/blas/base/zscal' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var za = new Float64Array( [ 2.0, 0.0 ] );
+
+zscal.ndarray( 2, za, zx, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -82,9 +90,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zscal = require( '@stdlib/blas/base/zscal' );
 
-// TODO: Add examples
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var za = new Float64Array( [ 2.0, 0.0 ] );
+
+zscal.ndarray( 2, za, zx, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,18 @@ var dsygvx = require( '@stdlib/lapack/base/dsygvx' );
 Computes selected eigenvalues, and optionally, eigenvectors of a real.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsygvx = require( '@stdlib/lapack/base/dsygvx' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dsygvx.ndarray( N, 'compute-vectors', 'all', 'upper', N, A, N, 1, 0, B, N, 1, 0, 1.0, 1.0, N, N, 1.0, 1, w, 1, 0, Z, N, 1, 0, WORK, 1, 0, N, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -74,9 +83,18 @@ The function has the following parameters:
 Computes selected eigenvalues, and optionally, eigenvectors of a real, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dsygvx = require( '@stdlib/lapack/base/dsygvx' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dsygvx.ndarray( N, 'compute-vectors', 'all', 'upper', N, A, N, 1, 0, B, N, 1, 0, 1.0, 1.0, N, N, 1.0, 1, w, 1, 0, Z, N, 1, 0, WORK, 1, 0, N, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -118,7 +136,16 @@ The function has the following additional parameters:
 ```javascript
 var dsygvx = require( '@stdlib/lapack/base/dsygvx' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var Z = discreteUniform( N * N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dsygvx.ndarray( N, 'compute-vectors', 'all', 'upper', N, A, N, 1, 0, B, N, 1, 0, 1.0, 1.0, N, N, 1.0, 1, w, 1, 0, Z, N, 1, 0, WORK, 1, 0, N, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 </section>

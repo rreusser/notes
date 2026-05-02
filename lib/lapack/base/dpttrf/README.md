@@ -35,9 +35,13 @@ var dpttrf = require( '@stdlib/lapack/base/dpttrf' );
 Computes the L_D_L^T factorization of a real symmetric positive definite tridiagonal matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpttrf = require( '@stdlib/lapack/base/dpttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+dpttrf.ndarray( N, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +57,13 @@ The function has the following parameters:
 Computes the L_D_L^T factorization of a real symmetric positive definite tridiagonal matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpttrf = require( '@stdlib/lapack/base/dpttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+dpttrf.ndarray( N, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -86,7 +94,11 @@ The function has the following additional parameters:
 ```javascript
 var dpttrf = require( '@stdlib/lapack/base/dpttrf' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+dpttrf.ndarray( N, d, 1, 0, e, 1, 0 );
 ```
 
 </section>

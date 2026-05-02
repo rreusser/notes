@@ -35,9 +35,14 @@ var zspsv = require( '@stdlib/lapack/base/zspsv' );
 Computes the solution to a complex system of linear equations A * X = B where A is symmetric in packed storage.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zspsv = require( '@stdlib/lapack/base/zspsv' );
 
-// TODO: Add usage example
+var IPIV = new Int32Array( 3 );
+var B = new Complex128Array([ 7.0, 2.0, 10.0, -1.5, 10.0, 2.0 ]);
+
+zspsv.ndarray( 'upper', 3, 1, AP, 1, 0, IPIV, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +61,14 @@ The function has the following parameters:
 Computes the solution to a complex system of linear equations A * X = B where A is symmetric in packed storage, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zspsv = require( '@stdlib/lapack/base/zspsv' );
 
-// TODO: Add usage example
+var IPIV = new Int32Array( 3 );
+var B = new Complex128Array([ 7.0, 2.0, 10.0, -1.5, 10.0, 2.0 ]);
+
+zspsv.ndarray( 'upper', 3, 1, AP, 1, 0, IPIV, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +101,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zspsv = require( '@stdlib/lapack/base/zspsv' );
 
-// TODO: Add examples
+var IPIV = new Int32Array( 3 );
+var B = new Complex128Array([ 7.0, 2.0, 10.0, -1.5, 10.0, 2.0 ]);
+
+zspsv.ndarray( 'upper', 3, 1, AP, 1, 0, IPIV, 1, 0, B, 1, 3, 0 );
 ```
 
 </section>

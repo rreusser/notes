@@ -36,8 +36,12 @@ Performs the symmetric rank 1 operation:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsyr = require( '@stdlib/blas/base/dsyr' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+
+dsyr.ndarray( 'upper', 2, 1.0, x, 1, 0, A, 2, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +61,12 @@ Performs the symmetric rank 1 operation:, using alternative indexing semantics.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dsyr = require( '@stdlib/blas/base/dsyr' );
 
-// TODO: Add usage example
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+
+dsyr.ndarray( 'upper', 2, 1.0, x, 1, 0, A, 2, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +97,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dsyr = require( '@stdlib/blas/base/dsyr' );
 
-// TODO: Add examples
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+
+dsyr.ndarray( 'upper', 2, 1.0, x, 1, 0, A, 2, 1, 0 );
 ```
 
 </section>

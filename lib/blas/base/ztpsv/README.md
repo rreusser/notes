@@ -36,8 +36,12 @@ Solves one of the systems of equations `A*x = b`, `A**T*x = b`, or `A**H*x = b`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ztpsv = require( '@stdlib/blas/base/ztpsv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 5.0, 0.0, 11.0, 0.0 ] );
+
+ztpsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +61,12 @@ Solves one of the systems of equations `A*x = b`, `A**T*x = b`, or `A**H*x = b`,
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ztpsv = require( '@stdlib/blas/base/ztpsv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 5.0, 0.0, 11.0, 0.0 ] );
+
+ztpsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +95,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var ztpsv = require( '@stdlib/blas/base/ztpsv' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 5.0, 0.0, 11.0, 0.0 ] );
+
+ztpsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
 ```
 
 </section>

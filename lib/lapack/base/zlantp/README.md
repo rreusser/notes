@@ -36,8 +36,11 @@ Returns the norm of a complex triangular matrix in packed storage.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlantp = require( '@stdlib/lapack/base/zlantp' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlantp( 'max', 'upper', 'non-unit', 3, AP, WORK );
 ```
 
 The function has the following parameters:
@@ -55,8 +58,11 @@ Returns the norm of a complex triangular matrix in packed storage, using alterna
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zlantp = require( '@stdlib/lapack/base/zlantp' );
 
-// TODO: Add usage example
+var WORK = new Float64Array( 3 );
+
+zlantp( 'max', 'upper', 'non-unit', 3, AP, WORK );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +93,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zlantp = require( '@stdlib/lapack/base/zlantp' );
 
-// TODO: Add examples
+var WORK = new Float64Array( 3 );
+
+zlantp( 'max', 'upper', 'non-unit', 3, AP, WORK );
 ```
 
 </section>

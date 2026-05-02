@@ -35,9 +35,14 @@ var dlaln2 = require( '@stdlib/lapack/base/dlaln2' );
 Solves a 1-by-1 or 2-by-2 linear system of the form:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaln2 = require( '@stdlib/lapack/base/dlaln2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+
+dlaln2.ndarray( 1, 1, 1, 1, 1, A, N, 1, 0, 1, 1, B, N, 1, 0, 1, 1, X, N, 1, 0, 1.0, 1 );
 ```
 
 The function has the following parameters:
@@ -63,9 +68,14 @@ The function has the following parameters:
 Solves a 1-by-1 or 2-by-2 linear system of the form:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlaln2 = require( '@stdlib/lapack/base/dlaln2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+
+dlaln2.ndarray( 1, 1, 1, 1, 1, A, N, 1, 0, 1, 1, B, N, 1, 0, 1, 1, X, N, 1, 0, 1.0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -105,7 +115,12 @@ The function has the following additional parameters:
 ```javascript
 var dlaln2 = require( '@stdlib/lapack/base/dlaln2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+
+dlaln2.ndarray( 1, 1, 1, 1, 1, A, N, 1, 0, 1, 1, B, N, 1, 0, 1, 1, X, N, 1, 0, 1.0, 1 );
 ```
 
 </section>

@@ -35,9 +35,13 @@ var zlaev2 = require( '@stdlib/lapack/base/zlaev2' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaev2 = require( '@stdlib/lapack/base/zlaev2' );
 
-// TODO: Add usage example
+var a = new Complex128( 5.0, 0.0 );
+var b = new Complex128( 1.0, 2.0 );
+var c = new Complex128( 3.0, 0.0 );
+
+zlaev2( a, b, c );
 ```
 
 The function has the following parameters:
@@ -51,9 +55,13 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaev2 = require( '@stdlib/lapack/base/zlaev2' );
 
-// TODO: Add usage example
+var a = new Complex128( 5.0, 0.0 );
+var b = new Complex128( 1.0, 2.0 );
+var c = new Complex128( 3.0, 0.0 );
+
+zlaev2( a, b, c );
 ```
 
 The function has the following additional parameters:
@@ -82,7 +90,11 @@ The function has the following additional parameters:
 ```javascript
 var zlaev2 = require( '@stdlib/lapack/base/zlaev2' );
 
-// TODO: Add examples
+var a = new Complex128( 5.0, 0.0 );
+var b = new Complex128( 1.0, 2.0 );
+var c = new Complex128( 3.0, 0.0 );
+
+zlaev2( a, b, c );
 ```
 
 </section>

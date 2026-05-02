@@ -35,9 +35,14 @@ var zlaqge = require( '@stdlib/lapack/base/zlaqge' );
 Equilibrates a complex general M-by-N matrix A using the row and column.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqge = require( '@stdlib/lapack/base/zlaqge' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+zlaqge.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1, 'none' );
 ```
 
 The function has the following parameters:
@@ -59,9 +64,14 @@ The function has the following parameters:
 Equilibrates a complex general M-by-N matrix A using the row and column, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqge = require( '@stdlib/lapack/base/zlaqge' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+zlaqge.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1, 'none' );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var zlaqge = require( '@stdlib/lapack/base/zlaqge' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var r = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+zlaqge.ndarray( N, N, A, N, 1, 0, r, 1, 0, c, 1, 0, 1, 1, 1, 'none' );
 ```
 
 </section>

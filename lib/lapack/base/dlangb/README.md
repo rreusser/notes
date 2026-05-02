@@ -36,8 +36,12 @@ Returns the norm of a real general band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlangb = require( '@stdlib/lapack/base/dlangb' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 3.0, -1.0, 2.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlangb.ndarray( 'frobenius', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +61,12 @@ Returns the norm of a real general band matrix, using alternative indexing seman
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlangb = require( '@stdlib/lapack/base/dlangb' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 3.0, -1.0, 2.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlangb.ndarray( 'frobenius', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,9 +97,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlangb = require( '@stdlib/lapack/base/dlangb' );
 
-// TODO: Add examples
+var AB = new Float64Array( [ 3.0, -1.0, 2.0 ] );
+var WORK = new Float64Array( 3 );
+
+dlangb.ndarray( 'frobenius', 3, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,13 @@ var zhpgst = require( '@stdlib/lapack/base/zhpgst' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhpgst = require( '@stdlib/lapack/base/zhpgst' );
 
-// TODO: Add usage example
+var BP = new Complex128Array( [ 4, 0, 1, 2, 10, 0 ] );
+var AP = new Complex128Array( [ 5, 0, 1, -1, 3, 0 ] );
+
+zhpgst( 1, 'upper', 2, AP, BP );
 ```
 
 The function has the following parameters:
@@ -53,9 +57,13 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zhpgst = require( '@stdlib/lapack/base/zhpgst' );
 
-// TODO: Add usage example
+var BP = new Complex128Array( [ 4, 0, 1, 2, 10, 0 ] );
+var AP = new Complex128Array( [ 5, 0, 1, -1, 3, 0 ] );
+
+zhpgst( 1, 'upper', 2, AP, BP );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +94,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zhpgst = require( '@stdlib/lapack/base/zhpgst' );
 
-// TODO: Add examples
+var BP = new Complex128Array( [ 4, 0, 1, 2, 10, 0 ] );
+var AP = new Complex128Array( [ 5, 0, 1, -1, 3, 0 ] );
+
+zhpgst( 1, 'upper', 2, AP, BP );
 ```
 
 </section>

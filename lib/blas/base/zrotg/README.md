@@ -36,8 +36,11 @@ Computes the parameters for a Givens rotation.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zrotg = require( '@stdlib/blas/base/zrotg' );
 
-// TODO: Add usage example
+var out = new Float64Array( 8 );
+
+zrotg.ndarray( 3.0, 0.0, 4.0, 0.0, out, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -51,8 +54,11 @@ Computes the parameters for a Givens rotation, using alternative indexing semant
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zrotg = require( '@stdlib/blas/base/zrotg' );
 
-// TODO: Add usage example
+var out = new Float64Array( 8 );
+
+zrotg.ndarray( 3.0, 0.0, 4.0, 0.0, out, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,9 +93,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zrotg = require( '@stdlib/blas/base/zrotg' );
 
-// TODO: Add examples
+var out = new Float64Array( 8 );
+
+zrotg.ndarray( 3.0, 0.0, 4.0, 0.0, out, 1, 0 );
 ```
 
 </section>

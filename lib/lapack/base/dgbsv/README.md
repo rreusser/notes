@@ -35,9 +35,14 @@ var dgbsv = require( '@stdlib/lapack/base/dgbsv' );
 Solves a system of linear equations A * X = B where A is an N-by-N band.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgbsv = require( '@stdlib/lapack/base/dgbsv' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgbsv.ndarray( N, N, N, N, AB, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +64,14 @@ The function has the following parameters:
 Solves a system of linear equations A * X = B where A is an N-by-N band, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgbsv = require( '@stdlib/lapack/base/dgbsv' );
 
-// TODO: Add usage example
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgbsv.ndarray( N, N, N, N, AB, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +107,12 @@ The function has the following additional parameters:
 ```javascript
 var dgbsv = require( '@stdlib/lapack/base/dgbsv' );
 
-// TODO: Add examples
+var N = 3;
+var AB = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgbsv.ndarray( N, N, N, N, AB, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

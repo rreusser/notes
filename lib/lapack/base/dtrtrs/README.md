@@ -35,9 +35,13 @@ var dtrtrs = require( '@stdlib/lapack/base/dtrtrs' );
 Solves a triangular system of the form:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtrtrs = require( '@stdlib/lapack/base/dtrtrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dtrtrs.ndarray( 'upper', 'no-transpose', 'non-unit', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +62,13 @@ The function has the following parameters:
 Solves a triangular system of the form:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dtrtrs = require( '@stdlib/lapack/base/dtrtrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dtrtrs.ndarray( 'upper', 'no-transpose', 'non-unit', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +103,11 @@ The function has the following additional parameters:
 ```javascript
 var dtrtrs = require( '@stdlib/lapack/base/dtrtrs' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+
+dtrtrs.ndarray( 'upper', 'no-transpose', 'non-unit', N, N, A, N, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

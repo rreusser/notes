@@ -36,8 +36,15 @@ Performs the Hermitian packed matrix-vector operation `y := alpha*A*x + beta*y`.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zhpmv = require( '@stdlib/blas/base/zhpmv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+var y = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+var beta = new Float64Array( [ 0.0, 0.0 ] );
+
+zhpmv.ndarray( 'upper', 2, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +66,15 @@ Performs the Hermitian packed matrix-vector operation `y := alpha*A*x + beta*y`,
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zhpmv = require( '@stdlib/blas/base/zhpmv' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+var y = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+var beta = new Float64Array( [ 0.0, 0.0 ] );
+
+zhpmv.ndarray( 'upper', 2, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +104,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zhpmv = require( '@stdlib/blas/base/zhpmv' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+var y = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+var beta = new Float64Array( [ 0.0, 0.0 ] );
+
+zhpmv.ndarray( 'upper', 2, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
 ```
 
 </section>

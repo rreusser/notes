@@ -35,9 +35,14 @@ var zlasr = require( '@stdlib/lapack/base/zlasr' );
 Applies a sequence of real plane rotations to a complex general matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlasr = require( '@stdlib/lapack/base/zlasr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlasr.ndarray( 'left', 1, 'forward', N, N, c, 1, 0, s, 1, 0, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -60,9 +65,14 @@ The function has the following parameters:
 Applies a sequence of real plane rotations to a complex general matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlasr = require( '@stdlib/lapack/base/zlasr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlasr.ndarray( 'left', 1, 'forward', N, N, c, 1, 0, s, 1, 0, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var zlasr = require( '@stdlib/lapack/base/zlasr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+var s = discreteUniform( N, -10, 10, opts );
+
+zlasr.ndarray( 'left', 1, 'forward', N, N, c, 1, 0, s, 1, 0, A, N, 1, 0 );
 ```
 
 </section>

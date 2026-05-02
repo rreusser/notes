@@ -35,9 +35,12 @@ var ztptrs = require( '@stdlib/lapack/base/ztptrs' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztptrs = require( '@stdlib/lapack/base/ztptrs' );
 
-// TODO: Add usage example
+var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
+
+ztptrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +60,12 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var ztptrs = require( '@stdlib/lapack/base/ztptrs' );
 
-// TODO: Add usage example
+var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
+
+ztptrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +97,12 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var ztptrs = require( '@stdlib/lapack/base/ztptrs' );
 
-// TODO: Add examples
+var B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
+
+ztptrs.ndarray( 'upper', 'no-transpose', 'non-unit', 3, 1, AP, 1, 0, B, 1, 3, 0 );
 ```
 
 </section>

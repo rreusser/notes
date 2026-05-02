@@ -35,9 +35,12 @@ var dlamrg = require( '@stdlib/lapack/base/dlamrg' );
 Merges two sorted integer sublists into a single sorted list.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlamrg = require( '@stdlib/lapack/base/dlamrg' );
 
-// TODO: Add usage example
+var a = discreteUniform( N, -10, 10, opts );
+var INDEX = discreteUniform( N, -10, 10, opts );
+
+dlamrg.ndarray( 1, 1, a, 1, 0, 1, 1, INDEX, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -56,9 +59,12 @@ The function has the following parameters:
 Merges two sorted integer sublists into a single sorted list, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlamrg = require( '@stdlib/lapack/base/dlamrg' );
 
-// TODO: Add usage example
+var a = discreteUniform( N, -10, 10, opts );
+var INDEX = discreteUniform( N, -10, 10, opts );
+
+dlamrg.ndarray( 1, 1, a, 1, 0, 1, 1, INDEX, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,7 +95,10 @@ The function has the following additional parameters:
 ```javascript
 var dlamrg = require( '@stdlib/lapack/base/dlamrg' );
 
-// TODO: Add examples
+var a = discreteUniform( N, -10, 10, opts );
+var INDEX = discreteUniform( N, -10, 10, opts );
+
+dlamrg.ndarray( 1, 1, a, 1, 0, 1, 1, INDEX, 1, 0 );
 ```
 
 </section>

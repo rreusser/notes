@@ -36,8 +36,21 @@ Solves a complex Hermitian positive definite system A*X = B where A is in packed
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zppsvx = require( '@stdlib/lapack/base/zppsvx' );
 
-// TODO: Add usage example
+var AFP = new Complex128Array( 6 );
+var S = new Float64Array( 3 );
+var equed = [ 'none' ];
+var B = new Complex128Array( new Float64Array( [ 1, 1, 2, -1, 3, 0.5 ] ) );
+var X = new Complex128Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zppsvx.ndarray( 'not-factored', 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, equed, S, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -71,8 +84,21 @@ Solves a complex Hermitian positive definite system A*X = B where A is in packed
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zppsvx = require( '@stdlib/lapack/base/zppsvx' );
 
-// TODO: Add usage example
+var AFP = new Complex128Array( 6 );
+var S = new Float64Array( 3 );
+var equed = [ 'none' ];
+var B = new Complex128Array( new Float64Array( [ 1, 1, 2, -1, 3, 0.5 ] ) );
+var X = new Complex128Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zppsvx.ndarray( 'not-factored', 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, equed, S, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -114,9 +140,22 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zppsvx = require( '@stdlib/lapack/base/zppsvx' );
 
-// TODO: Add examples
+var AFP = new Complex128Array( 6 );
+var S = new Float64Array( 3 );
+var equed = [ 'none' ];
+var B = new Complex128Array( new Float64Array( [ 1, 1, 2, -1, 3, 0.5 ] ) );
+var X = new Complex128Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zppsvx.ndarray( 'not-factored', 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, equed, S, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

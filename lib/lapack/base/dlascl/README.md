@@ -35,9 +35,12 @@ var dlascl = require( '@stdlib/lapack/base/dlascl' );
 Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlascl = require( '@stdlib/lapack/base/dlascl' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +61,12 @@ The function has the following parameters:
 Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlascl = require( '@stdlib/lapack/base/dlascl' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +98,10 @@ The function has the following additional parameters:
 ```javascript
 var dlascl = require( '@stdlib/lapack/base/dlascl' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+dlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
 ```
 
 </section>

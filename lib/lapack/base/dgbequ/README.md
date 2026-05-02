@@ -36,8 +36,13 @@ Computes row and column scalings to equilibrate a real general band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgbequ = require( '@stdlib/lapack/base/dgbequ' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 3, 1, 2 ] );
+var r = new Float64Array( 3 );
+var c = new Float64Array( 3 );
+
+dgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +64,13 @@ Computes row and column scalings to equilibrate a real general band matrix, usin
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgbequ = require( '@stdlib/lapack/base/dgbequ' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 3, 1, 2 ] );
+var r = new Float64Array( 3 );
+var c = new Float64Array( 3 );
+
+dgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,9 +102,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dgbequ = require( '@stdlib/lapack/base/dgbequ' );
 
-// TODO: Add examples
+var AB = new Float64Array( [ 3, 1, 2 ] );
+var r = new Float64Array( 3 );
+var c = new Float64Array( 3 );
+
+dgbequ.ndarray( 3, 3, 0, 0, AB, 1, 1, 0, r, 1, 0, c, 1, 0 );
 ```
 
 </section>

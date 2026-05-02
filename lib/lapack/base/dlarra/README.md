@@ -35,9 +35,15 @@ var dlarra = require( '@stdlib/lapack/base/dlarra' );
 Computes the splitting points with threshold based on the representation.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarra = require( '@stdlib/lapack/base/dlarra' );
 
-// TODO: Add usage example
+var N = 3;
+var e = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N * N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+
+dlarra.ndarray( N, d, 1, 0, e, 1, 0, 1, 1, 0, 1, 1, 1, ISPLIT, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -60,9 +66,15 @@ The function has the following parameters:
 Computes the splitting points with threshold based on the representation, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlarra = require( '@stdlib/lapack/base/dlarra' );
 
-// TODO: Add usage example
+var N = 3;
+var e = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N * N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+
+dlarra.ndarray( N, d, 1, 0, e, 1, 0, 1, 1, 0, 1, 1, 1, ISPLIT, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +107,13 @@ The function has the following additional parameters:
 ```javascript
 var dlarra = require( '@stdlib/lapack/base/dlarra' );
 
-// TODO: Add examples
+var N = 3;
+var e = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N * N, -10, 10, opts );
+var ISPLIT = discreteUniform( N, -10, 10, opts );
+
+dlarra.ndarray( N, d, 1, 0, e, 1, 0, 1, 1, 0, 1, 1, 1, ISPLIT, 1, 0 );
 ```
 
 </section>

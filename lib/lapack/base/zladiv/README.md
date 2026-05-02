@@ -35,9 +35,9 @@ var zladiv = require( '@stdlib/lapack/base/zladiv' );
 Performs complex division: out = X / Y, where X and Y are complex.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zladiv = require( '@stdlib/lapack/base/zladiv' );
 
-// TODO: Add usage example
+zladiv.ndarray( 1, 0, 1, 0, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +54,9 @@ The function has the following parameters:
 Performs complex division: out = X / Y, where X and Y are complex, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zladiv = require( '@stdlib/lapack/base/zladiv' );
 
-// TODO: Add usage example
+zladiv.ndarray( 1, 0, 1, 0, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var zladiv = require( '@stdlib/lapack/base/zladiv' );
 
-// TODO: Add examples
+zladiv.ndarray( 1, 0, 1, 0, 1, 0 );
 ```
 
 </section>

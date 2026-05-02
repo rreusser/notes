@@ -36,8 +36,12 @@ Applies a real plane rotation to a pair of complex double-precision vectors:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zdrot = require( '@stdlib/blas/base/zdrot' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+
+zdrot.ndarray( 2, zx, 1, 0, zy, 1, 0, 0.8, 0.6 );
 ```
 
 The function has the following parameters:
@@ -56,8 +60,12 @@ Applies a real plane rotation to a pair of complex double-precision vectors:, us
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var zdrot = require( '@stdlib/blas/base/zdrot' );
 
-// TODO: Add usage example
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+
+zdrot.ndarray( 2, zx, 1, 0, zy, 1, 0, 0.8, 0.6 );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +94,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var zdrot = require( '@stdlib/blas/base/zdrot' );
 
-// TODO: Add examples
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+
+zdrot.ndarray( 2, zx, 1, 0, zy, 1, 0, 0.8, 0.6 );
 ```
 
 </section>

@@ -35,9 +35,20 @@ var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );
 Computes the generalized singular value decomposition (GSVD) of an M-by-N.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dggsvd3.ndarray( 'compute-U', 'compute-V', 'compute-Q', N, N, 1, N, 1, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, U, N, 1, 0, V, N, 1, 0, Q, N, 1, 0, WORK, 1, 0, N, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -75,9 +86,20 @@ The function has the following parameters:
 Computes the generalized singular value decomposition (GSVD) of an M-by-N, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dggsvd3.ndarray( 'compute-U', 'compute-V', 'compute-Q', N, N, 1, N, 1, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, U, N, 1, 0, V, N, 1, 0, Q, N, 1, 0, WORK, 1, 0, N, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -125,7 +147,18 @@ The function has the following additional parameters:
 ```javascript
 var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var ALPHA = discreteUniform( N, -10, 10, opts );
+var BETA = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+
+dggsvd3.ndarray( 'compute-U', 'compute-V', 'compute-Q', N, N, 1, N, 1, A, N, 1, 0, B, N, 1, 0, ALPHA, 1, 0, BETA, 1, 0, U, N, 1, 0, V, N, 1, 0, Q, N, 1, 0, WORK, 1, 0, N, IWORK, 1, 0 );
 ```
 
 </section>

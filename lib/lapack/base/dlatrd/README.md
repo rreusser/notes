@@ -35,9 +35,15 @@ var dlatrd = require( '@stdlib/lapack/base/dlatrd' );
 Reduces NB rows and columns of a real symmetric matrix A to symmetric.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlatrd = require( '@stdlib/lapack/base/dlatrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N * N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+dlatrd.ndarray( 'upper', N, N, A, N, 1, 0, e, 1, 0, TAU, 1, 0, W, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -60,9 +66,15 @@ The function has the following parameters:
 Reduces NB rows and columns of a real symmetric matrix A to symmetric, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlatrd = require( '@stdlib/lapack/base/dlatrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N * N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+dlatrd.ndarray( 'upper', N, N, A, N, 1, 0, e, 1, 0, TAU, 1, 0, W, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -99,7 +111,13 @@ The function has the following additional parameters:
 ```javascript
 var dlatrd = require( '@stdlib/lapack/base/dlatrd' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var W = discreteUniform( N * N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+dlatrd.ndarray( 'upper', N, N, A, N, 1, 0, e, 1, 0, TAU, 1, 0, W, N, 1, 0 );
 ```
 
 </section>

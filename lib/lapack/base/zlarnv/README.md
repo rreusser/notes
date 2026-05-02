@@ -35,9 +35,9 @@ var zlarnv = require( '@stdlib/lapack/base/zlarnv' );
 Returns a vector of complex random numbers from a uniform or normal distribution.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarnv = require( '@stdlib/lapack/base/zlarnv' );
 
-// TODO: Add usage example
+zlarnv.ndarray( 1, iseed, 1, 0, 5, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +54,9 @@ The function has the following parameters:
 Returns a vector of complex random numbers from a uniform or normal distribution, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlarnv = require( '@stdlib/lapack/base/zlarnv' );
 
-// TODO: Add usage example
+zlarnv.ndarray( 1, iseed, 1, 0, 5, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -87,7 +87,7 @@ The function has the following additional parameters:
 ```javascript
 var zlarnv = require( '@stdlib/lapack/base/zlarnv' );
 
-// TODO: Add examples
+zlarnv.ndarray( 1, iseed, 1, 0, 5, x, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,12 @@ var zlascl = require( '@stdlib/lapack/base/zlascl' );
 Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlascl = require( '@stdlib/lapack/base/zlascl' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +61,12 @@ The function has the following parameters:
 Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlascl = require( '@stdlib/lapack/base/zlascl' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +98,10 @@ The function has the following additional parameters:
 ```javascript
 var zlascl = require( '@stdlib/lapack/base/zlascl' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+
+zlascl.ndarray( 1, N, N, 1, 1, N, N, A, N, 1, 0 );
 ```
 
 </section>

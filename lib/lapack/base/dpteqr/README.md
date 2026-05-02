@@ -36,8 +36,13 @@ var dpteqr = require( '@stdlib/lapack/base/dpteqr' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpteqr = require( '@stdlib/lapack/base/dpteqr' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0 ] );
+var e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var N = 4;
+
+dpteqr( 'column-major', 'initialize', N, d, 1, e, 1, new Float64Array( N * N ), N, new Float64Array( 4 * N ), 1 );
 ```
 
 The function has the following parameters:
@@ -60,8 +65,13 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dpteqr = require( '@stdlib/lapack/base/dpteqr' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0 ] );
+var e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var N = 4;
+
+dpteqr( 'column-major', 'initialize', N, d, 1, e, 1, new Float64Array( N * N ), N, new Float64Array( 4 * N ), 1 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +104,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dpteqr = require( '@stdlib/lapack/base/dpteqr' );
 
-// TODO: Add examples
+var d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0 ] );
+var e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var N = 4;
+
+dpteqr( 'column-major', 'initialize', N, d, 1, e, 1, new Float64Array( N * N ), N, new Float64Array( 4 * N ), 1 );
 ```
 
 </section>

@@ -35,9 +35,9 @@ var ztfsm = require( '@stdlib/lapack/base/ztfsm' );
 Solves a matrix equation with a complex triangular matrix in Rectangular Full Packed format.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztfsm = require( '@stdlib/lapack/base/ztfsm' );
 
-// TODO: Add usage example
+ztfsm( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 1, alpha, A, B );
 ```
 
 The function has the following parameters:
@@ -58,9 +58,9 @@ The function has the following parameters:
 Solves a matrix equation with a complex triangular matrix in Rectangular Full Packed format, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var ztfsm = require( '@stdlib/lapack/base/ztfsm' );
 
-// TODO: Add usage example
+ztfsm( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 1, alpha, A, B );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +94,7 @@ The function has the following additional parameters:
 ```javascript
 var ztfsm = require( '@stdlib/lapack/base/ztfsm' );
 
-// TODO: Add examples
+ztfsm( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 1, alpha, A, B );
 ```
 
 </section>

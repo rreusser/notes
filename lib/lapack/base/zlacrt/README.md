@@ -35,9 +35,15 @@ var zlacrt = require( '@stdlib/lapack/base/zlacrt' );
 Applies a plane rotation to two complex vectors, where both the cosine.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlacrt = require( '@stdlib/lapack/base/zlacrt' );
 
-// TODO: Add usage example
+var cx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var cy = new Complex128Array( [ 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 ] );
+var c = new Complex128( 0.6, 0.1 );
+var s = new Complex128( 0.8, 0.2 );
+
+zlacrt.ndarray( 3, cx, 1, 0, cy, 1, 0, c, s );
 ```
 
 The function has the following parameters:
@@ -55,9 +61,15 @@ The function has the following parameters:
 Applies a plane rotation to two complex vectors, where both the cosine, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlacrt = require( '@stdlib/lapack/base/zlacrt' );
 
-// TODO: Add usage example
+var cx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var cy = new Complex128Array( [ 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 ] );
+var c = new Complex128( 0.6, 0.1 );
+var s = new Complex128( 0.8, 0.2 );
+
+zlacrt.ndarray( 3, cx, 1, 0, cy, 1, 0, c, s );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +98,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlacrt = require( '@stdlib/lapack/base/zlacrt' );
 
-// TODO: Add examples
+var cx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+var cy = new Complex128Array( [ 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 ] );
+var c = new Complex128( 0.6, 0.1 );
+var s = new Complex128( 0.8, 0.2 );
+
+zlacrt.ndarray( 3, cx, 1, 0, cy, 1, 0, c, s );
 ```
 
 </section>

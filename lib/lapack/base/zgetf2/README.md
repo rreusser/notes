@@ -35,9 +35,9 @@ var zgetf2 = require( '@stdlib/lapack/base/zgetf2' );
 Computes an LU factorization of a general M-by-N complex matrix using partial pivoting with row interchanges (unblocked algorithm).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgetf2 = require( '@stdlib/lapack/base/zgetf2' );
 
-// TODO: Add usage example
+zgetf2( 'column-major', 3, 3, A, 3, IPIV, 1 );
 ```
 
 The function has the following parameters:
@@ -55,9 +55,9 @@ The function has the following parameters:
 Computes an LU factorization of a general M-by-N complex matrix using partial pivoting with row interchanges (unblocked algorithm), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgetf2 = require( '@stdlib/lapack/base/zgetf2' );
 
-// TODO: Add usage example
+zgetf2( 'column-major', 3, 3, A, 3, IPIV, 1 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +90,7 @@ The function has the following additional parameters:
 ```javascript
 var zgetf2 = require( '@stdlib/lapack/base/zgetf2' );
 
-// TODO: Add examples
+zgetf2( 'column-major', 3, 3, A, 3, IPIV, 1 );
 ```
 
 </section>

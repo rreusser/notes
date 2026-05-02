@@ -35,9 +35,15 @@ var dla_syrpvgrw = require( '@stdlib/lapack/base/dla_syrpvgrw' );
 Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a symmetric indefinite matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dla_syrpvgrw = require( '@stdlib/lapack/base/dla_syrpvgrw' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AF = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dla_syrpvgrw.ndarray( 'upper', N, 1, A, N, 1, 0, AF, N, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +63,15 @@ The function has the following parameters:
 Computes the reciprocal pivot growth factor `norm(A)/norm(U)` for a symmetric indefinite matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dla_syrpvgrw = require( '@stdlib/lapack/base/dla_syrpvgrw' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AF = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dla_syrpvgrw.ndarray( 'upper', N, 1, A, N, 1, 0, AF, N, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -98,7 +110,13 @@ The function has the following additional parameters:
 ```javascript
 var dla_syrpvgrw = require( '@stdlib/lapack/base/dla_syrpvgrw' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var AF = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dla_syrpvgrw.ndarray( 'upper', N, 1, A, N, 1, 0, AF, N, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

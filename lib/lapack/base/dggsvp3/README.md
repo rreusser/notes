@@ -35,9 +35,19 @@ var dggsvp3 = require( '@stdlib/lapack/base/dggsvp3' );
 Computes orthogonal matrices U, V, and Q such that:.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dggsvp3 = require( '@stdlib/lapack/base/dggsvp3' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dggsvp3.ndarray( 'compute-U', 'compute-V', 'compute-Q', N, 1, N, A, N, 1, 0, B, N, 1, 0, 1, 1, N, 1, U, N, 1, 0, V, N, 1, 0, Q, N, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -75,9 +85,19 @@ The function has the following parameters:
 Computes orthogonal matrices U, V, and Q such that:, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dggsvp3 = require( '@stdlib/lapack/base/dggsvp3' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dggsvp3.ndarray( 'compute-U', 'compute-V', 'compute-Q', N, 1, N, A, N, 1, 0, B, N, 1, 0, 1, 1, N, 1, U, N, 1, 0, V, N, 1, 0, Q, N, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -124,7 +144,17 @@ The function has the following additional parameters:
 ```javascript
 var dggsvp3 = require( '@stdlib/lapack/base/dggsvp3' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var U = discreteUniform( N * N, -10, 10, opts );
+var V = discreteUniform( N * N, -10, 10, opts );
+var Q = discreteUniform( N * N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dggsvp3.ndarray( 'compute-U', 'compute-V', 'compute-Q', N, 1, N, A, N, 1, 0, B, N, 1, 0, 1, 1, N, 1, U, N, 1, 0, V, N, 1, 0, Q, N, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

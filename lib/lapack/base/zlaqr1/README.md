@@ -35,9 +35,13 @@ var zlaqr1 = require( '@stdlib/lapack/base/zlaqr1' );
 CABS1 = |Re(z)| + |Im(z)|.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqr1 = require( '@stdlib/lapack/base/zlaqr1' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+
+zlaqr1.ndarray( N, H, N, 1, 0, 1, 1, v, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -50,9 +54,13 @@ The function has the following parameters:
 CABS1 = |Re(z)| + |Im(z)|, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlaqr1 = require( '@stdlib/lapack/base/zlaqr1' );
 
-// TODO: Add usage example
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+
+zlaqr1.ndarray( N, H, N, 1, 0, 1, 1, v, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zlaqr1 = require( '@stdlib/lapack/base/zlaqr1' );
 
-// TODO: Add examples
+var N = 3;
+var H = discreteUniform( N * N, -10, 10, opts );
+var v = discreteUniform( N, -10, 10, opts );
+
+zlaqr1.ndarray( N, H, N, 1, 0, 1, 1, v, 1, 0 );
 ```
 
 </section>

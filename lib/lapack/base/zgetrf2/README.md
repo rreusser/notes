@@ -35,9 +35,13 @@ var zgetrf2 = require( '@stdlib/lapack/base/zgetrf2' );
 Computes an LU factorization of a general complex M-by-N matrix A using.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgetrf2 = require( '@stdlib/lapack/base/zgetrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgetrf2.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Computes an LU factorization of a general complex M-by-N matrix A using, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgetrf2 = require( '@stdlib/lapack/base/zgetrf2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgetrf2.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zgetrf2 = require( '@stdlib/lapack/base/zgetrf2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zgetrf2.ndarray( N, N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 </section>

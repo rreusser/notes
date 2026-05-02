@@ -36,8 +36,12 @@ Returns the norm of a real triangular band matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlantb = require( '@stdlib/lapack/base/dlantb' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 0, 2, -3, 4, 1, -5, 6, 7 ] );
+var WORK = new Float64Array( 4 );
+
+dlantb.ndarray( 'max', 'upper', 'non-unit', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +61,12 @@ Returns the norm of a real triangular band matrix, using alternative indexing se
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlantb = require( '@stdlib/lapack/base/dlantb' );
 
-// TODO: Add usage example
+var AB = new Float64Array( [ 0, 2, -3, 4, 1, -5, 6, 7 ] );
+var WORK = new Float64Array( 4 );
+
+dlantb.ndarray( 'max', 'upper', 'non-unit', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +98,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlantb = require( '@stdlib/lapack/base/dlantb' );
 
-// TODO: Add examples
+var AB = new Float64Array( [ 0, 2, -3, 4, 1, -5, 6, 7 ] );
+var WORK = new Float64Array( 4 );
+
+dlantb.ndarray( 'max', 'upper', 'non-unit', 4, 1, AB, 1, 2, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,13 @@ var zlantr = require( '@stdlib/lapack/base/zlantr' );
 Computes the value of a matrix norm for a complex triangular or trapezoidal matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlantr = require( '@stdlib/lapack/base/zlantr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlantr.ndarray( '1', 'upper', 'non-unit', N, N, A, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +61,13 @@ The function has the following parameters:
 Computes the value of a matrix norm for a complex triangular or trapezoidal matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlantr = require( '@stdlib/lapack/base/zlantr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlantr.ndarray( '1', 'upper', 'non-unit', N, N, A, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -92,7 +100,11 @@ The function has the following additional parameters:
 ```javascript
 var zlantr = require( '@stdlib/lapack/base/zlantr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zlantr.ndarray( '1', 'upper', 'non-unit', N, N, A, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

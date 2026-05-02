@@ -36,8 +36,16 @@ Estimates the reciprocal condition number of a real symmetric packed matrix.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dspcon = require( '@stdlib/lapack/base/dspcon' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 1.0, 3.0, 1.0, 1.0, 2.0 ] );
+var IPIV = new Int32Array( 3 );
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 6 );
+var IWORK = new Int32Array( 3 );
+
+dspcon.ndarray( 'upper', 3, AP, 1, 0, IPIV, 1, 0, 6.0, rcond, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,8 +65,16 @@ Estimates the reciprocal condition number of a real symmetric packed matrix, usi
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dspcon = require( '@stdlib/lapack/base/dspcon' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 4.0, 1.0, 3.0, 1.0, 1.0, 2.0 ] );
+var IPIV = new Int32Array( 3 );
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 6 );
+var IWORK = new Int32Array( 3 );
+
+dspcon.ndarray( 'upper', 3, AP, 1, 0, IPIV, 1, 0, 6.0, rcond, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -93,9 +109,17 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dspcon = require( '@stdlib/lapack/base/dspcon' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 4.0, 1.0, 3.0, 1.0, 1.0, 2.0 ] );
+var IPIV = new Int32Array( 3 );
+var rcond = new Float64Array( 1 );
+var WORK = new Float64Array( 6 );
+var IWORK = new Int32Array( 3 );
+
+dspcon.ndarray( 'upper', 3, AP, 1, 0, IPIV, 1, 0, 6.0, rcond, WORK, 1, 0, IWORK, 1, 0 );
 ```
 
 </section>

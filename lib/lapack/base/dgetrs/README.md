@@ -35,9 +35,14 @@ var dgetrs = require( '@stdlib/lapack/base/dgetrs' );
 Solves a system of linear equations A_X = B or A^T_X = B with a general.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgetrs = require( '@stdlib/lapack/base/dgetrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgetrs.ndarray( 'no-transpose', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Solves a system of linear equations A_X = B or A^T_X = B with a general, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgetrs = require( '@stdlib/lapack/base/dgetrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgetrs.ndarray( 'no-transpose', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +106,12 @@ The function has the following additional parameters:
 ```javascript
 var dgetrs = require( '@stdlib/lapack/base/dgetrs' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var B = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+dgetrs.ndarray( 'no-transpose', N, N, A, N, 1, 0, IPIV, 1, 0, B, N, 1, 0 );
 ```
 
 </section>

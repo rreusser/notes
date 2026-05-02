@@ -35,9 +35,18 @@ var dlabrd = require( '@stdlib/lapack/base/dlabrd' );
 Reduces the first NB rows and columns of a real general M-by-N matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlabrd = require( '@stdlib/lapack/base/dlabrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var Y = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAUQ = discreteUniform( N, -10, 10, opts );
+var TAUP = discreteUniform( N, -10, 10, opts );
+
+dlabrd.ndarray( N, N, N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, X, N, 1, 0, Y, N, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -66,9 +75,18 @@ The function has the following parameters:
 Reduces the first NB rows and columns of a real general M-by-N matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlabrd = require( '@stdlib/lapack/base/dlabrd' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var Y = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAUQ = discreteUniform( N, -10, 10, opts );
+var TAUP = discreteUniform( N, -10, 10, opts );
+
+dlabrd.ndarray( N, N, N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, X, N, 1, 0, Y, N, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -110,7 +128,16 @@ The function has the following additional parameters:
 ```javascript
 var dlabrd = require( '@stdlib/lapack/base/dlabrd' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var X = discreteUniform( N * N, -10, 10, opts );
+var Y = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAUQ = discreteUniform( N, -10, 10, opts );
+var TAUP = discreteUniform( N, -10, 10, opts );
+
+dlabrd.ndarray( N, N, N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, X, N, 1, 0, Y, N, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,14 @@ var zunghr = require( '@stdlib/lapack/base/zunghr' );
 Generates the complex unitary matrix Q which is defined as the product.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zunghr = require( '@stdlib/lapack/base/zunghr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunghr.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -58,9 +63,14 @@ The function has the following parameters:
 Generates the complex unitary matrix Q which is defined as the product, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zunghr = require( '@stdlib/lapack/base/zunghr' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunghr.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -94,7 +104,12 @@ The function has the following additional parameters:
 ```javascript
 var zunghr = require( '@stdlib/lapack/base/zunghr' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+zunghr.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

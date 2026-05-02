@@ -36,8 +36,20 @@ var dptsvx = require( '@stdlib/lapack/base/dptsvx' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dptsvx = require( '@stdlib/lapack/base/dptsvx' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
+var e = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var df = new Float64Array( 4 );
+var ef = new Float64Array( 3 );
+var b = new Float64Array( [ 5.0, 8.0, 11.0, 10.0 ] );
+var x = new Float64Array( 4 );
+var rcond = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Float64Array( 8 );
+
+dptsvx.ndarray( 'not-factored', 4, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 4, 0, x, 1, 4, 0, rcond, ferr, 1, 0, berr, 1, 0, work, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -64,8 +76,20 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dptsvx = require( '@stdlib/lapack/base/dptsvx' );
 
-// TODO: Add usage example
+var d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
+var e = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var df = new Float64Array( 4 );
+var ef = new Float64Array( 3 );
+var b = new Float64Array( [ 5.0, 8.0, 11.0, 10.0 ] );
+var x = new Float64Array( 4 );
+var rcond = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Float64Array( 8 );
+
+dptsvx.ndarray( 'not-factored', 4, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 4, 0, x, 1, 4, 0, rcond, ferr, 1, 0, berr, 1, 0, work, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -112,9 +136,21 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dptsvx = require( '@stdlib/lapack/base/dptsvx' );
 
-// TODO: Add examples
+var d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
+var e = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+var df = new Float64Array( 4 );
+var ef = new Float64Array( 3 );
+var b = new Float64Array( [ 5.0, 8.0, 11.0, 10.0 ] );
+var x = new Float64Array( 4 );
+var rcond = new Float64Array( 1 );
+var ferr = new Float64Array( 1 );
+var berr = new Float64Array( 1 );
+var work = new Float64Array( 8 );
+
+dptsvx.ndarray( 'not-factored', 4, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 4, 0, x, 1, 4, 0, rcond, ferr, 1, 0, berr, 1, 0, work, 1, 0 );
 ```
 
 </section>

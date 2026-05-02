@@ -35,9 +35,9 @@ var zpftri = require( '@stdlib/lapack/base/zpftri' );
 Computes the inverse of a complex Hermitian positive definite matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpftri = require( '@stdlib/lapack/base/zpftri' );
 
-// TODO: Add usage example
+zpftri( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -52,9 +52,9 @@ The function has the following parameters:
 Computes the inverse of a complex Hermitian positive definite matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpftri = require( '@stdlib/lapack/base/zpftri' );
 
-// TODO: Add usage example
+zpftri( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -85,7 +85,7 @@ The function has the following additional parameters:
 ```javascript
 var zpftri = require( '@stdlib/lapack/base/zpftri' );
 
-// TODO: Add examples
+zpftri( 'no-transpose', 'lower', 3, A, 1, 0 );
 ```
 
 </section>

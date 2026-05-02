@@ -35,9 +35,14 @@ var dlargv = require( '@stdlib/lapack/base/dlargv' );
 Generates a vector of real plane rotations (Givens rotations).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlargv = require( '@stdlib/lapack/base/dlargv' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+dlargv.ndarray( N, x, 1, 0, y, 1, 0, c, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +60,14 @@ The function has the following parameters:
 Generates a vector of real plane rotations (Givens rotations), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlargv = require( '@stdlib/lapack/base/dlargv' );
 
-// TODO: Add usage example
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+dlargv.ndarray( N, x, 1, 0, y, 1, 0, c, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -89,7 +99,12 @@ The function has the following additional parameters:
 ```javascript
 var dlargv = require( '@stdlib/lapack/base/dlargv' );
 
-// TODO: Add examples
+var N = 3;
+var x = discreteUniform( N, -10, 10, opts );
+var y = discreteUniform( N, -10, 10, opts );
+var c = discreteUniform( N, -10, 10, opts );
+
+dlargv.ndarray( N, x, 1, 0, y, 1, 0, c, 1, 0 );
 ```
 
 </section>

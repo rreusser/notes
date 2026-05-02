@@ -35,9 +35,12 @@ var izmax1 = require( '@stdlib/lapack/base/izmax1' );
 Finds the index of the first vector element of maximum absolute value.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var izmax1 = require( '@stdlib/lapack/base/izmax1' );
 
-// TODO: Add usage example
+var N = 3;
+var ZX = discreteUniform( N, -10, 10, opts );
+
+izmax1.ndarray( N, ZX, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -51,9 +54,12 @@ The function has the following parameters:
 Finds the index of the first vector element of maximum absolute value, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var izmax1 = require( '@stdlib/lapack/base/izmax1' );
 
-// TODO: Add usage example
+var N = 3;
+var ZX = discreteUniform( N, -10, 10, opts );
+
+izmax1.ndarray( N, ZX, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -83,7 +89,10 @@ The function has the following additional parameters:
 ```javascript
 var izmax1 = require( '@stdlib/lapack/base/izmax1' );
 
-// TODO: Add examples
+var N = 3;
+var ZX = discreteUniform( N, -10, 10, opts );
+
+izmax1.ndarray( N, ZX, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,18 @@ var dstevx = require( '@stdlib/lapack/base/dstevx' );
 Computes selected eigenvalues and, optionally, eigenvectors of a real.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dstevx = require( '@stdlib/lapack/base/dstevx' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dstevx.ndarray( 'compute-vectors', 'all', N, d, 1, 0, e, 1, 0, 1.0, 1.0, N, N, 1.0, N, w, 1, 0, Z, N, 1, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -71,9 +80,18 @@ The function has the following parameters:
 Computes selected eigenvalues and, optionally, eigenvectors of a real, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dstevx = require( '@stdlib/lapack/base/dstevx' );
 
-// TODO: Add usage example
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dstevx.ndarray( 'compute-vectors', 'all', N, d, 1, 0, e, 1, 0, 1.0, 1.0, N, N, 1.0, N, w, 1, 0, Z, N, 1, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -111,7 +129,16 @@ The function has the following additional parameters:
 ```javascript
 var dstevx = require( '@stdlib/lapack/base/dstevx' );
 
-// TODO: Add examples
+var N = 3;
+var Z = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var w = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+var IWORK = discreteUniform( N, -10, 10, opts );
+var IFAIL = discreteUniform( N, -10, 10, opts );
+
+dstevx.ndarray( 'compute-vectors', 'all', N, d, 1, 0, e, 1, 0, 1.0, 1.0, N, N, 1.0, N, w, 1, 0, Z, N, 1, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
 ```
 
 </section>

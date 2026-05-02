@@ -35,9 +35,15 @@ var dlahr2 = require( '@stdlib/lapack/base/dlahr2' );
 Reduces NB columns of a real general n-by-(n-k+1) matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlahr2 = require( '@stdlib/lapack/base/dlahr2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var tau = discreteUniform( N, -10, 10, opts );
+var T = discreteUniform( N, -10, 10, opts );
+var Y = discreteUniform( N, -10, 10, opts );
+
+dlahr2.ndarray( N, N, N, A, N, 1, 0, tau, 1, 0, T, 1, 0, 1, Y, 1, 0, 1 );
 ```
 
 The function has the following parameters:
@@ -62,9 +68,15 @@ The function has the following parameters:
 Reduces NB columns of a real general n-by-(n-k+1) matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlahr2 = require( '@stdlib/lapack/base/dlahr2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var tau = discreteUniform( N, -10, 10, opts );
+var T = discreteUniform( N, -10, 10, opts );
+var Y = discreteUniform( N, -10, 10, opts );
+
+dlahr2.ndarray( N, N, N, A, N, 1, 0, tau, 1, 0, T, 1, 0, 1, Y, 1, 0, 1 );
 ```
 
 The function has the following additional parameters:
@@ -103,7 +115,13 @@ The function has the following additional parameters:
 ```javascript
 var dlahr2 = require( '@stdlib/lapack/base/dlahr2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var tau = discreteUniform( N, -10, 10, opts );
+var T = discreteUniform( N, -10, 10, opts );
+var Y = discreteUniform( N, -10, 10, opts );
+
+dlahr2.ndarray( N, N, N, A, N, 1, 0, tau, 1, 0, T, 1, 0, 1, Y, 1, 0, 1 );
 ```
 
 </section>

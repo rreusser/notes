@@ -35,9 +35,14 @@ var zptcon = require( '@stdlib/lapack/base/zptcon' );
 Computes the reciprocal of the condition number (in the 1-norm) of a complex.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zptcon = require( '@stdlib/lapack/base/zptcon' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zptcon.ndarray( N, d, 1, 0, e, 1, 0, 1.0, 1.0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +62,14 @@ The function has the following parameters:
 Computes the reciprocal of the condition number (in the 1-norm) of a complex, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zptcon = require( '@stdlib/lapack/base/zptcon' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zptcon.ndarray( N, d, 1, 0, e, 1, 0, 1.0, 1.0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +101,12 @@ The function has the following additional parameters:
 ```javascript
 var zptcon = require( '@stdlib/lapack/base/zptcon' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var RWORK = discreteUniform( N, -10, 10, opts );
+
+zptcon.ndarray( N, d, 1, 0, e, 1, 0, 1.0, 1.0, RWORK, 1, 0 );
 ```
 
 </section>

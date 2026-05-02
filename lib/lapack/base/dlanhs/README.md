@@ -35,9 +35,9 @@ var dlanhs = require( '@stdlib/lapack/base/dlanhs' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlanhs = require( '@stdlib/lapack/base/dlanhs' );
 
-// TODO: Add usage example
+dlanhs( 'column-major', 'max', 3, A, 3, WORK, 1 );
 ```
 
 The function has the following parameters:
@@ -55,9 +55,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlanhs = require( '@stdlib/lapack/base/dlanhs' );
 
-// TODO: Add usage example
+dlanhs( 'column-major', 'max', 3, A, 3, WORK, 1 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +90,7 @@ The function has the following additional parameters:
 ```javascript
 var dlanhs = require( '@stdlib/lapack/base/dlanhs' );
 
-// TODO: Add examples
+dlanhs( 'column-major', 'max', 3, A, 3, WORK, 1 );
 ```
 
 </section>

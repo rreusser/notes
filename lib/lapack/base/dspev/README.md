@@ -36,8 +36,14 @@ Computes all eigenvalues and, optionally, eigenvectors of a real symmetric matri
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspev = require( '@stdlib/lapack/base/dspev' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 5.0, 1.0, 2.0, 4.0, 1.0, 6.0 ] );
+var w = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dspev.ndarray( 'compute', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,8 +64,14 @@ Computes all eigenvalues and, optionally, eigenvectors of a real symmetric matri
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dspev = require( '@stdlib/lapack/base/dspev' );
 
-// TODO: Add usage example
+var AP = new Float64Array( [ 5.0, 1.0, 2.0, 4.0, 1.0, 6.0 ] );
+var w = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dspev.ndarray( 'compute', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -95,9 +107,15 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dspev = require( '@stdlib/lapack/base/dspev' );
 
-// TODO: Add examples
+var AP = new Float64Array( [ 5.0, 1.0, 2.0, 4.0, 1.0, 6.0 ] );
+var w = new Float64Array( 3 );
+var Z = new Float64Array( 9 );
+var WORK = new Float64Array( 9 );
+
+dspev.ndarray( 'compute', 'lower', 3, AP, 1, 0, w, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
 ```
 
 </section>

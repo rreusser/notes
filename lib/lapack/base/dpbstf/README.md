@@ -35,9 +35,9 @@ var dpbstf = require( '@stdlib/lapack/base/dpbstf' );
 @license Apache-2.0.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbstf = require( '@stdlib/lapack/base/dpbstf' );
 
-// TODO: Add usage example
+dpbstf.ndarray( 'upper', 4, 1, ab, 1, 2, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +54,9 @@ The function has the following parameters:
 @license Apache-2.0, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dpbstf = require( '@stdlib/lapack/base/dpbstf' );
 
-// TODO: Add usage example
+dpbstf.ndarray( 'upper', 4, 1, ab, 1, 2, 0 );
 ```
 
 The function has the following additional parameters:
@@ -88,7 +88,7 @@ The function has the following additional parameters:
 ```javascript
 var dpbstf = require( '@stdlib/lapack/base/dpbstf' );
 
-// TODO: Add examples
+dpbstf.ndarray( 'upper', 4, 1, ab, 1, 2, 0 );
 ```
 
 </section>

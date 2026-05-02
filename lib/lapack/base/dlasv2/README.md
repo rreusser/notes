@@ -35,9 +35,9 @@ var dlasv2 = require( '@stdlib/lapack/base/dlasv2' );
 Returns |a| with the sign of b (Fortran SIGN intrinsic).
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasv2 = require( '@stdlib/lapack/base/dlasv2' );
 
-// TODO: Add usage example
+dlasv2.ndarray( 1, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -51,9 +51,9 @@ The function has the following parameters:
 Returns |a| with the sign of b (Fortran SIGN intrinsic), using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasv2 = require( '@stdlib/lapack/base/dlasv2' );
 
-// TODO: Add usage example
+dlasv2.ndarray( 1, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -82,7 +82,7 @@ The function has the following additional parameters:
 ```javascript
 var dlasv2 = require( '@stdlib/lapack/base/dlasv2' );
 
-// TODO: Add examples
+dlasv2.ndarray( 1, 1, 1 );
 ```
 
 </section>

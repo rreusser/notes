@@ -35,9 +35,13 @@ var zlapmr = require( '@stdlib/lapack/base/zlapmr' );
 Rearranges the rows of an M-by-N complex matrix X as specified by a permutation vector.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlapmr = require( '@stdlib/lapack/base/zlapmr' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+zlapmr.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -55,9 +59,13 @@ The function has the following parameters:
 Rearranges the rows of an M-by-N complex matrix X as specified by a permutation vector, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlapmr = require( '@stdlib/lapack/base/zlapmr' );
 
-// TODO: Add usage example
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+zlapmr.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,7 +98,11 @@ The function has the following additional parameters:
 ```javascript
 var zlapmr = require( '@stdlib/lapack/base/zlapmr' );
 
-// TODO: Add examples
+var N = 3;
+var X = discreteUniform( N * N, -10, 10, opts );
+var k = discreteUniform( N, -10, 10, opts );
+
+zlapmr.ndarray( 1, N, N, X, N, 1, 0, k, 1, 0 );
 ```
 
 </section>

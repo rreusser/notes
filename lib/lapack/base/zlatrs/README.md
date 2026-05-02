@@ -35,9 +35,14 @@ var zlatrs = require( '@stdlib/lapack/base/zlatrs' );
 CABS1: |re(z)| + |im(z)|.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlatrs = require( '@stdlib/lapack/base/zlatrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var CNORM = discreteUniform( N, -10, 10, opts );
+
+zlatrs.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', N, A, N, 1, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -50,9 +55,14 @@ The function has the following parameters:
 CABS1: |re(z)| + |im(z)|, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zlatrs = require( '@stdlib/lapack/base/zlatrs' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var CNORM = discreteUniform( N, -10, 10, opts );
+
+zlatrs.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', N, A, N, 1, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -97,7 +107,12 @@ The function has the following additional parameters:
 ```javascript
 var zlatrs = require( '@stdlib/lapack/base/zlatrs' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var x = discreteUniform( N, -10, 10, opts );
+var CNORM = discreteUniform( N, -10, 10, opts );
+
+zlatrs.ndarray( 'upper', 'no-transpose', 'non-unit', 'no', N, A, N, 1, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 ```
 
 </section>

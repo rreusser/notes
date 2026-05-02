@@ -36,8 +36,22 @@ var zhpsvx = require( '@stdlib/lapack/base/zhpsvx' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpsvx = require( '@stdlib/lapack/base/zhpsvx' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( 6 );
+var AFP = new Complex128Array( 6 );
+var IPIV = new Int32Array( 3 );
+var B = new Complex128Array( 3 );
+var X = new Complex128Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zhpsvx.ndarray( 'not-factored', 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -70,8 +84,22 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhpsvx = require( '@stdlib/lapack/base/zhpsvx' );
 
-// TODO: Add usage example
+var AP = new Complex128Array( 6 );
+var AFP = new Complex128Array( 6 );
+var IPIV = new Int32Array( 3 );
+var B = new Complex128Array( 3 );
+var X = new Complex128Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zhpsvx.ndarray( 'not-factored', 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -113,9 +141,23 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zhpsvx = require( '@stdlib/lapack/base/zhpsvx' );
 
-// TODO: Add examples
+var AP = new Complex128Array( 6 );
+var AFP = new Complex128Array( 6 );
+var IPIV = new Int32Array( 3 );
+var B = new Complex128Array( 3 );
+var X = new Complex128Array( 3 );
+var rcond = new Float64Array( 1 );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zhpsvx.ndarray( 'not-factored', 'upper', 3, 1, AP, 1, 0, AFP, 1, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

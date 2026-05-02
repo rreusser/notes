@@ -35,9 +35,9 @@ var zupmtr = require( '@stdlib/lapack/base/zupmtr' );
 Overwrites a general complex matrix with a transformation from the unitary matrix Q returned by zhptrd.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zupmtr = require( '@stdlib/lapack/base/zupmtr' );
 
-// TODO: Add usage example
+zupmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +58,9 @@ The function has the following parameters:
 Overwrites a general complex matrix with a transformation from the unitary matrix Q returned by zhptrd, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zupmtr = require( '@stdlib/lapack/base/zupmtr' );
 
-// TODO: Add usage example
+zupmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -98,7 +98,7 @@ The function has the following additional parameters:
 ```javascript
 var zupmtr = require( '@stdlib/lapack/base/zupmtr' );
 
-// TODO: Add examples
+zupmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -36,8 +36,17 @@ Estimates the 1-norm of a square complex matrix A using reverse communication.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlacon = require( '@stdlib/lapack/base/zlacon' );
 
-// TODO: Add usage example
+var N = 3;
+var V = new Complex128Array( N );
+var X = new Complex128Array( N );
+var EST = new Float64Array( 1 );
+var KASE = new Int32Array( 1 );
+
+zlacon.ndarray( N, V, 1, 0, X, 1, 0, EST, KASE );
 ```
 
 The function has the following parameters:
@@ -56,8 +65,17 @@ Estimates the 1-norm of a square complex matrix A using reverse communication, u
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zlacon = require( '@stdlib/lapack/base/zlacon' );
 
-// TODO: Add usage example
+var N = 3;
+var V = new Complex128Array( N );
+var X = new Complex128Array( N );
+var EST = new Float64Array( 1 );
+var KASE = new Int32Array( 1 );
+
+zlacon.ndarray( N, V, 1, 0, X, 1, 0, EST, KASE );
 ```
 
 The function has the following additional parameters:
@@ -86,9 +104,18 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zlacon = require( '@stdlib/lapack/base/zlacon' );
 
-// TODO: Add examples
+var N = 3;
+var V = new Complex128Array( N );
+var X = new Complex128Array( N );
+var EST = new Float64Array( 1 );
+var KASE = new Int32Array( 1 );
+
+zlacon.ndarray( N, V, 1, 0, X, 1, 0, EST, KASE );
 ```
 
 </section>

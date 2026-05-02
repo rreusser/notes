@@ -36,8 +36,13 @@ Performs one of the matrix-vector operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgemv = require( '@stdlib/blas/base/dgemv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+dgemv.ndarray( 'no-transpose', 2, 2, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -61,8 +66,13 @@ Performs one of the matrix-vector operations:, using alternative indexing semant
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgemv = require( '@stdlib/blas/base/dgemv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+dgemv.ndarray( 'no-transpose', 2, 2, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -94,9 +104,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dgemv = require( '@stdlib/blas/base/dgemv' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+var y = new Float64Array( [ 0.0, 0.0 ] );
+
+dgemv.ndarray( 'no-transpose', 2, 2, 1.0, A, 2, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,13 @@ var zsytrf = require( '@stdlib/lapack/base/zsytrf' );
 Compute the factorization of a complex symmetric matrix using Bunch-Kaufman diagonal pivoting.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsytrf = require( '@stdlib/lapack/base/zsytrf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zsytrf.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -57,9 +61,13 @@ The function has the following parameters:
 Compute the factorization of a complex symmetric matrix using Bunch-Kaufman diagonal pivoting, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zsytrf = require( '@stdlib/lapack/base/zsytrf' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zsytrf.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -88,7 +96,11 @@ The function has the following additional parameters:
 ```javascript
 var zsytrf = require( '@stdlib/lapack/base/zsytrf' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+
+zsytrf.ndarray( 'upper', N, A, N, 1, 0, IPIV, 1, 0 );
 ```
 
 </section>

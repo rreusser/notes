@@ -36,8 +36,12 @@ Performs one of the matrix-vector operations `x := A*x`, `x := A**T*x`, or `x :=
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ztbmv = require( '@stdlib/blas/base/ztbmv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 0.0, 0.0, 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztbmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, 1, A, 2, 1, 0, x, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,8 +63,12 @@ Performs one of the matrix-vector operations `x := A*x`, `x := A**T*x`, or `x :=
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var ztbmv = require( '@stdlib/blas/base/ztbmv' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 0.0, 0.0, 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztbmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, 1, A, 2, 1, 0, x, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,9 +99,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var ztbmv = require( '@stdlib/blas/base/ztbmv' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 0.0, 0.0, 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztbmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, 1, A, 2, 1, 0, x, 1, 0 );
 ```
 
 </section>

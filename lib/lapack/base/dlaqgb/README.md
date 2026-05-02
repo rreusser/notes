@@ -36,8 +36,12 @@ Equilibrates a general M-by-N band matrix A with KL sub-diagonals and KU super-d
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlaqgb = require( '@stdlib/lapack/base/dlaqgb' );
 
-// TODO: Add usage example
+var r = new Float64Array( [ 0.5, 1.0, 0.8, 0.25 ] );
+var c = new Float64Array( [ 0.6, 1.0, 0.7, 0.9, 0.4 ] );
+
+dlaqgb.ndarray( 4, 5, 1, 2, AB, 1, 4, 0, r, 1, 0, c, 1, 0, 0.01, 0.01, 4.0 );
 ```
 
 The function has the following parameters:
@@ -62,8 +66,12 @@ Equilibrates a general M-by-N band matrix A with KL sub-diagonals and KU super-d
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dlaqgb = require( '@stdlib/lapack/base/dlaqgb' );
 
-// TODO: Add usage example
+var r = new Float64Array( [ 0.5, 1.0, 0.8, 0.25 ] );
+var c = new Float64Array( [ 0.6, 1.0, 0.7, 0.9, 0.4 ] );
+
+dlaqgb.ndarray( 4, 5, 1, 2, AB, 1, 4, 0, r, 1, 0, c, 1, 0, 0.01, 0.01, 4.0 );
 ```
 
 The function has the following additional parameters:
@@ -95,9 +103,13 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dlaqgb = require( '@stdlib/lapack/base/dlaqgb' );
 
-// TODO: Add examples
+var r = new Float64Array( [ 0.5, 1.0, 0.8, 0.25 ] );
+var c = new Float64Array( [ 0.6, 1.0, 0.7, 0.9, 0.4 ] );
+
+dlaqgb.ndarray( 4, 5, 1, 2, AB, 1, 4, 0, r, 1, 0, c, 1, 0, 0.01, 0.01, 4.0 );
 ```
 
 </section>

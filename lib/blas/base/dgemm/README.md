@@ -36,8 +36,13 @@ Performs one of the matrix-matrix operations:.
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgemm = require( '@stdlib/blas/base/dgemm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dgemm.ndarray( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 2, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -63,8 +68,13 @@ Performs one of the matrix-matrix operations:, using alternative indexing semant
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var dgemm = require( '@stdlib/blas/base/dgemm' );
 
-// TODO: Add usage example
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dgemm.ndarray( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 2, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -100,9 +110,14 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
 var dgemm = require( '@stdlib/blas/base/dgemm' );
 
-// TODO: Add examples
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var B = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+var C = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dgemm.ndarray( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 2, 1, 0, B, 2, 1, 0, 0.0, C, 2, 1, 0 );
 ```
 
 </section>

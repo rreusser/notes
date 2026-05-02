@@ -35,9 +35,15 @@ var zhetd2 = require( '@stdlib/lapack/base/zhetd2' );
 Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhetd2 = require( '@stdlib/lapack/base/zhetd2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+zhetd2.ndarray( 'upper', N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -59,9 +65,15 @@ The function has the following parameters:
 Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zhetd2 = require( '@stdlib/lapack/base/zhetd2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+zhetd2.ndarray( 'upper', N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -96,7 +108,13 @@ The function has the following additional parameters:
 ```javascript
 var zhetd2 = require( '@stdlib/lapack/base/zhetd2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+
+zhetd2.ndarray( 'upper', N, A, N, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 ```
 
 </section>

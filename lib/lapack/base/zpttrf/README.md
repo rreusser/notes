@@ -35,9 +35,13 @@ var zpttrf = require( '@stdlib/lapack/base/zpttrf' );
 Computes the L*D*L^H factorization of a complex Hermitian positive definite tridiagonal matrix.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpttrf = require( '@stdlib/lapack/base/zpttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+zpttrf.ndarray( N, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -53,9 +57,13 @@ The function has the following parameters:
 Computes the L*D*L^H factorization of a complex Hermitian positive definite tridiagonal matrix, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zpttrf = require( '@stdlib/lapack/base/zpttrf' );
 
-// TODO: Add usage example
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+zpttrf.ndarray( N, d, 1, 0, e, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -86,7 +94,11 @@ The function has the following additional parameters:
 ```javascript
 var zpttrf = require( '@stdlib/lapack/base/zpttrf' );
 
-// TODO: Add examples
+var N = 3;
+var d = discreteUniform( N, -10, 10, opts );
+var e = discreteUniform( N, -10, 10, opts );
+
+zpttrf.ndarray( N, d, 1, 0, e, 1, 0 );
 ```
 
 </section>

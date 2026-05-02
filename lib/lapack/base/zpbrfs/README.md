@@ -36,8 +36,17 @@ var zpbrfs = require( '@stdlib/lapack/base/zpbrfs' );
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zpbrfs = require( '@stdlib/lapack/base/zpbrfs' );
 
-// TODO: Add usage example
+var B = new Complex128Array( [ 4.0, 2.0, 10.0, 2.0, 13.0, 3.0 ] );
+var X = new Complex128Array( [ 1.0, 0.0, 1.0, 1.0, 2.0, 0.0 ] );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zpbrfs.ndarray( 'upper', 3, 1, 1, AB, 1, 2, 0, AFB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -65,8 +74,17 @@ The function has the following parameters:
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zpbrfs = require( '@stdlib/lapack/base/zpbrfs' );
 
-// TODO: Add usage example
+var B = new Complex128Array( [ 4.0, 2.0, 10.0, 2.0, 13.0, 3.0 ] );
+var X = new Complex128Array( [ 1.0, 0.0, 1.0, 1.0, 2.0, 0.0 ] );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zpbrfs.ndarray( 'upper', 3, 1, 1, AB, 1, 2, 0, AFB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -113,9 +131,18 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zpbrfs = require( '@stdlib/lapack/base/zpbrfs' );
 
-// TODO: Add examples
+var B = new Complex128Array( [ 4.0, 2.0, 10.0, 2.0, 13.0, 3.0 ] );
+var X = new Complex128Array( [ 1.0, 0.0, 1.0, 1.0, 2.0, 0.0 ] );
+var FERR = new Float64Array( 1 );
+var BERR = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+var RWORK = new Float64Array( 3 );
+
+zpbrfs.ndarray( 'upper', 3, 1, 1, AB, 1, 2, 0, AFB, 1, 2, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

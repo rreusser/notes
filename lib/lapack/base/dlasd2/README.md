@@ -35,9 +35,23 @@ var dlasd2 = require( '@stdlib/lapack/base/dlasd2' );
 Merge two sets of singular values in bidiagonal SVD divide and conquer.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasd2 = require( '@stdlib/lapack/base/dlasd2' );
 
-// TODO: Add usage example
+var N = 3;
+var U = discreteUniform( N * N, -10, 10, opts );
+var VT = discreteUniform( N * N, -10, 10, opts );
+var U2 = discreteUniform( N * N, -10, 10, opts );
+var VT2 = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DSIGMA = discreteUniform( N, -10, 10, opts );
+var IDXP = discreteUniform( N, -10, 10, opts );
+var IDX = discreteUniform( N, -10, 10, opts );
+var IDXC = discreteUniform( N, -10, 10, opts );
+var IDXQ = discreteUniform( N, -10, 10, opts );
+var COLTYP = discreteUniform( N, -10, 10, opts );
+
+dlasd2.ndarray( 1, 1, 1, N, d, 1, 0, z, 1, 0, 1.0, 1.0, U, N, 1, 0, VT, N, 1, 0, DSIGMA, 1, 0, U2, N, 1, 0, VT2, N, 1, 0, IDXP, 1, 0, IDX, 1, 0, IDXC, 1, 0, IDXQ, 1, 0, COLTYP, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -71,9 +85,23 @@ The function has the following parameters:
 Merge two sets of singular values in bidiagonal SVD divide and conquer, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasd2 = require( '@stdlib/lapack/base/dlasd2' );
 
-// TODO: Add usage example
+var N = 3;
+var U = discreteUniform( N * N, -10, 10, opts );
+var VT = discreteUniform( N * N, -10, 10, opts );
+var U2 = discreteUniform( N * N, -10, 10, opts );
+var VT2 = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DSIGMA = discreteUniform( N, -10, 10, opts );
+var IDXP = discreteUniform( N, -10, 10, opts );
+var IDX = discreteUniform( N, -10, 10, opts );
+var IDXC = discreteUniform( N, -10, 10, opts );
+var IDXQ = discreteUniform( N, -10, 10, opts );
+var COLTYP = discreteUniform( N, -10, 10, opts );
+
+dlasd2.ndarray( 1, 1, 1, N, d, 1, 0, z, 1, 0, 1.0, 1.0, U, N, 1, 0, VT, N, 1, 0, DSIGMA, 1, 0, U2, N, 1, 0, VT2, N, 1, 0, IDXP, 1, 0, IDX, 1, 0, IDXC, 1, 0, IDXQ, 1, 0, COLTYP, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -137,7 +165,21 @@ The function has the following additional parameters:
 ```javascript
 var dlasd2 = require( '@stdlib/lapack/base/dlasd2' );
 
-// TODO: Add examples
+var N = 3;
+var U = discreteUniform( N * N, -10, 10, opts );
+var VT = discreteUniform( N * N, -10, 10, opts );
+var U2 = discreteUniform( N * N, -10, 10, opts );
+var VT2 = discreteUniform( N * N, -10, 10, opts );
+var d = discreteUniform( N, -10, 10, opts );
+var z = discreteUniform( N, -10, 10, opts );
+var DSIGMA = discreteUniform( N, -10, 10, opts );
+var IDXP = discreteUniform( N, -10, 10, opts );
+var IDX = discreteUniform( N, -10, 10, opts );
+var IDXC = discreteUniform( N, -10, 10, opts );
+var IDXQ = discreteUniform( N, -10, 10, opts );
+var COLTYP = discreteUniform( N, -10, 10, opts );
+
+dlasd2.ndarray( 1, 1, 1, N, d, 1, 0, z, 1, 0, 1.0, 1.0, U, N, 1, 0, VT, N, 1, 0, DSIGMA, 1, 0, U2, N, 1, 0, VT2, N, 1, 0, IDXP, 1, 0, IDX, 1, 0, IDXC, 1, 0, IDXQ, 1, 0, COLTYP, 1, 0 );
 ```
 
 </section>

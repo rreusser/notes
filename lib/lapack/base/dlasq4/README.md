@@ -35,9 +35,9 @@ var dlasq4 = require( '@stdlib/lapack/base/dlasq4' );
 Computes an approximation TAU to the smallest eigenvalue using values of d.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq4 = require( '@stdlib/lapack/base/dlasq4' );
 
-// TODO: Add usage example
+dlasq4.ndarray( 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1.0, 1, 1 );
 ```
 
 The function has the following parameters:
@@ -63,9 +63,9 @@ The function has the following parameters:
 Computes an approximation TAU to the smallest eigenvalue using values of d, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq4 = require( '@stdlib/lapack/base/dlasq4' );
 
-// TODO: Add usage example
+dlasq4.ndarray( 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1.0, 1, 1 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +95,7 @@ The function has the following additional parameters:
 ```javascript
 var dlasq4 = require( '@stdlib/lapack/base/dlasq4' );
 
-// TODO: Add examples
+dlasq4.ndarray( 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1.0, 1, 1 );
 ```
 
 </section>

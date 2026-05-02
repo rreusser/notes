@@ -80,12 +80,18 @@ function scanModules( pkg ) {
 			} catch ( e ) {}
 		}
 
-		// Discover ALL test files (test.js, test.<routine>.js, test.ndarray.js)
+		// Discover ALL test files: test.js, test.<routine>.js, test.ndarray.js.
+		// The earlier regex `/^test(\.|$).*\.js$/` *failed to match `test.js`*
+		// (the bare-name file): after consuming `^test\.` it required a second
+		// `.js` ending, leaving nothing in between. That silently excluded the
+		// bare test.js from coverage runs and the test-count tally for any
+		// module whose substantive tests happened to live there (e.g. dlaein
+		// after wave 3 — reported 52% line coverage when the actual was 99%).
 		var testDir = path.join( dir, 'test' );
 		var testFiles = [];
 		if ( fs.existsSync( testDir ) ) {
 			testFiles = fs.readdirSync( testDir ).filter( function( f ) {
-				return /^test(\.|$).*\.js$/.test( f );
+				return /^test(\..+)?\.js$/.test( f );
 			}).map( function( f ) {
 				return path.join( testDir, f );
 			});
@@ -110,10 +116,28 @@ function scanModules( pkg ) {
 					'node --test --experimental-test-coverage ' + testFiles.join( ' ' ) + ' 2>&1',
 					{ timeout: 60000, encoding: 'utf8' }
 				);
+				// Parse Node's coverage-table output. Coverage-table lines start
+				// with the info-symbol `ℹ` (U+2139); test-result lines start
+				// with `✔`/`✖`. Restricting to `ℹ`-lines avoids a real bug we
+				// hit: a test name like `'dlartgs.ndarray: |x| < thresh branch'`
+				// contains both the module name AND a `|`, so the previous
+				// regex (`\b<name>\b` + `|`) latched onto the test result and
+				// then read the *previous* module's base.js coverage. Result:
+				// dlartgs reported 76% line cov when the actual was 100%.
 				var covLines = covOut.split( '\n' );
 				var foundDir = false;
 				for ( var li = 0; li < covLines.length; li++ ) {
 					var covLine = covLines[ li ];
+					// Only consider coverage-table lines, which start with the
+					// info-symbol `ℹ` (U+2139). Test-result lines start with
+					// `✔`/`✖`. Without this filter, a test name like
+					// `'dlartgs.ndarray: |x| < thresh branch'` matches both
+					// the module name AND a `|`, latches `foundDir = true` on
+					// the test line, then reads the *previous* module's
+					// base.js coverage (dlartgs read 76% when actual was 100%).
+					if ( !/^ℹ/.test( covLine ) ) {
+						continue;
+					}
 					if ( new RegExp( '\\b' + name + '\\b' ).test( covLine ) && /\|/.test( covLine ) ) {
 						foundDir = true;
 						continue;
@@ -703,7 +727,21 @@ var html = '<!DOCTYPE html>\n' +
 '.cov-warn { color: #ca8a04; font-weight: 600; }\n' +
 '.cov-bad { color: #dc2626; font-weight: 600; }\n' +
 'tr.filter-hidden { display: none !important; }\n' +
-'.controls { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }\n' +
+// `.controls` is wrapped in `.controls-resizer`, which is the actual
+// vertically-resizable box. The wrapper carries `resize: vertical` + a
+// fixed `min-height` and `overflow: auto`; controls inside scroll when
+// the user drags the wrapper shorter than its content. We use a wrapper
+// (instead of `resize: vertical` directly on `.controls`) because the
+// inner flex layout interferes with `position: absolute` for the custom
+// drag-handle pseudo-element below.
+'.controls-resizer { position: relative; margin-bottom: 1.5rem; background: white; border-radius: 8px; padding: 0.75rem 1rem 0.9rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); resize: vertical; overflow: auto; min-height: 2.5rem; max-height: 70vh; }\n' +
+// Custom drag-handle indicator in the bottom-right corner. The browser's
+// native `resize: vertical` handle is technically present but very small
+// and easy to miss on mobile/touch — these diagonal stripes make the
+// affordance obvious. The pseudo-element is `pointer-events: none` so
+// the underlying native handle still does the actual resizing.
+'.controls-resizer::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 12px; height: 12px; background-image: linear-gradient(135deg, transparent 0%, transparent 40%, #bbb 40%, #bbb 50%, transparent 50%, transparent 65%, #bbb 65%, #bbb 75%, transparent 75%); pointer-events: none; }\n' +
+'.controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }\n' +
 '.toggle { font-size: 0.9rem; cursor: pointer; user-select: none; }\n' +
 '.toggle input { margin-right: 0.4rem; cursor: pointer; }\n' +
 '.legend { margin-bottom: 1.5rem; background: white; border-radius: 8px; padding: 0.75rem 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-size: 0.85rem; }\n' +
@@ -749,6 +787,7 @@ Object.keys( db.meta.storage_codes ).sort().map( function( code ) {
 '</div>\n' +
 '</div>\n' +
 '</details>\n' +
+'<div class="controls-resizer">\n' +
 '<div class="controls">\n' +
 '<div class="filter-group">\n' +
 '<span>Storage:</span>\n' +
@@ -765,7 +804,8 @@ Object.keys( db.meta.storage_codes ).sort().filter( function( c ) {
 '<span>Search:</span>\n' +
 '<input type="text" id="searchInput" placeholder="algorithm or routine">\n' +
 '</div>\n' +
-'</div>\n' +
+'</div>\n' +   // /.controls
+'</div>\n' +   // /.controls-resizer
 sectionHTML( 'BLAS', blasAlgs ) +
 sectionHTML( 'LAPACK', lapackAlgs ) +
 '<script>\n' +

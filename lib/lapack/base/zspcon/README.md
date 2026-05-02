@@ -36,8 +36,15 @@ Estimates the reciprocal of the condition number of a complex symmetric matrix i
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zspcon = require( '@stdlib/lapack/base/zspcon' );
 
-// TODO: Add usage example
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var rcond = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+
+zspcon.ndarray( 'upper', 3, AP, 1, 0, IPIV, 1, 0, 1.0, rcond, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -58,8 +65,15 @@ Estimates the reciprocal of the condition number of a complex symmetric matrix i
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zspcon = require( '@stdlib/lapack/base/zspcon' );
 
-// TODO: Add usage example
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var rcond = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+
+zspcon.ndarray( 'upper', 3, AP, 1, 0, IPIV, 1, 0, 1.0, rcond, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -90,9 +104,16 @@ The function has the following additional parameters:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zspcon = require( '@stdlib/lapack/base/zspcon' );
 
-// TODO: Add examples
+var IPIV = new Int32Array( [ 0, 1, 2 ] );
+var rcond = new Float64Array( 1 );
+var WORK = new Complex128Array( 6 );
+
+zspcon.ndarray( 'upper', 3, AP, 1, 0, IPIV, 1, 0, 1.0, rcond, WORK, 1, 0 );
 ```
 
 </section>

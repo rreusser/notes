@@ -35,9 +35,13 @@ var zgebal = require( '@stdlib/lapack/base/zgebal' );
 Balances a general complex matrix A.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgebal = require( '@stdlib/lapack/base/zgebal' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var SCALE = discreteUniform( N, -10, 10, opts );
+
+zgebal.ndarray( 'both', N, A, N, 1, 0, N, N, SCALE, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -54,9 +58,13 @@ The function has the following parameters:
 Balances a general complex matrix A, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var zgebal = require( '@stdlib/lapack/base/zgebal' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var SCALE = discreteUniform( N, -10, 10, opts );
+
+zgebal.ndarray( 'both', N, A, N, 1, 0, N, N, SCALE, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -91,7 +99,11 @@ The function has the following additional parameters:
 ```javascript
 var zgebal = require( '@stdlib/lapack/base/zgebal' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var SCALE = discreteUniform( N, -10, 10, opts );
+
+zgebal.ndarray( 'both', N, A, N, 1, 0, N, N, SCALE, 1, 0 );
 ```
 
 </section>

@@ -35,9 +35,15 @@ var dgesc2 = require( '@stdlib/lapack/base/dgesc2' );
 Solves a system of linear equations A _ X = scale _ RHS with a general.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgesc2 = require( '@stdlib/lapack/base/dgesc2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var RHS = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var JPIV = discreteUniform( N, -10, 10, opts );
+
+dgesc2.ndarray( N, A, N, 1, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, 1.0 );
 ```
 
 The function has the following parameters:
@@ -58,9 +64,15 @@ The function has the following parameters:
 Solves a system of linear equations A _ X = scale _ RHS with a general, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dgesc2 = require( '@stdlib/lapack/base/dgesc2' );
 
-// TODO: Add usage example
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var RHS = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var JPIV = discreteUniform( N, -10, 10, opts );
+
+dgesc2.ndarray( N, A, N, 1, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, 1.0 );
 ```
 
 The function has the following additional parameters:
@@ -95,7 +107,13 @@ The function has the following additional parameters:
 ```javascript
 var dgesc2 = require( '@stdlib/lapack/base/dgesc2' );
 
-// TODO: Add examples
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var RHS = discreteUniform( N, -10, 10, opts );
+var IPIV = discreteUniform( N, -10, 10, opts );
+var JPIV = discreteUniform( N, -10, 10, opts );
+
+dgesc2.ndarray( N, A, N, 1, 0, RHS, 1, 0, IPIV, 1, 0, JPIV, 1, 0, 1.0 );
 ```
 
 </section>

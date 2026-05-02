@@ -35,9 +35,9 @@ var dlasq3 = require( '@stdlib/lapack/base/dlasq3' );
 Checks for deflation, computes a shift (TAU) and calls dqds. In case of.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq3 = require( '@stdlib/lapack/base/dlasq3' );
 
-// TODO: Add usage example
+dlasq3.ndarray( 1, 1, 1, 1, 0, 1, 1, 1.0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.0 );
 ```
 
 The function has the following parameters:
@@ -69,9 +69,9 @@ The function has the following parameters:
 Checks for deflation, computes a shift (TAU) and calls dqds. In case of, using alternative indexing semantics.
 
 ```javascript
-var Float64Array = require( '@stdlib/array/float64' );
+var dlasq3 = require( '@stdlib/lapack/base/dlasq3' );
 
-// TODO: Add usage example
+dlasq3.ndarray( 1, 1, 1, 1, 0, 1, 1, 1.0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.0 );
 ```
 
 The function has the following additional parameters:
@@ -101,7 +101,7 @@ The function has the following additional parameters:
 ```javascript
 var dlasq3 = require( '@stdlib/lapack/base/dlasq3' );
 
-// TODO: Add examples
+dlasq3.ndarray( 1, 1, 1, 1, 0, 1, 1, 1.0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.0 );
 ```
 
 </section>

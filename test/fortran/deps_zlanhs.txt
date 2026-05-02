@@ -1,4 +1,7 @@
+la_constants
+la_xisnan
 zlanhs
+zlassq
 disnan
 dlaisnan
 dlamch
