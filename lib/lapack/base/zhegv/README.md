@@ -44,7 +44,7 @@ var w = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var RWORK = discreteUniform( N, -10, 10, opts );
 
-zhegv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
+zhegv.ndarray( N, 'compute-vectors', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -79,7 +79,7 @@ var w = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var RWORK = discreteUniform( N, -10, 10, opts );
 
-zhegv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
+zhegv.ndarray( N, 'compute-vectors', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -124,7 +124,7 @@ var w = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var RWORK = discreteUniform( N, -10, 10, opts );
 
-zhegv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
+zhegv.ndarray( N, 'compute-vectors', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N, RWORK, 1, 0 );
 ```
 
 </section>

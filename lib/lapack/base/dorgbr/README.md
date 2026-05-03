@@ -42,13 +42,13 @@ var A = discreteUniform( N * N, -10, 10, opts );
 var TAU = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dorgbr.ndarray( 'q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+dorgbr.ndarray( 'apply-Q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **vect**: `vect`.
+-   **vect**: `'apply-Q'` to generate Q, `'apply-P'` to generate P^T.
 -   **M**: number of rows.
 -   **N**: number of columns.
 -   **K**: inner dimension.
@@ -71,7 +71,7 @@ var A = discreteUniform( N * N, -10, 10, opts );
 var TAU = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dorgbr.ndarray( 'q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+dorgbr.ndarray( 'apply-Q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -110,7 +110,7 @@ var A = discreteUniform( N * N, -10, 10, opts );
 var TAU = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dorgbr.ndarray( 'q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+dorgbr.ndarray( 'apply-Q', N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

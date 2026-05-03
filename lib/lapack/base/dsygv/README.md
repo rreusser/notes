@@ -43,7 +43,7 @@ var B = discreteUniform( N * N, -10, 10, opts );
 var w = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dsygv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N );
+dsygv.ndarray( N, 'compute-vectors', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following parameters:
@@ -75,7 +75,7 @@ var B = discreteUniform( N * N, -10, 10, opts );
 var w = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dsygv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N );
+dsygv.ndarray( N, 'compute-vectors', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N );
 ```
 
 The function has the following additional parameters:
@@ -118,7 +118,7 @@ var B = discreteUniform( N * N, -10, 10, opts );
 var w = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dsygv.ndarray( N, 'compute', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N );
+dsygv.ndarray( N, 'compute-vectors', 'upper', N, A, N, 1, 0, B, N, 1, 0, w, 1, 0, WORK, 1, 0, N );
 ```
 
 </section>

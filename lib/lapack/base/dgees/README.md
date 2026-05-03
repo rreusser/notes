@@ -45,7 +45,7 @@ var WI = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var BWORK = discreteUniform( N, -10, 10, opts );
 
-dgees.ndarray( 'compute-vectors', 'no-sort', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
+dgees.ndarray( 'compute-vectors', 'none', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -84,7 +84,7 @@ var WI = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var BWORK = discreteUniform( N, -10, 10, opts );
 
-dgees.ndarray( 'compute-vectors', 'no-sort', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
+dgees.ndarray( 'compute-vectors', 'none', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -131,7 +131,7 @@ var WI = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var BWORK = discreteUniform( N, -10, 10, opts );
 
-dgees.ndarray( 'compute-vectors', 'no-sort', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
+dgees.ndarray( 'compute-vectors', 'none', 1, N, A, N, 1, 0, 1, WR, 1, 0, WI, 1, 0, VS, N, 1, 0, WORK, 1, 0, N, BWORK, 1, 0 );
 ```
 
 </section>

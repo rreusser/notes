@@ -44,9 +44,9 @@ test inputs used.
 - `'compute-U'` / `'compute-V'` / `'compute-Q'` (compute the respective unitary factor)
 - `'none'` (skip)
 
-This differs from `dggsvp3` which uses `'compute'`/`'none'` uniformly.
 The distinct long-form strings avoid ambiguity about which factor is
-being requested in error messages and call sites.
+being requested in error messages and call sites. `dggsvp3` follows the
+same convention.
 
 ## Workspace parameters
 

@@ -43,13 +43,13 @@ var C = discreteUniform( N * N, -10, 10, opts );
 var TAU = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dormbr.ndarray( 'q', 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
+dormbr.ndarray( 'apply-Q', 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **vect**: `vect`.
+-   **vect**: `'apply-Q'` to apply Q, `'apply-P'` to apply P^T.
 -   **side**: specifies the side of the operation.
 -   **trans**: specifies whether the matrix should be transposed.
 -   **M**: number of rows.
@@ -77,7 +77,7 @@ var C = discreteUniform( N * N, -10, 10, opts );
 var TAU = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dormbr.ndarray( 'q', 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
+dormbr.ndarray( 'apply-Q', 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -120,7 +120,7 @@ var C = discreteUniform( N * N, -10, 10, opts );
 var TAU = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 
-dormbr.ndarray( 'q', 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
+dormbr.ndarray( 'apply-Q', 'left', 'no-transpose', N, N, N, A, N, 1, 0, TAU, 1, 0, C, N, 1, 0, WORK, 1, 0 );
 ```
 
 </section>

@@ -43,7 +43,7 @@ var IPIV = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var RWORK = discreteUniform( N, -10, 10, opts );
 
-zgbcon.ndarray( '1', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, RWORK, 1, 0 );
+zgbcon.ndarray( 'one-norm', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following parameters:
@@ -64,7 +64,7 @@ var IPIV = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var RWORK = discreteUniform( N, -10, 10, opts );
 
-zgbcon.ndarray( '1', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, RWORK, 1, 0 );
+zgbcon.ndarray( 'one-norm', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 The function has the following additional parameters:
@@ -118,7 +118,7 @@ var IPIV = discreteUniform( N, -10, 10, opts );
 var WORK = discreteUniform( N, -10, 10, opts );
 var RWORK = discreteUniform( N, -10, 10, opts );
 
-zgbcon.ndarray( '1', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, RWORK, 1, 0 );
+zgbcon.ndarray( 'one-norm', N, N, N, AB, N, 1, 0, IPIV, 1, 0, 1.0, 1.0, WORK, 1, 0, RWORK, 1, 0 );
 ```
 
 </section>

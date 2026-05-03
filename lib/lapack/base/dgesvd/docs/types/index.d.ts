@@ -25,12 +25,12 @@ import { Layout } from '@stdlib/types/blas';
 /**
 * Job specifier for the left singular vectors.
 */
-type JobU = 'all' | 'some' | 'overwrite' | 'none';
+type JobU = 'all-columns' | 'economy' | 'overwrite' | 'none';
 
 /**
 * Job specifier for the right singular vectors.
 */
-type JobVT = 'all' | 'some' | 'overwrite' | 'none';
+type JobVT = 'all-rows' | 'economy' | 'overwrite' | 'none';
 
 /**
 * Interface describing `dgesvd`.

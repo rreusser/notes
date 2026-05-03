@@ -42,7 +42,7 @@ var s = new Float64Array( 3 );
 var U = new Float64Array( 9 );
 var VT = new Float64Array( 9 );
 
-var info = dgesvd( 'row-major', 'all', 'all', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
+var info = dgesvd( 'row-major', 'all-columns', 'all-rows', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
 // returns 0
 // s => <Float64Array>[ 17.4125..., 0.8751..., 0.1968... ]
 ```
@@ -50,8 +50,8 @@ var info = dgesvd( 'row-major', 'all', 'all', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
 The function has the following parameters:
 
 -   **order**: storage layout (`'row-major'` or `'column-major'`).
--   **jobu**: how to compute the left singular vectors. One of `'all'` (return all M columns of U), `'some'` (return the first min(M,N) columns), `'overwrite'` (overwrite `A` with U), or `'none'` (do not compute U).
--   **jobvt**: how to compute the right singular vectors. One of `'all'` (return all N rows of V^T), `'some'` (return the first min(M,N) rows), `'overwrite'` (overwrite `A` with V^T), or `'none'` (do not compute V^T). At most one of `jobu` and `jobvt` may be `'overwrite'`.
+-   **jobu**: how to compute the left singular vectors. One of `'all-columns'` (return all M columns of U), `'economy'` (return the first min(M,N) columns), `'overwrite'` (overwrite `A` with U), or `'none'` (do not compute U).
+-   **jobvt**: how to compute the right singular vectors. One of `'all-rows'` (return all N rows of V^T), `'economy'` (return the first min(M,N) rows), `'overwrite'` (overwrite `A` with V^T), or `'none'` (do not compute V^T). At most one of `jobu` and `jobvt` may be `'overwrite'`.
 -   **M**: number of rows of `A`.
 -   **N**: number of columns of `A`.
 -   **A**: input matrix as a [`Float64Array`][mdn-float64array]; overwritten on output.
@@ -78,7 +78,7 @@ var s = new Float64Array( 3 );
 var U = new Float64Array( 9 );
 var VT = new Float64Array( 9 );
 
-var info = dgesvd.ndarray( 'all', 'all', 3, 3, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0 );
+var info = dgesvd.ndarray( 'all-columns', 'all-rows', 3, 3, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0 );
 // returns 0
 ```
 
@@ -124,7 +124,7 @@ var s = new Float64Array( 3 );
 var U = new Float64Array( 9 );
 var VT = new Float64Array( 9 );
 
-var info = dgesvd( 'row-major', 'all', 'all', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
+var info = dgesvd( 'row-major', 'all-columns', 'all-rows', 3, 3, A, 3, s, 1, U, 3, VT, 3 );
 console.log( 'info: %d', info );
 console.log( 's: %s', s.toString() );
 ```
