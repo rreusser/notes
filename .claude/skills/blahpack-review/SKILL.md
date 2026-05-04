@@ -139,26 +139,20 @@ return base( jobu, ... );    // BUG: passes 'all' through
 wantua = ( jobu === 'all-columns' );   // never matches; routine takes the no-op path
 ```
 
-**Two acceptable patterns. Pick one and stick to it:**
+**Rule: ndarray validator strings, wrapper validator strings, and base
+dispatch strings MUST be identical.** No translation tables (`*_MAP`),
+no aliases. Pick one canonical name per concept and use it everywhere
+— base.js, wrappers, ndarray.js, tests, examples, README.
 
-1. **Identical strings.** ndarray and base both check the same literal set
-   (`'upper'`/`'lower'`, `'no-transpose'`/`'transpose'`/`'conjugate-transpose'`).
-   This is the default. No mapping needed.
+We tried the "friendly external name → specific internal name" pattern
+(e.g. `'all'` → `'all-columns'`) and **banished it**: it just creates
+two vocabularies to keep in sync and makes validator/base mismatches
+silent. Use the more specific name (`'all-columns'`/`'all-rows'`,
+`'compute-U'`/`'compute-V'`/`'compute-Q'`, `'compute-vectors'`,
+`'apply-Q'`/`'apply-P'`, `'inf-norm'`, etc.) directly.
 
-2. **Explicit mapping table.** When the public API and the internal kernel
-   want different vocabularies (e.g. user-facing `'all'`/`'some'` mapping to
-   internal `'all-columns'`/`'economy'` for SVD's JOBU), declare the map at
-   module scope and apply it before the base call:
-   ```js
-   var JOBU_MAP = {
-       'all': 'all-columns', 'some': 'economy',
-       'overwrite': 'overwrite', 'none': 'none'
-   };
-   // ...
-   return base( JOBU_MAP[ jobu ], ... );
-   ```
-   Mirror the same pattern in `<routine>.js` (the layout wrapper) — both
-   public surfaces accept the user-facing strings.
+When reviewing, if you see a `*_MAP` declaration in `lib/*.js` (not
+test fixtures), flag it for removal.
 
 **Anti-pattern: single-branch validators that exclude valid values.** A real
 example from `dorgbr.js` and `dormbr.js`:
@@ -187,8 +181,8 @@ grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/ndarray.js
 grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/base.js
 ```
 
-The two sets must either be equal, or related by an explicit `*_MAP`
-table at the top of the wrapper file.
+These should print identical sets. If they differ, fix the diverging
+file — do NOT add a translation table.
 
 ---
 

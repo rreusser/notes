@@ -962,25 +962,26 @@ recognizes, and the routine takes a no-op or wrong-mode branch while still
 returning `info=0`. This bug class has been seen in dgesvd, dorgbr, dormbr,
 and dlascl.
 
-Two acceptable patterns. **Pick one per routine and verify it.**
+**Rule: ndarray validator strings, wrapper validator strings, and base
+dispatch strings MUST be identical.** No translation tables (`*_MAP`),
+no aliases. Pick one canonical name per concept and use it everywhere
+— base.js, wrappers, ndarray.js, tests, examples, README.
 
-1. **Identical strings.** ndarray and base both check the same literal set.
-   This is the default; no mapping needed.
+We tried the "friendly external name → specific internal name" pattern
+(e.g. `'all'` → `'all-columns'`) and **banished it**: it just creates
+two vocabularies to keep in sync and makes validator/base mismatches
+silent. Use the more specific name (`'all-columns'`/`'all-rows'`,
+`'compute-U'`/`'compute-V'`/`'compute-Q'`, `'compute-vectors'`,
+`'apply-Q'`/`'apply-P'`, `'inf-norm'`, etc.) directly.
 
-2. **Explicit mapping.** When the public API and internal kernel use
-   different vocabularies (e.g. user-facing `'all'`/`'some'` mapping to
-   internal `'all-columns'`/`'economy'` for SVD's JOBU), declare a
-   module-scope map and apply it before the base call:
-   ```js
-   var JOBU_MAP = {
-       'all': 'all-columns', 'some': 'economy',
-       'overwrite': 'overwrite', 'none': 'none'
-   };
-   // ...
-   return base( JOBU_MAP[ jobu ], ... );
-   ```
-   Mirror the same map in `<routine>.js` (the layout wrapper) so both
-   public surfaces accept the same vocabulary.
+**Picking the canonical name.** When choosing between competing forms:
+- Prefer the more semantically specific one (`'all-columns'` over `'all'`,
+  since `'all'` is ambiguous between rows and columns).
+- Match the project's existing canonical for the same concept — see
+  the "Canonical string flag values" table later in this section. For
+  jobz/jobvs/jobvl/jobvr the canonical is `'no-vectors'`/`'compute-vectors'`.
+- Avoid single-letter forms (`'q'`, `'p'`, `'V'`, `'N'`) — they're the
+  Fortran shorthand we're translating away from.
 
 **Anti-pattern: single-branch validators.** Real example from `dorgbr.js`:
 
@@ -1003,9 +1004,58 @@ grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/ndarray.js
 
 # Strings base.js dispatches on:
 grep -nE "[!=]==.*'[a-z-]+'" lib/<pkg>/base/<routine>/lib/base.js
+
+# These should print identical sets. If they differ, fix base.js or the
+# wrapper — do NOT add a translation table.
 ```
 
-The two sets must either be equal, or related by an explicit `*_MAP`.
+### Canonical string flag values
+
+Use these exact long-form strings end-to-end (base.js dispatch, wrapper
+validators, ndarray.js validators, tests, examples, README). Never
+abbreviate, never alias.
+
+| Param family | Canonical values |
+|--------------|------------------|
+| `order` | `'row-major'`, `'column-major'` |
+| `uplo` | `'upper'`, `'lower'` |
+| `trans`, `transa`, `transb`, `transr` | `'no-transpose'`, `'transpose'`, `'conjugate-transpose'` |
+| `side` | `'left'`, `'right'` |
+| `diag` | `'unit'`, `'non-unit'` |
+| `direct` | `'forward'`, `'backward'` |
+| `storev` | `'columnwise'`, `'rowwise'` |
+| `norm` | `'max'`, `'one-norm'`, `'inf-norm'`, `'frobenius'` |
+| `compz`, `compq` | `'none'`, `'initialize'`, `'update'` |
+| `jobz`, `jobvl`, `jobvr`, `jobvs`, `jobvsl`, `jobvsr` | `'no-vectors'`, `'compute-vectors'` |
+| `jobu` (gesvd family) | `'all-columns'`, `'economy'`, `'overwrite'`, `'none'` |
+| `jobvt` (gesvd family) | `'all-rows'`, `'economy'`, `'overwrite'`, `'none'` |
+| `jobu`, `jobv`, `jobq` (ggsvd3/ggsvp3 family) | `'compute-U'`/`'compute-V'`/`'compute-Q'`, `'none'` |
+| `jobu`, `jobv`, `jobq` (tgsja family) | `'compute-vectors'`, `'initialize'`, `'none'` |
+| `vect` (orgbr/ormbr/ungbr/unmbr) | `'apply-Q'`, `'apply-P'` |
+| `vect` (sbtrd/hbtrd) | `'none'`, `'initialize'`, `'update'` |
+| `vect` (gbbrd) | `'no-vectors'`, `'q-only'`, `'p-only'`, `'both'` |
+| `range` (eigenvalue selection) | `'all'`, `'value'`, `'index'` |
+| `howmny` | `'all'`, `'backtransform'`, `'selected'` |
+| `range` (dlarrd, dstebz block selection — not the eigenvalue range) | `'all'`, `'value'`, `'index'` |
+| `order` (dlarrd, dstebz — block ordering, NOT the layout `order`) | `'block'`, `'entire'` |
+| `fact` (svx family) | `'not-factored'`, `'equilibrate'`, `'factored'` |
+| `equed` (gesvx/gbsvx/laqge/laqsy family) | `'none'`, `'row'`, `'column'`, `'both'` |
+| `equed` (pbsvx/ppsvx/posvx family) | `'yes'`, `'none'` |
+| `sort` | `'none'`, `'sort'` |
+| `normin` | `'no'`, `'yes'` |
+| `signs` | `'no-signs'`, `'compute-signs'` |
+| `way` | `'convert'`, `'revert'` |
+| `job` (gebal) | `'none'`, `'permute'`, `'scale'`, `'both'` |
+| `job` (hseqr) | `'eigenvalues'`, `'schur'` |
+| `job` (ddisna) | `'eigenvalues'`, `'left-vectors'`, `'right-vectors'` |
+| `cmach` (dlamch) | `'epsilon'`, `'safe-minimum'`, `'precision'`, `'base'`, `'digits'`, `'rounding'`, `'min-exponent'`, `'underflow'`, `'max-exponent'`, `'overflow'` |
+
+When translating a routine whose flag isn't in this table, search for
+the same flag name in already-translated sister modules (e.g. real ↔
+complex pair) and adopt their canonical. Don't invent a new vocabulary
+unless no precedent exists. If you DO invent one, prefer the more
+semantically specific form (`'all-columns'` over `'all'`, since a single
+word may be ambiguous when paired with an analogous flag like jobvt).
 
 ### Recurring scaffold-emitted noise to scrub
 

@@ -32,6 +32,13 @@ var COMMENT_OR_REQUIRE = /\/\/|^\s*\*|eslint|require/;
 // Skip lines whose only single-char literals are in object-key position.
 var OBJECT_KEY_ONLY = /^[^']*'[A-Z]'\s*:[^']*(?:'[A-Z]'\s*:[^']*)*$/;
 
+// `*_MAP` translation tables in lib/*.js (NOT test fixtures) — banished.
+// Wrappers must accept the same canonical strings base.js dispatches on,
+// not translate between vocabularies. Real test fixture maps (translating
+// Fortran chars from JSON fixtures to long-form) live in test/ — those
+// are fine.
+var WRAPPER_MAP_VAR = /^\s*var\s+[A-Z]+_MAP\s*=/;
+
 function checkSingleCharFlagsInFile( filePath, locs, label ) {
 	var hits = util.grepFile( filePath, SINGLE_CHAR_FLAG );
 	for ( var i = 0; i < hits.length; i++ ) {
@@ -163,6 +170,27 @@ function check( mod ) {
 			'No single-char Fortran flags in examples/benchmarks',
 			locs.length, locs,
 			'Replace single-char flags (e.g. `\'A\'`, `\'N\'`) with long-form strings (e.g. `\'all\'`, `\'none\'`)'
+		));
+	}
+
+	// 6. No `*_MAP` translation-table variables in lib/*.js. Wrappers must
+	// pass the same string vocabulary base.js dispatches on; introducing a
+	// translation table creates two vocabularies that drift out of sync.
+	locs = [];
+	for ( i = 0; i < libFiles.length; i++ ) {
+		hits = util.grepFile( libFiles[ i ][ 0 ], WRAPPER_MAP_VAR );
+		for ( j = 0; j < hits.length; j++ ) {
+			locs.push( libFiles[ i ][ 1 ] + ':' + hits[ j ].line );
+		}
+	}
+	if ( locs.length === 0 ) {
+		results.push( util.pass( ID + '.no-wrapper-string-map', 'No string-translation `*_MAP` in lib/' ) );
+	} else {
+		results.push( util.fail(
+			ID + '.no-wrapper-string-map',
+			'No string-translation `*_MAP` in lib/',
+			locs.length, locs,
+			'Wrappers must pass the same canonical strings base.js dispatches on. Drop the MAP and align both sides on the canonical name.'
 		));
 	}
 
