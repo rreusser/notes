@@ -1,0 +1,137 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zgeqrt2
+
+> Compute a `QR` factorization of a complex `M`-by-`N` matrix `A = Q * R` (with `M >= N`) using the compact `WY` representation of `Q`.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zgeqrt2 = require( '@stdlib/lapack/base/zgeqrt2' );
+```
+
+#### zgeqrt2( order, M, N, A, LDA, T, LDT )
+
+Computes a `QR` factorization of a complex `M`-by-`N` matrix `A = Q * R` using the compact `WY` representation of `Q`. On exit, the upper triangle of `A` contains the upper triangular factor `R`, the strict lower triangle stores the Householder vectors `V`, and `T` contains the upper triangular block reflector factor.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 2.0, 0.5, 1.0, -0.3, 3.0, 0.2, 1.0, -0.4, 1.0, -0.2, 4.0, 0.4, 2.0, 0.1, 3.0, -0.2, 3.0, 0.1, 2.0, -0.1, 5.0, 0.3, 1.0, 0.5 ] );
+var T = new Complex128Array( 9 );
+
+var info = zgeqrt2( 'column-major', 4, 3, A, 4, T, 3 );
+// info => 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows in `A` (must satisfy `M >= N`).
+-   **N**: number of columns in `A`.
+-   **A**: input/output matrix; on exit `R` is in the upper triangle and `V` is in the strict lower triangle.
+-   **LDA**: leading dimension of `A`.
+-   **T**: output `N`-by-`N` block reflector factor.
+-   **LDT**: leading dimension of `T`.
+
+#### zgeqrt2.ndarray( M, N, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT )
+
+Computes a `QR` factorization of a complex `M`-by-`N` matrix using the compact `WY` representation of `Q`, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( [ 2.0, 0.5, 1.0, -0.3, 3.0, 0.2, 1.0, -0.4, 1.0, -0.2, 4.0, 0.4, 2.0, 0.1, 3.0, -0.2, 3.0, 0.1, 2.0, -0.1, 5.0, 0.3, 1.0, 0.5 ] );
+var T = new Complex128Array( 9 );
+
+var info = zgeqrt2.ndarray( 4, 3, A, 1, 4, 0, T, 1, 3, 0 );
+// info => 0
+```
+
+The function has the following additional parameters:
+
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A` (in complex elements).
+-   **strideA2**: stride of dimension 2 of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **T**: output matrix.
+-   **strideT1**: stride of dimension 1 of `T` (in complex elements).
+-   **strideT2**: stride of dimension 2 of `T` (in complex elements).
+-   **offsetT**: starting index for `T` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The factorization is computed via Householder reflections (unblocked algorithm) and produces both `V` and the block reflector `T` in a single pass.
+-   `Q` is implicitly represented as `Q = I - V * T * V^H`, where `V^H` denotes the conjugate transpose of `V`. The reflector vectors are stored in the strict lower triangle of `A` with implicit unit diagonals.
+-   The last column of `T` (`T(:, N-1)`) is used internally as workspace during reflector application; it is overwritten before exit.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgeqrt2 = require( '@stdlib/lapack/base/zgeqrt2' );
+
+var A = new Complex128Array( [ 2.0, 0.5, 1.0, -0.3, 3.0, 0.2, 1.0, -0.4, 1.0, -0.2, 4.0, 0.4, 2.0, 0.1, 3.0, -0.2, 3.0, 0.1, 2.0, -0.1, 5.0, 0.3, 1.0, 0.5 ] );
+var T = new Complex128Array( 9 );
+
+var info = zgeqrt2.ndarray( 4, 3, A, 1, 4, 0, T, 1, 3, 0 );
+console.log( info );
+console.log( A );
+console.log( T );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-complex128array]: https://github.com/stdlib-js/array-complex128
+
+</section>
+
+<!-- /.links -->

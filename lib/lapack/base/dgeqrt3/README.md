@@ -1,0 +1,147 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dgeqrt3
+
+> Recursively computes a QR factorization of a real M-by-N matrix using the compact WY representation of Q.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dgeqrt3 = require( '@stdlib/lapack/base/dgeqrt3' );
+```
+
+#### dgeqrt3( order, M, N, A, LDA, T, LDT )
+
+Recursively computes a QR factorization of a real M-by-N matrix using the compact WY representation of Q.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// Column-major 3-by-2 matrix (M=3, N=2, LDA=3):
+var A = new Float64Array( [ 2.0, 1.0, 0.5, 0.5, 3.0, 1.5 ] );
+var T = new Float64Array( 4 ); // 2-by-2
+
+dgeqrt3( 'column-major', 3, 2, A, 3, T, 2 );
+// On exit: A holds R above the diagonal and V below; T holds the upper-triangular block reflector.
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of the matrix `A` (`M >= N`).
+-   **N**: number of columns of the matrix `A`.
+-   **A**: input/output matrix; on exit contains `R` and `V`.
+-   **LDA**: leading dimension of `A`.
+-   **T**: output upper-triangular factor of the block reflector.
+-   **LDT**: leading dimension of `T`.
+
+#### dgeqrt3.ndarray( M, N, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT )
+
+Recursively computes a QR factorization of a real M-by-N matrix using the compact WY representation of Q, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 2.0, 1.0, 0.5, 0.5, 3.0, 1.5 ] );
+var T = new Float64Array( 4 );
+
+// Column-major: strideA1=1, strideA2=M (=3)
+dgeqrt3.ndarray( 3, 2, A, 1, 3, 0, T, 1, 2, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **T**: output matrix.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   Requires `M >= N`.
+-   On exit, the elements on and above the diagonal of `A` contain the `N`-by-`N` upper triangular matrix `R`; the elements below the diagonal are the columns of `V` defining the elementary reflectors. The implicit `1`s on the diagonal of `V` are not stored.
+-   On exit, the elements on and above the diagonal of `T` contain the `N`-by-`N` upper triangular block reflector factor; the elements below the diagonal are not used.
+-   Based on the algorithm of Elmroth and Gustavson, _IBM J. Res. Develop._ Vol 44 No. 4, July 2000.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dgeqrt3 = require( '@stdlib/lapack/base/dgeqrt3' );
+
+var M = 5;
+var N = 3;
+var A = new Float64Array( [
+	4.0, 0.5, 0.3, -0.25, 0.75,  // column 0
+	1.0, 3.5, 0.8, 0.6, -0.4,    // column 1
+	0.5, 1.2, 4.5, 1.1, 0.9      // column 2
+] );
+var T = new Float64Array( N * N );
+
+var info = dgeqrt3( 'column-major', M, N, A, M, T, N );
+console.log( info );
+// => 0
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

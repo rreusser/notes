@@ -131,6 +131,7 @@ def main():
     # Step 3: Generate JS test scaffold if fixture exists
     fixture = os.path.join(ROOT, 'test', 'fixtures', f'{routine}.jsonl')
     test_js = os.path.join(module_dir, 'test', 'test.js')
+    test_ndarray_js = os.path.join(module_dir, 'test', 'test.ndarray.js')
     if os.path.exists(fixture):
         print(f'\n3. JS test scaffold (from existing fixture):', file=sys.stderr)
         result = subprocess.run(
@@ -138,9 +139,12 @@ def main():
             capture_output=True, text=True
         )
         if result.returncode == 0:
-            with open(test_js, 'w') as f:
+            # gen_test.py emits ndarray-targeted tests (require '../lib/ndarray.js').
+            # Write to test.ndarray.js — overwriting scaffold.py's stub there is
+            # intended. Do NOT clobber test.js (export-checks file the gate expects).
+            with open(test_ndarray_js, 'w') as f:
                 f.write(result.stdout)
-            print(f'  Written: {test_js}', file=sys.stderr)
+            print(f'  Written: {test_ndarray_js}', file=sys.stderr)
     else:
         print(f'\n3. No fixture yet — write Fortran test first.', file=sys.stderr)
 
@@ -177,11 +181,11 @@ def main():
     if not os.path.exists(fixture):
         print(f'  2. Write Fortran test: test/fortran/test_{routine}.f90', file=sys.stderr)
         print(f'  3. Generate fixture: ./test/run_fortran.sh {package} {routine}', file=sys.stderr)
-        print(f'  4. Regenerate JS test: python bin/gen_test.py {package} {routine} > {test_js}', file=sys.stderr)
+        print(f'  4. Regenerate JS test: python bin/gen_test.py {package} {routine} > {test_ndarray_js}', file=sys.stderr)
     print(f'  5. Implement: {base_js}', file=sys.stderr)
-    print(f'  6. Fill in test inputs: {test_js}', file=sys.stderr)
-    print(f'  7. Verify: node --test {test_js}', file=sys.stderr)
-    print(f'  8. Coverage: node --test --experimental-test-coverage {test_js}', file=sys.stderr)
+    print(f'  6. Fill in test inputs: {test_ndarray_js}', file=sys.stderr)
+    print(f'  7. Verify: node --test {test_js} {test_ndarray_js}', file=sys.stderr)
+    print(f'  8. Coverage: node --test --experimental-test-coverage {test_js} {test_ndarray_js}', file=sys.stderr)
     print(f'  9. Lint: bin/lint.sh {base_js}', file=sys.stderr)
     print(f' 10. Write LEARNINGS.md (MANDATORY)', file=sys.stderr)
     print(f' 11. MANDATORY FINAL GATE: npm run check (must pass with 0 errors, 0 warnings)', file=sys.stderr)

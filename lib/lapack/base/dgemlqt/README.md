@@ -1,0 +1,150 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dgemlqt
+
+> Overwrites a real M-by-N matrix `C` with `op(Q)*C` or `C*op(Q)`, where `Q` is the orthogonal factor in the compact WY representation produced by `dgelqt` (rows of `V` hold the Householder reflectors).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dgemlqt = require( '@stdlib/lapack/base/dgemlqt' );
+```
+
+#### dgemlqt( order, side, trans, M, N, K, mb, V, LDV, T, LDT, C, LDC, WORK, strideWORK )
+
+Overwrites the M-by-N matrix `C` with one of `Q*C`, `Q^T*C`, `C*Q`, or `C*Q^T` according to `side` and `trans`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var V = new Float64Array( 12 );
+var T = new Float64Array( 6 );
+var C = new Float64Array( 16 );
+var WORK = new Float64Array( 8 );
+
+dgemlqt( 'column-major', 'left', 'no-transpose', 4, 4, 3, 2, V, 3, T, 2, C, 4, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: `'left'` to apply `Q` from the left, `'right'` to apply from the right.
+-   **trans**: `'no-transpose'` to apply `Q`, `'transpose'` to apply `Q^T`.
+-   **M**: number of rows of `C`.
+-   **N**: number of columns of `C`.
+-   **K**: number of elementary reflectors.
+-   **mb**: block size used to build `T` (must equal the value used in `dgelqt`).
+-   **V**: reflector vectors from `dgelqt` (rows are Householder reflectors with implicit unit diagonal).
+-   **LDV**: leading dimension of `V`.
+-   **T**: block triangular factors from `dgelqt`.
+-   **LDT**: leading dimension of `T` (must be `>= mb`).
+-   **C**: input/output matrix.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: workspace buffer (logically `ldwork`-by-`mb`).
+-   **strideWORK**: element stride for `WORK`.
+
+#### dgemlqt.ndarray( side, trans, M, N, K, mb, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+Same operation as `dgemlqt`, using alternative indexing semantics with explicit strides and offsets.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var V = new Float64Array( 12 );
+var T = new Float64Array( 6 );
+var C = new Float64Array( 16 );
+var WORK = new Float64Array( 8 );
+
+dgemlqt.ndarray( 'left', 'no-transpose', 4, 4, 3, 2, V, 1, 3, 0, T, 1, 2, 0, C, 1, 4, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideV1**: stride of dimension 1 of `V`.
+-   **strideV2**: stride of dimension 2 of `V`.
+-   **offsetV**: starting index for `V`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideC1**: stride of dimension 1 of `C`.
+-   **strideC2**: stride of dimension 2 of `C`.
+-   **offsetC**: starting index for `C`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The `WORK` buffer should provide at least `ldwork * mb` elements where `ldwork = max(1,N)` for `side='left'` or `max(1,M)` for `side='right'`. If the buffer is too small, an internal scratch array is allocated.
+-   `V` and `T` must come from a prior call to `dgelqt` with the same block size `mb`.
+-   In the LQ representation produced by `dgelqt`, rows of `V` hold the Householder reflectors. `dgemlqt` therefore drives the underlying block-reflector kernel with row-wise storage and an opposite-sense `trans` per block; the user-visible `(side, trans)` semantics described above are unaffected.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dgemlqt = require( '@stdlib/lapack/base/dgemlqt' );
+
+var V = new Float64Array( 12 );
+var T = new Float64Array( 6 );
+var C = new Float64Array( 16 );
+var WORK = new Float64Array( 8 );
+
+dgemlqt.ndarray( 'left', 'no-transpose', 4, 4, 3, 2, V, 1, 3, 0, T, 1, 2, 0, C, 1, 4, 0, WORK, 1, 0 );
+console.log( C );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

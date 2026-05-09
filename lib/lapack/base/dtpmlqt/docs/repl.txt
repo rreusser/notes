@@ -1,0 +1,164 @@
+
+{{alias}}( order, side, trans, M, N, K, l, mb, V, LDV, T, LDT, A, LDA, B, LDB, WORK, strideWORK )
+    applies a real orthogonal matrix Q (or Q^T) from a triangular-pentagonal compact-WY block reflector (output of dtplqt) to a real M-by-N matrix C composed of stacked blocks A and B
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        K: integer
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        mb: integer
+            mb.
+
+        V: Float64Array
+            input matrix.
+
+        LDV: integer
+            leading dimension of `V`.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        B: Float64Array
+            input matrix.
+
+        LDB: integer
+            leading dimension of `B`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, trans, M, N, K, l, mb, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK )
+    applies a real orthogonal matrix Q (or Q^T) from a triangular-pentagonal compact-WY block reflector (output of dtplqt) to a real M-by-N matrix C composed of stacked blocks A and B, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        K: integer
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        mb: integer
+            mb.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of dimension 1 of `V`.
+
+        strideV2: integer
+            stride of dimension 2 of `V`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of dimension 1 of `B`.
+
+        strideB2: integer
+            stride of dimension 2 of `B`.
+
+        offsetB: integer
+            starting index for `B`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

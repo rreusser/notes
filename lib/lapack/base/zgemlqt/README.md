@@ -1,0 +1,147 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zgemlqt
+
+> Overwrites a complex M-by-N matrix `C` with `op(Q)*C` or `C*op(Q)`, where `Q` is the unitary factor in the compact-WY representation produced by `zgelqt` (rows of `V` hold the Householder reflectors).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zgemlqt = require( '@stdlib/lapack/base/zgemlqt' );
+```
+
+#### zgemlqt( order, side, trans, M, N, K, mb, V, LDV, T, LDT, C, LDC, WORK, strideWORK )
+
+Overwrites the M-by-N matrix `C` with one of `Q*C`, `Q^H*C`, `C*Q`, or `C*Q^H` according to `side` and `trans`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var V = new Complex128Array( 12 );
+var T = new Complex128Array( 6 );
+var C = new Complex128Array( 16 );
+var WORK = new Complex128Array( 8 );
+
+zgemlqt( 'column-major', 'left', 'no-transpose', 4, 4, 3, 2, V, 3, T, 2, C, 4, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: `'left'` to apply `Q` from the left, `'right'` to apply from the right.
+-   **trans**: `'no-transpose'` to apply `Q`, `'conjugate-transpose'` to apply `Q^H`.
+-   **M**: number of rows of `C`.
+-   **N**: number of columns of `C`.
+-   **K**: number of elementary reflectors.
+-   **mb**: block size used to build `T` (must equal the value used in `zgelqt`).
+-   **V**: reflector vectors from `zgelqt` (rows are Householder reflectors with implicit unit diagonal).
+-   **LDV**: leading dimension of `V`.
+-   **T**: block triangular factors from `zgelqt`.
+-   **LDT**: leading dimension of `T` (must be `>= mb`).
+-   **C**: input/output matrix.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: workspace buffer (logically `ldwork`-by-`mb`).
+-   **strideWORK**: element stride for `WORK`.
+
+#### zgemlqt.ndarray( side, trans, M, N, K, mb, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+Same operation as `zgemlqt`, using alternative indexing semantics with explicit strides and offsets.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var V = new Complex128Array( 12 );
+var T = new Complex128Array( 6 );
+var C = new Complex128Array( 16 );
+var WORK = new Complex128Array( 8 );
+
+zgemlqt.ndarray( 'left', 'no-transpose', 4, 4, 3, 2, V, 1, 3, 0, T, 1, 2, 0, C, 1, 4, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideV1**: stride of dimension 1 of `V` (in complex elements).
+-   **strideV2**: stride of dimension 2 of `V` (in complex elements).
+-   **offsetV**: starting index for `V` (in complex elements).
+-   **strideT1**: stride of dimension 1 of `T` (in complex elements).
+-   **strideT2**: stride of dimension 2 of `T` (in complex elements).
+-   **offsetT**: starting index for `T` (in complex elements).
+-   **strideC1**: stride of dimension 1 of `C` (in complex elements).
+-   **strideC2**: stride of dimension 2 of `C` (in complex elements).
+-   **offsetC**: starting index for `C` (in complex elements).
+-   **offsetWORK**: starting index for `WORK` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The `WORK` buffer should provide at least `ldwork * mb` complex elements where `ldwork = max(1,N)` for `side='left'` or `max(1,M)` for `side='right'`. If the buffer is too small, an internal scratch array is allocated.
+-   `V` and `T` must come from a prior call to `zgelqt` with the same block size `mb`.
+-   In the LQ representation produced by `zgelqt`, rows of `V` hold the Householder reflectors. `zgemlqt` therefore drives the underlying block-reflector kernel with row-wise storage and an opposite-sense `trans` per block; the user-visible `(side, trans)` semantics described above are unaffected.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgemlqt = require( '@stdlib/lapack/base/zgemlqt' );
+
+var V = new Complex128Array( 12 );
+var T = new Complex128Array( 6 );
+var C = new Complex128Array( 16 );
+var WORK = new Complex128Array( 8 );
+
+zgemlqt.ndarray( 'left', 'no-transpose', 4, 4, 3, 2, V, 1, 3, 0, T, 1, 2, 0, C, 1, 4, 0, WORK, 1, 0 );
+console.log( C );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

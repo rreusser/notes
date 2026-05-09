@@ -1,4 +1,10 @@
 {
+    "lib/lapack/base/dgsvj1": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "ESLint's stdlib/jsdoc-doctest plugin attempts to load `@stdlib/lapack/base/dgsvj1` from the read-only stdlib clone at /Users/rreusser/gh/stdlib-js/stdlib/lib/node_modules/@stdlib/lapack/base/, where dgsvj1 (like dgsvj0 and most other lapack/base modules in this repo) does not have a corresponding upstream entry. Cannot symlink (read-only filesystem). All other lint rules pass clean — the only error is `Cannot find module ... lapack/base/dgsvj1` from the doctest rule. Coverage is 98.57% line / 93.75% branch on base.js."
+    },
     "lib/lapack/base/dlamch": {
         "skip": [
             "file-structure.all-files",

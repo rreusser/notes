@@ -52,6 +52,8 @@ def main():
 
     print(LICENSE)
     print()
+    print("/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */")
+    print()
     print("'use strict';")
     print()
     print("// MODULES //")

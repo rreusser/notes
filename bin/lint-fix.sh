@@ -11,6 +11,11 @@ set -uo pipefail
 BLAHPACK_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$BLAHPACK_DIR"
 
+# Per-invocation backup path so concurrent runs (multiple parallel agents)
+# do not race on the test.js revert path. Cleaned up on exit.
+BACKUP_FILE=$(mktemp -t lint_fix_backup.XXXXXX.js)
+trap 'rm -f "$BACKUP_FILE"' EXIT
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -61,25 +66,31 @@ for mod in "${MODULES[@]}"; do
     # Step 2: Apply index.js codemod
     [ -f "$index_file" ] && node bin/codemod-index.js "$index_file" > /dev/null 2>&1
 
-    # Step 3: eslint --fix on all JS files (with backup)
-    for f in "$mod"/lib/*.js "$mod"/test/test.js "$mod"/examples/index.js; do
+    # Step 3a: eslint --fix on lib and examples files (no backup needed)
+    for f in "$mod"/lib/*.js "$mod"/examples/index.js; do
         [ -f "$f" ] || continue
-        cp "$f" /tmp/lint_fix_backup.js
         npx eslint --resolve-plugins-relative-to tools/eslint --fix "$f" 2>/dev/null
     done
+
+    # Step 3b: eslint --fix on test.js with backup. The vars-order rule can
+    # break test files (use-before-define), so we keep the original to revert.
+    # Backup is per-invocation (see BACKUP_FILE at top); pulled out of the
+    # file loop so it preserves test.js content, not the last-iterated file.
+    cp "$test_file" "$BACKUP_FILE"
+    npx eslint --resolve-plugins-relative-to tools/eslint --fix "$test_file" 2>/dev/null
 
     # Step 4: Verify tests still pass
     FAILS=$(node --test "$test_file" 2>&1 | grep -c '✖')
     if [ "$FAILS" -gt 1 ]; then
         # Revert test file and retry without vars-order (known to break some files)
-        cp /tmp/lint_fix_backup.js "$test_file"
+        cp "$BACKUP_FILE" "$test_file"
         node bin/codemod-tests.js "$test_file" > /dev/null 2>&1
         npx eslint --resolve-plugins-relative-to tools/eslint --fix \
             --rule 'stdlib/vars-order: off' "$test_file" 2>/dev/null
         FAILS=$(node --test "$test_file" 2>&1 | grep -c '✖')
         if [ "$FAILS" -gt 1 ]; then
             # Still broken — revert to codemod-only
-            cp /tmp/lint_fix_backup.js "$test_file"
+            cp "$BACKUP_FILE" "$test_file"
             node bin/codemod-tests.js "$test_file" > /dev/null 2>&1
             BROKEN=$((BROKEN + 1))
             echo -e "  ${RED}REVERTED${NC}  $name (eslint --fix broke tests)"

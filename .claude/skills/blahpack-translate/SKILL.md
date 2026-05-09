@@ -640,6 +640,46 @@ Eigenvalue drivers (dspev, dsbev, zhbev, etc.) share:
 Key string mappings: dsbtrd vect=`'initialize'` (builds Q from identity),
 dsteqr compz=`'update'` (Z already contains Q from reduction step).
 
+### Compact-WY Block Reflector Routines
+
+The compact-WY family (`dgeqrt`/`dgeqrt2`/`dgeqrt3`, `dgelqt`/`dgelqt3`,
+`dtpqrt`/`dtpqrt2`, `dtplqt`/`dtplqt2`, `dgemqrt`, `dtpmqrt`, `dgemlqt`,
+`dtpmlqt`, plus z-prefix counterparts) produces V (Householder vectors)
+*and* the block triangular factor T directly — eliminating the need to
+call `dlarft` after a `dgeqrf`-style factorization. Several conventions
+recur and have repeatedly bitten translators:
+
+- **τ storage trick.** The unblocked leaf kernels write each reflector's
+  τ into `T(:,0)` first (using it as scratch), then the T-construction
+  loop overwrites `T(i,i)` with τ in-place. Don't rewrite this — preserve
+  the Fortran's two-pass structure.
+- **Last column of T as workspace.** During reflector application in the
+  inner loop, T's last column doubles as scratch. The construction loop
+  must guard `if (i < N-1)` on writes that would overwrite a reflector
+  not yet processed. Without this guard, you silently corrupt the T
+  factor and produce subtly wrong factorizations.
+- **`mb` is exposed as an explicit JS parameter.** The Fortran blocked
+  drivers (`dgeqrt`, `dgelqt`, `dtpqrt`, `dtplqt`) call ILAENV to pick a
+  block size. In JS, drop the ILAENV query and surface `mb` as an input
+  parameter (callers can pass `32` if they don't care). This matches the
+  rest of the project's "no ILAENV" convention.
+- **Recursive variants (`dgelqt3`, `dgeqrt3`).** Implement recursion as
+  a direct self-call on the exported `base.js` function — no harness,
+  no trampoline, no ES6 named function expressions. The Fortran's
+  recursive `IINFO` is silently dropped when the recursion preserves an
+  invariant that makes failure unreachable (e.g., M ≤ N for `dgelqt3`).
+- **Appliers (`dgemqrt`, `dtpmqrt`, `dgemlqt`, `dtpmlqt`).** Implement
+  ALL four SIDE×TRANS combinations even if the immediate caller only
+  uses one. Block-iteration direction depends on SIDE×TRANS: forward for
+  (left, transpose) and (right, no-transpose); backward for the other
+  two. The block-application kernels (`dlarfb`, `dtprfb`) treat WORK as
+  logically 2D — see [docs/dependency-conventions.md](docs/dependency-conventions.md).
+- **Scaffold can't infer matrix shapes for compact-WY.** `scaffold.py`
+  guesses A is M-by-N from `A(LDA,*)`, but in `dtpqrt2`/`dtplqt2` A is
+  N-by-N (triangular block) and B is M-by-N (pentagonal block). Audit
+  the LDA/LDB/LDT validators in the generated `dxxx.js` against the
+  Fortran spec and fix them by hand if wrong.
+
 ### zrot Sine Convention
 
 `zrot` expects its complex sine parameter `s` as a `Float64Array(2)`
@@ -691,10 +731,16 @@ Cv[ic+1] = betaR*cI + betaI*cR + ...;
 - **IPIV arrays are 0-based in base.js.** Fortran IPIV is 1-based. If
   comparing against fixtures, subtract 1 from Fortran values. The ndarray.js
   wrapper handles conversion from 1-based Fortran convention.
-- **Negative IPIV (Bunch-Kaufman):** Fortran encodes 2x2 pivot rows as
-  negative 1-based values (`-p`). In JS with bitwise NOT convention,
-  `~(p-1) = -p`, so the raw numeric value is preserved between Fortran
-  and JS. Extract with `~IPIV[i]` (bitwise NOT), not `-IPIV[i] - 1`.
+- **Negative IPIV (Bunch-Kaufman) — variant-dependent.** The Bunch-Kaufman
+  family (`dsytrf`, `dsytrf_rk`, `dsytrf_rook`, plus z-prefix and `_3`
+  variants) encodes 2x2 pivot rows as negative 1-based values (`-p`). In
+  JS with bitwise NOT convention, `~(p-1) = -p`, so the raw numeric value
+  is preserved between Fortran and JS. Extract with `~IPIV[i]` (bitwise
+  NOT), not `-IPIV[i] - 1`. **Aasen's algorithm uses plain integer
+  pivots** (`dlasyf_aa`, `zlasyf_aa`, `dsytrf_aa`, `zsytrf_aa`) — store
+  0-based row indices directly, no negative encoding, no bitwise NOT
+  decoding. Two agents got this wrong by analogy with `_rk`/`_rook` —
+  always check the Fortran source.
 - **INFO return values remain 1-based** (matching Fortran): 0 = success,
   k > 0 = algorithmic outcome at position k. In implementation, this means
   `return j + 1` when the 0-based loop variable finds the problem.
@@ -783,6 +829,18 @@ dtrrfs, zptrfs) partition a single WORK array into 2-3 segments of N
 elements: `WORK[0..N-1]` for abs values, `WORK[N..2N-1]` for residuals,
 `WORK[2N..3N-1]` for dlacn2's v vector. Use offset `N*strideWORK` for
 each segment.
+
+**Caller-initialized scratch arrays.** Some panel kernels expect the
+caller to pre-populate part of an "input" buffer. The clearest example
+is Aasen's `dlasyf_aa`/`zlasyf_aa`: the H workspace's first column
+(`H(:,0)`) must be initialized by the caller before the panel kernel
+is invoked. If the caller passes `H = zeros`, the panel silently
+produces zero output for column 0 — no error, no NaN, just wrong
+results. The blocked driver (`dsytrf_aa`/`zsytrf_aa`) handles this by
+running a `dcopy` of the first row/column of A into `H(:,0)` at the
+top of the routine and at the bottom of each main-loop iteration.
+When testing a panel kernel in isolation, replicate this initialization
+or you'll get correct behavior on column 1+ and zeros on column 0.
 
 **dlacn2 reverse communication:** Used by all iterative refinement routines
 for condition estimation. Requires `KASE` as `Int32Array(1)`, `EST` as

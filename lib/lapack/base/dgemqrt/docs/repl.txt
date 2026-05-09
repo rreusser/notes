@@ -1,0 +1,140 @@
+
+{{alias}}( order, side, trans, M, N, K, nb, V, LDV, T, LDT, C, LDC, WORK, strideWORK )
+    Overwrites a real M-by-N matrix C with op(Q)*C or C*op(Q) using a compact WY representation.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        K: integer
+            number of superdiagonals.
+
+        nb: integer
+            nb.
+
+        V: Float64Array
+            input matrix.
+
+        LDV: integer
+            leading dimension of `V`.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        C: Float64Array
+            input matrix.
+
+        LDC: integer
+            leading dimension of `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( side, trans, M, N, K, nb, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+    Overwrites a real M-by-N matrix C with op(Q)*C or C*op(Q) using a compact WY representation., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        K: integer
+            number of superdiagonals.
+
+        nb: integer
+            nb.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of dimension 1 of `V`.
+
+        strideV2: integer
+            stride of dimension 2 of `V`.
+
+        offsetV: integer
+            starting index for `V`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of dimension 1 of `C`.
+
+        strideC2: integer
+            stride of dimension 2 of `C`.
+
+        offsetC: integer
+            starting index for `C`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

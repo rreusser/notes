@@ -1,0 +1,163 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dlasyf_aa
+
+> factorize a panel of a real symmetric matrix using Aasen's algorithm
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dlasyf_aa = require( '@stdlib/lapack/base/dlasyf_aa' );
+```
+
+#### dlasyf_aa( order, uplo, j1, M, nb, A, LDA, IPIV, strideIPIV, offsetIPIV, H, LDH, WORK, strideWORK )
+
+factorize a panel of a real symmetric matrix using Aasen's algorithm
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 4.0, 1.0, 2.0, 1.0, 5.0, 1.5, 2.0, 1.5, 6.0 ] );
+var H = new Float64Array( 9 );
+var WORK = new Float64Array( 3 );
+var IPIV = new Int32Array( 3 );
+
+dlasyf_aa( 'column-major', 'lower', 1, 3, 3, A, 3, IPIV, 1, 0, H, 3, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies the operation type.
+-   **j1**: j1.
+-   **M**: number of rows.
+-   **nb**: nb.
+-   **A**: input matrix.
+-   **LDA**: leading dimension of `A`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **H**: input matrix.
+-   **LDH**: leading dimension of `H`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+
+#### dlasyf_aa.ndarray( uplo, j1, M, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, H, strideH1, strideH2, offsetH, WORK, strideWORK, offsetWORK )
+
+factorize a panel of a real symmetric matrix using Aasen's algorithm, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var A = new Float64Array( [ 4.0, 1.0, 2.0, 1.0, 5.0, 1.5, 2.0, 1.5, 6.0 ] );
+var H = new Float64Array( 9 );
+var WORK = new Float64Array( 3 );
+var IPIV = new Int32Array( 3 );
+
+dlasyf_aa.ndarray( 'lower', 1, 3, 3, A, 1, 3, 0, IPIV, 1, 0, H, 1, 3, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **uplo**: specifies the operation type.
+-   **j1**: j1.
+-   **M**: number of rows.
+-   **nb**: nb.
+-   **A**: input matrix.
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **IPIV**: input array.
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **H**: input matrix.
+-   **strideH1**: stride of dimension 1 of `H`.
+-   **strideH2**: stride of dimension 2 of `H`.
+-   **offsetH**: starting index for `H`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   Implements LAPACK's [`DLASYF_AA`][lapack-dlasyf_aa]: factorizes a panel of `M` rows or columns of a real symmetric matrix `A` using Aasen's algorithm.
+-   The panel kernel is intended to be invoked by the higher-level `dsytrf_aa` driver, which is responsible for initializing the first column of the workspace `H` to the corresponding column (or row, for `'upper'`) of `A`.
+-   `IPIV` entries are stored as 0-based row/column indices.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dlasyf_aa = require( '@stdlib/lapack/base/dlasyf_aa' );
+
+var A = new Float64Array( [ 4.0, 1.0, 2.0, 1.0, 5.0, 1.5, 2.0, 1.5, 6.0 ] );
+var H = new Float64Array( 9 );
+var WORK = new Float64Array( 3 );
+var IPIV = new Int32Array( 3 );
+
+dlasyf_aa( 'column-major', 'lower', 1, 3, 3, A, 3, IPIV, 1, 0, H, 3, WORK, 1 );
+console.log( A );
+console.log( IPIV );
+```
+
+[lapack-dlasyf_aa]: https://www.netlib.org/lapack/explore-html/d8/d6c/group__hetrf__aa_ga17a92a73c4dc5cdf6ddf80ea3b2ac1f0.html
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

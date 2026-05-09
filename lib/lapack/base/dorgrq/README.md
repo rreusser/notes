@@ -1,0 +1,144 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dorgrq
+
+> Generates an M-by-N real matrix Q with orthonormal rows from elementary reflectors returned by DGERQF (blocked algorithm).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dorgrq = require( '@stdlib/lapack/base/dorgrq' );
+```
+
+#### dorgrq( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
+
+Generates an M-by-N real matrix Q with orthonormal rows from K elementary reflectors of order N, as returned by DGERQF.
+
+```javascript
+var dorgrq = require( '@stdlib/lapack/base/dorgrq' );
+
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorgrq.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of Q.
+-   **N**: number of columns of Q (`N >= M`).
+-   **K**: number of elementary reflectors (`0 <= K <= M`).
+-   **A**: input/output matrix.
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: scalar factors of the reflectors (length `K`).
+-   **strideTAU**: stride length for `TAU`.
+-   **WORK**: workspace array.
+-   **strideWORK**: stride length for `WORK`.
+
+#### dorgrq.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+
+Generates an M-by-N real matrix Q with orthonormal rows, using alternative indexing semantics.
+
+```javascript
+var dorgrq = require( '@stdlib/lapack/base/dorgrq' );
+
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorgrq.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `dorgrq()` corresponds to the [LAPACK][lapack] level routine [`dorgrq`][lapack-dorgrq].
+-   On entry, the `(m-k+i)`-th row of `A` must contain the reflector vector for `H(i)`, as returned by DGERQF in the last `k` rows of `A`.
+-   On exit, `A` contains the M-by-N matrix Q.
+-   `WORK` must have length _>=_ `M*NB` where `NB` is the block size (32).
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+<!-- eslint no-undef: "error" -->
+
+```javascript
+var dorgrq = require( '@stdlib/lapack/base/dorgrq' );
+
+var N = 3;
+var A = discreteUniform( N * N, -10, 10, opts );
+var TAU = discreteUniform( N, -10, 10, opts );
+var WORK = discreteUniform( N, -10, 10, opts );
+
+dorgrq.ndarray( N, N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-dorgrq]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__dorgrq.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

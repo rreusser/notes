@@ -8,6 +8,7 @@ a routine for the first time.
 | `dlarfg`/`zlarfg` | alpha is `(array, offset)`, not a scalar — modified in-place |
 | `dlarf` vs `zlarf` | Real: tau is a plain number. Complex: tau is `(Float64Array, offset)` |
 | `zlarfb` | Takes 2D WORK strides `(strideWORK1, strideWORK2)` |
+| `dlarfb`/`dtprfb` | WORK is logically 2D (`ldwork × nb`). When passing a 1D buffer, set strides as `(strideWORK, ldwork*strideWORK)` and pre-compute `ldwork = N` (left side) or `M` (right side). Undersized buffers force the callee to allocate internally — wasting the caller's. |
 | `zgeqr2` | Takes 1D WORK stride `(strideWORK)` |
 | `zlaqps` | Returns KB as a scalar (Fortran uses output parameter) |
 | `zladiv` | `zladiv(x, y, out)` writes to `out` array, does NOT return result |

@@ -1,0 +1,154 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dtzrzf
+
+> Reduces a real M-by-N (M <= N) upper trapezoidal matrix to upper triangular form via the RZ factorization (blocked driver).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dtzrzf = require( '@stdlib/lapack/base/dtzrzf' );
+```
+
+#### dtzrzf( order, M, N, A, LDA, TAU, strideTAU, WORK, strideWORK )
+
+Reduces a real M-by-N (M <= N) upper trapezoidal matrix `A` to upper triangular form via the RZ factorization. On exit, the leading M-by-M upper triangular part of `A` contains the upper triangular factor `R`, and the trailing columns combined with `TAU` represent the orthogonal matrix `Z` as a product of M elementary reflectors.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [
+    4.0, 0.0, 0.0,
+    1.0, 5.0, 0.0,
+    2.0, 1.0, 6.0,
+    3.0, 2.0, 1.0,
+    1.0, 4.0, 2.0
+] );
+var TAU = new Float64Array( 3 );
+var WORK = new Float64Array( 3 * 32 );
+
+var info = dtzrzf( 'column-major', 3, 5, A, 3, TAU, 1, WORK, 1 );
+// info => 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `A`.
+-   **N**: number of columns of `A` (must satisfy `N >= M`).
+-   **A**: input/output `Float64Array` matrix; on exit, the leading M-by-M upper triangular part contains `R` and the first M rows from column `M` to `N-1` (combined with `TAU`) encode the reflectors of `Z`.
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: output `Float64Array` of scalar factors of the elementary reflectors (length `M`).
+-   **strideTAU**: stride length for `TAU`.
+-   **WORK**: workspace `Float64Array`; the function reallocates internally if undersized.
+-   **strideWORK**: stride length for `WORK`.
+
+#### dtzrzf.ndarray( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+
+Reduces a real upper trapezoidal matrix to upper triangular form using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [
+    4.0, 0.0, 0.0,
+    1.0, 5.0, 0.0,
+    2.0, 1.0, 6.0,
+    3.0, 2.0, 1.0,
+    1.0, 4.0, 2.0
+] );
+var TAU = new Float64Array( 3 );
+var WORK = new Float64Array( 3 * 32 );
+
+var info = dtzrzf.ndarray( 3, 5, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
+// info => 0
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A`.
+-   **strideA2**: stride of the second dimension of `A`.
+-   **offsetA**: starting index for `A`.
+-   **offsetTAU**: starting index for `TAU`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   This is the blocked driver for the RZ factorization. The unblocked kernel `dlatrz` is invoked for the trailing columns; for sufficiently large `M` (`M > 128`), block reflectors are formed and applied via `dlarzt`/`dlarzb`.
+-   The reflectors are stored in the "Z-form": each `H(i) = I - tau(i) * v(i) * v(i)^T` has a length-`(N-M+1)` vector `v(i)` consisting of a leading `1` (implicit) followed by `N-M` non-trivial entries stored in row `i` of `A` from column `M` to `N-1`.
+-   The function returns `0` on success.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dtzrzf = require( '@stdlib/lapack/base/dtzrzf' );
+
+var A = new Float64Array( [
+    4.0, 0.0, 0.0,
+    1.0, 5.0, 0.0,
+    2.0, 1.0, 6.0,
+    3.0, 2.0, 1.0,
+    1.0, 4.0, 2.0
+] );
+var TAU = new Float64Array( 3 );
+var WORK = new Float64Array( 3 * 32 );
+
+var info = dtzrzf( 'column-major', 3, 5, A, 3, TAU, 1, WORK, 1 );
+console.log( 'INFO: ' + info );
+console.log( 'TAU: ' + TAU );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->
