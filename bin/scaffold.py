@@ -375,10 +375,29 @@ def gen_routine_js(routine, sig, package, description):
         validation_lines.append(f"\t\tthrow new RangeError( format( 'invalid argument. {dp['ordinal']} argument must be a nonnegative integer. Value: `%d`.', {dp['name']} ) );")
         validation_lines.append('\t}')
 
-    # LD validation for matrix routines
+    # LD validation for matrix routines.
+    #
+    # Compact-WY family note: the T factor of compact-WY routines (dgeqrt,
+    # dgelqt, dtpqrt, dtplqt, dgemqrt, dlatsqr, etc., plus z-prefix) has
+    # leading dimension constrained by the block size (nb/mb), not M/N. If
+    # the array is `T` and the routine has a block-size parameter, use that
+    # instead. Surfaced repeatedly by translation agents (dlatsqr, zlatsqr,
+    # dlamtsqr).
+    block_param = None
+    for cand in ('nb', 'mb', 'NB', 'MB'):
+        if cand in blas_args:
+            block_param = cand
+            break
+
     for arr_name, ld_name in array_ld_map.items():
         ld_idx = blas_args.index(ld_name)
         ld_ordinal = ORDINALS[ld_idx] if ld_idx < len(ORDINALS) else f'{ld_idx+1}th'
+        if arr_name == 'T' and block_param is not None:
+            # Compact-WY: T is block-by-something, LDT >= max(1, block_param)
+            validation_lines.append(f"\tif ( {ld_name} < max( 1, {block_param} ) ) {{")
+            validation_lines.append(f"\t\tthrow new RangeError( format( 'invalid argument. {ld_ordinal} argument must be greater than or equal to max(1,{block_param}). Value: `%d`.', {ld_name} ) );")
+            validation_lines.append('\t}')
+            continue
         dim_for_ld = 'N' if 'N' in blas_args else ('M' if 'M' in blas_args else None)
         if dim_for_ld:
             validation_lines.append(f"\tif ( order === 'row-major' && {ld_name} < max( 1, N ) ) {{")
@@ -1184,12 +1203,48 @@ export = {routine};
 
 
 def gen_examples_js(routine, package, sig):
-    """Generate examples/index.js — working example using discreteUniform."""
+    """Generate examples/index.js — working example. Picks Complex128Array
+    for z/c-prefix routines (random utils don't support complex dtype yet),
+    otherwise uses discreteUniform. The call itself is a TODO placeholder."""
     mod_path = f'@stdlib/{package}/base/{routine}'
     arrays_info = sig.get('arrays', {})
-
-    # Determine array size and build example
     has_2d = any(info['dim'] == 2 for info in arrays_info.values())
+    is_complex = routine.startswith(('z', 'c'))
+
+    if is_complex:
+        if has_2d:
+            return f"""{LICENSE_HEADER}
+
+'use strict';
+
+var Complex128Array = require( '@stdlib/array/complex128' );
+var {routine} = require( '{mod_path}' );
+
+var M = 3;
+var N = 3;
+var A = new Complex128Array( M * N );
+var B = new Complex128Array( M * N );
+var C = new Complex128Array( M * N );
+
+// TODO: Adjust call to match the specific routine signature
+{routine}( 'row-major', M, N, A, B, C );
+console.log( C ); // eslint-disable-line no-console
+"""
+        return f"""{LICENSE_HEADER}
+
+'use strict';
+
+var Complex128Array = require( '@stdlib/array/complex128' );
+var {routine} = require( '{mod_path}' );
+
+var N = 10;
+var x = new Complex128Array( N );
+var y = new Complex128Array( N );
+
+// TODO: Adjust call to match the specific routine signature
+{routine}( N, x, 1, y, 1 );
+console.log( y ); // eslint-disable-line no-console
+"""
 
     if has_2d:
         return f"""{LICENSE_HEADER}
@@ -1213,8 +1268,7 @@ var C = discreteUniform( M * N, -10, 10, opts );
 {routine}( 'row-major', M, N, 1.0, A, N, B, N, 0.0, C, N );
 console.log( C ); // eslint-disable-line no-console
 """
-    else:
-        return f"""{LICENSE_HEADER}
+    return f"""{LICENSE_HEADER}
 
 'use strict';
 
@@ -1240,6 +1294,7 @@ def gen_benchmark_js(routine, package, sig, description):
     blas_args, blas_arg_meta, array_ld_map = build_blas_args(sig)
     arrays_info = sig.get('arrays', {})
     has_2d = any(info['dim'] == 2 for info in arrays_info.values())
+    is_complex = routine.startswith(('z', 'c'))
     # Cap N for matrix (N*N) benchmarks so buffers stay ~8 MB per array.
     # 2D: max=3 → N=1000 → N*N=1e6 doubles = 8 MB. 1D: max=6 → 1e6 doubles = 8 MB.
     max_exp = 3 if has_2d else 6
@@ -1260,7 +1315,7 @@ def gen_benchmark_js(routine, package, sig, description):
                 call_parts.append("'non-unit'")
             elif name == 'side':
                 call_parts.append("'left'")
-            elif meta['type'] in ('Float64Array', 'Float32Array'):
+            elif meta['type'] in ('Float64Array', 'Float32Array', 'Complex128Array', 'Complex64Array'):
                 call_parts.append(name)
             elif name in ('M', 'N', 'K'):
                 call_parts.append('N')
@@ -1273,8 +1328,11 @@ def gen_benchmark_js(routine, package, sig, description):
         call_str = ', '.join(call_parts)
 
         # Build array creation
-        array_names = [meta['name'] for meta in blas_arg_meta if meta['type'] in ('Float64Array', 'Float32Array')]
-        array_creates = '\n'.join(f"\tvar {name} = uniform( N * N, -10.0, 10.0, options );" for name in array_names)
+        array_names = [meta['name'] for meta in blas_arg_meta if meta['type'] in ('Float64Array', 'Float32Array', 'Complex128Array', 'Complex64Array')]
+        if is_complex:
+            array_creates = '\n'.join(f"\tvar {name} = new Complex128Array( N * N );" for name in array_names)
+        else:
+            array_creates = '\n'.join(f"\tvar {name} = uniform( N * N, -10.0, 10.0, options );" for name in array_names)
     else:
         # Vector benchmark
         call_parts = []
@@ -1284,7 +1342,7 @@ def gen_benchmark_js(routine, package, sig, description):
                 call_parts.append("'row-major'")
             elif name in ('trans', 'transa', 'transb'):
                 call_parts.append("'no-transpose'")
-            elif meta['type'] in ('Float64Array', 'Float32Array'):
+            elif meta['type'] in ('Float64Array', 'Float32Array', 'Complex128Array', 'Complex64Array'):
                 call_parts.append(name)
             elif name in ('M', 'N', 'K'):
                 call_parts.append('N')
@@ -1296,8 +1354,18 @@ def gen_benchmark_js(routine, package, sig, description):
                 call_parts.append('N')
         call_str = ', '.join(call_parts)
 
-        array_names = [meta['name'] for meta in blas_arg_meta if meta['type'] in ('Float64Array', 'Float32Array')]
-        array_creates = '\n'.join(f"\tvar {name} = uniform( N, -10.0, 10.0, options );" for name in array_names)
+        array_names = [meta['name'] for meta in blas_arg_meta if meta['type'] in ('Float64Array', 'Float32Array', 'Complex128Array', 'Complex64Array')]
+        if is_complex:
+            array_creates = '\n'.join(f"\tvar {name} = new Complex128Array( N );" for name in array_names)
+        else:
+            array_creates = '\n'.join(f"\tvar {name} = uniform( N, -10.0, 10.0, options );" for name in array_names)
+
+    if is_complex:
+        random_import = "var Complex128Array = require( '@stdlib/array/complex128' );"
+        options_block = ""
+    else:
+        random_import = "var uniform = require( '@stdlib/random/array/uniform' );"
+        options_block = "var options = {\n\t'dtype': 'float64'\n};\n\n\n"
 
     return f"""{LICENSE_HEADER}
 
@@ -1306,7 +1374,7 @@ def gen_benchmark_js(routine, package, sig, description):
 // MODULES //
 
 var bench = require( '@stdlib/bench' );
-var uniform = require( '@stdlib/random/array/uniform' );
+{random_import}
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
@@ -1316,12 +1384,7 @@ var {routine} = require( './../lib/{routine}.js' );
 
 // VARIABLES //
 
-var options = {{
-\t'dtype': 'float64'
-}};
-
-
-// FUNCTIONS //
+{options_block}// FUNCTIONS //
 
 /**
 * Creates a benchmark function.
@@ -1394,6 +1457,7 @@ def gen_benchmark_ndarray_js(routine, package, sig, description):
     """Generate benchmark/benchmark.ndarray.js — ndarray-style benchmark."""
     arrays_info = sig.get('arrays', {})
     has_2d = any(info['dim'] == 2 for info in arrays_info.values())
+    is_complex = routine.startswith(('z', 'c'))
     # Cap N for matrix benchmarks; see gen_benchmark_js for rationale.
     max_exp = 3 if has_2d else 6
     js_args = sig['js_args']
@@ -1411,7 +1475,7 @@ def gen_benchmark_ndarray_js(routine, package, sig, description):
             call_parts.append("'non-unit'")
         elif name == 'side':
             call_parts.append("'left'")
-        elif meta['type'] in ('Float64Array', 'Float32Array'):
+        elif meta['type'] in ('Float64Array', 'Float32Array', 'Complex128Array', 'Complex64Array'):
             call_parts.append(name)
         elif name in ('M', 'N', 'K'):
             call_parts.append('N')
@@ -1431,11 +1495,23 @@ def gen_benchmark_ndarray_js(routine, package, sig, description):
     call_str = ', '.join(call_parts)
 
     # Build array creation
-    array_names = [meta['name'] for meta in js_arg_meta if meta['type'] in ('Float64Array', 'Float32Array')]
-    if has_2d:
+    array_names = [meta['name'] for meta in js_arg_meta if meta['type'] in ('Float64Array', 'Float32Array', 'Complex128Array', 'Complex64Array')]
+    if is_complex:
+        if has_2d:
+            array_creates = '\n'.join(f"\tvar {name} = new Complex128Array( N * N );" for name in array_names)
+        else:
+            array_creates = '\n'.join(f"\tvar {name} = new Complex128Array( N );" for name in array_names)
+    elif has_2d:
         array_creates = '\n'.join(f"\tvar {name} = uniform( N * N, -10.0, 10.0, options );" for name in array_names)
     else:
         array_creates = '\n'.join(f"\tvar {name} = uniform( N, -10.0, 10.0, options );" for name in array_names)
+
+    if is_complex:
+        random_import = "var Complex128Array = require( '@stdlib/array/complex128' );"
+        options_block = ""
+    else:
+        random_import = "var uniform = require( '@stdlib/random/array/uniform' );"
+        options_block = "var options = {\n\t'dtype': 'float64'\n};\n\n\n"
 
     return f"""{LICENSE_HEADER}
 
@@ -1444,7 +1520,7 @@ def gen_benchmark_ndarray_js(routine, package, sig, description):
 // MODULES //
 
 var bench = require( '@stdlib/bench' );
-var uniform = require( '@stdlib/random/array/uniform' );
+{random_import}
 var isnan = require( '@stdlib/math/base/assert/is-nan' );
 var pow = require( '@stdlib/math/base/special/pow' );
 var format = require( '@stdlib/string/format' );
@@ -1454,12 +1530,7 @@ var {routine} = require( './../lib/ndarray.js' );
 
 // VARIABLES //
 
-var options = {{
-\t'dtype': 'float64'
-}};
-
-
-// FUNCTIONS //
+{options_block}// FUNCTIONS //
 
 /**
 * Creates a benchmark function.

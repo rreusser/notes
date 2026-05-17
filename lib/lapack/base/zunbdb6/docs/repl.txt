@@ -1,0 +1,146 @@
+
+{{alias}}( order, m1, m2, N, X1, strideX1, incx1, X2, strideX2, incx2, Q1, LDQ1, Q2, LDQ2, WORK, strideWORK )
+    orthogonalizes a complex column vector against the columns of a complex orthonormal basis matrix
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        m1: integer
+            m1.
+
+        m2: integer
+            m2.
+
+        N: integer
+            number of columns.
+
+        X1: Float64Array
+            input array.
+
+        strideX1: integer
+            stride length for `X1`.
+
+        incx1: integer
+            incx1.
+
+        X2: Float64Array
+            input array.
+
+        strideX2: integer
+            stride length for `X2`.
+
+        incx2: integer
+            incx2.
+
+        Q1: Float64Array
+            input matrix.
+
+        LDQ1: integer
+            leading dimension of `Q1`.
+
+        Q2: Float64Array
+            input matrix.
+
+        LDQ2: integer
+            leading dimension of `Q2`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( m1, m2, N, X1, strideX1, offsetX1, incx1, X2, strideX2, offsetX2, incx2, Q1, strideQ11, strideQ12, offsetQ1, Q2, strideQ21, strideQ22, offsetQ2, WORK, strideWORK, offsetWORK )
+    orthogonalizes a complex column vector against the columns of a complex orthonormal basis matrix, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        m1: integer
+            m1.
+
+        m2: integer
+            m2.
+
+        N: integer
+            number of columns.
+
+        X1: Float64Array
+            input array.
+
+        strideX1: integer
+            stride of dimension 1 of `X`.
+
+        offsetX1: integer
+            starting index for `X1`.
+
+        incx1: integer
+            incx1.
+
+        X2: Float64Array
+            input array.
+
+        strideX2: integer
+            stride of dimension 2 of `X`.
+
+        offsetX2: integer
+            starting index for `X2`.
+
+        incx2: integer
+            incx2.
+
+        Q1: Float64Array
+            input matrix.
+
+        strideQ11: integer
+            stride of dimension 1 of `Q1`.
+
+        strideQ12: integer
+            stride of dimension 2 of `Q1`.
+
+        offsetQ1: integer
+            starting index for `Q1`.
+
+        Q2: Float64Array
+            input matrix.
+
+        strideQ21: integer
+            stride of dimension 1 of `Q2`.
+
+        strideQ22: integer
+            stride of dimension 2 of `Q2`.
+
+        offsetQ2: integer
+            starting index for `Q2`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

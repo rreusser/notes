@@ -1,0 +1,159 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zungtsqr
+
+> Generate an M-by-N complex matrix Q with orthonormal columns from a Tall-Skinny QR factorization produced by `zlatsqr`.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zungtsqr = require( '@stdlib/lapack/base/zungtsqr' );
+```
+
+#### zungtsqr( order, M, N, mb, nb, A, LDA, T, LDT, WORK, strideWORK )
+
+Generates the M-by-N complex matrix `Q` with orthonormal columns that is implicitly defined by the V/T output of `zlatsqr`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var M = 4;
+var N = 2;
+var mb = 3;
+var nb = 2;
+var A = new Complex128Array( M * N ); // V (lower-trapezoidal) from zlatsqr
+var T = new Complex128Array( nb * 2 * N ); // T factors from zlatsqr
+var WORK = new Complex128Array( ( M + nb ) * N );
+
+zungtsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `A` (`M >= 0`).
+-   **N**: number of columns of `A` (`0 <= N <= M`).
+-   **mb**: row block size used by `zlatsqr` (`mb > N`).
+-   **nb**: column block size used by `zlatsqr` (`nb >= 1`).
+-   **A**: complex `M`-by-`N` matrix; on entry holds the reflector vectors produced by `zlatsqr`, on exit holds the orthonormal `Q`.
+-   **LDA**: leading dimension of `A` (`>= max(1, M)` for column-major, `>= max(1, N)` for row-major).
+-   **T**: complex matrix holding the block triangular factors produced by `zlatsqr`.
+-   **LDT**: leading dimension of `T` (`>= max(1, min(nb, N))`).
+-   **WORK**: complex workspace of length `>= (M + nb)*N`.
+-   **strideWORK**: stride for `WORK` (in complex elements; typically `1`).
+
+#### zungtsqr.ndarray( M, N, mb, nb, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK )
+
+Same as above, using stride/offset indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var M = 4;
+var N = 2;
+var mb = 3;
+var nb = 2;
+var A = new Complex128Array( M * N );
+var T = new Complex128Array( nb * 2 * N );
+var WORK = new Complex128Array( ( M + nb ) * N );
+
+zungtsqr.ndarray( M, N, mb, nb, A, 1, M, 0, T, 1, nb, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A` (in complex elements).
+-   **strideA2**: stride of dimension 2 of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **strideT1**: stride of dimension 1 of `T` (in complex elements).
+-   **strideT2**: stride of dimension 2 of `T` (in complex elements).
+-   **offsetT**: starting index for `T` (in complex elements).
+-   **offsetWORK**: starting index for `WORK` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `zungtsqr()` corresponds to the [LAPACK][lapack] routine [`zungtsqr`][lapack-zungtsqr].
+-   `Q` is formed by applying the unitary factor `Q` (from `zlatsqr`) to the `M`-by-`N` identity via `zlamtsqr` and copying the result back into `A`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+<!-- eslint no-undef: "error" -->
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlatsqr = require( '@stdlib/lapack/base/zlatsqr' );
+var zungtsqr = require( '@stdlib/lapack/base/zungtsqr' );
+
+var M = 6;
+var N = 2;
+var mb = 3;
+var nb = 2;
+var A = new Complex128Array( M * N );
+// ... populate A with a tall panel ...
+
+var numblk = Math.ceil( ( M - N ) / ( mb - N ) );
+var T = new Complex128Array( nb * numblk * N );
+var WORK = new Complex128Array( nb * N );
+zlatsqr( M, N, mb, nb, A, 1, M, 0, T, 1, nb, 0, WORK, 1, 0 );
+
+WORK = new Complex128Array( ( M + nb ) * N );
+zungtsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK, 1 );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zungtsqr]: https://www.netlib.org/lapack/explore-html/d2/d4f/group__ungtsqr.html
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

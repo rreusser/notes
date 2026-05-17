@@ -1,0 +1,148 @@
+
+{{alias}}( order, m1, m2, N, X1, strideX1, X2, strideX2, Q1, LDQ1, Q2, LDQ2, WORK, strideWORK )
+    Orthogonalizes the column vector `X = [X1; X2]` against the columns of
+    `Q = [Q1; Q2]`, where the columns of `Q` are assumed to be orthonormal.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        m1: integer
+            Dimension of `X1` and number of rows in `Q1`.
+
+        m2: integer
+            Dimension of `X2` and number of rows in `Q2`.
+
+        N: integer
+            Number of columns in `Q1` and `Q2`.
+
+        X1: Float64Array
+            Top part of the input vector.
+
+        strideX1: integer
+            Stride length for `X1`.
+
+        X2: Float64Array
+            Bottom part of the input vector.
+
+        strideX2: integer
+            Stride length for `X2`.
+
+        Q1: Float64Array
+            Top part of the orthonormal basis matrix.
+
+        LDQ1: integer
+            Leading dimension of `Q1`.
+
+        Q2: Float64Array
+            Bottom part of the orthonormal basis matrix.
+
+        LDQ2: integer
+            Leading dimension of `Q2`.
+
+        WORK: Float64Array
+            Workspace array of length at least `N`.
+
+        strideWORK: integer
+            Stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Status code (0 on success).
+
+    Examples
+    --------
+    > var Q1 = new {{alias:@stdlib/array/float64}}( [ 1.0, 0.0 ] );
+    > var Q2 = new {{alias:@stdlib/array/float64}}( [ 0.0, 0.0 ] );
+    > var X1 = new {{alias:@stdlib/array/float64}}( [ 3.0, 4.0 ] );
+    > var X2 = new {{alias:@stdlib/array/float64}}( [ 5.0, 6.0 ] );
+    > var WORK = new {{alias:@stdlib/array/float64}}( 1 );
+    > {{alias}}( 'column-major', 2, 2, 1, X1, 1, X2, 1, Q1, 2, Q2, 2, WORK, 1 );
+    0
+
+
+{{alias}}.ndarray( m1, m2, N, X1, strideX1, offsetX1, X2, strideX2, offsetX2, Q1, strideQ11, strideQ12, offsetQ1, Q2, strideQ21, strideQ22, offsetQ2, WORK, strideWORK, offsetWORK )
+    Same as above, but with explicit per-array stride and offset parameters
+    in place of the `order`/`LDQ` layout convention.
+
+    Parameters
+    ----------
+        m1: integer
+            Dimension of `X1` and number of rows in `Q1`.
+
+        m2: integer
+            Dimension of `X2` and number of rows in `Q2`.
+
+        N: integer
+            Number of columns in `Q1` and `Q2`.
+
+        X1: Float64Array
+            Top part of the input vector.
+
+        strideX1: integer
+            Stride length for `X1`.
+
+        offsetX1: integer
+            Starting index for `X1`.
+
+        X2: Float64Array
+            Bottom part of the input vector.
+
+        strideX2: integer
+            Stride length for `X2`.
+
+        offsetX2: integer
+            Starting index for `X2`.
+
+        Q1: Float64Array
+            Top part of the orthonormal basis matrix.
+
+        strideQ11: integer
+            Stride of dimension 1 of `Q1`.
+
+        strideQ12: integer
+            Stride of dimension 2 of `Q1`.
+
+        offsetQ1: integer
+            Starting index for `Q1`.
+
+        Q2: Float64Array
+            Bottom part of the orthonormal basis matrix.
+
+        strideQ21: integer
+            Stride of dimension 1 of `Q2`.
+
+        strideQ22: integer
+            Stride of dimension 2 of `Q2`.
+
+        offsetQ2: integer
+            Starting index for `Q2`.
+
+        WORK: Float64Array
+            Workspace array of length at least `N`.
+
+        strideWORK: integer
+            Stride length for `WORK`.
+
+        offsetWORK: integer
+            Starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Status code (0 on success).
+
+    Examples
+    --------
+    > var Q1 = new {{alias:@stdlib/array/float64}}( [ 1.0, 0.0 ] );
+    > var Q2 = new {{alias:@stdlib/array/float64}}( [ 0.0, 0.0 ] );
+    > var X1 = new {{alias:@stdlib/array/float64}}( [ 3.0, 4.0 ] );
+    > var X2 = new {{alias:@stdlib/array/float64}}( [ 5.0, 6.0 ] );
+    > var WORK = new {{alias:@stdlib/array/float64}}( 1 );
+    > {{alias}}.ndarray( 2, 2, 1, X1, 1, 0, X2, 1, 0, Q1, 1, 2, 0, Q2, 1, 2, 0, WORK, 1, 0 );
+    0
+
+    See Also
+    --------

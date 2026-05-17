@@ -1,0 +1,118 @@
+
+{{alias}}( order, M, N, mb, nb, A, LDA, T, LDT, WORK )
+    Computes a blocked Tall-Skinny QR (TSQR) factorization of a real M-by-N
+    matrix (with M >= N).
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        M: integer
+            Number of rows of the matrix `A` (`M >= N`).
+
+        N: integer
+            Number of columns of the matrix `A`.
+
+        mb: integer
+            Row block size (`mb >= 1`).
+
+        nb: integer
+            Column block size (`1 <= nb <= N` when `N > 0`).
+
+        A: Float64Array
+            Input/output matrix; on exit the upper triangle holds `R` and the
+            elements below the diagonal hold the Householder reflectors.
+
+        LDA: integer
+            Leading dimension of `A`.
+
+        T: Float64Array
+            Output matrix of upper triangular block reflector factors.
+
+        LDT: integer
+            Leading dimension of `T` (`LDT >= nb`).
+
+        WORK: Float64Array
+            Workspace array of length at least `nb*N`.
+
+    Returns
+    -------
+    out: integer
+        Status code (`0` indicates success).
+
+    Examples
+    --------
+    > var A = new {{alias:@stdlib/array/float64}}( [ 5.0, 1.0, 0.5, 0.3, 1.0, 6.0, 0.5, 0.5 ] );
+    > var T = new {{alias:@stdlib/array/float64}}( 4 );
+    > var W = new {{alias:@stdlib/array/float64}}( 4 );
+    > {{alias}}( 'column-major', 4, 2, 8, 2, A, 4, T, 2, W )
+    0
+
+
+{{alias}}.ndarray( M, N, mb, nb, A, sa1, sa2, oa, T, st1, st2, ot, WORK, sw, ow )
+    Computes a blocked Tall-Skinny QR (TSQR) factorization of a real M-by-N
+    matrix (with M >= N), using alternative indexing semantics.
+
+    Parameters
+    ----------
+        M: integer
+            Number of rows of the matrix `A` (`M >= N`).
+
+        N: integer
+            Number of columns of the matrix `A`.
+
+        mb: integer
+            Row block size (`mb >= 1`).
+
+        nb: integer
+            Column block size (`1 <= nb <= N` when `N > 0`).
+
+        A: Float64Array
+            Input/output matrix.
+
+        sa1: integer
+            Stride of dimension 1 of `A`.
+
+        sa2: integer
+            Stride of dimension 2 of `A`.
+
+        oa: integer
+            Starting index for `A`.
+
+        T: Float64Array
+            Output matrix of upper triangular block reflector factors.
+
+        st1: integer
+            Stride of dimension 1 of `T`.
+
+        st2: integer
+            Stride of dimension 2 of `T`.
+
+        ot: integer
+            Starting index for `T`.
+
+        WORK: Float64Array
+            Workspace array of length at least `nb*N`.
+
+        sw: integer
+            Stride length for `WORK`.
+
+        ow: integer
+            Starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Status code (`0` indicates success).
+
+    Examples
+    --------
+    > var A = new {{alias:@stdlib/array/float64}}( [ 5.0, 1.0, 0.5, 0.3, 1.0, 6.0, 0.5, 0.5 ] );
+    > var T = new {{alias:@stdlib/array/float64}}( 4 );
+    > var W = new {{alias:@stdlib/array/float64}}( 4 );
+    > {{alias}}.ndarray( 4, 2, 8, 2, A, 1, 4, 0, T, 1, 2, 0, W, 1, 0 )
+    0
+
+    See Also
+    --------

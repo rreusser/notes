@@ -1,0 +1,116 @@
+
+{{alias}}( order, M, N, mb1, nb1, nb2, A, LDA, T, LDT, WORK, strideWORK )
+    Computes a column-blocked QR factorization of a complex M-by-N matrix using TSQR followed by Householder reconstruction.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        mb1: integer
+            mb1.
+
+        nb1: integer
+            nb1.
+
+        nb2: integer
+            nb2.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        T: Float64Array
+            input matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( M, N, mb1, nb1, nb2, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK )
+    Computes a column-blocked QR factorization of a complex M-by-N matrix using TSQR followed by Householder reconstruction., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        mb1: integer
+            mb1.
+
+        nb1: integer
+            nb1.
+
+        nb2: integer
+            nb2.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

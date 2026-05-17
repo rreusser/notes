@@ -1,0 +1,129 @@
+
+{{alias}}( order, M, N, mb1, nb1, nb2, A, LDA, T, LDT, WORK )
+    Computes a column-blocked QR factorization of a real `M`-by-`N` matrix
+    `A` (with `M >= N`) via TSQR followed by Householder reconstruction.
+
+    On exit, the upper triangle of `A` contains `R` and the strict lower
+    trapezoid contains the Householder vectors `V`. `T` is the
+    `nb2`-by-`N` matrix of upper triangular block reflectors (compact-WY
+    form).
+
+    Parameters
+    ----------
+    order: string
+        Row-major (C-style) or column-major (Fortran-style) order.
+
+    M: integer
+        Number of rows of the matrix `A` (with `M >= N`).
+
+    N: integer
+        Number of columns of the matrix `A`.
+
+    mb1: integer
+        TSQR row block size (`mb1 > N`).
+
+    nb1: integer
+        TSQR column block size (`nb1 >= 1`).
+
+    nb2: integer
+        HRT (output) block size (`nb2 >= 1`).
+
+    A: Float64Array
+        Input/output matrix.
+
+    LDA: integer
+        Leading dimension of `A`.
+
+    T: Float64Array
+        Output matrix of upper triangular block reflectors.
+
+    LDT: integer
+        Leading dimension of `T`.
+
+    WORK: Float64Array
+        Workspace array.
+
+    Returns
+    -------
+    out: integer
+        Status code (`0` = success).
+
+    Examples
+    --------
+    > var A = new {{alias:@stdlib/array/float64}}( [ 2.0, 1.0, 3.0, 1.0, 1.0, 4.0, 2.0, 3.0, 3.0, 2.0, 5.0, 1.0 ] );
+    > var T = new {{alias:@stdlib/array/float64}}( 6 );
+    > var W = new {{alias:@stdlib/array/float64}}( 256 );
+    > {{alias}}( 'column-major', 4, 3, 4, 2, 2, A, 4, T, 2, W )
+    0
+
+
+{{alias}}.ndarray( M, N, mb1, nb1, nb2, A, sa1, sa2, oa, T, st1, st2, ot, W, sw, ow )
+    Computes a column-blocked QR factorization of a real `M`-by-`N` matrix
+    `A` (with `M >= N`) via TSQR followed by Householder reconstruction,
+    using alternative indexing semantics.
+
+    Parameters
+    ----------
+    M: integer
+        Number of rows of the matrix `A` (with `M >= N`).
+
+    N: integer
+        Number of columns of the matrix `A`.
+
+    mb1: integer
+        TSQR row block size (`mb1 > N`).
+
+    nb1: integer
+        TSQR column block size (`nb1 >= 1`).
+
+    nb2: integer
+        HRT (output) block size (`nb2 >= 1`).
+
+    A: Float64Array
+        Input/output matrix.
+
+    sa1: integer
+        Stride of the first dimension of `A`.
+
+    sa2: integer
+        Stride of the second dimension of `A`.
+
+    oa: integer
+        Starting index for `A`.
+
+    T: Float64Array
+        Output matrix of upper triangular block reflectors.
+
+    st1: integer
+        Stride of the first dimension of `T`.
+
+    st2: integer
+        Stride of the second dimension of `T`.
+
+    ot: integer
+        Starting index for `T`.
+
+    W: Float64Array
+        Workspace array.
+
+    sw: integer
+        Stride length for the workspace array.
+
+    ow: integer
+        Starting index for the workspace array.
+
+    Returns
+    -------
+    out: integer
+        Status code (`0` = success).
+
+    Examples
+    --------
+    > var A = new {{alias:@stdlib/array/float64}}( [ 2.0, 1.0, 3.0, 1.0, 1.0, 4.0, 2.0, 3.0, 3.0, 2.0, 5.0, 1.0 ] );
+    > var T = new {{alias:@stdlib/array/float64}}( 6 );
+    > var W = new {{alias:@stdlib/array/float64}}( 256 );
+    > {{alias}}.ndarray( 4, 3, 4, 2, 2, A, 1, 4, 0, T, 1, 2, 0, W, 1, 0 )
+    0
+
+    See Also
+    --------

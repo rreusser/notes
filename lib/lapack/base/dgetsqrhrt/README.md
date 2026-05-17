@@ -1,0 +1,152 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dgetsqrhrt
+
+> Computes a column-blocked QR factorization of a real `M`-by-`N` matrix `A` (with `M >= N`) via TSQR followed by Householder reconstruction.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dgetsqrhrt = require( '@stdlib/lapack/base/dgetsqrhrt' );
+```
+
+#### dgetsqrhrt( order, M, N, mb1, nb1, nb2, A, LDA, T, LDT, WORK )
+
+Computes a column-blocked QR factorization of a real `M`-by-`N` matrix `A` (with `M >= N`) via TSQR followed by Householder reconstruction.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 1.0, 4.0, 2.0, 3.0, 3.0, 2.0, 5.0, 1.0 ] );
+var T = new Float64Array( 6 );
+var W = new Float64Array( 256 );
+
+var info = dgetsqrhrt( 'column-major', 4, 3, 4, 2, 2, A, 4, T, 2, W );
+// returns 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `A` (with `M >= N`).
+-   **N**: number of columns of `A`.
+-   **mb1**: TSQR row block size (`mb1 > N`).
+-   **nb1**: TSQR column block size (`nb1 >= 1`).
+-   **nb2**: HRT (output) block size (`nb2 >= 1`).
+-   **A**: input/output matrix; on exit the upper triangle holds `R` and the strict lower trapezoid holds the Householder vectors `V`.
+-   **LDA**: leading dimension of `A`.
+-   **T**: output `nb2`-by-`N` matrix of upper triangular block reflectors (compact-WY form).
+-   **LDT**: leading dimension of `T`.
+-   **WORK**: workspace array.
+
+#### dgetsqrhrt.ndarray( M, N, mb1, nb1, nb2, A, sa1, sa2, oa, T, st1, st2, ot, W, sw, ow )
+
+Computes a column-blocked QR factorization of a real `M`-by-`N` matrix `A` (with `M >= N`) via TSQR followed by Householder reconstruction, using alternative indexing semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+var A = new Float64Array( [ 2.0, 1.0, 3.0, 1.0, 1.0, 4.0, 2.0, 3.0, 3.0, 2.0, 5.0, 1.0 ] );
+var T = new Float64Array( 6 );
+var W = new Float64Array( 256 );
+
+var info = dgetsqrhrt.ndarray( 4, 3, 4, 2, 2, A, 1, 4, 0, T, 1, 2, 0, W, 1, 0 );
+// returns 0
+```
+
+The function has the following additional parameters:
+
+-   **sa1**, **sa2**, **oa**: stride and offset for `A`.
+-   **st1**, **st2**, **ot**: stride and offset for `T`.
+-   **sw**, **ow**: stride and offset for the workspace array.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The routine internally calls `dlatsqr` to compute a Tall-Skinny QR with row block size `mb1` and column block size `nb1`, then `dorgtsqr_row` to reconstruct the orthonormal `Q1`, then `dorhr_col` to convert `Q1` into a sequence of standard Householder reflectors of column-block width `nb2`.
+-   On exit, the elements on and above the diagonal of `A` contain the `N`-by-`N` upper triangular factor `R` of the QR factorization `A = Q * R`; the elements strictly below the diagonal hold the Householder vectors `V`.
+-   The output is in the same compact-WY layout as `dgeqrt`.
+-   Required `WORK` length: `LWT + N*N + max( nb1local * max(nb1local, N - nb1local), N )`, where `nb1local = min(nb1, N)`, `num_all_row_blocks = max(1, ceil((M-N) / (mb1-N)))`, and `LWT = num_all_row_blocks * N * nb1local`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+<!-- eslint no-undef: "error" -->
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dgetsqrhrt = require( '@stdlib/lapack/base/dgetsqrhrt' );
+
+var M = 8;
+var N = 3;
+var A = new Float64Array( M * N );
+var i;
+var j;
+for ( j = 0; j < N; j++ ) {
+    for ( i = 0; i < M; i++ ) {
+        A[ i + ( j * M ) ] = Math.sin( ( i + 1 ) + ( 3 * ( j + 1 ) ) ) + 0.5;
+        if ( i === j ) {
+            A[ i + ( j * M ) ] += 4.0;
+        }
+    }
+}
+var T = new Float64Array( 2 * N );
+var WORK = new Float64Array( 256 );
+
+var info = dgetsqrhrt( 'column-major', M, N, 4, 2, 2, A, M, T, 2, WORK );
+console.log( info );
+console.log( A );
+console.log( T );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

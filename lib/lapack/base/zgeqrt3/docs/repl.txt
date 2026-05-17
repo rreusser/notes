@@ -1,0 +1,83 @@
+
+{{alias}}( order, M, N, A, LDA, T, LDT )
+    recursively computes a QR factorization of a complex M-by-N matrix using the compact WY representation of Q
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        T: Float64Array
+            output matrix.
+
+        LDT: integer
+            leading dimension of `T`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( M, N, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT )
+    recursively computes a QR factorization of a complex M-by-N matrix using the compact WY representation of Q, using alternative indexing semantics.
+
+    Parameters
+    ----------
+        M: integer
+            number of rows.
+
+        N: integer
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        T: Float64Array
+            output matrix.
+
+        strideT1: integer
+            stride of dimension 1 of `T`.
+
+        strideT2: integer
+            stride of dimension 2 of `T`.
+
+        offsetT: integer
+            starting index for `T`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

@@ -1,0 +1,162 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dorgtsqr
+
+> Generates a real `M`-by-`N` matrix `Q` with orthonormal columns from a Tall-Skinny QR factorization (`dlatsqr`).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dorgtsqr = require( '@stdlib/lapack/base/dorgtsqr' );
+```
+
+#### dorgtsqr( order, M, N, mb, nb, A, LDA, T, LDT, WORK )
+
+Generates a real `M`-by-`N` matrix `Q` with orthonormal columns from the reflectors and block triangular factors produced by `dlatsqr`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlatsqr = require( '@stdlib/lapack/base/dlatsqr' );
+
+var M = 8;
+var N = 3;
+var mb = 4;
+var nb = 2;
+var A = new Float64Array( [
+    5.0, 0.5, 0.333, 0.25, 0.2, 0.167, 0.143, 0.125,
+    0.5, 6.0, 0.5,   0.333, 0.25, 0.2, 0.167, 0.143,
+    0.333, 0.5, 7.0, 0.5,   0.333, 0.25, 0.2, 0.167
+] );
+var T = new Float64Array( nb * N * 5 ); // nb-by-(N*Number_of_row_blocks)
+var WORK = new Float64Array( ( M + nb ) * N );
+
+dlatsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK );
+dorgtsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `Q` (`M >= 0`).
+-   **N**: number of columns of `Q` (`0 <= N <= M`).
+-   **mb**: row block size used by `dlatsqr` (`mb > N`).
+-   **nb**: column block size used by `dlatsqr` (`nb >= 1`).
+-   **A**: input/output matrix; on entry contains the reflectors below the diagonal as produced by `dlatsqr`; on exit contains the orthonormal `Q`.
+-   **LDA**: leading dimension of `A`.
+-   **T**: block triangular factors from `dlatsqr` (read-only).
+-   **LDT**: leading dimension of `T` (`LDT >= min(nb, N)`).
+-   **WORK**: workspace of length at least `(M + nb) * N`.
+
+#### dorgtsqr.ndarray( M, N, mb, nb, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK )
+
+Same operation as above, but using stride/offset semantics.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlatsqr = require( '@stdlib/lapack/base/dlatsqr' );
+
+var M = 4;
+var N = 2;
+var mb = 8;
+var nb = 2;
+var A = new Float64Array( [ 5.0, 1.0, 0.5, 0.3, 1.0, 6.0, 0.5, 1.0 ] );
+var T = new Float64Array( nb * N );
+var WORK = new Float64Array( ( M + nb ) * N );
+
+dlatsqr.ndarray( M, N, mb, nb, A, 1, M, 0, T, 1, nb, 0, WORK, 1, 0 );
+dorgtsqr.ndarray( M, N, mb, nb, A, 1, M, 0, T, 1, nb, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideWORK**: element stride for `WORK` (use `1`).
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `dorgtsqr` consumes the output of `dlatsqr`: the reflectors stored below the diagonal of `A` and the block triangular factors stored in `T`. Calling `dorgtsqr` on inputs that did not come from `dlatsqr` (with the same `mb`, `nb`) will produce undefined results.
+-   The implementation forms `Q` by applying the implicit `Q` to the leading `N` columns of the `M`-by-`M` identity matrix using `dlamtsqr`, then copying the result back into `A`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlatsqr = require( '@stdlib/lapack/base/dlatsqr' );
+var dorgtsqr = require( '@stdlib/lapack/base/dorgtsqr' );
+
+var M = 8;
+var N = 3;
+var mb = 4;
+var nb = 2;
+var A = new Float64Array( [
+    5.0, 0.5, 0.333, 0.25, 0.2, 0.167, 0.143, 0.125,
+    0.5, 6.0, 0.5,   0.333, 0.25, 0.2, 0.167, 0.143,
+    0.333, 0.5, 7.0, 0.5,   0.333, 0.25, 0.2, 0.167
+] );
+var T = new Float64Array( nb * N * 5 );
+var WORK = new Float64Array( ( M + nb ) * N );
+
+dlatsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK );
+dorgtsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK );
+console.log( A );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+</section>
+
+<!-- /.links -->

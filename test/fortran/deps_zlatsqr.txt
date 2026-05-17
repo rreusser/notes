@@ -1,0 +1,17 @@
+dladiv
+dlamch
+dlapy3
+ieeeck
+ilaenv
+iparmq
+zgeqrt
+zgeqrt2
+zgeqrt3
+zlacgv
+zladiv
+zlarfb
+zlarfg
+zlatsqr
+ztpqrt
+ztpqrt2
+ztprfb

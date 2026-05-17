@@ -1,0 +1,150 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zlatsqr
+
+> Computes a blocked Tall-Skinny QR (TSQR) factorization of a complex `M`-by-`N` matrix (with `M >= N`).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlatsqr = require( '@stdlib/lapack/base/zlatsqr' );
+```
+
+#### zlatsqr( order, M, N, mb, nb, A, LDA, T, LDT, WORK )
+
+Computes the QR factorization `A = Q * (R; 0)` of a complex `M`-by-`N` matrix `A` partitioned into row blocks of size `mb`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( 12 );
+var T = new Complex128Array( 4 ); // nb-by-N
+var WORK = new Complex128Array( 4 );
+
+zlatsqr( 'row-major', 4, 3, 8, 2, A, 3, T, 3, WORK );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `A` (`M >= N`).
+-   **N**: number of columns of `A`.
+-   **mb**: row block size.
+-   **nb**: column block size (`1 <= nb <= N` when `N > 0`).
+-   **A**: input matrix overwritten on exit; the upper triangle holds `R`, and the elements below the diagonal hold the Householder reflectors `V`.
+-   **LDA**: leading dimension of `A`.
+-   **T**: output matrix of upper triangular block reflector factors.
+-   **LDT**: leading dimension of `T` (`LDT >= nb`).
+-   **WORK**: workspace array of length at least `nb*N`.
+
+#### zlatsqr.ndarray( M, N, mb, nb, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK )
+
+Same operation as above, but using stride/offset semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array( 6 );
+var T = new Complex128Array( 4 );
+var WORK = new Complex128Array( 4 );
+
+zlatsqr.ndarray( 3, 2, 8, 2, A, 1, 3, 0, T, 1, 2, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A`.
+-   **strideA2**: stride of dimension 2 of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideT1**: stride of dimension 1 of `T`.
+-   **strideT2**: stride of dimension 2 of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideWORK**: stride length for `WORK`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The factorization is appropriate for tall-skinny complex matrices where `M >> N`. The first row block of size `mb`-by-`N` is factored via [`zgeqrt`][@stdlib/lapack/base/zgeqrt]; subsequent row blocks are combined into the running `R` factor via [`ztpqrt`][@stdlib/lapack/base/ztpqrt].
+-   `T` has dimensions `nb`-by-`(N * Number_of_row_blocks)` where `Number_of_row_blocks = ceil((M-N)/(mb-N))`. When `mb <= N` or `mb >= M`, the routine simply calls `zgeqrt` and `T` is `nb`-by-`N`.
+-   The unitary factor `Q` is represented implicitly by the Householder reflectors stored below the diagonal of `A` together with `T`; use [`zgemqrt`][@stdlib/lapack/base/zgemqrt] (or a future `zlamtsqr`) to apply `Q` or `Q^H`.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zlatsqr = require( '@stdlib/lapack/base/zlatsqr' );
+
+var M = 8;
+var N = 3;
+var mb = 4;
+var nb = 2;
+var A = new Complex128Array( M * N );
+var T = new Complex128Array( nb * N * 5 );
+var WORK = new Complex128Array( nb * N );
+var i;
+
+for ( i = 0; i < M * N; i++ ) {
+    A.set( [ ( i + 1 ) * 0.5, ( i + 1 ) * 0.1 ], i );
+}
+
+var info = zlatsqr( 'column-major', M, N, mb, nb, A, M, T, nb, WORK );
+console.log( info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[@stdlib/lapack/base/zgeqrt]: https://github.com/stdlib-js/stdlib
+
+[@stdlib/lapack/base/ztpqrt]: https://github.com/stdlib-js/stdlib
+
+[@stdlib/lapack/base/zgemqrt]: https://github.com/stdlib-js/stdlib
+
+</section>
+
+<!-- /.links -->

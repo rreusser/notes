@@ -269,6 +269,13 @@ def generate_signature(path):
     if has_info:
         consumed.add('INFO')
 
+    # LWORK is consumed: in JS the workspace size is implicit (from WORK.length
+    # or allocated internally). The Fortran workspace-query pattern (LWORK=-1)
+    # has no JS equivalent. Surfaced repeatedly by translation agents
+    # (dgeqrt, dlatsqr, zlatsqr, dlamtsqr, zlamtsqr).
+    if 'LWORK' in fortran_args:
+        consumed.add('LWORK')
+
     # Count total arrays to decide naming (single-array routines use plain stride/offset)
     array_count = len(arrays)
 

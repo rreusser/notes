@@ -695,6 +695,7 @@ sine values from a reinterpreted WORK array, copy to a scratch
 | `DISNAN(X)` | `x !== x` (or `Number.isNaN(x)`) | Self-comparison NaN test |
 | `DLAMCH('S')` | `Number.MIN_VALUE` or stdlib constant | Replace DLAMCH constants with direct numeric literals |
 | `DLAMCH('E')` | `Number.EPSILON / 2` | Machine epsilon (half-precision) |
+| `DLAMCH('P')` / `DLAMCH('Precision')` | `Number.EPSILON` | Precision = epsilon * base (full-precision). Distinct from `'E'`. |
 | `ILAENV(1, ...)` | `NB = 32` (hardcoded) | Remove ILAENV/LWORK workspace queries entirely — allocate internally. **Defaults vary by query:** `ILAENV(1)` → NB=32, `ILAENV(3)` → NX=128 (crossover), `ILAENV(12)` → NMIN=12 (dlaqr3 threshold). Check the Fortran source for which query is used. |
 | Integer division | `(expr)\|0` | Fortran integer division truncates toward zero (like JS `\|0`), NOT `Math.floor`. For negative dividends, `Math.floor(-3/2) = -2` but Fortran gives `-1`. Always use `\|0` for integer division of expressions that can be negative. |
 | `ABS(z)` (complex) | `Math.sqrt(re*re + im*im)` | Complex modulus. Safe to inline (no division). |

@@ -1,0 +1,149 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zgelqt
+
+> Compute a blocked LQ factorization of a complex M-by-N matrix A using the compact WY representation of Q.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zgelqt = require( '@stdlib/lapack/base/zgelqt' );
+```
+
+#### zgelqt( order, M, N, mb, A, LDA, T, LDT, WORK )
+
+Compute a blocked LQ factorization of a complex `M`-by-`N` matrix `A` using the compact WY representation of `Q`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array([ 3.0, 0.0, 0.5, 0.0, 0.6, 0.0, 4.0, 0.0, 0.4, 0.0, 0.7, 0.0, 0.2, 0.0, 0.3, 0.0 ]);
+var T = new Complex128Array( 4 ); // mb*K = 2*2
+var WORK = new Complex128Array( 8 ); // mb*N = 2*4
+
+var info = zgelqt( 'column-major', 2, 4, 2, A, 2, T, 2, WORK );
+// info => 0
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of `A`.
+-   **N**: number of columns of `A`.
+-   **mb**: block size; must satisfy `1 <= mb <= min(M,N)` (when `min(M,N) > 0`).
+-   **A**: input/output [`Complex128Array`][@stdlib/array/complex128]. On exit, the elements on and below the diagonal contain `L`; the elements above the diagonal are the rows of `V`.
+-   **LDA**: leading dimension of `A`.
+-   **T**: output [`Complex128Array`][@stdlib/array/complex128] of shape `mb`-by-`min(M,N)` storing the upper triangular block reflectors.
+-   **LDT**: leading dimension of `T`.
+-   **WORK**: workspace [`Complex128Array`][@stdlib/array/complex128] of length `mb*N`.
+
+#### zgelqt.ndarray( M, N, mb, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, WORK, offsetWORK )
+
+Compute a blocked LQ factorization using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+
+var A = new Complex128Array([ 3.0, 0.0, 0.5, 0.0, 0.6, 0.0, 4.0, 0.0, 0.4, 0.0, 0.7, 0.0, 0.2, 0.0, 0.3, 0.0 ]);
+var T = new Complex128Array( 4 );
+var WORK = new Complex128Array( 8 );
+
+var info = zgelqt.ndarray( 2, 4, 2, A, 1, 2, 0, T, 1, 2, 0, WORK, 0 );
+// info => 0
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of dimension 1 of `A` (in complex elements).
+-   **strideA2**: stride of dimension 2 of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **strideT1**: stride of dimension 1 of `T` (in complex elements).
+-   **strideT2**: stride of dimension 2 of `T` (in complex elements).
+-   **offsetT**: starting index for `T` (in complex elements).
+-   **offsetWORK**: starting index for `WORK` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `zgelqt` calls the recursive panel kernel `zgelqt3` and applies each panel's block reflector to the trailing matrix via `zlarfb` (side `'right'`, no-transpose, forward, rowwise storage).
+-   Unlike the Fortran reference, `mb` is exposed as an explicit parameter (no `ILAENV` query). Pass `mb = 32` for a typical default.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgelqt = require( '@stdlib/lapack/base/zgelqt' );
+
+var M = 4;
+var N = 6;
+var mb = 2;
+
+var A = new Complex128Array([
+    3.0, 0.1, 0.5, -0.3, 0.2, 0.5, 0.4, -0.1,
+    0.6, -0.2, 4.0, 0.4, 0.5, -0.3, 0.3, 0.4,
+    0.4, 0.3, 0.7, -0.2, 3.5, 0.2, 0.5, -0.5,
+    0.2, -0.1, 0.3, 0.5, 0.8, -0.4, 4.5, 0.3,
+    0.1, 0.4, -0.2, -0.4, 0.6, 0.1, 1.1, -0.2,
+    -0.3, 0.2, 0.5, 0.1, 0.1, -0.5, -0.5, 0.4
+]);
+var T = new Complex128Array( mb * Math.min( M, N ) );
+var WORK = new Complex128Array( mb * N );
+
+var info = zgelqt( 'column-major', M, N, mb, A, M, T, mb, WORK );
+console.log( info );
+console.log( A );
+console.log( T );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[@stdlib/array/complex128]: https://github.com/stdlib-js/array-complex128
+
+</section>
+
+<!-- /.links -->

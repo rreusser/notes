@@ -1,0 +1,11 @@
+la_constants
+la_xisnan
+dlamch
+dlassq
+dnrm2
+dscal
+dgemv
+dorbdb6
+dorbdb5
+disnan
+dlaisnan
