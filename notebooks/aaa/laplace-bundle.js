@@ -12438,10 +12438,10 @@ var require_ndarray = __commonJS({
     var format = require_lib3();
     var base = require_base51();
     function zgesvd2(jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK) {
-      if (jobu !== "all" && jobu !== "some" && jobu !== "overwrite" && jobu !== "none") {
+      if (jobu !== "all-columns" && jobu !== "economy" && jobu !== "overwrite" && jobu !== "none") {
         throw new TypeError(format("invalid argument. First argument must be a valid job type. Value: `%s`.", jobu));
       }
-      if (jobvt !== "all" && jobvt !== "some" && jobvt !== "overwrite" && jobvt !== "none") {
+      if (jobvt !== "all-rows" && jobvt !== "economy" && jobvt !== "overwrite" && jobvt !== "none") {
         throw new TypeError(format("invalid argument. Second argument must be a valid job type. Value: `%s`.", jobvt));
       }
       if (M < 0) {
@@ -12453,19 +12453,7 @@ var require_ndarray = __commonJS({
       if (M === 0 || N === 0) {
         return 0;
       }
-      var JOBVT_MAP = {
-        "all": "all-rows",
-        "some": "economy",
-        "overwrite": "overwrite",
-        "none": "none"
-      };
-      var JOBU_MAP = {
-        "all": "all-columns",
-        "some": "economy",
-        "overwrite": "overwrite",
-        "none": "none"
-      };
-      return base(JOBU_MAP[jobu], JOBVT_MAP[jobvt], M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK);
+      return base(jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK);
     }
     module.exports = zgesvd2;
   }
@@ -13944,23 +13932,6 @@ export {
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-/**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 Ricky Reusser.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.

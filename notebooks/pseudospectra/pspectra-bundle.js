@@ -698,15 +698,15 @@ var require_base11 = __commonJS({
     var SFMIN2 = SFMIN1 * SCLFAC;
     var SFMAX2 = ONE / SFMIN2;
     function dgebal(job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, offsetSCALE) {
-      var noconv;
       var canswap;
-      var ca;
-      var ra;
+      var noconv;
       var ica;
       var ira;
-      var oA;
       var sA1;
       var sA2;
+      var ca;
+      var ra;
+      var oA;
       var oS;
       var sS;
       var c;
@@ -724,13 +724,21 @@ var require_base11 = __commonJS({
       oS = offsetSCALE;
       sS = strideSCALE;
       if (N === 0) {
-        return { "info": 0, "ilo": 1, "ihi": 0 };
+        return {
+          "info": 0,
+          "ilo": 1,
+          "ihi": 0
+        };
       }
       if (job === "none") {
         for (i = 0; i < N; i++) {
           SCALE[oS + i * sS] = ONE;
         }
-        return { "info": 0, "ilo": 1, "ihi": N };
+        return {
+          "info": 0,
+          "ilo": 1,
+          "ihi": N
+        };
       }
       k = 1;
       l = N;
@@ -754,7 +762,11 @@ var require_base11 = __commonJS({
               }
               noconv = true;
               if (l === 1) {
-                return { "info": 0, "ilo": 1, "ihi": 1 };
+                return {
+                  "info": 0,
+                  "ilo": 1,
+                  "ihi": 1
+                };
               }
               l -= 1;
             }
@@ -787,7 +799,11 @@ var require_base11 = __commonJS({
         SCALE[oS + (i - 1) * sS] = ONE;
       }
       if (job === "permute") {
-        return { "info": 0, "ilo": k, "ihi": l };
+        return {
+          "info": 0,
+          "ilo": k,
+          "ihi": l
+        };
       }
       noconv = true;
       while (noconv) {
@@ -803,7 +819,11 @@ var require_base11 = __commonJS({
             continue;
           }
           if (c + ca + r + ra !== c + ca + r + ra) {
-            return { "info": -3, "ilo": k, "ihi": l };
+            return {
+              "info": -3,
+              "ilo": k,
+              "ihi": l
+            };
           }
           g = r / SCLFAC;
           f = ONE;
@@ -845,7 +865,11 @@ var require_base11 = __commonJS({
           dscal(l, f, A, sA1, oA + (i - 1) * sA2);
         }
       }
-      return { "info": 0, "ilo": k, "ihi": l };
+      return {
+        "info": 0,
+        "ilo": k,
+        "ihi": l
+      };
     }
     module.exports = dgebal;
   }
@@ -1185,72 +1209,12 @@ var require_base18 = __commonJS({
       }
       if (applyLeft) {
         if (lastv > 0) {
-          dgemv(
-            "transpose",
-            lastv,
-            lastc,
-            1,
-            C,
-            strideC1,
-            strideC2,
-            offsetC,
-            v,
-            strideV,
-            offsetV,
-            0,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
-          dger(
-            lastv,
-            lastc,
-            -tau,
-            v,
-            strideV,
-            offsetV,
-            WORK,
-            strideWORK,
-            offsetWORK,
-            C,
-            strideC1,
-            strideC2,
-            offsetC
-          );
+          dgemv("transpose", lastv, lastc, 1, C, strideC1, strideC2, offsetC, v, strideV, offsetV, 0, WORK, strideWORK, offsetWORK);
+          dger(lastv, lastc, -tau, v, strideV, offsetV, WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetC);
         }
       } else if (lastv > 0) {
-        dgemv(
-          "no-transpose",
-          lastc,
-          lastv,
-          1,
-          C,
-          strideC1,
-          strideC2,
-          offsetC,
-          v,
-          strideV,
-          offsetV,
-          0,
-          WORK,
-          strideWORK,
-          offsetWORK
-        );
-        dger(
-          lastc,
-          lastv,
-          -tau,
-          WORK,
-          strideWORK,
-          offsetWORK,
-          v,
-          strideV,
-          offsetV,
-          C,
-          strideC1,
-          strideC2,
-          offsetC
-        );
+        dgemv("no-transpose", lastc, lastv, 1, C, strideC1, strideC2, offsetC, v, strideV, offsetV, 0, WORK, strideWORK, offsetWORK);
+        dger(lastc, lastv, -tau, WORK, strideWORK, offsetWORK, v, strideV, offsetV, C, strideC1, strideC2, offsetC);
       }
     }
     module.exports = dlarf;
@@ -1297,6 +1261,7 @@ var require_base20 = __commonJS({
       var rsafmn;
       var safmin;
       var xnorm;
+      var sign;
       var beta;
       var knt;
       var j;
@@ -1308,7 +1273,8 @@ var require_base20 = __commonJS({
       if (xnorm === 0) {
         tau[offsetTau] = 0;
       } else {
-        beta = -(Math.sign(alpha[offsetAlpha]) || 1) * dlapy2(alpha[offsetAlpha], xnorm);
+        sign = Math.sign(alpha[offsetAlpha]) || 1;
+        beta = -sign * dlapy2(alpha[offsetAlpha], xnorm);
         safmin = dlamch("safe-minimum") / dlamch("epsilon");
         knt = 0;
         if (Math.abs(beta) < safmin) {
@@ -1320,7 +1286,8 @@ var require_base20 = __commonJS({
             alpha[offsetAlpha] *= rsafmn;
           } while (Math.abs(beta) < safmin && knt < 20);
           xnorm = dnrm2(N - 1, x, strideX, offsetX);
-          beta = -(Math.sign(alpha[offsetAlpha]) || 1) * dlapy2(alpha[offsetAlpha], xnorm);
+          sign = Math.sign(alpha[offsetAlpha]) || 1;
+          beta = -sign * dlapy2(alpha[offsetAlpha], xnorm);
         }
         tau[offsetTau] = (beta - alpha[offsetAlpha]) / beta;
         dscal(N - 1, 1 / (alpha[offsetAlpha] - beta), x, strideX, offsetX);
@@ -1945,51 +1912,11 @@ var require_base27 = __commonJS({
             }
             dtrmm("right", "lower", "no-transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
-              dgemm2(
-                "transpose",
-                "no-transpose",
-                N,
-                K,
-                M - K,
-                1,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC1,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV1,
-                1,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
+              dgemm2("transpose", "no-transpose", N, K, M - K, 1, C, strideC1, strideC2, offsetC + K * strideC1, V, strideV1, strideV2, offsetV + K * strideV1, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
             }
             dtrmm("right", "upper", transt, "non-unit", N, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
-              dgemm2(
-                "no-transpose",
-                "transpose",
-                M - K,
-                N,
-                K,
-                -1,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV1,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                1,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC1
-              );
+              dgemm2("no-transpose", "transpose", M - K, N, K, -1, V, strideV1, strideV2, offsetV + K * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK, 1, C, strideC1, strideC2, offsetC + K * strideC1);
             }
             dtrmm("right", "lower", "transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
@@ -2003,51 +1930,11 @@ var require_base27 = __commonJS({
             }
             dtrmm("right", "lower", "no-transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                K,
-                N - K,
-                1,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC2,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV1,
-                1,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
+              dgemm2("no-transpose", "no-transpose", M, K, N - K, 1, C, strideC1, strideC2, offsetC + K * strideC2, V, strideV1, strideV2, offsetV + K * strideV1, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
             }
             dtrmm("right", "upper", trans, "non-unit", M, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
-              dgemm2(
-                "no-transpose",
-                "transpose",
-                M,
-                N - K,
-                K,
-                -1,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV1,
-                1,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC2
-              );
+              dgemm2("no-transpose", "transpose", M, N - K, K, -1, WORK, strideWORK1, strideWORK2, offsetWORK, V, strideV1, strideV2, offsetV + K * strideV1, 1, C, strideC1, strideC2, offsetC + K * strideC2);
             }
             dtrmm("right", "lower", "transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
@@ -2062,51 +1949,11 @@ var require_base27 = __commonJS({
           }
           dtrmm("right", "upper", "no-transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (M > K) {
-            dgemm2(
-              "transpose",
-              "no-transpose",
-              N,
-              K,
-              M - K,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC,
-              V,
-              strideV1,
-              strideV2,
-              offsetV,
-              1,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK
-            );
+            dgemm2("transpose", "no-transpose", N, K, M - K, 1, C, strideC1, strideC2, offsetC, V, strideV1, strideV2, offsetV, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
           }
           dtrmm("right", "lower", transt, "non-unit", N, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (M > K) {
-            dgemm2(
-              "no-transpose",
-              "transpose",
-              M - K,
-              N,
-              K,
-              -1,
-              V,
-              strideV1,
-              strideV2,
-              offsetV,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC
-            );
+            dgemm2("no-transpose", "transpose", M - K, N, K, -1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK, 1, C, strideC1, strideC2, offsetC);
           }
           dtrmm("right", "upper", "transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
           for (j = 0; j < K; j++) {
@@ -2120,51 +1967,11 @@ var require_base27 = __commonJS({
           }
           dtrmm("right", "upper", "no-transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (N > K) {
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              K,
-              N - K,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC,
-              V,
-              strideV1,
-              strideV2,
-              offsetV,
-              1,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK
-            );
+            dgemm2("no-transpose", "no-transpose", M, K, N - K, 1, C, strideC1, strideC2, offsetC, V, strideV1, strideV2, offsetV, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
           }
           dtrmm("right", "lower", trans, "non-unit", M, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (N > K) {
-            dgemm2(
-              "no-transpose",
-              "transpose",
-              M,
-              N - K,
-              K,
-              -1,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK,
-              V,
-              strideV1,
-              strideV2,
-              offsetV,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC
-            );
+            dgemm2("no-transpose", "transpose", M, N - K, K, -1, WORK, strideWORK1, strideWORK2, offsetWORK, V, strideV1, strideV2, offsetV, 1, C, strideC1, strideC2, offsetC);
           }
           dtrmm("right", "upper", "transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
           for (j = 0; j < K; j++) {
@@ -2180,51 +1987,11 @@ var require_base27 = __commonJS({
           }
           dtrmm("right", "upper", "transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (M > K) {
-            dgemm2(
-              "transpose",
-              "transpose",
-              N,
-              K,
-              M - K,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC + K * strideC1,
-              V,
-              strideV1,
-              strideV2,
-              offsetV + K * strideV2,
-              1,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK
-            );
+            dgemm2("transpose", "transpose", N, K, M - K, 1, C, strideC1, strideC2, offsetC + K * strideC1, V, strideV1, strideV2, offsetV + K * strideV2, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
           }
           dtrmm("right", "upper", transt, "non-unit", N, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (M > K) {
-            dgemm2(
-              "transpose",
-              "transpose",
-              M - K,
-              N,
-              K,
-              -1,
-              V,
-              strideV1,
-              strideV2,
-              offsetV + K * strideV2,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC + K * strideC1
-            );
+            dgemm2("transpose", "transpose", M - K, N, K, -1, V, strideV1, strideV2, offsetV + K * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK, 1, C, strideC1, strideC2, offsetC + K * strideC1);
           }
           dtrmm("right", "upper", "no-transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
           for (j = 0; j < K; j++) {
@@ -2238,51 +2005,11 @@ var require_base27 = __commonJS({
           }
           dtrmm("right", "upper", "transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (N > K) {
-            dgemm2(
-              "no-transpose",
-              "transpose",
-              M,
-              K,
-              N - K,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC + K * strideC2,
-              V,
-              strideV1,
-              strideV2,
-              offsetV + K * strideV2,
-              1,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK
-            );
+            dgemm2("no-transpose", "transpose", M, K, N - K, 1, C, strideC1, strideC2, offsetC + K * strideC2, V, strideV1, strideV2, offsetV + K * strideV2, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
           }
           dtrmm("right", "upper", trans, "non-unit", M, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
           if (N > K) {
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N - K,
-              K,
-              -1,
-              WORK,
-              strideWORK1,
-              strideWORK2,
-              offsetWORK,
-              V,
-              strideV1,
-              strideV2,
-              offsetV + K * strideV2,
-              1,
-              C,
-              strideC1,
-              strideC2,
-              offsetC + K * strideC2
-            );
+            dgemm2("no-transpose", "no-transpose", M, N - K, K, -1, WORK, strideWORK1, strideWORK2, offsetWORK, V, strideV1, strideV2, offsetV + K * strideV2, 1, C, strideC1, strideC2, offsetC + K * strideC2);
           }
           dtrmm("right", "upper", "no-transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
           for (j = 0; j < K; j++) {
@@ -2297,51 +2024,11 @@ var require_base27 = __commonJS({
         }
         dtrmm("right", "lower", "transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
         if (M > K) {
-          dgemm2(
-            "transpose",
-            "transpose",
-            N,
-            K,
-            M - K,
-            1,
-            C,
-            strideC1,
-            strideC2,
-            offsetC,
-            V,
-            strideV1,
-            strideV2,
-            offsetV,
-            1,
-            WORK,
-            strideWORK1,
-            strideWORK2,
-            offsetWORK
-          );
+          dgemm2("transpose", "transpose", N, K, M - K, 1, C, strideC1, strideC2, offsetC, V, strideV1, strideV2, offsetV, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
         }
         dtrmm("right", "lower", transt, "non-unit", N, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
         if (M > K) {
-          dgemm2(
-            "transpose",
-            "transpose",
-            M - K,
-            N,
-            K,
-            -1,
-            V,
-            strideV1,
-            strideV2,
-            offsetV,
-            WORK,
-            strideWORK1,
-            strideWORK2,
-            offsetWORK,
-            1,
-            C,
-            strideC1,
-            strideC2,
-            offsetC
-          );
+          dgemm2("transpose", "transpose", M - K, N, K, -1, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK, 1, C, strideC1, strideC2, offsetC);
         }
         dtrmm("right", "lower", "no-transpose", "unit", N, K, 1, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
         for (j = 0; j < K; j++) {
@@ -2355,51 +2042,11 @@ var require_base27 = __commonJS({
         }
         dtrmm("right", "lower", "transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
         if (N > K) {
-          dgemm2(
-            "no-transpose",
-            "transpose",
-            M,
-            K,
-            N - K,
-            1,
-            C,
-            strideC1,
-            strideC2,
-            offsetC,
-            V,
-            strideV1,
-            strideV2,
-            offsetV,
-            1,
-            WORK,
-            strideWORK1,
-            strideWORK2,
-            offsetWORK
-          );
+          dgemm2("no-transpose", "transpose", M, K, N - K, 1, C, strideC1, strideC2, offsetC, V, strideV1, strideV2, offsetV, 1, WORK, strideWORK1, strideWORK2, offsetWORK);
         }
         dtrmm("right", "lower", trans, "non-unit", M, K, 1, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
         if (N > K) {
-          dgemm2(
-            "no-transpose",
-            "no-transpose",
-            M,
-            N - K,
-            K,
-            -1,
-            WORK,
-            strideWORK1,
-            strideWORK2,
-            offsetWORK,
-            V,
-            strideV1,
-            strideV2,
-            offsetV,
-            1,
-            C,
-            strideC1,
-            strideC2,
-            offsetC
-          );
+          dgemm2("no-transpose", "no-transpose", M, N - K, K, -1, WORK, strideWORK1, strideWORK2, offsetWORK, V, strideV1, strideV2, offsetV, 1, C, strideC1, strideC2, offsetC);
         }
         dtrmm("right", "lower", "no-transpose", "unit", M, K, 1, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
         for (j = 0; j < K; j++) {
@@ -2425,7 +2072,7 @@ var require_base28 = __commonJS({
     var dtrmm = require_base24();
     var NBMAX = 64;
     var LDT = NBMAX + 1;
-    function dgehrd(N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK) {
+    function dgehrd(N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork) {
       var LDWORK;
       var IWT;
       var sa1;
@@ -2440,6 +2087,10 @@ var require_base28 = __commonJS({
       var i;
       var j;
       NB = 32;
+      if (lwork === -1) {
+        WORK[offsetWORK] = N * NB + LDT * NBMAX;
+        return 0;
+      }
       sa1 = strideA1;
       sa2 = strideA2;
       oA = offsetA;
@@ -2770,31 +2421,10 @@ var require_base29 = __commonJS({
       for (i = K - 1; i >= 0; i--) {
         if (i < N - 1) {
           A[offsetA + i * strideA1 + i * strideA2] = 1;
-          dlarf(
-            "left",
-            M - i,
-            N - i - 1,
-            A,
-            strideA1,
-            offsetA + i * strideA1 + i * strideA2,
-            TAU[offsetTAU + i * strideTAU],
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + (i + 1) * strideA2,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
+          dlarf("left", M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2, TAU[offsetTAU + i * strideTAU], A, strideA1, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, WORK, strideWORK, offsetWORK);
         }
         if (i < M - 1) {
-          dscal(
-            M - i - 1,
-            -TAU[offsetTAU + i * strideTAU],
-            A,
-            strideA1,
-            offsetA + (i + 1) * strideA1 + i * strideA2
-          );
+          dscal(M - i - 1, -TAU[offsetTAU + i * strideTAU], A, strideA1, offsetA + (i + 1) * strideA1 + i * strideA2);
         }
         A[offsetA + i * strideA1 + i * strideA2] = 1 - TAU[offsetTAU + i * strideTAU];
         for (l = 0; l < i; l++) {
@@ -2844,23 +2474,7 @@ var require_base30 = __commonJS({
               }
               jj = Math.min(lastv, prevlastv);
               if (jj - i - 1 > 0) {
-                dgemv(
-                  "transpose",
-                  jj - i - 1,
-                  i,
-                  -TAU[offsetTAU + i * strideTAU],
-                  V,
-                  strideV1,
-                  strideV2,
-                  offsetV + (i + 1) * strideV1,
-                  V,
-                  strideV1,
-                  offsetV + (i + 1) * strideV1 + i * strideV2,
-                  1,
-                  T,
-                  strideT1,
-                  offsetT + i * strideT2
-                );
+                dgemv("transpose", jj - i - 1, i, -TAU[offsetTAU + i * strideTAU], V, strideV1, strideV2, offsetV + (i + 1) * strideV1, V, strideV1, offsetV + (i + 1) * strideV1 + i * strideV2, 1, T, strideT1, offsetT + i * strideT2);
               }
             } else {
               lastv = N;
@@ -2875,39 +2489,11 @@ var require_base30 = __commonJS({
               }
               jj = Math.min(lastv, prevlastv);
               if (jj - i - 1 > 0) {
-                dgemv(
-                  "no-transpose",
-                  i,
-                  jj - i - 1,
-                  -TAU[offsetTAU + i * strideTAU],
-                  V,
-                  strideV1,
-                  strideV2,
-                  offsetV + (i + 1) * strideV2,
-                  V,
-                  strideV2,
-                  offsetV + i * strideV1 + (i + 1) * strideV2,
-                  1,
-                  T,
-                  strideT1,
-                  offsetT + i * strideT2
-                );
+                dgemv("no-transpose", i, jj - i - 1, -TAU[offsetTAU + i * strideTAU], V, strideV1, strideV2, offsetV + (i + 1) * strideV2, V, strideV2, offsetV + i * strideV1 + (i + 1) * strideV2, 1, T, strideT1, offsetT + i * strideT2);
               }
             }
             if (i > 0) {
-              dtrmv(
-                "upper",
-                "no-transpose",
-                "non-unit",
-                i,
-                T,
-                strideT1,
-                strideT2,
-                offsetT,
-                T,
-                strideT1,
-                offsetT + i * strideT2
-              );
+              dtrmv("upper", "no-transpose", "non-unit", i, T, strideT1, strideT2, offsetT, T, strideT1, offsetT + i * strideT2);
             }
             T[offsetT + i * strideT1 + i * strideT2] = TAU[offsetTAU + i * strideTAU];
             if (i > 0) {
@@ -2939,23 +2525,7 @@ var require_base30 = __commonJS({
                 }
                 jj = Math.max(lastv, prevlastv);
                 if (N - K + i - jj > 0) {
-                  dgemv(
-                    "transpose",
-                    N - K + i - jj,
-                    K - i - 1,
-                    -TAU[offsetTAU + i * strideTAU],
-                    V,
-                    strideV1,
-                    strideV2,
-                    offsetV + jj * strideV1 + (i + 1) * strideV2,
-                    V,
-                    strideV1,
-                    offsetV + jj * strideV1 + i * strideV2,
-                    1,
-                    T,
-                    strideT1,
-                    offsetT + (i + 1) * strideT1 + i * strideT2
-                  );
+                  dgemv("transpose", N - K + i - jj, K - i - 1, -TAU[offsetTAU + i * strideTAU], V, strideV1, strideV2, offsetV + jj * strideV1 + (i + 1) * strideV2, V, strideV1, offsetV + jj * strideV1 + i * strideV2, 1, T, strideT1, offsetT + (i + 1) * strideT1 + i * strideT2);
                 }
               } else {
                 lastv = 0;
@@ -2970,38 +2540,10 @@ var require_base30 = __commonJS({
                 }
                 jj = Math.max(lastv, prevlastv);
                 if (N - K + i - jj > 0) {
-                  dgemv(
-                    "no-transpose",
-                    K - i - 1,
-                    N - K + i - jj,
-                    -TAU[offsetTAU + i * strideTAU],
-                    V,
-                    strideV1,
-                    strideV2,
-                    offsetV + (i + 1) * strideV1 + jj * strideV2,
-                    V,
-                    strideV2,
-                    offsetV + i * strideV1 + jj * strideV2,
-                    1,
-                    T,
-                    strideT1,
-                    offsetT + (i + 1) * strideT1 + i * strideT2
-                  );
+                  dgemv("no-transpose", K - i - 1, N - K + i - jj, -TAU[offsetTAU + i * strideTAU], V, strideV1, strideV2, offsetV + (i + 1) * strideV1 + jj * strideV2, V, strideV2, offsetV + i * strideV1 + jj * strideV2, 1, T, strideT1, offsetT + (i + 1) * strideT1 + i * strideT2);
                 }
               }
-              dtrmv(
-                "lower",
-                "no-transpose",
-                "non-unit",
-                K - i - 1,
-                T,
-                strideT1,
-                strideT2,
-                offsetT + (i + 1) * strideT1 + (i + 1) * strideT2,
-                T,
-                strideT1,
-                offsetT + (i + 1) * strideT1 + i * strideT2
-              );
+              dtrmv("lower", "no-transpose", "non-unit", K - i - 1, T, strideT1, strideT2, offsetT + (i + 1) * strideT1 + (i + 1) * strideT2, T, strideT1, offsetT + (i + 1) * strideT1 + i * strideT2);
               if (i > 0) {
                 prevlastv = Math.min(prevlastv, lastv);
               } else {
@@ -3058,85 +2600,17 @@ var require_base31 = __commonJS({
         kk = 0;
       }
       if (kk < N) {
-        dorg2r(
-          M - kk,
-          N - kk,
-          K - kk,
-          A,
-          strideA1,
-          strideA2,
-          offsetA + kk * strideA1 + kk * strideA2,
-          TAU,
-          strideTAU,
-          offsetTAU + kk * strideTAU,
-          WORK,
-          strideWORK,
-          offsetWORK
-        );
+        dorg2r(M - kk, N - kk, K - kk, A, strideA1, strideA2, offsetA + kk * strideA1 + kk * strideA2, TAU, strideTAU, offsetTAU + kk * strideTAU, WORK, strideWORK, offsetWORK);
       }
       if (kk > 0) {
         work = new Float64Array2(ldwork * nb);
         for (i = ki; i >= 0; i -= nb) {
           ib = Math.min(nb, K - i);
           if (i + ib < N) {
-            dlarft(
-              "forward",
-              "columnwise",
-              M - i,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              TAU,
-              strideTAU,
-              offsetTAU + i * strideTAU,
-              work,
-              1,
-              ldwork,
-              0
-            );
-            dlarfb(
-              "left",
-              "no-transpose",
-              "forward",
-              "columnwise",
-              M - i,
-              N - i - ib,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              work,
-              1,
-              ldwork,
-              0,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + (i + ib) * strideA2,
-              work,
-              1,
-              ldwork,
-              ib
-            );
+            dlarft("forward", "columnwise", M - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, work, 1, ldwork, 0);
+            dlarfb("left", "no-transpose", "forward", "columnwise", M - i, N - i - ib, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, work, 1, ldwork, 0, A, strideA1, strideA2, offsetA + i * strideA1 + (i + ib) * strideA2, work, 1, ldwork, ib);
           }
-          dorg2r(
-            M - i,
-            ib,
-            ib,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2,
-            TAU,
-            strideTAU,
-            offsetTAU + i * strideTAU,
-            work,
-            1,
-            0
-          );
+          dorg2r(M - i, ib, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, work, 1, 0);
           for (j = i; j < i + ib; j++) {
             for (l = 0; l < i; l++) {
               A[offsetA + l * strideA1 + j * strideA2] = 0;
@@ -3158,9 +2632,9 @@ var require_base32 = __commonJS({
     var dorgqr = require_base31();
     function dorghr(N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork) {
       var work;
-      var nh;
       var sa1;
       var sa2;
+      var nh;
       var oA;
       var i;
       var j;
@@ -3196,21 +2670,7 @@ var require_base32 = __commonJS({
       }
       if (nh > 0) {
         work = new Float64Array2(Math.max(1, nh) * 32);
-        dorgqr(
-          nh,
-          nh,
-          nh,
-          A,
-          sa1,
-          sa2,
-          oA + ilo * sa1 + ilo * sa2,
-          TAU,
-          strideTAU,
-          offsetTAU + (ilo - 1) * strideTAU,
-          work,
-          1,
-          0
-        );
+        dorgqr(nh, nh, nh, A, sa1, sa2, oA + ilo * sa1 + ilo * sa2, TAU, strideTAU, offsetTAU + (ilo - 1) * strideTAU, work, 1, 0);
       }
       return 0;
     }
@@ -3248,17 +2708,17 @@ var require_base33 = __commonJS({
       var sigma;
       var count;
       var temp;
-      var tau;
       var rt1r;
       var rt1i;
       var rt2r;
       var rt2i;
-      var cs;
-      var sn;
+      var tau;
       var cs1;
       var sn1;
       var sab;
       var sac;
+      var cs;
+      var sn;
       var aa;
       var bb;
       var cc;
@@ -3289,11 +2749,11 @@ var require_base33 = __commonJS({
         if (z >= MULTPL * EPS) {
           z = p + sign(Math.sqrt(scale) * Math.sqrt(z), p);
           A = D + z;
-          D = D - bcmax / z * bcmis;
+          D -= bcmax / z * bcmis;
           tau = dlapy2(C, z);
           cs = z / tau;
           sn = C / tau;
-          B = B - C;
+          B -= C;
           C = ZERO;
         } else {
           count = 0;
@@ -3302,15 +2762,15 @@ var require_base33 = __commonJS({
             count += 1;
             scale = Math.max(Math.abs(temp), Math.abs(sigma));
             if (scale >= SAFMX2) {
-              sigma = sigma * SAFMN2;
-              temp = temp * SAFMN2;
+              sigma *= SAFMN2;
+              temp *= SAFMN2;
               if (count <= 20) {
                 continue;
               }
             }
             if (scale <= SAFMN2) {
-              sigma = sigma * SAFMX2;
-              temp = temp * SAFMX2;
+              sigma *= SAFMX2;
+              temp *= SAFMX2;
               if (count <= 20) {
                 continue;
               }
@@ -3333,28 +2793,26 @@ var require_base33 = __commonJS({
           A = temp;
           D = temp;
           if (C !== ZERO) {
-            if (B !== ZERO) {
-              if (sign(ONE, B) === sign(ONE, C)) {
-                sab = Math.sqrt(Math.abs(B));
-                sac = Math.sqrt(Math.abs(C));
-                p = sign(sab * sac, C);
-                tau = ONE / Math.sqrt(Math.abs(B + C));
-                A = temp + p;
-                D = temp - p;
-                B = B - C;
-                C = ZERO;
-                cs1 = sab * tau;
-                sn1 = sac * tau;
-                temp = cs * cs1 - sn * sn1;
-                sn = cs * sn1 + sn * cs1;
-                cs = temp;
-              }
-            } else {
+            if (B === ZERO) {
               B = -C;
               C = ZERO;
               temp = cs;
               cs = -sn;
               sn = temp;
+            } else if (sign(ONE, B) === sign(ONE, C)) {
+              sab = Math.sqrt(Math.abs(B));
+              sac = Math.sqrt(Math.abs(C));
+              p = sign(sab * sac, C);
+              tau = ONE / Math.sqrt(Math.abs(B + C));
+              A = temp + p;
+              D = temp - p;
+              B -= C;
+              C = ZERO;
+              cs1 = sab * tau;
+              sn1 = sac * tau;
+              temp = cs * cs1 - sn * sn1;
+              sn = cs * sn1 + sn * cs1;
+              cs = temp;
             }
           }
         }
@@ -3408,26 +2866,28 @@ var require_base34 = __commonJS({
       var smlnum;
       var kdefl;
       var itmax;
+      var lanv2;
       var info;
-      var h11;
-      var h12;
-      var h21;
       var h21s;
-      var h22;
       var rt1r;
       var rt1i;
       var rt2r;
       var rt2i;
-      var lanv2;
+      var h11;
+      var h12;
+      var h21;
+      var h22;
       var sum;
       var tst;
+      var det;
+      var tau;
+      var its;
       var aa;
       var ab;
       var ba;
       var bb;
       var cs;
       var sn;
-      var det;
       var nr;
       var nh;
       var nz;
@@ -3437,13 +2897,11 @@ var require_base34 = __commonJS({
       var t3;
       var v2;
       var v3;
-      var s;
-      var v;
-      var tau;
-      var i;
       var i1;
       var i2;
-      var its;
+      var s;
+      var v;
+      var i;
       var j;
       var k;
       var l;
@@ -3487,10 +2945,10 @@ var require_base34 = __commonJS({
             tst = Math.abs(H[offsetH + (k - 1 - 1) * strideH1 + (k - 1 - 1) * strideH2]) + Math.abs(H[offsetH + (k - 1) * strideH1 + (k - 1) * strideH2]);
             if (tst === ZERO) {
               if (k - 2 >= ilo) {
-                tst = tst + Math.abs(H[offsetH + (k - 1 - 1) * strideH1 + (k - 2 - 1) * strideH2]);
+                tst += Math.abs(H[offsetH + (k - 1 - 1) * strideH1 + (k - 2 - 1) * strideH2]);
               }
               if (k + 1 <= ihi) {
-                tst = tst + Math.abs(H[offsetH + (k + 1 - 1) * strideH1 + (k - 1) * strideH2]);
+                tst += Math.abs(H[offsetH + (k + 1 - 1) * strideH1 + (k - 1) * strideH2]);
               }
             }
             if (Math.abs(H[offsetH + (k - 1) * strideH1 + (k - 1 - 1) * strideH2]) <= ULP * tst) {
@@ -3542,10 +3000,10 @@ var require_base34 = __commonJS({
             rt2r = ZERO;
             rt2i = ZERO;
           } else {
-            h11 = h11 / s;
-            h21 = h21 / s;
-            h12 = h12 / s;
-            h22 = h22 / s;
+            h11 /= s;
+            h21 /= s;
+            h12 /= s;
+            h22 /= s;
             tr = (h11 + h22) / TWO;
             det = (h11 - tr) * (h22 - tr) - h12 * h21;
             rtdisc = Math.sqrt(Math.abs(det));
@@ -3558,10 +3016,10 @@ var require_base34 = __commonJS({
               rt1r = tr + rtdisc;
               rt2r = tr - rtdisc;
               if (Math.abs(rt1r - h22) <= Math.abs(rt2r - h22)) {
-                rt1r = rt1r * s;
+                rt1r *= s;
                 rt2r = rt1r;
               } else {
-                rt2r = rt2r * s;
+                rt2r *= s;
                 rt1r = rt2r;
               }
               rt1i = ZERO;
@@ -3576,9 +3034,9 @@ var require_base34 = __commonJS({
             v[1] = h21s * (H[offsetH + (m - 1) * strideH1 + (m - 1) * strideH2] + H[offsetH + (m + 1 - 1) * strideH1 + (m + 1 - 1) * strideH2] - rt1r - rt2r);
             v[2] = h21s * H[offsetH + (m + 2 - 1) * strideH1 + (m + 1 - 1) * strideH2];
             s = Math.abs(v[0]) + Math.abs(v[1]) + Math.abs(v[2]);
-            v[0] = v[0] / s;
-            v[1] = v[1] / s;
-            v[2] = v[2] / s;
+            v[0] /= s;
+            v[1] /= s;
+            v[2] /= s;
             if (m === l) {
               break;
             }
@@ -3656,12 +3114,7 @@ var require_base34 = __commonJS({
           WR[offsetWR + (i - 1) * strideWR] = H[offsetH + (i - 1) * strideH1 + (i - 1) * strideH2];
           WI[offsetWI + (i - 1) * strideWI] = ZERO;
         } else if (l === i - 1) {
-          lanv2 = dlanv2(
-            H[offsetH + (i - 1 - 1) * strideH1 + (i - 1 - 1) * strideH2],
-            H[offsetH + (i - 1 - 1) * strideH1 + (i - 1) * strideH2],
-            H[offsetH + (i - 1) * strideH1 + (i - 1 - 1) * strideH2],
-            H[offsetH + (i - 1) * strideH1 + (i - 1) * strideH2]
-          );
+          lanv2 = dlanv2(H[offsetH + (i - 1 - 1) * strideH1 + (i - 1 - 1) * strideH2], H[offsetH + (i - 1 - 1) * strideH1 + (i - 1) * strideH2], H[offsetH + (i - 1) * strideH1 + (i - 1 - 1) * strideH2], H[offsetH + (i - 1) * strideH1 + (i - 1) * strideH2]);
           H[offsetH + (i - 1 - 1) * strideH1 + (i - 1 - 1) * strideH2] = lanv2.a;
           H[offsetH + (i - 1 - 1) * strideH1 + (i - 1) * strideH2] = lanv2.b;
           H[offsetH + (i - 1) * strideH1 + (i - 1 - 1) * strideH2] = lanv2.c;
@@ -3787,22 +3240,7 @@ var require_base36 = __commonJS({
         idxA = offsetA + i * strideA1 + i * strideA2;
         aii = A[idxA];
         A[idxA] = 1;
-        dlarf(
-          side,
-          mi,
-          ni,
-          A,
-          strideA1,
-          offsetA + i * strideA1 + i * strideA2,
-          TAU[offsetTAU + i * strideTAU],
-          C,
-          strideC1,
-          strideC2,
-          offsetC + ic * strideC1 + jc * strideC2,
-          WORK,
-          strideWORK,
-          offsetWORK
-        );
+        dlarf(side, mi, ni, A, strideA1, offsetA + i * strideA1 + i * strideA2, TAU[offsetTAU + i * strideTAU], C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2, WORK, strideWORK, offsetWORK);
         A[idxA] = aii;
       }
       return 0;
@@ -3883,23 +3321,7 @@ var require_base37 = __commonJS({
       }
       for (i = i1; i3 > 0 ? i < i2 : i > i2; i += i3) {
         ib = Math.min(nb, K - i);
-        dlarft(
-          "forward",
-          "columnwise",
-          nq - i,
-          ib,
-          A,
-          strideA1,
-          strideA2,
-          offsetA + i * strideA1 + i * strideA2,
-          TAU,
-          strideTAU,
-          offsetTAU + i * strideTAU,
-          T,
-          1,
-          ldt,
-          0
-        );
+        dlarft("forward", "columnwise", nq - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, T, 1, ldt, 0);
         if (left) {
           mi = M - i;
           ic = i;
@@ -3907,31 +3329,7 @@ var require_base37 = __commonJS({
           ni = N - i;
           jc = i;
         }
-        dlarfb(
-          side,
-          trans,
-          "forward",
-          "columnwise",
-          mi,
-          ni,
-          ib,
-          A,
-          strideA1,
-          strideA2,
-          offsetA + i * strideA1 + i * strideA2,
-          T,
-          1,
-          ldt,
-          0,
-          C,
-          strideC1,
-          strideC2,
-          offsetC + ic * strideC1 + jc * strideC2,
-          WORK,
-          1,
-          ldwork,
-          offsetWORK
-        );
+        dlarfb(side, trans, "forward", "columnwise", mi, ni, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, T, 1, ldt, 0, C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2, WORK, 1, ldwork, offsetWORK);
       }
       return 0;
     }
@@ -3953,6 +3351,10 @@ var require_base38 = __commonJS({
       var jc;
       nh = ihi - ilo;
       left = side === "left";
+      if (lwork === -1) {
+        WORK[offsetWORK] = (left ? Math.max(1, N) : Math.max(1, M)) * 32;
+        return 0;
+      }
       if (M === 0 || N === 0 || nh === 0) {
         return 0;
       }
@@ -3967,27 +3369,7 @@ var require_base38 = __commonJS({
         ic = 0;
         jc = ilo;
       }
-      return dormqr(
-        side,
-        trans,
-        mi,
-        ni,
-        nh,
-        A,
-        strideA1,
-        strideA2,
-        offsetA + ilo * strideA1 + (ilo - 1) * strideA2,
-        TAU,
-        strideTAU,
-        offsetTAU + (ilo - 1) * strideTAU,
-        C,
-        strideC1,
-        strideC2,
-        offsetC + ic * strideC1 + jc * strideC2,
-        WORK,
-        strideWORK,
-        offsetWORK
-      );
+      return dormqr(side, trans, mi, ni, nh, A, strideA1, strideA2, offsetA + ilo * strideA1 + (ilo - 1) * strideA2, TAU, strideTAU, offsetTAU + (ilo - 1) * strideTAU, C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2, WORK, strideWORK, offsetWORK);
     }
     module.exports = dormhr;
   }
@@ -4001,11 +3383,11 @@ var require_base39 = __commonJS({
     var ZERO = 0;
     function dlarfx(side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK) {
       var sum;
+      var dim;
       var vv;
       var tt;
       var i;
       var j;
-      var dim;
       if (tau === ZERO) {
         return;
       }
@@ -4123,9 +3505,9 @@ var require_base41 = __commonJS({
     var XSWPIV = [false, false, true, true];
     var BSWPIV = [false, true, false, true];
     function dlasy2(ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm) {
-      var info;
       var bswap;
       var xswap;
+      var info;
       var smin;
       var temp;
       var ipiv;
@@ -4133,6 +3515,8 @@ var require_base41 = __commonJS({
       var jpsv;
       var xmax;
       var tau1;
+      var btmp;
+      var jpiv;
       var bet;
       var gam;
       var sgn;
@@ -4140,16 +3524,14 @@ var require_base41 = __commonJS({
       var u12;
       var u22;
       var l21;
-      var btmp;
       var tmp;
-      var x2;
       var t16;
-      var jpiv;
+      var x2;
+      var ip;
+      var jp;
       var k;
       var i;
       var j;
-      var ip;
-      var jp;
       info = 0;
       if (n1 === 0 || n2 === 0) {
         return info;
@@ -4174,16 +3556,7 @@ var require_base41 = __commonJS({
         return info;
       }
       if (k === 2) {
-        smin = Math.max(
-          EPS * Math.max(
-            Math.abs(TL[offsetTL]),
-            Math.abs(TR[offsetTR]),
-            Math.abs(TR[offsetTR + strideTR2]),
-            Math.abs(TR[offsetTR + strideTR1]),
-            Math.abs(TR[offsetTR + strideTR1 + strideTR2])
-          ),
-          SMLNUM
-        );
+        smin = Math.max(EPS * Math.max(Math.abs(TL[offsetTL]), Math.abs(TR[offsetTR]), Math.abs(TR[offsetTR + strideTR2]), Math.abs(TR[offsetTR + strideTR1]), Math.abs(TR[offsetTR + strideTR1 + strideTR2])), SMLNUM);
         tmp = new Float64Array(4);
         tmp[0] = TL[offsetTL] + sgn * TR[offsetTR];
         tmp[3] = TL[offsetTL] + sgn * TR[offsetTR + strideTR1 + strideTR2];
@@ -4200,16 +3573,7 @@ var require_base41 = __commonJS({
         return solve2x2(tmp, btmp, smin, n1, scale, X, strideX1, strideX2, offsetX, xnorm);
       }
       if (k === 3) {
-        smin = Math.max(
-          EPS * Math.max(
-            Math.abs(TR[offsetTR]),
-            Math.abs(TL[offsetTL]),
-            Math.abs(TL[offsetTL + strideTL2]),
-            Math.abs(TL[offsetTL + strideTL1]),
-            Math.abs(TL[offsetTL + strideTL1 + strideTL2])
-          ),
-          SMLNUM
-        );
+        smin = Math.max(EPS * Math.max(Math.abs(TR[offsetTR]), Math.abs(TL[offsetTL]), Math.abs(TL[offsetTL + strideTL2]), Math.abs(TL[offsetTL + strideTL1]), Math.abs(TL[offsetTL + strideTL1 + strideTL2])), SMLNUM);
         tmp = new Float64Array(4);
         tmp[0] = TL[offsetTL] + sgn * TR[offsetTR];
         tmp[3] = TL[offsetTL + strideTL1 + strideTL2] + sgn * TR[offsetTR];
@@ -4225,19 +3589,8 @@ var require_base41 = __commonJS({
         btmp[1] = B[offsetB + strideB1];
         return solve2x2(tmp, btmp, smin, n1, scale, X, strideX1, strideX2, offsetX, xnorm);
       }
-      smin = Math.max(
-        Math.abs(TR[offsetTR]),
-        Math.abs(TR[offsetTR + strideTR2]),
-        Math.abs(TR[offsetTR + strideTR1]),
-        Math.abs(TR[offsetTR + strideTR1 + strideTR2])
-      );
-      smin = Math.max(
-        smin,
-        Math.abs(TL[offsetTL]),
-        Math.abs(TL[offsetTL + strideTL2]),
-        Math.abs(TL[offsetTL + strideTL1]),
-        Math.abs(TL[offsetTL + strideTL1 + strideTL2])
-      );
+      smin = Math.max(Math.abs(TR[offsetTR]), Math.abs(TR[offsetTR + strideTR2]), Math.abs(TR[offsetTR + strideTR1]), Math.abs(TR[offsetTR + strideTR1 + strideTR2]));
+      smin = Math.max(smin, Math.abs(TL[offsetTL]), Math.abs(TL[offsetTL + strideTL2]), Math.abs(TL[offsetTL + strideTL1]), Math.abs(TL[offsetTL + strideTL1 + strideTL2]));
       smin = Math.max(EPS * smin, SMLNUM);
       btmp = new Float64Array(4);
       t16 = new Float64Array(16);
@@ -4313,16 +3666,11 @@ var require_base41 = __commonJS({
       }
       scale[0] = ONE;
       if (EIGHT * SMLNUM * Math.abs(btmp[0]) > Math.abs(t16[0]) || EIGHT * SMLNUM * Math.abs(btmp[1]) > Math.abs(t16[1 + 4]) || EIGHT * SMLNUM * Math.abs(btmp[2]) > Math.abs(t16[2 + 2 * 4]) || EIGHT * SMLNUM * Math.abs(btmp[3]) > Math.abs(t16[3 + 3 * 4])) {
-        scale[0] = ONE / EIGHT / Math.max(
-          Math.abs(btmp[0]),
-          Math.abs(btmp[1]),
-          Math.abs(btmp[2]),
-          Math.abs(btmp[3])
-        );
-        btmp[0] = btmp[0] * scale[0];
-        btmp[1] = btmp[1] * scale[0];
-        btmp[2] = btmp[2] * scale[0];
-        btmp[3] = btmp[3] * scale[0];
+        scale[0] = ONE / EIGHT / Math.max(Math.abs(btmp[0]), Math.abs(btmp[1]), Math.abs(btmp[2]), Math.abs(btmp[3]));
+        btmp[0] *= scale[0];
+        btmp[1] *= scale[0];
+        btmp[2] *= scale[0];
+        btmp[3] *= scale[0];
       }
       tmp = new Float64Array(4);
       for (i = 0; i < 4; i++) {
@@ -4345,10 +3693,7 @@ var require_base41 = __commonJS({
       X[offsetX + strideX1] = tmp[1];
       X[offsetX + strideX2] = tmp[2];
       X[offsetX + strideX1 + strideX2] = tmp[3];
-      xnorm[0] = Math.max(
-        Math.abs(tmp[0]) + Math.abs(tmp[2]),
-        Math.abs(tmp[1]) + Math.abs(tmp[3])
-      );
+      xnorm[0] = Math.max(Math.abs(tmp[0]) + Math.abs(tmp[2]), Math.abs(tmp[1]) + Math.abs(tmp[3]));
       return info;
     }
     function solve2x2(tmp, btmp, smin, n1, scale, X, strideX1, strideX2, offsetX, xnorm) {
@@ -4383,13 +3728,13 @@ var require_base41 = __commonJS({
         btmp[1] = btmp[0] - l21 * temp;
         btmp[0] = temp;
       } else {
-        btmp[1] = btmp[1] - l21 * btmp[0];
+        btmp[1] -= l21 * btmp[0];
       }
       scale[0] = ONE;
       if (TWO * SMLNUM * Math.abs(btmp[1]) > Math.abs(u22) || TWO * SMLNUM * Math.abs(btmp[0]) > Math.abs(u11)) {
         scale[0] = HALF / Math.max(Math.abs(btmp[0]), Math.abs(btmp[1]));
-        btmp[0] = btmp[0] * scale[0];
-        btmp[1] = btmp[1] * scale[0];
+        btmp[0] *= scale[0];
+        btmp[1] *= scale[0];
       }
       x2 = new Float64Array(2);
       x2[1] = btmp[1] / u22;
@@ -4434,33 +3779,33 @@ var require_base42 = __commonJS({
     var EPS = dlamch("precision");
     var SMLNUM = dlamch("safe-minimum") / EPS;
     function dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK) {
-      var dnorm;
-      var scale;
-      var xnorm;
       var thresh;
       var lanv2r;
       var rtgOut;
+      var dnorm;
+      var scale;
+      var xnorm;
       var info;
       var ierr;
       var temp;
-      var tau;
       var tau1;
       var tau2;
-      var cs;
-      var sn;
+      var tau;
       var t11;
       var t22;
       var t33;
+      var cs;
+      var sn;
       var nd;
-      var k;
       var j2;
       var j3;
       var j4;
+      var u1;
+      var u2;
+      var k;
       var D;
       var X;
       var u;
-      var u1;
-      var u2;
       info = 0;
       if (N === 0 || n1 === 0 || n2 === 0) {
         return 0;
@@ -4585,12 +3930,7 @@ var require_base42 = __commonJS({
           }
         }
         if (n2 === 2) {
-          lanv2r = dlanv2(
-            T[tij(j1, j1)],
-            T[tij(j1, j2)],
-            T[tij(j2, j1)],
-            T[tij(j2, j2)]
-          );
+          lanv2r = dlanv2(T[tij(j1, j1)], T[tij(j1, j2)], T[tij(j2, j1)], T[tij(j2, j2)]);
           T[tij(j1, j1)] = lanv2r.a;
           T[tij(j1, j2)] = lanv2r.b;
           T[tij(j2, j1)] = lanv2r.c;
@@ -4606,12 +3946,7 @@ var require_base42 = __commonJS({
         if (n1 === 2) {
           j3 = j1 + n2;
           j4 = j3 + 1;
-          lanv2r = dlanv2(
-            T[tij(j3, j3)],
-            T[tij(j3, j4)],
-            T[tij(j4, j3)],
-            T[tij(j4, j4)]
-          );
+          lanv2r = dlanv2(T[tij(j3, j3)], T[tij(j3, j4)], T[tij(j4, j3)], T[tij(j4, j4)]);
           T[tij(j3, j3)] = lanv2r.a;
           T[tij(j3, j4)] = lanv2r.b;
           T[tij(j4, j3)] = lanv2r.c;
@@ -4639,8 +3974,8 @@ var require_base43 = __commonJS({
     "use strict";
     var dlaexc = require_base42();
     function dtrexc(compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK) {
-      var wantq;
       var nbnext;
+      var wantq;
       var info;
       var here;
       var nbf;
@@ -4648,14 +3983,18 @@ var require_base43 = __commonJS({
       info = 0;
       wantq = compq === "update";
       if (N <= 1) {
-        return { "info": 0, "ifst": ifst, "ilst": ilst };
+        return {
+          "info": 0,
+          "ifst": ifst,
+          "ilst": ilst
+        };
       }
       function tij(i, j) {
         return offsetT + (i - 1) * strideT1 + (j - 1) * strideT2;
       }
       if (ifst > 1) {
         if (T[tij(ifst, ifst - 1)] !== 0) {
-          ifst = ifst - 1;
+          ifst -= 1;
         }
       }
       nbf = 1;
@@ -4666,7 +4005,7 @@ var require_base43 = __commonJS({
       }
       if (ilst > 1) {
         if (T[tij(ilst, ilst - 1)] !== 0) {
-          ilst = ilst - 1;
+          ilst -= 1;
         }
       }
       nbl = 1;
@@ -4676,14 +4015,18 @@ var require_base43 = __commonJS({
         }
       }
       if (ifst === ilst) {
-        return { "info": 0, "ifst": ifst, "ilst": ilst };
+        return {
+          "info": 0,
+          "ifst": ifst,
+          "ilst": ilst
+        };
       }
       if (ifst < ilst) {
         if (nbf === 2 && nbl === 1) {
-          ilst = ilst - 1;
+          ilst -= 1;
         }
         if (nbf === 1 && nbl === 2) {
-          ilst = ilst + 1;
+          ilst += 1;
         }
         here = ifst;
         while (here < ilst) {
@@ -4697,9 +4040,13 @@ var require_base43 = __commonJS({
             info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, nbf, nbnext, WORK, strideWORK, offsetWORK);
             if (info !== 0) {
               ilst = here;
-              return { "info": info, "ifst": ifst, "ilst": ilst };
+              return {
+                "info": info,
+                "ifst": ifst,
+                "ilst": ilst
+              };
             }
-            here = here + nbnext;
+            here += nbnext;
             if (nbf === 2) {
               if (T[tij(here + 1, here)] === 0) {
                 nbf = 3;
@@ -4715,11 +4062,15 @@ var require_base43 = __commonJS({
             info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here + 1, 1, nbnext, WORK, strideWORK, offsetWORK);
             if (info !== 0) {
               ilst = here;
-              return { "info": info, "ifst": ifst, "ilst": ilst };
+              return {
+                "info": info,
+                "ifst": ifst,
+                "ilst": ilst
+              };
             }
             if (nbnext === 1) {
               info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, nbnext, WORK, strideWORK, offsetWORK);
-              here = here + 1;
+              here += 1;
             } else {
               if (T[tij(here + 2, here + 1)] === 0) {
                 nbnext = 1;
@@ -4728,13 +4079,17 @@ var require_base43 = __commonJS({
                 info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, nbnext, WORK, strideWORK, offsetWORK);
                 if (info !== 0) {
                   ilst = here;
-                  return { "info": info, "ifst": ifst, "ilst": ilst };
+                  return {
+                    "info": info,
+                    "ifst": ifst,
+                    "ilst": ilst
+                  };
                 }
-                here = here + 2;
+                here += 2;
               } else {
                 info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, 1, WORK, strideWORK, offsetWORK);
                 info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here + 1, 1, 1, WORK, strideWORK, offsetWORK);
-                here = here + 2;
+                here += 2;
               }
             }
           }
@@ -4752,9 +4107,13 @@ var require_base43 = __commonJS({
             info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - nbnext, nbnext, nbf, WORK, strideWORK, offsetWORK);
             if (info !== 0) {
               ilst = here;
-              return { "info": info, "ifst": ifst, "ilst": ilst };
+              return {
+                "info": info,
+                "ifst": ifst,
+                "ilst": ilst
+              };
             }
-            here = here - nbnext;
+            here -= nbnext;
             if (nbf === 2) {
               if (T[tij(here + 1, here)] === 0) {
                 nbf = 3;
@@ -4770,11 +4129,15 @@ var require_base43 = __commonJS({
             info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - nbnext, nbnext, 1, WORK, strideWORK, offsetWORK);
             if (info !== 0) {
               ilst = here;
-              return { "info": info, "ifst": ifst, "ilst": ilst };
+              return {
+                "info": info,
+                "ifst": ifst,
+                "ilst": ilst
+              };
             }
             if (nbnext === 1) {
               info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, nbnext, 1, WORK, strideWORK, offsetWORK);
-              here = here - 1;
+              here -= 1;
             } else {
               if (T[tij(here, here - 1)] === 0) {
                 nbnext = 1;
@@ -4783,20 +4146,28 @@ var require_base43 = __commonJS({
                 info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - 1, 2, 1, WORK, strideWORK, offsetWORK);
                 if (info !== 0) {
                   ilst = here;
-                  return { "info": info, "ifst": ifst, "ilst": ilst };
+                  return {
+                    "info": info,
+                    "ifst": ifst,
+                    "ilst": ilst
+                  };
                 }
-                here = here - 2;
+                here -= 2;
               } else {
                 info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, 1, WORK, strideWORK, offsetWORK);
                 info = dlaexc(wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - 1, 1, 1, WORK, strideWORK, offsetWORK);
-                here = here - 2;
+                here -= 2;
               }
             }
           }
         }
       }
       ilst = here;
-      return { "info": 0, "ifst": ifst, "ilst": ilst };
+      return {
+        "info": 0,
+        "ifst": ifst,
+        "ilst": ilst
+      };
     }
     module.exports = dtrexc;
   }
@@ -4826,14 +4197,14 @@ var require_base44 = __commonJS({
       return dlaqr23impl(null, wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork);
     }
     function dlaqr23impl(dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork) {
+      var trxResult;
       var lwkopt;
       var smlnum;
       var sorted;
+      var tauArr;
       var kwtop;
       var infqr;
       var bulge;
-      var trxResult;
-      var tauArr;
       var nmin;
       var ilst;
       var ifst;
@@ -4841,10 +4212,15 @@ var require_base44 = __commonJS({
       var krow;
       var kcol;
       var ltop;
+      var lwk1;
+      var lwk2;
+      var lwk3;
       var tau;
       var foo;
       var evi;
       var evk;
+      var lv2;
+      var kln;
       var jw;
       var ns;
       var nd;
@@ -4852,11 +4228,6 @@ var require_base44 = __commonJS({
       var bb;
       var cc;
       var dd;
-      var lv2;
-      var kln;
-      var lwk1;
-      var lwk2;
-      var lwk3;
       var s;
       var i;
       var j;
@@ -4894,16 +4265,25 @@ var require_base44 = __commonJS({
       }
       if (lwork === -1) {
         WORK[offsetWORK] = lwkopt;
-        return { "ns": 0, "nd": 0 };
+        return {
+          "ns": 0,
+          "nd": 0
+        };
       }
       ns = 0;
       nd = 0;
       WORK[offsetWORK] = ONE;
       if (ktop > kbot) {
-        return { "ns": ns, "nd": nd };
+        return {
+          "ns": ns,
+          "nd": nd
+        };
       }
       if (nw < 1) {
-        return { "ns": ns, "nd": nd };
+        return {
+          "ns": ns,
+          "nd": nd
+        };
       }
       smlnum = SAFMIN * (N / ULP);
       jw = Math.min(nw, kbot - ktop + 1);
@@ -4926,7 +4306,10 @@ var require_base44 = __commonJS({
           }
         }
         WORK[offsetWORK] = ONE;
-        return { "ns": ns, "nd": nd };
+        return {
+          "ns": ns,
+          "nd": nd
+        };
       }
       dlacpy("upper", jw, jw, H, strideH1, strideH2, hij(kwtop, kwtop), T, strideT1, strideT2, offsetT);
       dcopy(jw - 1, H, strideH1 + strideH2, hij(kwtop + 1, kwtop), T, strideT1 + strideT2, tij(2, 1));
@@ -4962,7 +4345,7 @@ var require_base44 = __commonJS({
             foo = Math.abs(s);
           }
           if (Math.abs(s * V[vij(1, ns)]) <= Math.max(smlnum, ULP * foo)) {
-            ns = ns - 1;
+            ns -= 1;
           } else {
             ifst = ns;
             trxResult = dtrexc("update", jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK);
@@ -4974,7 +4357,7 @@ var require_base44 = __commonJS({
             foo = Math.abs(s);
           }
           if (Math.max(Math.abs(s * V[vij(1, ns)]), Math.abs(s * V[vij(1, ns - 1)])) <= Math.max(smlnum, ULP * foo)) {
-            ns = ns - 2;
+            ns -= 2;
           } else {
             ifst = ns;
             trxResult = dtrexc("update", jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK);
@@ -5039,11 +4422,11 @@ var require_base44 = __commonJS({
         if (i === infqr + 1) {
           SR[offsetSR + (kwtop + i - 2) * strideSR] = T[tij(i, i)];
           SI[offsetSI + (kwtop + i - 2) * strideSI] = ZERO;
-          i = i - 1;
+          i -= 1;
         } else if (T[tij(i, i - 1)] === ZERO) {
           SR[offsetSR + (kwtop + i - 2) * strideSR] = T[tij(i, i)];
           SI[offsetSI + (kwtop + i - 2) * strideSI] = ZERO;
-          i = i - 1;
+          i -= 1;
         } else {
           aa = T[tij(i - 1, i - 1)];
           cc = T[tij(i, i - 1)];
@@ -5054,12 +4437,12 @@ var require_base44 = __commonJS({
           SI[offsetSI + (kwtop + i - 3) * strideSI] = lv2.rt1i;
           SR[offsetSR + (kwtop + i - 2) * strideSR] = lv2.rt2r;
           SI[offsetSI + (kwtop + i - 2) * strideSI] = lv2.rt2i;
-          i = i - 2;
+          i -= 2;
         }
       }
       if (ns < jw || s === ZERO) {
         if (ns > 1 && s !== ZERO) {
-          dcopy(ns, V, strideV1, vij(1, 1), WORK, strideWORK, offsetWORK);
+          dcopy(ns, V, strideV2, vij(1, 1), WORK, strideWORK, offsetWORK);
           tauArr = new Float64Array(1);
           dlarfg(ns, WORK, offsetWORK, WORK, strideWORK, offsetWORK + strideWORK, tauArr, 0);
           tau = tauArr[0];
@@ -5104,9 +4487,12 @@ var require_base44 = __commonJS({
         }
       }
       nd = jw - ns;
-      ns = ns - infqr;
+      ns -= infqr;
       WORK[offsetWORK] = lwkopt;
-      return { "ns": ns, "nd": nd };
+      return {
+        "ns": ns,
+        "nd": nd
+      };
     }
     module.exports = dlaqr2;
     module.exports.dlaqr23impl = dlaqr23impl;
@@ -5158,6 +4544,7 @@ var require_base45 = __commonJS({
 var require_base46 = __commonJS({
   "lib/lapack/base/dlaqr5/lib/base.js"(exports, module) {
     "use strict";
+    var Float64Array2 = require_lib8();
     var dlamch = require_base5();
     var dlaqr1 = require_base45();
     var dlarfg = require_base20();
@@ -5176,10 +4563,12 @@ var require_base46 = __commonJS({
       return oA + (i - 1) * sA1 + (j - 1) * sA2;
     }
     function dlaqr5(wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offsetSR, SI, strideSI, offsetSI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH) {
+      var alphaArr = new Float64Array2(1);
       var smlnum;
       var refsum;
       var safmax;
       var safmin;
+      var tauArr = new Float64Array2(1);
       var nbmps;
       var ndcol;
       var krcol;
@@ -5198,6 +4587,14 @@ var require_base46 = __commonJS({
       var mtop;
       var tst1;
       var tst2;
+      var KTOP = ktop + 1;
+      var KBOT = kbot + 1;
+      var ILOZ = iloz + 1;
+      var IHIZ = ihiz + 1;
+      var sWV1 = strideWV1;
+      var sWV2 = strideWV2;
+      var sWH1 = strideWH1;
+      var sWH2 = strideWH2;
       var h11;
       var h12;
       var h21;
@@ -5206,7 +4603,17 @@ var require_base46 = __commonJS({
       var kdu;
       var kms;
       var m22;
-      var vt;
+      var sH1 = strideH1;
+      var sH2 = strideH2;
+      var sZ1 = strideZ1;
+      var sZ2 = strideZ2;
+      var sV1 = strideV1;
+      var sV2 = strideV2;
+      var sU1 = strideU1;
+      var sU2 = strideU2;
+      var oWV = offsetWV;
+      var oWH = offsetWH;
+      var vt = new Float64Array2(3);
       var ns;
       var nu;
       var k1;
@@ -5215,35 +4622,14 @@ var require_base46 = __commonJS({
       var t1;
       var t2;
       var t3;
+      var oH = offsetH;
+      var oZ = offsetZ;
+      var oV = offsetV;
+      var oU = offsetU;
       var k;
       var m;
       var j;
       var i;
-      var KTOP = ktop + 1;
-      var KBOT = kbot + 1;
-      var ILOZ = iloz + 1;
-      var IHIZ = ihiz + 1;
-      var sH1 = strideH1;
-      var sH2 = strideH2;
-      var oH = offsetH;
-      var sZ1 = strideZ1;
-      var sZ2 = strideZ2;
-      var oZ = offsetZ;
-      var sV1 = strideV1;
-      var sV2 = strideV2;
-      var oV = offsetV;
-      var sU1 = strideU1;
-      var sU2 = strideU2;
-      var oU = offsetU;
-      var sWV1 = strideWV1;
-      var sWV2 = strideWV2;
-      var oWV = offsetWV;
-      var sWH1 = strideWH1;
-      var sWH2 = strideWH2;
-      var oWH = offsetWH;
-      vt = new Float64Array(3);
-      var alphaArr = new Float64Array(1);
-      var tauArr = new Float64Array(1);
       if (nshfts < 2) {
         return;
       }
@@ -5298,20 +4684,7 @@ var require_base46 = __commonJS({
           if (bmp22) {
             k = krcol + 2 * (m22 - 1);
             if (k === KTOP - 1) {
-              dlaqr1(
-                2,
-                H,
-                sH1,
-                sH2,
-                idx2d(sH1, sH2, oH, k + 1, k + 1),
-                sr(2 * m22 - 1),
-                si(2 * m22 - 1),
-                sr(2 * m22),
-                si(2 * m22),
-                V,
-                sV1,
-                idx2d(sV1, sV2, oV, 1, m22)
-              );
+              dlaqr1(2, H, sH1, sH2, idx2d(sH1, sH2, oH, k + 1, k + 1), sr(2 * m22 - 1), si(2 * m22 - 1), sr(2 * m22), si(2 * m22), V, sV1, idx2d(sV1, sV2, oV, 1, m22));
               alphaArr[0] = get2d(V, sV1, sV2, oV, 1, m22);
               dlarfg(2, alphaArr, 0, V, sV1, idx2d(sV1, sV2, oV, 2, m22), tauArr, 0);
               set2d(V, sV1, sV2, oV, 1, m22, tauArr[0]);
@@ -5349,22 +4722,22 @@ var require_base46 = __commonJS({
                 tst1 = Math.abs(get2d(H, sH1, sH2, oH, k, k)) + Math.abs(get2d(H, sH1, sH2, oH, k + 1, k + 1));
                 if (tst1 === 0) {
                   if (k >= KTOP + 1) {
-                    tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k, k - 1));
+                    tst1 += Math.abs(get2d(H, sH1, sH2, oH, k, k - 1));
                   }
                   if (k >= KTOP + 2) {
-                    tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k, k - 2));
+                    tst1 += Math.abs(get2d(H, sH1, sH2, oH, k, k - 2));
                   }
                   if (k >= KTOP + 3) {
-                    tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k, k - 3));
+                    tst1 += Math.abs(get2d(H, sH1, sH2, oH, k, k - 3));
                   }
                   if (k <= KBOT - 2) {
-                    tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k + 2, k + 1));
+                    tst1 += Math.abs(get2d(H, sH1, sH2, oH, k + 2, k + 1));
                   }
                   if (k <= KBOT - 3) {
-                    tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k + 3, k + 1));
+                    tst1 += Math.abs(get2d(H, sH1, sH2, oH, k + 3, k + 1));
                   }
                   if (k <= KBOT - 4) {
-                    tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k + 4, k + 1));
+                    tst1 += Math.abs(get2d(H, sH1, sH2, oH, k + 4, k + 1));
                   }
                 }
                 if (Math.abs(get2d(H, sH1, sH2, oH, k + 1, k)) <= Math.max(smlnum, ULP * tst1)) {
@@ -5402,20 +4775,7 @@ var require_base46 = __commonJS({
           for (m = mbot; m >= mtop; m--) {
             k = krcol + 2 * (m - 1);
             if (k === KTOP - 1) {
-              dlaqr1(
-                3,
-                H,
-                sH1,
-                sH2,
-                idx2d(sH1, sH2, oH, KTOP, KTOP),
-                sr(2 * m - 1),
-                si(2 * m - 1),
-                sr(2 * m),
-                si(2 * m),
-                V,
-                sV1,
-                idx2d(sV1, sV2, oV, 1, m)
-              );
+              dlaqr1(3, H, sH1, sH2, idx2d(sH1, sH2, oH, KTOP, KTOP), sr(2 * m - 1), si(2 * m - 1), sr(2 * m), si(2 * m), V, sV1, idx2d(sV1, sV2, oV, 1, m));
               alphaArr[0] = get2d(V, sV1, sV2, oV, 1, m);
               dlarfg(3, alphaArr, 0, V, sV1, idx2d(sV1, sV2, oV, 2, m), tauArr, 0);
               set2d(V, sV1, sV2, oV, 1, m, tauArr[0]);
@@ -5438,20 +4798,7 @@ var require_base46 = __commonJS({
                 set2d(H, sH1, sH2, oH, k + 2, k, 0);
                 set2d(H, sH1, sH2, oH, k + 3, k, 0);
               } else {
-                dlaqr1(
-                  3,
-                  H,
-                  sH1,
-                  sH2,
-                  idx2d(sH1, sH2, oH, k + 1, k + 1),
-                  sr(2 * m - 1),
-                  si(2 * m - 1),
-                  sr(2 * m),
-                  si(2 * m),
-                  vt,
-                  1,
-                  0
-                );
+                dlaqr1(3, H, sH1, sH2, idx2d(sH1, sH2, oH, k + 1, k + 1), sr(2 * m - 1), si(2 * m - 1), sr(2 * m), si(2 * m), vt, 1, 0);
                 alphaArr[0] = vt[0];
                 dlarfg(3, alphaArr, 0, vt, 1, 1, tauArr, 0);
                 vt[0] = tauArr[0];
@@ -5493,22 +4840,22 @@ var require_base46 = __commonJS({
               tst1 = Math.abs(get2d(H, sH1, sH2, oH, k, k)) + Math.abs(get2d(H, sH1, sH2, oH, k + 1, k + 1));
               if (tst1 === 0) {
                 if (k >= KTOP + 1) {
-                  tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k, k - 1));
+                  tst1 += Math.abs(get2d(H, sH1, sH2, oH, k, k - 1));
                 }
                 if (k >= KTOP + 2) {
-                  tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k, k - 2));
+                  tst1 += Math.abs(get2d(H, sH1, sH2, oH, k, k - 2));
                 }
                 if (k >= KTOP + 3) {
-                  tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k, k - 3));
+                  tst1 += Math.abs(get2d(H, sH1, sH2, oH, k, k - 3));
                 }
                 if (k <= KBOT - 2) {
-                  tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k + 2, k + 1));
+                  tst1 += Math.abs(get2d(H, sH1, sH2, oH, k + 2, k + 1));
                 }
                 if (k <= KBOT - 3) {
-                  tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k + 3, k + 1));
+                  tst1 += Math.abs(get2d(H, sH1, sH2, oH, k + 3, k + 1));
                 }
                 if (k <= KBOT - 4) {
-                  tst1 = tst1 + Math.abs(get2d(H, sH1, sH2, oH, k + 4, k + 1));
+                  tst1 += Math.abs(get2d(H, sH1, sH2, oH, k + 4, k + 1));
                 }
               }
               if (Math.abs(get2d(H, sH1, sH2, oH, k + 1, k)) <= Math.max(smlnum, ULP * tst1)) {
@@ -5587,115 +4934,19 @@ var require_base46 = __commonJS({
           nu = kdu - Math.max(0, ndcol - KBOT) - k1 + 1;
           for (jcol = Math.min(ndcol, KBOT) + 1; jcol <= jbot; jcol += nh) {
             jlen = Math.min(nh, jbot - jcol + 1);
-            dgemm2(
-              "transpose",
-              "no-transpose",
-              nu,
-              jlen,
-              nu,
-              1,
-              U,
-              sU1,
-              sU2,
-              idx2d(sU1, sU2, oU, k1, k1),
-              H,
-              sH1,
-              sH2,
-              idx2d(sH1, sH2, oH, incol + k1, jcol),
-              0,
-              WH,
-              sWH1,
-              sWH2,
-              oWH
-            );
-            dlacpy(
-              "ALL",
-              nu,
-              jlen,
-              WH,
-              sWH1,
-              sWH2,
-              oWH,
-              H,
-              sH1,
-              sH2,
-              idx2d(sH1, sH2, oH, incol + k1, jcol)
-            );
+            dgemm2("transpose", "no-transpose", nu, jlen, nu, 1, U, sU1, sU2, idx2d(sU1, sU2, oU, k1, k1), H, sH1, sH2, idx2d(sH1, sH2, oH, incol + k1, jcol), 0, WH, sWH1, sWH2, oWH);
+            dlacpy("ALL", nu, jlen, WH, sWH1, sWH2, oWH, H, sH1, sH2, idx2d(sH1, sH2, oH, incol + k1, jcol));
           }
           for (jrow = jtop; jrow <= Math.max(KTOP, incol) - 1; jrow += nv) {
             jlen = Math.min(nv, Math.max(KTOP, incol) - jrow);
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              jlen,
-              nu,
-              nu,
-              1,
-              H,
-              sH1,
-              sH2,
-              idx2d(sH1, sH2, oH, jrow, incol + k1),
-              U,
-              sU1,
-              sU2,
-              idx2d(sU1, sU2, oU, k1, k1),
-              0,
-              WV,
-              sWV1,
-              sWV2,
-              oWV
-            );
-            dlacpy(
-              "ALL",
-              jlen,
-              nu,
-              WV,
-              sWV1,
-              sWV2,
-              oWV,
-              H,
-              sH1,
-              sH2,
-              idx2d(sH1, sH2, oH, jrow, incol + k1)
-            );
+            dgemm2("no-transpose", "no-transpose", jlen, nu, nu, 1, H, sH1, sH2, idx2d(sH1, sH2, oH, jrow, incol + k1), U, sU1, sU2, idx2d(sU1, sU2, oU, k1, k1), 0, WV, sWV1, sWV2, oWV);
+            dlacpy("ALL", jlen, nu, WV, sWV1, sWV2, oWV, H, sH1, sH2, idx2d(sH1, sH2, oH, jrow, incol + k1));
           }
           if (wantz) {
             for (jrow = ILOZ; jrow <= IHIZ; jrow += nv) {
               jlen = Math.min(nv, IHIZ - jrow + 1);
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                jlen,
-                nu,
-                nu,
-                1,
-                Z,
-                sZ1,
-                sZ2,
-                idx2d(sZ1, sZ2, oZ, jrow, incol + k1),
-                U,
-                sU1,
-                sU2,
-                idx2d(sU1, sU2, oU, k1, k1),
-                0,
-                WV,
-                sWV1,
-                sWV2,
-                oWV
-              );
-              dlacpy(
-                "ALL",
-                jlen,
-                nu,
-                WV,
-                sWV1,
-                sWV2,
-                oWV,
-                Z,
-                sZ1,
-                sZ2,
-                idx2d(sZ1, sZ2, oZ, jrow, incol + k1)
-              );
+              dgemm2("no-transpose", "no-transpose", jlen, nu, nu, 1, Z, sZ1, sZ2, idx2d(sZ1, sZ2, oZ, jrow, incol + k1), U, sU1, sU2, idx2d(sU1, sU2, oU, k1, k1), 0, WV, sWV1, sWV2, oWV);
+              dlacpy("ALL", jlen, nu, WV, sWV1, sWV2, oWV, Z, sZ1, sZ2, idx2d(sZ1, sZ2, oZ, jrow, incol + k1));
             }
           }
         }
@@ -5722,10 +4973,13 @@ var require_base47 = __commonJS({
     var WILK1 = 0.75;
     var WILK2 = -0.4375;
     function dlaqr4(wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork) {
+      var aedResult;
       var lwkopt;
       var nwupbd;
-      var nsmax;
       var sorted;
+      var nibble;
+      var kacc22;
+      var nsmax;
       var itmax;
       var kwtop;
       var kbot;
@@ -5735,22 +4989,25 @@ var require_base47 = __commonJS({
       var info;
       var swap;
       var nmin;
+      var zdum;
       var nwr;
       var nsr;
-      var nw;
-      var nh;
       var nho;
       var nve;
+      var kwv;
+      var kwh;
+      var kdu;
+      var lv2;
+      var inf;
+      var nw;
+      var nh;
       var ns;
       var ks;
       var ld;
       var ls;
       var kv;
       var kt;
-      var kwv;
-      var kwh;
       var ku;
-      var kdu;
       var aa;
       var bb;
       var cc;
@@ -5758,15 +5015,9 @@ var require_base47 = __commonJS({
       var cs;
       var sn;
       var ss;
-      var lv2;
       var it;
       var k;
       var i;
-      var nibble;
-      var kacc22;
-      var inf;
-      var aedResult;
-      var zdum;
       function hij(r, c) {
         return offsetH + (r - 1) * strideH1 + (c - 1) * strideH2;
       }
@@ -5801,7 +5052,7 @@ var require_base47 = __commonJS({
         var nwmax = Math.min(Math.floor((N - 1) / 3), Math.floor(lwork / 2));
         nw = nwmax;
         nsmax = Math.min(Math.floor((N - 3) / 6), Math.floor(2 * lwork / 3));
-        nsmax = nsmax - nsmax % 2;
+        nsmax -= nsmax % 2;
         ndfl = 1;
         itmax = Math.max(30, 2 * KEXSH) * Math.max(10, ihi - ilo + 1);
         kbot = ihi;
@@ -5832,18 +5083,18 @@ var require_base47 = __commonJS({
             } else {
               kwtop = kbot - nw + 1;
               if (Math.abs(H[hij(kwtop, kwtop - 1)]) > Math.abs(H[hij(kwtop - 1, kwtop - 2)])) {
-                nw = nw + 1;
+                nw += 1;
               }
             }
           }
           if (ndfl < KEXNW) {
             ndec = -1;
           } else if (ndec >= 0 || nw >= nwupbd) {
-            ndec = ndec + 1;
+            ndec += 1;
             if (nw - ndec < 2) {
               ndec = 0;
             }
-            nw = nw - ndec;
+            nw -= ndec;
           }
           kv = N - nw + 1;
           kt = nw + 1;
@@ -5853,11 +5104,11 @@ var require_base47 = __commonJS({
           aedResult = dlaqr2(wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, H, strideH1, strideH2, hij(kv, 1), nho, H, strideH1, strideH2, hij(kv, kt), nve, H, strideH1, strideH2, hij(kwv, 1), WORK, strideWORK, offsetWORK, lwork);
           ls = aedResult.ns;
           ld = aedResult.nd;
-          kbot = kbot - ld;
+          kbot -= ld;
           ks = kbot - ls + 1;
           if (ld === 0 || 100 * ld <= nw * nibble && kbot - ktop + 1 > Math.min(nmin, nwmax)) {
             ns = Math.min(nsmax, nsr, Math.max(2, kbot - ktop));
-            ns = ns - ns % 2;
+            ns -= ns % 2;
             if (ndfl % KEXSH === 0) {
               ks = kbot - ns + 1;
               for (i = kbot; i >= Math.max(ks + 1, ktop + 2); i -= 2) {
@@ -5885,7 +5136,7 @@ var require_base47 = __commonJS({
                 dlacpy("full", ns, ns, H, strideH1, strideH2, hij(ks, ks), H, strideH1, strideH2, hij(kt, 1));
                 zdum = new Float64Array(1);
                 inf = dlahqr(false, false, ns, 1, ns, H, strideH1, strideH2, hij(kt, 1), WR, strideWR, offsetWR + (ks - 1) * strideWR, WI, strideWI, offsetWI + (ks - 1) * strideWI, 1, 1, zdum, 1, 1, 0);
-                ks = ks + inf;
+                ks += inf;
                 if (ks >= kbot) {
                   aa = H[hij(kbot - 1, kbot - 1)];
                   cc = H[hij(kbot, kbot - 1)];
@@ -5942,7 +5193,7 @@ var require_base47 = __commonJS({
               }
             }
             ns = Math.min(ns, kbot - ks + 1);
-            ns = ns - ns % 2;
+            ns -= ns % 2;
             ks = kbot - ns + 1;
             kdu = 2 * ns;
             ku = N - kdu + 1;
@@ -5955,7 +5206,7 @@ var require_base47 = __commonJS({
           if (ld > 0) {
             ndfl = 1;
           } else {
-            ndfl = ndfl + 1;
+            ndfl += 1;
           }
         }
         if (it > itmax) {
@@ -6298,13 +5549,19 @@ var require_base50 = __commonJS({
     var NTINY = 15;
     var NL = 49;
     var NMIN = 75;
+    var USE_DLAQR0 = true;
+    function laqr0Work(wantt, wantz, n, lo, hi, H, sH1, sH2, oH, WR, sWR, oWR, WI, sWI, oWI, iloz, ihiz, Z, sZ1, sZ2, oZ) {
+      var q = new Float64Array(1);
+      dlaqr0(wantt, wantz, n, lo, hi, H, sH1, sH2, oH, WR, sWR, oWR, WI, sWI, oWI, iloz, ihiz, Z, sZ1, sZ2, oZ, q, 1, 0, -1);
+      return new Float64Array(Math.max(n, Math.floor(q[0]), 1));
+    }
     function dhseqr(job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ) {
       var wantt;
       var initz;
       var wantz;
+      var WORKL;
       var info;
       var kbot;
-      var WORKL;
       var HL;
       var i;
       wantt = job === "schur";
@@ -6329,23 +5586,23 @@ var require_base50 = __commonJS({
         WI[offsetWI + (ilo - 1) * strideWI] = ZERO;
         return 0;
       }
-      if (N > Math.max(NTINY, NMIN)) {
-        WORKL = new Float64Array(Math.max(1, N));
+      if (USE_DLAQR0 && N > Math.max(NTINY, NMIN)) {
+        WORKL = laqr0Work(wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ);
         info = dlaqr0(wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, WORKL.length);
       } else {
         info = dlahqr(wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ);
         if (info > 0) {
           kbot = info;
           if (N >= NL) {
-            WORKL = new Float64Array(Math.max(1, N));
+            WORKL = laqr0Work(wantt, wantz, N, ilo, kbot, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ);
             info = dlaqr0(wantt, wantz, N, ilo, kbot, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, WORKL.length);
           } else {
             HL = new Float64Array(NL * NL);
-            WORKL = new Float64Array(NL);
             dlacpy("all", N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0);
             HL[N + (N - 1) * NL] = ZERO;
             dlaset("full", NL, NL - N, ZERO, ZERO, HL, 1, NL, N * NL);
-            info = dlaqr0(wantt, wantz, NL, ilo, kbot, HL, 1, NL, 0, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, NL);
+            WORKL = laqr0Work(wantt, wantz, NL, ilo, kbot, HL, 1, NL, 0, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ);
+            info = dlaqr0(wantt, wantz, NL, ilo, kbot, HL, 1, NL, 0, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, WORKL.length);
             if (wantt || info !== 0) {
               dlacpy("all", N, N, HL, 1, NL, 0, H, strideH1, strideH2, offsetH);
             }
@@ -6636,7 +5893,11 @@ var require_base53 = __commonJS({
             X[offsetX + strideX1] = temp * B[offsetB + strideB1];
             xnorm = temp * bnorm;
             info = 1;
-            return { "info": info, "scale": scale, "xnorm": xnorm };
+            return {
+              "info": info,
+              "scale": scale,
+              "xnorm": xnorm
+            };
           }
           ur11 = cr[icmax];
           cr21 = cr[IPIVOT[1 + icmax * 4]];
@@ -6656,7 +5917,7 @@ var require_base53 = __commonJS({
             br1 = B[offsetB];
             br2 = B[offsetB + strideB1];
           }
-          br2 = br2 - lr21 * br1;
+          br2 -= lr21 * br1;
           bbnd = Math.max(Math.abs(br1 * (ur22 * ur11r)), Math.abs(br2));
           if (bbnd > ONE && Math.abs(ur22) < ONE) {
             if (bbnd >= BIGNUM * Math.abs(ur22)) {
@@ -6697,10 +5958,7 @@ var require_base53 = __commonJS({
             }
           }
           if (cmax < smini) {
-            bnorm = Math.max(
-              Math.abs(B[offsetB]) + Math.abs(B[offsetB + strideB2]),
-              Math.abs(B[offsetB + strideB1]) + Math.abs(B[offsetB + strideB1 + strideB2])
-            );
+            bnorm = Math.max(Math.abs(B[offsetB]) + Math.abs(B[offsetB + strideB2]), Math.abs(B[offsetB + strideB1]) + Math.abs(B[offsetB + strideB1 + strideB2]));
             if (smini < ONE && bnorm > ONE) {
               if (bnorm > BIGNUM * smini) {
                 scale = ONE / bnorm;
@@ -6713,7 +5971,11 @@ var require_base53 = __commonJS({
             X[offsetX + strideX1 + strideX2] = temp * B[offsetB + strideB1 + strideB2];
             xnorm = temp * bnorm;
             info = 1;
-            return { "info": info, "scale": scale, "xnorm": xnorm };
+            return {
+              "info": info,
+              "scale": scale,
+              "xnorm": xnorm
+            };
           }
           ur11 = cr[icmax];
           ui11 = ci[icmax];
@@ -6768,10 +6030,7 @@ var require_base53 = __commonJS({
           }
           br2 = br2 - lr21 * br1 + li21 * bi1;
           bi2 = bi2 - li21 * br1 - lr21 * bi1;
-          bbnd = Math.max(
-            (Math.abs(br1) + Math.abs(bi1)) * (u22abs * (Math.abs(ur11r) + Math.abs(ui11r))),
-            Math.abs(br2) + Math.abs(bi2)
-          );
+          bbnd = Math.max((Math.abs(br1) + Math.abs(bi1)) * (u22abs * (Math.abs(ur11r) + Math.abs(ui11r))), Math.abs(br2) + Math.abs(bi2));
           if (bbnd > ONE && u22abs < ONE) {
             if (bbnd >= BIGNUM * u22abs) {
               scale = ONE / bbnd;
@@ -6811,7 +6070,11 @@ var require_base53 = __commonJS({
           }
         }
       }
-      return { "info": info, "scale": scale, "xnorm": xnorm };
+      return {
+        "info": info,
+        "scale": scale,
+        "xnorm": xnorm
+      };
     }
     module.exports = dlaln2;
   }
@@ -6840,36 +6103,36 @@ var require_base54 = __commonJS({
       var rightv;
       var bothv;
       var leftv;
-      var allv;
-      var over;
       var somev;
-      var smin;
       var remax;
-      var emax;
       var scale;
       var xnorm;
       var vcrit;
+      var allv;
+      var over;
+      var smin;
+      var emax;
       var vmax;
       var beta;
       var pair;
+      var jnxt;
       var rec;
+      var res;
+      var sT1;
+      var sT2;
       var wr;
       var wi;
       var ip;
       var is;
       var ki;
       var ii;
-      var jnxt;
-      var j;
       var j1;
       var j2;
-      var k;
-      var m;
-      var res;
-      var sT1;
-      var sT2;
       var oT;
       var nb;
+      var j;
+      var k;
+      var m;
       sT1 = strideT1;
       sT2 = strideT2;
       oT = offsetT;
@@ -6896,23 +6159,19 @@ var require_base54 = __commonJS({
         for (j = 0; j < N; j++) {
           if (pair) {
             pair = false;
-          } else {
-            if (j < N - 1) {
-              if (T[oT + (j + 1) * sT1 + j * sT2] === ZERO) {
-                if (SELECT[offsetSELECT + j * strideSELECT]) {
-                  m += 1;
-                }
-              } else {
-                pair = true;
-                if (SELECT[offsetSELECT + j * strideSELECT] || SELECT[offsetSELECT + (j + 1) * strideSELECT]) {
-                  m += 2;
-                }
-              }
-            } else {
+          } else if (j < N - 1) {
+            if (T[oT + (j + 1) * sT1 + j * sT2] === ZERO) {
               if (SELECT[offsetSELECT + j * strideSELECT]) {
                 m += 1;
               }
+            } else {
+              pair = true;
+              if (SELECT[offsetSELECT + j * strideSELECT] || SELECT[offsetSELECT + (j + 1) * strideSELECT]) {
+                m += 2;
+              }
             }
+          } else if (SELECT[offsetSELECT + j * strideSELECT]) {
+            m += 1;
           }
         }
       } else {
@@ -6937,10 +6196,8 @@ var require_base54 = __commonJS({
               if (!SELECT[offsetSELECT + ki * strideSELECT]) {
                 continue;
               }
-            } else {
-              if (!SELECT[offsetSELECT + (ki - 1) * strideSELECT]) {
-                continue;
-              }
+            } else if (!SELECT[offsetSELECT + (ki - 1) * strideSELECT]) {
+              continue;
             }
           }
           wr = T[oT + ki * sT1 + ki * sT2];
@@ -6969,35 +6226,13 @@ var require_base54 = __commonJS({
                 }
               }
               if (j1 === j2) {
-                res = dlaln2(
-                  false,
-                  1,
-                  1,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + j * sT1 + j * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + 2 * N + j,
-                  wr,
-                  ZERO,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                res = dlaln2(false, 1, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + 2 * N + j, wr, ZERO, X, 1, 2, 0);
                 scale = res.scale;
                 xnorm = res.xnorm;
                 if (xnorm > ONE) {
                   if (WORK[offsetWORK + j] > BIGNUM / xnorm) {
-                    X[0] = X[0] / xnorm;
-                    scale = scale / xnorm;
+                    X[0] /= xnorm;
+                    scale /= xnorm;
                   }
                 }
                 if (scale !== ONE) {
@@ -7006,37 +6241,15 @@ var require_base54 = __commonJS({
                 WORK[offsetWORK + 2 * N + j] = X[0];
                 daxpy(j, -X[0], T, sT1, oT + j * sT2, WORK, 1, offsetWORK + 2 * N);
               } else {
-                res = dlaln2(
-                  false,
-                  2,
-                  1,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + (j - 1) * sT1 + (j - 1) * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + 2 * N + (j - 1),
-                  wr,
-                  ZERO,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                res = dlaln2(false, 2, 1, smin, ONE, T, sT1, sT2, oT + (j - 1) * sT1 + (j - 1) * sT2, ONE, ONE, WORK, 1, N, offsetWORK + 2 * N + (j - 1), wr, ZERO, X, 1, 2, 0);
                 scale = res.scale;
                 xnorm = res.xnorm;
                 if (xnorm > ONE) {
                   beta = Math.max(WORK[offsetWORK + j - 1], WORK[offsetWORK + j]);
                   if (beta > BIGNUM / xnorm) {
-                    X[0] = X[0] / xnorm;
-                    X[1] = X[1] / xnorm;
-                    scale = scale / xnorm;
+                    X[0] /= xnorm;
+                    X[1] /= xnorm;
+                    scale /= xnorm;
                   }
                 }
                 if (scale !== ONE) {
@@ -7058,23 +6271,7 @@ var require_base54 = __commonJS({
               }
             } else {
               if (ki > 0) {
-                dgemv(
-                  "no-transpose",
-                  N,
-                  ki,
-                  ONE,
-                  VR,
-                  strideVR1,
-                  strideVR2,
-                  offsetVR,
-                  WORK,
-                  1,
-                  offsetWORK + 2 * N,
-                  WORK[offsetWORK + 2 * N + ki],
-                  VR,
-                  strideVR1,
-                  offsetVR + ki * strideVR2
-                );
+                dgemv("no-transpose", N, ki, ONE, VR, strideVR1, strideVR2, offsetVR, WORK, 1, offsetWORK + 2 * N, WORK[offsetWORK + 2 * N + ki], VR, strideVR1, offsetVR + ki * strideVR2);
               } else {
                 dscal(N, WORK[offsetWORK + 2 * N + ki], VR, strideVR1, offsetVR + ki * strideVR2);
               }
@@ -7111,36 +6308,14 @@ var require_base54 = __commonJS({
                 }
               }
               if (j1 === j2) {
-                res = dlaln2(
-                  false,
-                  1,
-                  2,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + j * sT1 + j * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + N + j,
-                  wr,
-                  wi,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                res = dlaln2(false, 1, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, wi, X, 1, 2, 0);
                 scale = res.scale;
                 xnorm = res.xnorm;
                 if (xnorm > ONE) {
                   if (WORK[offsetWORK + j] > BIGNUM / xnorm) {
-                    X[0] = X[0] / xnorm;
-                    X[2] = X[2] / xnorm;
-                    scale = scale / xnorm;
+                    X[0] /= xnorm;
+                    X[2] /= xnorm;
+                    scale /= xnorm;
                   }
                 }
                 if (scale !== ONE) {
@@ -7152,29 +6327,7 @@ var require_base54 = __commonJS({
                 daxpy(j, -X[0], T, sT1, oT + j * sT2, WORK, 1, offsetWORK + N);
                 daxpy(j, -X[2], T, sT1, oT + j * sT2, WORK, 1, offsetWORK + 2 * N);
               } else {
-                res = dlaln2(
-                  false,
-                  2,
-                  2,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + (j - 1) * sT1 + (j - 1) * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + N + j - 1,
-                  wr,
-                  wi,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                res = dlaln2(false, 2, 2, smin, ONE, T, sT1, sT2, oT + (j - 1) * sT1 + (j - 1) * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j - 1, wr, wi, X, 1, 2, 0);
                 scale = res.scale;
                 xnorm = res.xnorm;
                 if (xnorm > ONE) {
@@ -7218,40 +6371,8 @@ var require_base54 = __commonJS({
               }
             } else {
               if (ki > 1) {
-                dgemv(
-                  "no-transpose",
-                  N,
-                  ki - 1,
-                  ONE,
-                  VR,
-                  strideVR1,
-                  strideVR2,
-                  offsetVR,
-                  WORK,
-                  1,
-                  offsetWORK + N,
-                  WORK[offsetWORK + N + ki - 1],
-                  VR,
-                  strideVR1,
-                  offsetVR + (ki - 1) * strideVR2
-                );
-                dgemv(
-                  "no-transpose",
-                  N,
-                  ki - 1,
-                  ONE,
-                  VR,
-                  strideVR1,
-                  strideVR2,
-                  offsetVR,
-                  WORK,
-                  1,
-                  offsetWORK + 2 * N,
-                  WORK[offsetWORK + 2 * N + ki],
-                  VR,
-                  strideVR1,
-                  offsetVR + ki * strideVR2
-                );
+                dgemv("no-transpose", N, ki - 1, ONE, VR, strideVR1, strideVR2, offsetVR, WORK, 1, offsetWORK + N, WORK[offsetWORK + N + ki - 1], VR, strideVR1, offsetVR + (ki - 1) * strideVR2);
+                dgemv("no-transpose", N, ki - 1, ONE, VR, strideVR1, strideVR2, offsetVR, WORK, 1, offsetWORK + 2 * N, WORK[offsetWORK + 2 * N + ki], VR, strideVR1, offsetVR + ki * strideVR2);
               } else {
                 dscal(N, WORK[offsetWORK + N + ki - 1], VR, strideVR1, offsetVR + (ki - 1) * strideVR2);
                 dscal(N, WORK[offsetWORK + 2 * N + ki], VR, strideVR1, offsetVR + ki * strideVR2);
@@ -7324,38 +6445,8 @@ var require_base54 = __commonJS({
                   vmax = ONE;
                   vcrit = BIGNUM;
                 }
-                WORK[offsetWORK + N + j] -= ddot(
-                  j - ki - 1,
-                  T,
-                  sT1,
-                  oT + (ki + 1) * sT1 + j * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 1
-                );
-                res = dlaln2(
-                  false,
-                  1,
-                  1,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + j * sT1 + j * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + N + j,
-                  wr,
-                  ZERO,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                WORK[offsetWORK + N + j] -= ddot(j - ki - 1, T, sT1, oT + (ki + 1) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 1);
+                res = dlaln2(false, 1, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, ZERO, X, 1, 2, 0);
                 scale = res.scale;
                 if (scale !== ONE) {
                   dscal(N - ki, scale, WORK, 1, offsetWORK + N + ki);
@@ -7371,58 +6462,16 @@ var require_base54 = __commonJS({
                   vmax = ONE;
                   vcrit = BIGNUM;
                 }
-                WORK[offsetWORK + N + j] -= ddot(
-                  j - ki - 1,
-                  T,
-                  sT1,
-                  oT + (ki + 1) * sT1 + j * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 1
-                );
-                WORK[offsetWORK + N + j + 1] -= ddot(
-                  j - ki - 1,
-                  T,
-                  sT1,
-                  oT + (ki + 1) * sT1 + (j + 1) * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 1
-                );
-                res = dlaln2(
-                  true,
-                  2,
-                  1,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + j * sT1 + j * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + N + j,
-                  wr,
-                  ZERO,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                WORK[offsetWORK + N + j] -= ddot(j - ki - 1, T, sT1, oT + (ki + 1) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 1);
+                WORK[offsetWORK + N + j + 1] -= ddot(j - ki - 1, T, sT1, oT + (ki + 1) * sT1 + (j + 1) * sT2, WORK, 1, offsetWORK + N + ki + 1);
+                res = dlaln2(true, 2, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, ZERO, X, 1, 2, 0);
                 scale = res.scale;
                 if (scale !== ONE) {
                   dscal(N - ki, scale, WORK, 1, offsetWORK + N + ki);
                 }
                 WORK[offsetWORK + N + j] = X[0];
                 WORK[offsetWORK + N + j + 1] = X[1];
-                vmax = Math.max(
-                  Math.abs(WORK[offsetWORK + N + j]),
-                  Math.abs(WORK[offsetWORK + N + j + 1]),
-                  vmax
-                );
+                vmax = Math.max(Math.abs(WORK[offsetWORK + N + j]), Math.abs(WORK[offsetWORK + N + j + 1]), vmax);
                 vcrit = BIGNUM / vmax;
               }
             }
@@ -7430,29 +6479,13 @@ var require_base54 = __commonJS({
               dcopy(N - ki, WORK, 1, offsetWORK + N + ki, VL, strideVL1, offsetVL + ki * strideVL1 + is * strideVL2);
               ii = idamax(N - ki, VL, strideVL1, offsetVL + ki * strideVL1 + is * strideVL2) + ki;
               remax = ONE / Math.abs(VL[offsetVL + ii * strideVL1 + is * strideVL2]);
-              dscal(N - ki, remax, VL, strideVL1, offsetVR + ki * strideVL1 + is * strideVL2);
+              dscal(N - ki, remax, VL, strideVL1, offsetVL + ki * strideVL1 + is * strideVL2);
               for (k = 0; k < ki; k++) {
                 VL[offsetVL + k * strideVL1 + is * strideVL2] = ZERO;
               }
             } else {
               if (ki < N - 1) {
-                dgemv(
-                  "no-transpose",
-                  N,
-                  N - ki - 1,
-                  ONE,
-                  VL,
-                  strideVL1,
-                  strideVL2,
-                  offsetVL + (ki + 1) * strideVL2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 1,
-                  WORK[offsetWORK + N + ki],
-                  VL,
-                  strideVL1,
-                  offsetVL + ki * strideVL2
-                );
+                dgemv("no-transpose", N, N - ki - 1, ONE, VL, strideVL1, strideVL2, offsetVL + (ki + 1) * strideVL2, WORK, 1, offsetWORK + N + ki + 1, WORK[offsetWORK + N + ki], VL, strideVL1, offsetVL + ki * strideVL2);
               } else {
                 dscal(N, WORK[offsetWORK + N + ki], VL, strideVL1, offsetVL + ki * strideVL2);
               }
@@ -7498,47 +6531,9 @@ var require_base54 = __commonJS({
                   vmax = ONE;
                   vcrit = BIGNUM;
                 }
-                WORK[offsetWORK + N + j] -= ddot(
-                  j - ki - 2,
-                  T,
-                  sT1,
-                  oT + (ki + 2) * sT1 + j * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 2
-                );
-                WORK[offsetWORK + 2 * N + j] -= ddot(
-                  j - ki - 2,
-                  T,
-                  sT1,
-                  oT + (ki + 2) * sT1 + j * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + 2 * N + ki + 2
-                );
-                res = dlaln2(
-                  false,
-                  1,
-                  2,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + j * sT1 + j * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + N + j,
-                  wr,
-                  -wi,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                WORK[offsetWORK + N + j] -= ddot(j - ki - 2, T, sT1, oT + (ki + 2) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 2);
+                WORK[offsetWORK + 2 * N + j] -= ddot(j - ki - 2, T, sT1, oT + (ki + 2) * sT1 + j * sT2, WORK, 1, offsetWORK + 2 * N + ki + 2);
+                res = dlaln2(false, 1, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, -wi, X, 1, 2, 0);
                 scale = res.scale;
                 if (scale !== ONE) {
                   dscal(N - ki, scale, WORK, 1, offsetWORK + N + ki);
@@ -7546,11 +6541,7 @@ var require_base54 = __commonJS({
                 }
                 WORK[offsetWORK + N + j] = X[0];
                 WORK[offsetWORK + 2 * N + j] = X[2];
-                vmax = Math.max(
-                  Math.abs(WORK[offsetWORK + N + j]),
-                  Math.abs(WORK[offsetWORK + 2 * N + j]),
-                  vmax
-                );
+                vmax = Math.max(Math.abs(WORK[offsetWORK + N + j]), Math.abs(WORK[offsetWORK + 2 * N + j]), vmax);
                 vcrit = BIGNUM / vmax;
               } else {
                 beta = Math.max(WORK[offsetWORK + j], WORK[offsetWORK + j + 1]);
@@ -7561,65 +6552,11 @@ var require_base54 = __commonJS({
                   vmax = ONE;
                   vcrit = BIGNUM;
                 }
-                WORK[offsetWORK + N + j] -= ddot(
-                  j - ki - 2,
-                  T,
-                  sT1,
-                  oT + (ki + 2) * sT1 + j * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 2
-                );
-                WORK[offsetWORK + 2 * N + j] -= ddot(
-                  j - ki - 2,
-                  T,
-                  sT1,
-                  oT + (ki + 2) * sT1 + j * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + 2 * N + ki + 2
-                );
-                WORK[offsetWORK + N + j + 1] -= ddot(
-                  j - ki - 2,
-                  T,
-                  sT1,
-                  oT + (ki + 2) * sT1 + (j + 1) * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 2
-                );
-                WORK[offsetWORK + 2 * N + j + 1] -= ddot(
-                  j - ki - 2,
-                  T,
-                  sT1,
-                  oT + (ki + 2) * sT1 + (j + 1) * sT2,
-                  WORK,
-                  1,
-                  offsetWORK + 2 * N + ki + 2
-                );
-                res = dlaln2(
-                  true,
-                  2,
-                  2,
-                  smin,
-                  ONE,
-                  T,
-                  sT1,
-                  sT2,
-                  oT + j * sT1 + j * sT2,
-                  ONE,
-                  ONE,
-                  WORK,
-                  1,
-                  N,
-                  offsetWORK + N + j,
-                  wr,
-                  -wi,
-                  X,
-                  1,
-                  2,
-                  0
-                );
+                WORK[offsetWORK + N + j] -= ddot(j - ki - 2, T, sT1, oT + (ki + 2) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 2);
+                WORK[offsetWORK + 2 * N + j] -= ddot(j - ki - 2, T, sT1, oT + (ki + 2) * sT1 + j * sT2, WORK, 1, offsetWORK + 2 * N + ki + 2);
+                WORK[offsetWORK + N + j + 1] -= ddot(j - ki - 2, T, sT1, oT + (ki + 2) * sT1 + (j + 1) * sT2, WORK, 1, offsetWORK + N + ki + 2);
+                WORK[offsetWORK + 2 * N + j + 1] -= ddot(j - ki - 2, T, sT1, oT + (ki + 2) * sT1 + (j + 1) * sT2, WORK, 1, offsetWORK + 2 * N + ki + 2);
+                res = dlaln2(true, 2, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, -wi, X, 1, 2, 0);
                 scale = res.scale;
                 if (scale !== ONE) {
                   dscal(N - ki, scale, WORK, 1, offsetWORK + N + ki);
@@ -7629,13 +6566,7 @@ var require_base54 = __commonJS({
                 WORK[offsetWORK + N + j + 1] = X[1];
                 WORK[offsetWORK + 2 * N + j] = X[2];
                 WORK[offsetWORK + 2 * N + j + 1] = X[3];
-                vmax = Math.max(
-                  Math.abs(X[0]),
-                  Math.abs(X[2]),
-                  Math.abs(X[1]),
-                  Math.abs(X[3]),
-                  vmax
-                );
+                vmax = Math.max(Math.abs(X[0]), Math.abs(X[2]), Math.abs(X[1]), Math.abs(X[3]), vmax);
                 vcrit = BIGNUM / vmax;
               }
             }
@@ -7655,40 +6586,8 @@ var require_base54 = __commonJS({
               }
             } else {
               if (ki < N - 2) {
-                dgemv(
-                  "no-transpose",
-                  N,
-                  N - ki - 2,
-                  ONE,
-                  VL,
-                  strideVL1,
-                  strideVL2,
-                  offsetVL + (ki + 2) * strideVL2,
-                  WORK,
-                  1,
-                  offsetWORK + N + ki + 2,
-                  WORK[offsetWORK + N + ki],
-                  VL,
-                  strideVL1,
-                  offsetVL + ki * strideVL2
-                );
-                dgemv(
-                  "no-transpose",
-                  N,
-                  N - ki - 2,
-                  ONE,
-                  VL,
-                  strideVL1,
-                  strideVL2,
-                  offsetVL + (ki + 2) * strideVL2,
-                  WORK,
-                  1,
-                  offsetWORK + 2 * N + ki + 2,
-                  WORK[offsetWORK + 2 * N + ki + 1],
-                  VL,
-                  strideVL1,
-                  offsetVL + (ki + 1) * strideVL2
-                );
+                dgemv("no-transpose", N, N - ki - 2, ONE, VL, strideVL1, strideVL2, offsetVL + (ki + 2) * strideVL2, WORK, 1, offsetWORK + N + ki + 2, WORK[offsetWORK + N + ki], VL, strideVL1, offsetVL + ki * strideVL2);
+                dgemv("no-transpose", N, N - ki - 2, ONE, VL, strideVL1, strideVL2, offsetVL + (ki + 2) * strideVL2, WORK, 1, offsetWORK + 2 * N + ki + 2, WORK[offsetWORK + 2 * N + ki + 1], VL, strideVL1, offsetVL + (ki + 1) * strideVL2);
               } else {
                 dscal(N, WORK[offsetWORK + N + ki], VL, strideVL1, offsetVL + ki * strideVL2);
                 dscal(N, WORK[offsetWORK + 2 * N + ki + 1], VL, strideVL1, offsetVL + (ki + 1) * strideVL2);
@@ -7782,7 +6681,9 @@ var require_base55 = __commonJS({
       }
       SCALE = new Float64Array(N);
       TAU = new Float64Array(N);
-      WORK = new Float64Array(Math.max(4 * N, 1));
+      WORK = new Float64Array(1);
+      dgehrd(N, 1, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1, 0, -1);
+      WORK = new Float64Array(Math.max(4 * N, Math.floor(WORK[0])));
       SELECT = new Uint8Array(1);
       anrm = dlange("max", N, N, A, strideA1, strideA2, offsetA, WORK, 1, 0);
       scalea = false;
@@ -7965,35 +6866,11 @@ var require_base56 = __commonJS({
       K = Math.min(M, N);
       for (i = 0; i < K; i++) {
         aii = offsetA + i * strideA1 + i * strideA2;
-        dlarfg(
-          M - i,
-          A,
-          aii,
-          A,
-          strideA1,
-          offsetA + Math.min(i + 1, M - 1) * strideA1 + i * strideA2,
-          TAU,
-          offsetTAU + i * strideTAU
-        );
+        dlarfg(M - i, A, aii, A, strideA1, offsetA + Math.min(i + 1, M - 1) * strideA1 + i * strideA2, TAU, offsetTAU + i * strideTAU);
         if (i < N - 1) {
           alpha = A[aii];
           A[aii] = 1;
-          dlarf(
-            "left",
-            M - i,
-            N - i - 1,
-            A,
-            strideA1,
-            aii,
-            TAU[offsetTAU + i * strideTAU],
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + (i + 1) * strideA2,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
+          dlarf("left", M - i, N - i - 1, A, strideA1, aii, TAU[offsetTAU + i * strideTAU], A, strideA1, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, WORK, strideWORK, offsetWORK);
           A[aii] = alpha;
         }
       }
@@ -8048,63 +6925,10 @@ var require_base57 = __commonJS({
         i = 0;
         while (i <= K - 1 - nx) {
           ib = Math.min(K - i, nb);
-          dgeqr2(
-            M - i,
-            ib,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2,
-            TAU,
-            strideTAU,
-            offsetTAU + i * strideTAU,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
+          dgeqr2(M - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, WORK, strideWORK, offsetWORK);
           if (i + ib < N) {
-            dlarft(
-              "forward",
-              "columnwise",
-              M - i,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              TAU,
-              strideTAU,
-              offsetTAU + i * strideTAU,
-              T,
-              1,
-              nb,
-              0
-            );
-            dlarfb(
-              "left",
-              "transpose",
-              "forward",
-              "columnwise",
-              M - i,
-              N - i - ib,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              T,
-              1,
-              nb,
-              0,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + (i + ib) * strideA2,
-              WORK,
-              1,
-              ldwork,
-              offsetWORK
-            );
+            dlarft("forward", "columnwise", M - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, T, 1, nb, 0);
+            dlarfb("left", "transpose", "forward", "columnwise", M - i, N - i - ib, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, T, 1, nb, 0, A, strideA1, strideA2, offsetA + i * strideA1 + (i + ib) * strideA2, WORK, 1, ldwork, offsetWORK);
           }
           i += nb;
         }
@@ -8112,20 +6936,7 @@ var require_base57 = __commonJS({
         i = 0;
       }
       if (i <= K - 1) {
-        dgeqr2(
-          M - i,
-          N - i,
-          A,
-          strideA1,
-          strideA2,
-          offsetA + i * strideA1 + i * strideA2,
-          TAU,
-          strideTAU,
-          offsetTAU + i * strideTAU,
-          WORK,
-          strideWORK,
-          offsetWORK
-        );
+        dgeqr2(M - i, N - i, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, WORK, strideWORK, offsetWORK);
       }
       return 0;
     }
@@ -8147,16 +6958,7 @@ var require_base58 = __commonJS({
       K = Math.min(M, N);
       for (i = 0; i < K; i++) {
         aii = offsetA + i * strideA1 + i * strideA2;
-        dlarfg(
-          N - i,
-          A,
-          aii,
-          A,
-          strideA2,
-          offsetA + i * strideA1 + Math.min(i + 1, N - 1) * strideA2,
-          TAU,
-          offsetTAU + i * strideTAU
-        );
+        dlarfg(N - i, A, aii, A, strideA2, offsetA + i * strideA1 + Math.min(i + 1, N - 1) * strideA2, TAU, offsetTAU + i * strideTAU);
         if (i < M - 1) {
           save = A[aii];
           A[aii] = 1;
@@ -8235,63 +7037,10 @@ var require_base59 = __commonJS({
         i = 0;
         while (i <= K - 1 - nx) {
           ib = Math.min(K - i, nb);
-          dgelq2(
-            ib,
-            N - i,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2,
-            TAU,
-            strideTAU,
-            offsetTAU + i * strideTAU,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
+          dgelq2(ib, N - i, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, WORK, strideWORK, offsetWORK);
           if (i + ib < M) {
-            dlarft(
-              "forward",
-              "rowwise",
-              N - i,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              TAU,
-              strideTAU,
-              offsetTAU + i * strideTAU,
-              T,
-              1,
-              nb,
-              0
-            );
-            dlarfb(
-              "right",
-              "no-transpose",
-              "forward",
-              "rowwise",
-              M - i - ib,
-              N - i,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              T,
-              1,
-              nb,
-              0,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + ib) * strideA1 + i * strideA2,
-              WORK,
-              1,
-              ldwork,
-              offsetWORK
-            );
+            dlarft("forward", "rowwise", N - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, T, 1, nb, 0);
+            dlarfb("right", "no-transpose", "forward", "rowwise", M - i - ib, N - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, T, 1, nb, 0, A, strideA1, strideA2, offsetA + (i + ib) * strideA1 + i * strideA2, WORK, 1, ldwork, offsetWORK);
           }
           i += nb;
         }
@@ -8299,20 +7048,7 @@ var require_base59 = __commonJS({
         i = 0;
       }
       if (i <= K - 1) {
-        dgelq2(
-          M - i,
-          N - i,
-          A,
-          strideA1,
-          strideA2,
-          offsetA + i * strideA1 + i * strideA2,
-          TAU,
-          strideTAU,
-          offsetTAU + i * strideTAU,
-          WORK,
-          strideWORK,
-          offsetWORK
-        );
+        dgelq2(M - i, N - i, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, WORK, strideWORK, offsetWORK);
       }
       return 0;
     }
@@ -8349,30 +7085,9 @@ var require_base60 = __commonJS({
         if (i < N - 1) {
           if (i < M - 1) {
             A[offsetA + i * strideA1 + i * strideA2] = 1;
-            dlarf(
-              "right",
-              M - i - 1,
-              N - i,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              TAU[it],
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              WORK,
-              strideWORK,
-              offsetWORK
-            );
+            dlarf("right", M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2, TAU[it], A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + i * strideA2, WORK, strideWORK, offsetWORK);
           }
-          dscal(
-            N - i - 1,
-            -TAU[it],
-            A,
-            strideA2,
-            offsetA + i * strideA1 + (i + 1) * strideA2
-          );
+          dscal(N - i - 1, -TAU[it], A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2);
         }
         A[offsetA + i * strideA1 + i * strideA2] = 1 - TAU[it];
         for (l = 0; l < i; l++) {
@@ -8424,84 +7139,16 @@ var require_base61 = __commonJS({
         kk = 0;
       }
       if (kk < M) {
-        dorgl2(
-          M - kk,
-          N - kk,
-          K - kk,
-          A,
-          strideA1,
-          strideA2,
-          offsetA + kk * strideA1 + kk * strideA2,
-          TAU,
-          strideTAU,
-          offsetTAU + kk * strideTAU,
-          WORK,
-          strideWORK,
-          offsetWORK
-        );
+        dorgl2(M - kk, N - kk, K - kk, A, strideA1, strideA2, offsetA + kk * strideA1 + kk * strideA2, TAU, strideTAU, offsetTAU + kk * strideTAU, WORK, strideWORK, offsetWORK);
       }
       if (kk > 0) {
         for (i = ki; i >= 0; i -= nb) {
           ib = Math.min(nb, K - i);
           if (i + ib < M) {
-            dlarft(
-              "forward",
-              "rowwise",
-              N - i,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              TAU,
-              strideTAU,
-              offsetTAU + i * strideTAU,
-              WORK,
-              1,
-              ldwork,
-              offsetWORK
-            );
-            dlarfb(
-              "right",
-              "transpose",
-              "forward",
-              "rowwise",
-              M - i - ib,
-              N - i,
-              ib,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              WORK,
-              1,
-              ldwork,
-              offsetWORK,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + ib) * strideA1 + i * strideA2,
-              WORK,
-              1,
-              ldwork,
-              offsetWORK + ib
-            );
+            dlarft("forward", "rowwise", N - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, WORK, 1, ldwork, offsetWORK);
+            dlarfb("right", "transpose", "forward", "rowwise", M - i - ib, N - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, WORK, 1, ldwork, offsetWORK, A, strideA1, strideA2, offsetA + (i + ib) * strideA1 + i * strideA2, WORK, 1, ldwork, offsetWORK + ib);
           }
-          dorgl2(
-            ib,
-            N - i,
-            ib,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2,
-            TAU,
-            strideTAU,
-            offsetTAU + i * strideTAU,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
+          dorgl2(ib, N - i, ib, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, TAU, strideTAU, offsetTAU + i * strideTAU, WORK, strideWORK, offsetWORK);
           for (j = 0; j < i; j++) {
             for (l = i; l < i + ib; l++) {
               A[offsetA + l * strideA1 + j * strideA2] = 0;
@@ -8531,67 +7178,19 @@ var require_base62 = __commonJS({
       if (M >= N) {
         for (i = 0; i < N; i++) {
           aii = offsetA + i * strideA1 + i * strideA2;
-          dlarfg(
-            M - i,
-            A,
-            aii,
-            A,
-            strideA1,
-            offsetA + Math.min(i + 1, M - 1) * strideA1 + i * strideA2,
-            TAUQ,
-            offsetTAUQ + i * strideTAUQ
-          );
+          dlarfg(M - i, A, aii, A, strideA1, offsetA + Math.min(i + 1, M - 1) * strideA1 + i * strideA2, TAUQ, offsetTAUQ + i * strideTAUQ);
           d[offsetD + i * strideD] = A[aii];
           A[aii] = 1;
           if (i < N - 1) {
-            dlarf(
-              "left",
-              M - i,
-              N - i - 1,
-              A,
-              strideA1,
-              aii,
-              TAUQ[offsetTAUQ + i * strideTAUQ],
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2,
-              WORK,
-              strideWORK,
-              offsetWORK
-            );
+            dlarf("left", M - i, N - i - 1, A, strideA1, aii, TAUQ[offsetTAUQ + i * strideTAUQ], A, strideA1, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, WORK, strideWORK, offsetWORK);
           }
           A[aii] = d[offsetD + i * strideD];
           if (i < N - 1) {
             aij = offsetA + i * strideA1 + (i + 1) * strideA2;
-            dlarfg(
-              N - i - 1,
-              A,
-              aij,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + Math.min(i + 2, N - 1) * strideA2,
-              TAUP,
-              offsetTAUP + i * strideTAUP
-            );
+            dlarfg(N - i - 1, A, aij, A, strideA2, offsetA + i * strideA1 + Math.min(i + 2, N - 1) * strideA2, TAUP, offsetTAUP + i * strideTAUP);
             e[offsetE + i * strideE] = A[aij];
             A[aij] = 1;
-            dlarf(
-              "right",
-              M - i - 1,
-              N - i - 1,
-              A,
-              strideA2,
-              aij,
-              TAUP[offsetTAUP + i * strideTAUP],
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + (i + 1) * strideA2,
-              WORK,
-              strideWORK,
-              offsetWORK
-            );
+            dlarf("right", M - i - 1, N - i - 1, A, strideA2, aij, TAUP[offsetTAUP + i * strideTAUP], A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + (i + 1) * strideA2, WORK, strideWORK, offsetWORK);
             A[aij] = e[offsetE + i * strideE];
           } else {
             TAUP[offsetTAUP + i * strideTAUP] = 0;
@@ -8600,67 +7199,19 @@ var require_base62 = __commonJS({
       } else {
         for (i = 0; i < M; i++) {
           aii = offsetA + i * strideA1 + i * strideA2;
-          dlarfg(
-            N - i,
-            A,
-            aii,
-            A,
-            strideA2,
-            offsetA + i * strideA1 + Math.min(i + 1, N - 1) * strideA2,
-            TAUP,
-            offsetTAUP + i * strideTAUP
-          );
+          dlarfg(N - i, A, aii, A, strideA2, offsetA + i * strideA1 + Math.min(i + 1, N - 1) * strideA2, TAUP, offsetTAUP + i * strideTAUP);
           d[offsetD + i * strideD] = A[aii];
           A[aii] = 1;
           if (i < M - 1) {
-            dlarf(
-              "right",
-              M - i - 1,
-              N - i,
-              A,
-              strideA2,
-              aii,
-              TAUP[offsetTAUP + i * strideTAUP],
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              WORK,
-              strideWORK,
-              offsetWORK
-            );
+            dlarf("right", M - i - 1, N - i, A, strideA2, aii, TAUP[offsetTAUP + i * strideTAUP], A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + i * strideA2, WORK, strideWORK, offsetWORK);
           }
           A[aii] = d[offsetD + i * strideD];
           if (i < M - 1) {
             aij = offsetA + (i + 1) * strideA1 + i * strideA2;
-            dlarfg(
-              M - i - 1,
-              A,
-              aij,
-              A,
-              strideA1,
-              offsetA + Math.min(i + 2, M - 1) * strideA1 + i * strideA2,
-              TAUQ,
-              offsetTAUQ + i * strideTAUQ
-            );
+            dlarfg(M - i - 1, A, aij, A, strideA1, offsetA + Math.min(i + 2, M - 1) * strideA1 + i * strideA2, TAUQ, offsetTAUQ + i * strideTAUQ);
             e[offsetE + i * strideE] = A[aij];
             A[aij] = 1;
-            dlarf(
-              "left",
-              M - i - 1,
-              N - i - 1,
-              A,
-              strideA1,
-              aij,
-              TAUQ[offsetTAUQ + i * strideTAUQ],
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + (i + 1) * strideA2,
-              WORK,
-              strideWORK,
-              offsetWORK
-            );
+            dlarf("left", M - i - 1, N - i - 1, A, strideA1, aij, TAUQ[offsetTAUQ + i * strideTAUQ], A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + (i + 1) * strideA2, WORK, strideWORK, offsetWORK);
             A[aij] = e[offsetE + i * strideE];
           } else {
             TAUQ[offsetTAUQ + i * strideTAUQ] = 0;
@@ -8687,564 +7238,56 @@ var require_base63 = __commonJS({
       }
       if (M >= N) {
         for (i = 0; i < nb; i++) {
-          dgemv(
-            "no-transpose",
-            M - i,
-            i,
-            -1,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1,
-            Y,
-            strideY2,
-            offsetY + i * strideY1,
-            1,
-            A,
-            strideA1,
-            offsetA + i * strideA1 + i * strideA2
-          );
-          dgemv(
-            "no-transpose",
-            M - i,
-            i,
-            -1,
-            X,
-            strideX1,
-            strideX2,
-            offsetX + i * strideX1,
-            A,
-            strideA1,
-            offsetA + i * strideA2,
-            1,
-            A,
-            strideA1,
-            offsetA + i * strideA1 + i * strideA2
-          );
-          dlarfg(
-            M - i,
-            A,
-            offsetA + i * strideA1 + i * strideA2,
-            A,
-            strideA1,
-            offsetA + Math.min(i + 1, M - 1) * strideA1 + i * strideA2,
-            TAUQ,
-            offsetTAUQ + i * strideTAUQ
-          );
+          dgemv("no-transpose", M - i, i, -1, A, strideA1, strideA2, offsetA + i * strideA1, Y, strideY2, offsetY + i * strideY1, 1, A, strideA1, offsetA + i * strideA1 + i * strideA2);
+          dgemv("no-transpose", M - i, i, -1, X, strideX1, strideX2, offsetX + i * strideX1, A, strideA1, offsetA + i * strideA2, 1, A, strideA1, offsetA + i * strideA1 + i * strideA2);
+          dlarfg(M - i, A, offsetA + i * strideA1 + i * strideA2, A, strideA1, offsetA + Math.min(i + 1, M - 1) * strideA1 + i * strideA2, TAUQ, offsetTAUQ + i * strideTAUQ);
           d[offsetD + i * strideD] = A[offsetA + i * strideA1 + i * strideA2];
           if (i < N - 1) {
             A[offsetA + i * strideA1 + i * strideA2] = 1;
-            dgemv(
-              "transpose",
-              M - i,
-              N - i - 1,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2,
-              A,
-              strideA1,
-              offsetA + i * strideA1 + i * strideA2,
-              0,
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dgemv(
-              "transpose",
-              M - i,
-              i,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1,
-              A,
-              strideA1,
-              offsetA + i * strideA1 + i * strideA2,
-              0,
-              Y,
-              strideY1,
-              offsetY + i * strideY2
-            );
-            dgemv(
-              "no-transpose",
-              N - i - 1,
-              i,
-              -1,
-              Y,
-              strideY1,
-              strideY2,
-              offsetY + (i + 1) * strideY1,
-              Y,
-              strideY1,
-              offsetY + i * strideY2,
-              1,
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dgemv(
-              "transpose",
-              M - i,
-              i,
-              1,
-              X,
-              strideX1,
-              strideX2,
-              offsetX + i * strideX1,
-              A,
-              strideA1,
-              offsetA + i * strideA1 + i * strideA2,
-              0,
-              Y,
-              strideY1,
-              offsetY + i * strideY2
-            );
-            dgemv(
-              "transpose",
-              i,
-              N - i - 1,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA2,
-              Y,
-              strideY1,
-              offsetY + i * strideY2,
-              1,
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dscal(
-              N - i - 1,
-              TAUQ[offsetTAUQ + i * strideTAUQ],
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dgemv(
-              "no-transpose",
-              N - i - 1,
-              i + 1,
-              -1,
-              Y,
-              strideY1,
-              strideY2,
-              offsetY + (i + 1) * strideY1,
-              A,
-              strideA2,
-              offsetA + i * strideA1,
-              1,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2
-            );
-            dgemv(
-              "transpose",
-              i,
-              N - i - 1,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA2,
-              X,
-              strideX2,
-              offsetX + i * strideX1,
-              1,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2
-            );
-            dlarfg(
-              N - i - 1,
-              A,
-              offsetA + i * strideA1 + (i + 1) * strideA2,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + Math.min(i + 2, N - 1) * strideA2,
-              TAUP,
-              offsetTAUP + i * strideTAUP
-            );
+            dgemv("transpose", M - i, N - i - 1, 1, A, strideA1, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, A, strideA1, offsetA + i * strideA1 + i * strideA2, 0, Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dgemv("transpose", M - i, i, 1, A, strideA1, strideA2, offsetA + i * strideA1, A, strideA1, offsetA + i * strideA1 + i * strideA2, 0, Y, strideY1, offsetY + i * strideY2);
+            dgemv("no-transpose", N - i - 1, i, -1, Y, strideY1, strideY2, offsetY + (i + 1) * strideY1, Y, strideY1, offsetY + i * strideY2, 1, Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dgemv("transpose", M - i, i, 1, X, strideX1, strideX2, offsetX + i * strideX1, A, strideA1, offsetA + i * strideA1 + i * strideA2, 0, Y, strideY1, offsetY + i * strideY2);
+            dgemv("transpose", i, N - i - 1, -1, A, strideA1, strideA2, offsetA + (i + 1) * strideA2, Y, strideY1, offsetY + i * strideY2, 1, Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dscal(N - i - 1, TAUQ[offsetTAUQ + i * strideTAUQ], Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dgemv("no-transpose", N - i - 1, i + 1, -1, Y, strideY1, strideY2, offsetY + (i + 1) * strideY1, A, strideA2, offsetA + i * strideA1, 1, A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2);
+            dgemv("transpose", i, N - i - 1, -1, A, strideA1, strideA2, offsetA + (i + 1) * strideA2, X, strideX2, offsetX + i * strideX1, 1, A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2);
+            dlarfg(N - i - 1, A, offsetA + i * strideA1 + (i + 1) * strideA2, A, strideA2, offsetA + i * strideA1 + Math.min(i + 2, N - 1) * strideA2, TAUP, offsetTAUP + i * strideTAUP);
             e[offsetE + i * strideE] = A[offsetA + i * strideA1 + (i + 1) * strideA2];
             A[offsetA + i * strideA1 + (i + 1) * strideA2] = 1;
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              N - i - 1,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + (i + 1) * strideA2,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2,
-              0,
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dgemv(
-              "transpose",
-              N - i - 1,
-              i + 1,
-              1,
-              Y,
-              strideY1,
-              strideY2,
-              offsetY + (i + 1) * strideY1,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2,
-              0,
-              X,
-              strideX1,
-              offsetX + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              i + 1,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1,
-              X,
-              strideX1,
-              offsetX + i * strideX2,
-              1,
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              i,
-              N - i - 1,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA2,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + (i + 1) * strideA2,
-              0,
-              X,
-              strideX1,
-              offsetX + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              i,
-              -1,
-              X,
-              strideX1,
-              strideX2,
-              offsetX + (i + 1) * strideX1,
-              X,
-              strideX1,
-              offsetX + i * strideX2,
-              1,
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dscal(
-              M - i - 1,
-              TAUP[offsetTAUP + i * strideTAUP],
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
+            dgemv("no-transpose", M - i - 1, N - i - 1, 1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + (i + 1) * strideA2, A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, 0, X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dgemv("transpose", N - i - 1, i + 1, 1, Y, strideY1, strideY2, offsetY + (i + 1) * strideY1, A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, 0, X, strideX1, offsetX + i * strideX2);
+            dgemv("no-transpose", M - i - 1, i + 1, -1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1, X, strideX1, offsetX + i * strideX2, 1, X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dgemv("no-transpose", i, N - i - 1, 1, A, strideA1, strideA2, offsetA + (i + 1) * strideA2, A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2, 0, X, strideX1, offsetX + i * strideX2);
+            dgemv("no-transpose", M - i - 1, i, -1, X, strideX1, strideX2, offsetX + (i + 1) * strideX1, X, strideX1, offsetX + i * strideX2, 1, X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dscal(M - i - 1, TAUP[offsetTAUP + i * strideTAUP], X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
           }
         }
       } else {
         for (i = 0; i < nb; i++) {
-          dgemv(
-            "no-transpose",
-            N - i,
-            i,
-            -1,
-            Y,
-            strideY1,
-            strideY2,
-            offsetY + i * strideY1,
-            A,
-            strideA2,
-            offsetA + i * strideA1,
-            1,
-            A,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2
-          );
-          dgemv(
-            "transpose",
-            i,
-            N - i,
-            -1,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA2,
-            X,
-            strideX2,
-            offsetX + i * strideX1,
-            1,
-            A,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2
-          );
-          dlarfg(
-            N - i,
-            A,
-            offsetA + i * strideA1 + i * strideA2,
-            A,
-            strideA2,
-            offsetA + i * strideA1 + Math.min(i + 1, N - 1) * strideA2,
-            TAUP,
-            offsetTAUP + i * strideTAUP
-          );
+          dgemv("no-transpose", N - i, i, -1, Y, strideY1, strideY2, offsetY + i * strideY1, A, strideA2, offsetA + i * strideA1, 1, A, strideA2, offsetA + i * strideA1 + i * strideA2);
+          dgemv("transpose", i, N - i, -1, A, strideA1, strideA2, offsetA + i * strideA2, X, strideX2, offsetX + i * strideX1, 1, A, strideA2, offsetA + i * strideA1 + i * strideA2);
+          dlarfg(N - i, A, offsetA + i * strideA1 + i * strideA2, A, strideA2, offsetA + i * strideA1 + Math.min(i + 1, N - 1) * strideA2, TAUP, offsetTAUP + i * strideTAUP);
           d[offsetD + i * strideD] = A[offsetA + i * strideA1 + i * strideA2];
           if (i < M - 1) {
             A[offsetA + i * strideA1 + i * strideA2] = 1;
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              N - i,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              0,
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dgemv(
-              "transpose",
-              N - i,
-              i,
-              1,
-              Y,
-              strideY1,
-              strideY2,
-              offsetY + i * strideY1,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              0,
-              X,
-              strideX1,
-              offsetX + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              i,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1,
-              X,
-              strideX1,
-              offsetX + i * strideX2,
-              1,
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              i,
-              N - i,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA2,
-              A,
-              strideA2,
-              offsetA + i * strideA1 + i * strideA2,
-              0,
-              X,
-              strideX1,
-              offsetX + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              i,
-              -1,
-              X,
-              strideX1,
-              strideX2,
-              offsetX + (i + 1) * strideX1,
-              X,
-              strideX1,
-              offsetX + i * strideX2,
-              1,
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dscal(
-              M - i - 1,
-              TAUP[offsetTAUP + i * strideTAUP],
-              X,
-              strideX1,
-              offsetX + (i + 1) * strideX1 + i * strideX2
-            );
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              i,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1,
-              Y,
-              strideY2,
-              offsetY + i * strideY1,
-              1,
-              A,
-              strideA1,
-              offsetA + (i + 1) * strideA1 + i * strideA2
-            );
-            dgemv(
-              "no-transpose",
-              M - i - 1,
-              i + 1,
-              -1,
-              X,
-              strideX1,
-              strideX2,
-              offsetX + (i + 1) * strideX1,
-              A,
-              strideA1,
-              offsetA + i * strideA2,
-              1,
-              A,
-              strideA1,
-              offsetA + (i + 1) * strideA1 + i * strideA2
-            );
-            dlarfg(
-              M - i - 1,
-              A,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              A,
-              strideA1,
-              offsetA + Math.min(i + 2, M - 1) * strideA1 + i * strideA2,
-              TAUQ,
-              offsetTAUQ + i * strideTAUQ
-            );
+            dgemv("no-transpose", M - i - 1, N - i, 1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + i * strideA2, A, strideA2, offsetA + i * strideA1 + i * strideA2, 0, X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dgemv("transpose", N - i, i, 1, Y, strideY1, strideY2, offsetY + i * strideY1, A, strideA2, offsetA + i * strideA1 + i * strideA2, 0, X, strideX1, offsetX + i * strideX2);
+            dgemv("no-transpose", M - i - 1, i, -1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1, X, strideX1, offsetX + i * strideX2, 1, X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dgemv("no-transpose", i, N - i, 1, A, strideA1, strideA2, offsetA + i * strideA2, A, strideA2, offsetA + i * strideA1 + i * strideA2, 0, X, strideX1, offsetX + i * strideX2);
+            dgemv("no-transpose", M - i - 1, i, -1, X, strideX1, strideX2, offsetX + (i + 1) * strideX1, X, strideX1, offsetX + i * strideX2, 1, X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dscal(M - i - 1, TAUP[offsetTAUP + i * strideTAUP], X, strideX1, offsetX + (i + 1) * strideX1 + i * strideX2);
+            dgemv("no-transpose", M - i - 1, i, -1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1, Y, strideY2, offsetY + i * strideY1, 1, A, strideA1, offsetA + (i + 1) * strideA1 + i * strideA2);
+            dgemv("no-transpose", M - i - 1, i + 1, -1, X, strideX1, strideX2, offsetX + (i + 1) * strideX1, A, strideA1, offsetA + i * strideA2, 1, A, strideA1, offsetA + (i + 1) * strideA1 + i * strideA2);
+            dlarfg(M - i - 1, A, offsetA + (i + 1) * strideA1 + i * strideA2, A, strideA1, offsetA + Math.min(i + 2, M - 1) * strideA1 + i * strideA2, TAUQ, offsetTAUQ + i * strideTAUQ);
             e[offsetE + i * strideE] = A[offsetA + (i + 1) * strideA1 + i * strideA2];
             A[offsetA + (i + 1) * strideA1 + i * strideA2] = 1;
-            dgemv(
-              "transpose",
-              M - i - 1,
-              N - i - 1,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1 + (i + 1) * strideA2,
-              A,
-              strideA1,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              0,
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dgemv(
-              "transpose",
-              M - i - 1,
-              i,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA1,
-              A,
-              strideA1,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              0,
-              Y,
-              strideY1,
-              offsetY + i * strideY2
-            );
-            dgemv(
-              "no-transpose",
-              N - i - 1,
-              i,
-              -1,
-              Y,
-              strideY1,
-              strideY2,
-              offsetY + (i + 1) * strideY1,
-              Y,
-              strideY1,
-              offsetY + i * strideY2,
-              1,
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dgemv(
-              "transpose",
-              M - i - 1,
-              i + 1,
-              1,
-              X,
-              strideX1,
-              strideX2,
-              offsetX + (i + 1) * strideX1,
-              A,
-              strideA1,
-              offsetA + (i + 1) * strideA1 + i * strideA2,
-              0,
-              Y,
-              strideY1,
-              offsetY + i * strideY2
-            );
-            dgemv(
-              "transpose",
-              i + 1,
-              N - i - 1,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + 1) * strideA2,
-              Y,
-              strideY1,
-              offsetY + i * strideY2,
-              1,
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
-            dscal(
-              N - i - 1,
-              TAUQ[offsetTAUQ + i * strideTAUQ],
-              Y,
-              strideY1,
-              offsetY + (i + 1) * strideY1 + i * strideY2
-            );
+            dgemv("transpose", M - i - 1, N - i - 1, 1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1 + (i + 1) * strideA2, A, strideA1, offsetA + (i + 1) * strideA1 + i * strideA2, 0, Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dgemv("transpose", M - i - 1, i, 1, A, strideA1, strideA2, offsetA + (i + 1) * strideA1, A, strideA1, offsetA + (i + 1) * strideA1 + i * strideA2, 0, Y, strideY1, offsetY + i * strideY2);
+            dgemv("no-transpose", N - i - 1, i, -1, Y, strideY1, strideY2, offsetY + (i + 1) * strideY1, Y, strideY1, offsetY + i * strideY2, 1, Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dgemv("transpose", M - i - 1, i + 1, 1, X, strideX1, strideX2, offsetX + (i + 1) * strideX1, A, strideA1, offsetA + (i + 1) * strideA1 + i * strideA2, 0, Y, strideY1, offsetY + i * strideY2);
+            dgemv("transpose", i + 1, N - i - 1, -1, A, strideA1, strideA2, offsetA + (i + 1) * strideA2, Y, strideY1, offsetY + i * strideY2, 1, Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
+            dscal(N - i - 1, TAUQ[offsetTAUQ + i * strideTAUQ], Y, strideY1, offsetY + (i + 1) * strideY1 + i * strideY2);
           }
         }
       }
@@ -9304,78 +7347,10 @@ var require_base64 = __commonJS({
       i = 0;
       if (nb >= 2 && nb < minmn && nx < minmn) {
         while (i < minmn - nx) {
-          dlabrd(
-            M - i,
-            N - i,
-            nb,
-            A,
-            strideA1,
-            strideA2,
-            offsetA + i * strideA1 + i * strideA2,
-            d,
-            strideD,
-            offsetD + i * strideD,
-            e,
-            strideE,
-            offsetE + i * strideE,
-            TAUQ,
-            strideTAUQ,
-            offsetTAUQ + i * strideTAUQ,
-            TAUP,
-            strideTAUP,
-            offsetTAUP + i * strideTAUP,
-            WORK,
-            1,
-            ldwrkx,
-            offsetWORK,
-            WORK,
-            1,
-            ldwrky,
-            offsetWORK + ldwrkx * nb
-          );
+          dlabrd(M - i, N - i, nb, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, d, strideD, offsetD + i * strideD, e, strideE, offsetE + i * strideE, TAUQ, strideTAUQ, offsetTAUQ + i * strideTAUQ, TAUP, strideTAUP, offsetTAUP + i * strideTAUP, WORK, 1, ldwrkx, offsetWORK, WORK, 1, ldwrky, offsetWORK + ldwrkx * nb);
           if (M - i - nb > 0 && N - i - nb > 0) {
-            dgemm2(
-              "no-transpose",
-              "transpose",
-              M - i - nb,
-              N - i - nb,
-              nb,
-              -1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + nb) * strideA1 + i * strideA2,
-              WORK,
-              1,
-              ldwrky,
-              offsetWORK + ldwrkx * nb + nb,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + nb) * strideA1 + (i + nb) * strideA2
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M - i - nb,
-              N - i - nb,
-              nb,
-              -1,
-              WORK,
-              1,
-              ldwrkx,
-              offsetWORK + nb,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + i * strideA1 + (i + nb) * strideA2,
-              1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + (i + nb) * strideA1 + (i + nb) * strideA2
-            );
+            dgemm2("no-transpose", "transpose", M - i - nb, N - i - nb, nb, -1, A, strideA1, strideA2, offsetA + (i + nb) * strideA1 + i * strideA2, WORK, 1, ldwrky, offsetWORK + ldwrkx * nb + nb, 1, A, strideA1, strideA2, offsetA + (i + nb) * strideA1 + (i + nb) * strideA2);
+            dgemm2("no-transpose", "no-transpose", M - i - nb, N - i - nb, nb, -1, WORK, 1, ldwrkx, offsetWORK + nb, A, strideA1, strideA2, offsetA + i * strideA1 + (i + nb) * strideA2, 1, A, strideA1, strideA2, offsetA + (i + nb) * strideA1 + (i + nb) * strideA2);
           }
           if (M >= N) {
             for (j = i; j < i + nb; j++) {
@@ -9391,29 +7366,7 @@ var require_base64 = __commonJS({
           i += nb;
         }
       }
-      dgebd2(
-        M - i,
-        N - i,
-        A,
-        strideA1,
-        strideA2,
-        offsetA + i * strideA1 + i * strideA2,
-        d,
-        strideD,
-        offsetD + i * strideD,
-        e,
-        strideE,
-        offsetE + i * strideE,
-        TAUQ,
-        strideTAUQ,
-        offsetTAUQ + i * strideTAUQ,
-        TAUP,
-        strideTAUP,
-        offsetTAUP + i * strideTAUP,
-        WORK,
-        strideWORK,
-        offsetWORK
-      );
+      dgebd2(M - i, N - i, A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2, d, strideD, offsetD + i * strideD, e, strideE, offsetE + i * strideE, TAUQ, strideTAUQ, offsetTAUQ + i * strideTAUQ, TAUP, strideTAUP, offsetTAUP + i * strideTAUP, WORK, strideWORK, offsetWORK);
       return 0;
     }
     module.exports = dgebrd;
@@ -10364,38 +8317,13 @@ var require_base71 = __commonJS({
             setZ(4 * n0 - pp, Z(4 * i0 - pp));
           }
           dmin2 = Math.min(dmin2, Z(4 * n0 + pp - 1));
-          setZ(4 * n0 + pp - 1, Math.min(
-            Z(4 * n0 + pp - 1),
-            Z(4 * i0 + pp - 1),
-            Z(4 * i0 + pp + 3)
-          ));
-          setZ(4 * n0 - pp, Math.min(
-            Z(4 * n0 - pp),
-            Z(4 * i0 - pp),
-            Z(4 * i0 - pp + 4)
-          ));
+          setZ(4 * n0 + pp - 1, Math.min(Z(4 * n0 + pp - 1), Z(4 * i0 + pp - 1), Z(4 * i0 + pp + 3)));
+          setZ(4 * n0 - pp, Math.min(Z(4 * n0 - pp), Z(4 * i0 - pp), Z(4 * i0 - pp + 4)));
           qmax = Math.max(qmax, Z(4 * i0 + pp - 3), Z(4 * i0 + pp + 1));
           dmin = -ZERO;
         }
       }
-      r = dlasq4(
-        i0,
-        n0,
-        z,
-        stride,
-        offset,
-        pp,
-        n0in,
-        dmin,
-        dmin1,
-        dmin2,
-        dn,
-        dn1,
-        dn2,
-        tau,
-        ttype,
-        g
-      );
+      r = dlasq4(i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g);
       tau = r.tau;
       ttype = r.ttype;
       g = r.g;
@@ -10948,30 +8876,7 @@ var require_base73 = __commonJS({
           if (i0 > n0) {
             break;
           }
-          r = dlasq3(
-            i0,
-            n0,
-            z,
-            stride,
-            offset,
-            pp,
-            dmin,
-            sigma,
-            desig,
-            qmax,
-            nfail,
-            iter,
-            ndiv,
-            true,
-            ttype,
-            dmin1,
-            dmin2,
-            dn,
-            dn1,
-            dn2,
-            g,
-            tau
-          );
+          r = dlasq3(i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, true, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau);
           n0 = r.n0;
           pp = r.pp;
           dmin = r.dmin;
@@ -11647,42 +9552,10 @@ var require_base77 = __commonJS({
           WORK[offsetWORK + (nm1 + i) * strideWORK] = sn;
         }
         if (nru > 0) {
-          dlasr(
-            "right",
-            "variable",
-            "forward",
-            nru,
-            N,
-            WORK,
-            strideWORK,
-            offsetWORK,
-            WORK,
-            strideWORK,
-            offsetWORK + nm1 * strideWORK,
-            U,
-            strideU1,
-            strideU2,
-            offsetU
-          );
+          dlasr("right", "variable", "forward", nru, N, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, U, strideU1, strideU2, offsetU);
         }
         if (ncc > 0) {
-          dlasr(
-            "left",
-            "variable",
-            "forward",
-            N,
-            ncc,
-            WORK,
-            strideWORK,
-            offsetWORK,
-            WORK,
-            strideWORK,
-            offsetWORK + nm1 * strideWORK,
-            C,
-            strideC1,
-            strideC2,
-            offsetC
-          );
+          dlasr("left", "variable", "forward", N, ncc, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, C, strideC1, strideC2, offsetC);
         }
       }
       tolmul = Math.max(TEN, Math.min(HNDRD, Math.pow(eps, MEIGTH)));
@@ -11775,11 +9648,7 @@ var require_base77 = __commonJS({
           ll = 0;
         }
         if (ll === m - 1) {
-          svd2 = dlasv2(
-            d[offsetD + (m - 1) * strideD],
-            e[offsetE + (m - 1) * strideE],
-            d[offsetD + m * strideD]
-          );
+          svd2 = dlasv2(d[offsetD + (m - 1) * strideD], e[offsetE + (m - 1) * strideE], d[offsetD + m * strideD]);
           sigmn = svd2.ssmin;
           sigmx = svd2.ssmax;
           sinr = svd2.snr;
@@ -11790,43 +9659,13 @@ var require_base77 = __commonJS({
           e[offsetE + (m - 1) * strideE] = ZERO;
           d[offsetD + m * strideD] = sigmn;
           if (ncvt > 0) {
-            drot(
-              ncvt,
-              VT,
-              strideVT2,
-              offsetVT + (m - 1) * strideVT1,
-              VT,
-              strideVT2,
-              offsetVT + m * strideVT1,
-              cosr,
-              sinr
-            );
+            drot(ncvt, VT, strideVT2, offsetVT + (m - 1) * strideVT1, VT, strideVT2, offsetVT + m * strideVT1, cosr, sinr);
           }
           if (nru > 0) {
-            drot(
-              nru,
-              U,
-              strideU1,
-              offsetU + (m - 1) * strideU2,
-              U,
-              strideU1,
-              offsetU + m * strideU2,
-              cosl,
-              sinl
-            );
+            drot(nru, U, strideU1, offsetU + (m - 1) * strideU2, U, strideU1, offsetU + m * strideU2, cosl, sinl);
           }
           if (ncc > 0) {
-            drot(
-              ncc,
-              C,
-              strideC2,
-              offsetC + (m - 1) * strideC1,
-              C,
-              strideC2,
-              offsetC + m * strideC1,
-              cosl,
-              sinl
-            );
+            drot(ncc, C, strideC2, offsetC + (m - 1) * strideC1, C, strideC2, offsetC + m * strideC1, cosl, sinl);
           }
           m -= 2;
           continue;
@@ -11886,22 +9725,12 @@ var require_base77 = __commonJS({
         } else {
           if (idir === 1) {
             sll = Math.abs(d[offsetD + ll * strideD]);
-            dlas2(
-              d[offsetD + (m - 1) * strideD],
-              e[offsetE + (m - 1) * strideE],
-              d[offsetD + m * strideD],
-              dout
-            );
+            dlas2(d[offsetD + (m - 1) * strideD], e[offsetE + (m - 1) * strideE], d[offsetD + m * strideD], dout);
             shift = dout[0];
             r = dout[1];
           } else {
             sll = Math.abs(d[offsetD + m * strideD]);
-            dlas2(
-              d[offsetD + ll * strideD],
-              e[offsetE + ll * strideE],
-              d[offsetD + (ll + 1) * strideD],
-              dout
-            );
+            dlas2(d[offsetD + ll * strideD], e[offsetE + ll * strideE], d[offsetD + (ll + 1) * strideD], dout);
             shift = dout[0];
             r = dout[1];
           }
@@ -11937,61 +9766,13 @@ var require_base77 = __commonJS({
             d[offsetD + m * strideD] = h * oldcs;
             e[offsetE + (m - 1) * strideE] = h * oldsn;
             if (ncvt > 0) {
-              dlasr(
-                "left",
-                "variable",
-                "forward",
-                m - ll + 1,
-                ncvt,
-                WORK,
-                strideWORK,
-                offsetWORK,
-                WORK,
-                strideWORK,
-                offsetWORK + nm1 * strideWORK,
-                VT,
-                strideVT1,
-                strideVT2,
-                offsetVT + ll * strideVT1
-              );
+              dlasr("left", "variable", "forward", m - ll + 1, ncvt, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, VT, strideVT1, strideVT2, offsetVT + ll * strideVT1);
             }
             if (nru > 0) {
-              dlasr(
-                "right",
-                "variable",
-                "forward",
-                nru,
-                m - ll + 1,
-                WORK,
-                strideWORK,
-                offsetWORK + nm12 * strideWORK,
-                WORK,
-                strideWORK,
-                offsetWORK + nm13 * strideWORK,
-                U,
-                strideU1,
-                strideU2,
-                offsetU + ll * strideU2
-              );
+              dlasr("right", "variable", "forward", nru, m - ll + 1, WORK, strideWORK, offsetWORK + nm12 * strideWORK, WORK, strideWORK, offsetWORK + nm13 * strideWORK, U, strideU1, strideU2, offsetU + ll * strideU2);
             }
             if (ncc > 0) {
-              dlasr(
-                "left",
-                "variable",
-                "forward",
-                m - ll + 1,
-                ncc,
-                WORK,
-                strideWORK,
-                offsetWORK + nm12 * strideWORK,
-                WORK,
-                strideWORK,
-                offsetWORK + nm13 * strideWORK,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + ll * strideC1
-              );
+              dlasr("left", "variable", "forward", m - ll + 1, ncc, WORK, strideWORK, offsetWORK + nm12 * strideWORK, WORK, strideWORK, offsetWORK + nm13 * strideWORK, C, strideC1, strideC2, offsetC + ll * strideC1);
             }
             if (Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
               e[offsetE + (m - 1) * strideE] = ZERO;
@@ -12020,61 +9801,13 @@ var require_base77 = __commonJS({
             d[offsetD + ll * strideD] = h * oldcs;
             e[offsetE + ll * strideE] = h * oldsn;
             if (ncvt > 0) {
-              dlasr(
-                "left",
-                "variable",
-                "backward",
-                m - ll + 1,
-                ncvt,
-                WORK,
-                strideWORK,
-                offsetWORK + nm12 * strideWORK,
-                WORK,
-                strideWORK,
-                offsetWORK + nm13 * strideWORK,
-                VT,
-                strideVT1,
-                strideVT2,
-                offsetVT + ll * strideVT1
-              );
+              dlasr("left", "variable", "backward", m - ll + 1, ncvt, WORK, strideWORK, offsetWORK + nm12 * strideWORK, WORK, strideWORK, offsetWORK + nm13 * strideWORK, VT, strideVT1, strideVT2, offsetVT + ll * strideVT1);
             }
             if (nru > 0) {
-              dlasr(
-                "right",
-                "variable",
-                "backward",
-                nru,
-                m - ll + 1,
-                WORK,
-                strideWORK,
-                offsetWORK,
-                WORK,
-                strideWORK,
-                offsetWORK + nm1 * strideWORK,
-                U,
-                strideU1,
-                strideU2,
-                offsetU + ll * strideU2
-              );
+              dlasr("right", "variable", "backward", nru, m - ll + 1, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, U, strideU1, strideU2, offsetU + ll * strideU2);
             }
             if (ncc > 0) {
-              dlasr(
-                "left",
-                "variable",
-                "backward",
-                m - ll + 1,
-                ncc,
-                WORK,
-                strideWORK,
-                offsetWORK,
-                WORK,
-                strideWORK,
-                offsetWORK + nm1 * strideWORK,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + ll * strideC1
-              );
+              dlasr("left", "variable", "backward", m - ll + 1, ncc, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, C, strideC1, strideC2, offsetC + ll * strideC1);
             }
             if (Math.abs(e[offsetE + ll * strideE]) <= thresh) {
               e[offsetE + ll * strideE] = ZERO;
@@ -12112,61 +9845,13 @@ var require_base77 = __commonJS({
           }
           e[offsetE + (m - 1) * strideE] = f;
           if (ncvt > 0) {
-            dlasr(
-              "left",
-              "variable",
-              "forward",
-              m - ll + 1,
-              ncvt,
-              WORK,
-              strideWORK,
-              offsetWORK,
-              WORK,
-              strideWORK,
-              offsetWORK + nm1 * strideWORK,
-              VT,
-              strideVT1,
-              strideVT2,
-              offsetVT + ll * strideVT1
-            );
+            dlasr("left", "variable", "forward", m - ll + 1, ncvt, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, VT, strideVT1, strideVT2, offsetVT + ll * strideVT1);
           }
           if (nru > 0) {
-            dlasr(
-              "right",
-              "variable",
-              "forward",
-              nru,
-              m - ll + 1,
-              WORK,
-              strideWORK,
-              offsetWORK + nm12 * strideWORK,
-              WORK,
-              strideWORK,
-              offsetWORK + nm13 * strideWORK,
-              U,
-              strideU1,
-              strideU2,
-              offsetU + ll * strideU2
-            );
+            dlasr("right", "variable", "forward", nru, m - ll + 1, WORK, strideWORK, offsetWORK + nm12 * strideWORK, WORK, strideWORK, offsetWORK + nm13 * strideWORK, U, strideU1, strideU2, offsetU + ll * strideU2);
           }
           if (ncc > 0) {
-            dlasr(
-              "left",
-              "variable",
-              "forward",
-              m - ll + 1,
-              ncc,
-              WORK,
-              strideWORK,
-              offsetWORK + nm12 * strideWORK,
-              WORK,
-              strideWORK,
-              offsetWORK + nm13 * strideWORK,
-              C,
-              strideC1,
-              strideC2,
-              offsetC + ll * strideC1
-            );
+            dlasr("left", "variable", "forward", m - ll + 1, ncc, WORK, strideWORK, offsetWORK + nm12 * strideWORK, WORK, strideWORK, offsetWORK + nm13 * strideWORK, C, strideC1, strideC2, offsetC + ll * strideC1);
           }
           if (Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
             e[offsetE + (m - 1) * strideE] = ZERO;
@@ -12206,61 +9891,13 @@ var require_base77 = __commonJS({
             e[offsetE + ll * strideE] = ZERO;
           }
           if (ncvt > 0) {
-            dlasr(
-              "left",
-              "variable",
-              "backward",
-              m - ll + 1,
-              ncvt,
-              WORK,
-              strideWORK,
-              offsetWORK + nm12 * strideWORK,
-              WORK,
-              strideWORK,
-              offsetWORK + nm13 * strideWORK,
-              VT,
-              strideVT1,
-              strideVT2,
-              offsetVT + ll * strideVT1
-            );
+            dlasr("left", "variable", "backward", m - ll + 1, ncvt, WORK, strideWORK, offsetWORK + nm12 * strideWORK, WORK, strideWORK, offsetWORK + nm13 * strideWORK, VT, strideVT1, strideVT2, offsetVT + ll * strideVT1);
           }
           if (nru > 0) {
-            dlasr(
-              "right",
-              "variable",
-              "backward",
-              nru,
-              m - ll + 1,
-              WORK,
-              strideWORK,
-              offsetWORK,
-              WORK,
-              strideWORK,
-              offsetWORK + nm1 * strideWORK,
-              U,
-              strideU1,
-              strideU2,
-              offsetU + ll * strideU2
-            );
+            dlasr("right", "variable", "backward", nru, m - ll + 1, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, U, strideU1, strideU2, offsetU + ll * strideU2);
           }
           if (ncc > 0) {
-            dlasr(
-              "left",
-              "variable",
-              "backward",
-              m - ll + 1,
-              ncc,
-              WORK,
-              strideWORK,
-              offsetWORK,
-              WORK,
-              strideWORK,
-              offsetWORK + nm1 * strideWORK,
-              C,
-              strideC1,
-              strideC2,
-              offsetC + ll * strideC1
-            );
+            dlasr("left", "variable", "backward", m - ll + 1, ncc, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + nm1 * strideWORK, C, strideC1, strideC2, offsetC + ll * strideC1);
           }
         }
       }
@@ -12293,37 +9930,13 @@ var require_base77 = __commonJS({
           d[offsetD + isub * strideD] = d[offsetD + (N - 1 - i) * strideD];
           d[offsetD + (N - 1 - i) * strideD] = smin;
           if (ncvt > 0) {
-            dswap(
-              ncvt,
-              VT,
-              strideVT2,
-              offsetVT + isub * strideVT1,
-              VT,
-              strideVT2,
-              offsetVT + (N - 1 - i) * strideVT1
-            );
+            dswap(ncvt, VT, strideVT2, offsetVT + isub * strideVT1, VT, strideVT2, offsetVT + (N - 1 - i) * strideVT1);
           }
           if (nru > 0) {
-            dswap(
-              nru,
-              U,
-              strideU1,
-              offsetU + isub * strideU2,
-              U,
-              strideU1,
-              offsetU + (N - 1 - i) * strideU2
-            );
+            dswap(nru, U, strideU1, offsetU + isub * strideU2, U, strideU1, offsetU + (N - 1 - i) * strideU2);
           }
           if (ncc > 0) {
-            dswap(
-              ncc,
-              C,
-              strideC2,
-              offsetC + isub * strideC1,
-              C,
-              strideC2,
-              offsetC + (N - 1 - i) * strideC1
-            );
+            dswap(ncc, C, strideC2, offsetC + isub * strideC1, C, strideC2, offsetC + (N - 1 - i) * strideC1);
           }
         }
       }
@@ -12416,16 +10029,7 @@ var require_base78 = __commonJS({
       if (M === 0 || N === 0) {
         return 0;
       }
-      wsz = Math.max(
-        1,
-        5 * minmn,
-        // bdspac
-        3 * minmn + Math.max(M, N),
-        // general
-        2 * Math.max(M, N) * Math.max(M, N) + // two temp NxN or MxM matrices
-        3 * Math.max(M, N) + Math.max(M, N)
-        // + tau + work
-      );
+      wsz = Math.max(1, 5 * minmn, 3 * minmn + Math.max(M, N), 2 * Math.max(M, N) * Math.max(M, N) + 3 * Math.max(M, N) + Math.max(M, N));
       WK = new Float64Array2(wsz);
       DUM = new Float64Array2(1);
       eps = dlamch("precision");
@@ -12446,413 +10050,76 @@ var require_base78 = __commonJS({
           if (wntun) {
             itau = 0;
             iwork = itau + N;
-            dgeqrf(
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              itau,
-              WK,
-              1,
-              iwork
-            );
+            dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
             if (N > 1) {
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                A,
-                sa1,
-                sa2,
-                offsetA + sa1
-              );
+              dlaset("lower", N - 1, N - 1, 0, 0, A, sa1, sa2, offsetA + sa1);
             }
             ie = 0;
             itauq = ie + N;
             itaup = itauq + N;
             iwork = itaup + N;
-            dgebrd(
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
+            dgebrd(N, N, A, sa1, sa2, offsetA, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
             ncvt = 0;
             if (wntvo || wntvas) {
               dorgbr("apply-P", N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork);
               ncvt = N;
             }
             iwork = ie + N;
-            info = dbdsqr(
-              "upper",
-              N,
-              ncvt,
-              0,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              // VT (or dummy if ncvt=0)
-              DUM,
-              1,
-              1,
-              0,
-              // U dummy (nru=0)
-              DUM,
-              1,
-              1,
-              0,
-              // C dummy (ncc=0)
-              WK,
-              1,
-              iwork
-            );
+            info = dbdsqr("upper", N, ncvt, 0, 0, s, strideS, offsetS, WK, 1, ie, A, sa1, sa2, offsetA, DUM, 1, 1, 0, DUM, 1, 1, 0, WK, 1, iwork);
             if (wntvas) {
-              dlacpy(
-                "full",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                VT,
-                svt1,
-                svt2,
-                offsetVT
-              );
+              dlacpy("full", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
             }
           } else if (wntuo && wntvn) {
             ir = 0;
             ldwrkr = N;
             itau = ir + ldwrkr * N;
             iwork = itau + N;
-            dgeqrf(
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              itau,
-              WK,
-              1,
-              iwork
-            );
-            dlacpy(
-              "upper",
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrkr,
-              ir
-            );
-            dlaset(
-              "lower",
-              N - 1,
-              N - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrkr,
-              ir + 1
-            );
+            dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+            dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir);
+            dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrkr, ir + 1);
             dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
             ie = itau;
             itauq = ie + N;
             itaup = itauq + N;
             iwork = itaup + N;
-            dgebrd(
-              N,
-              N,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
+            dgebrd(N, N, WK, 1, ldwrkr, ir, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
             dorgbr("apply-Q", N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork);
             iwork = ie + N;
-            info = dbdsqr(
-              "upper",
-              N,
-              0,
-              N,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              DUM,
-              1,
-              1,
-              0,
-              // VT dummy
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              // U = WORK(IR)
-              DUM,
-              1,
-              1,
-              0,
-              // C dummy
-              WK,
-              1,
-              iwork
-            );
+            info = dbdsqr("upper", N, 0, N, 0, s, strideS, offsetS, WK, 1, ie, DUM, 1, 1, 0, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, WK, 1, iwork);
             iu = ie + N;
             ldwrku = N;
             for (i = 0; i < M; i += ldwrku) {
               chunk = Math.min(M - i, ldwrku);
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                chunk,
-                N,
-                N,
-                1,
-                A,
-                sa1,
-                sa2,
-                offsetA + i * sa1,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                0,
-                WK,
-                1,
-                ldwrku,
-                iu
-              );
-              dlacpy(
-                "full",
-                chunk,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                A,
-                sa1,
-                sa2,
-                offsetA + i * sa1
-              );
+              dgemm2("no-transpose", "no-transpose", chunk, N, N, 1, A, sa1, sa2, offsetA + i * sa1, WK, 1, ldwrkr, ir, 0, WK, 1, ldwrku, iu);
+              dlacpy("full", chunk, N, WK, 1, ldwrku, iu, A, sa1, sa2, offsetA + i * sa1);
             }
           } else if (wntuo && wntvas) {
             ir = 0;
             ldwrkr = N;
             itau = ir + ldwrkr * N;
             iwork = itau + N;
-            dgeqrf(
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              itau,
-              WK,
-              1,
-              iwork
-            );
-            dlacpy(
-              "upper",
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+            dlacpy("upper", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
             if (N > 1) {
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                VT,
-                svt1,
-                svt2,
-                offsetVT + svt1
-              );
+              dlaset("lower", N - 1, N - 1, 0, 0, VT, svt1, svt2, offsetVT + svt1);
             }
             dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
             ie = itau;
             itauq = ie + N;
             itaup = itauq + N;
             iwork = itaup + N;
-            dgebrd(
-              N,
-              N,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
-            dlacpy(
-              "lower",
-              N,
-              N,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              WK,
-              1,
-              ldwrkr,
-              ir
-            );
+            dgebrd(N, N, VT, svt1, svt2, offsetVT, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+            dlacpy("lower", N, N, VT, svt1, svt2, offsetVT, WK, 1, ldwrkr, ir);
             dorgbr("apply-Q", N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork);
             dorgbr("apply-P", N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
             iwork = ie + N;
-            info = dbdsqr(
-              "upper",
-              N,
-              N,
-              N,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
+            info = dbdsqr("upper", N, N, N, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, WK, 1, iwork);
             iu = ie + N;
             ldwrku = N;
             for (i = 0; i < M; i += ldwrku) {
               chunk = Math.min(M - i, ldwrku);
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                chunk,
-                N,
-                N,
-                1,
-                A,
-                sa1,
-                sa2,
-                offsetA + i * sa1,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                0,
-                WK,
-                1,
-                ldwrku,
-                iu
-              );
-              dlacpy(
-                "full",
-                chunk,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                A,
-                sa1,
-                sa2,
-                offsetA + i * sa1
-              );
+              dgemm2("no-transpose", "no-transpose", chunk, N, N, 1, A, sa1, sa2, offsetA + i * sa1, WK, 1, ldwrkr, ir, 0, WK, 1, ldwrku, iu);
+              dlacpy("full", chunk, N, WK, 1, ldwrku, iu, A, sa1, sa2, offsetA + i * sa1);
             }
           } else if (wntus) {
             if (wntvn) {
@@ -12860,124 +10127,19 @@ var require_base78 = __commonJS({
               ldwrkr = N;
               itau = ir + ldwrkr * N;
               iwork = itau + N;
-              dgeqrf(
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                itau,
-                WK,
-                1,
-                iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrkr,
-                ir
-              );
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                WK,
-                1,
-                ldwrkr,
-                ir + 1
-              );
+              dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+              dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir);
+              dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrkr, ir + 1);
               dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
               ie = itau;
               itauq = ie + N;
               itaup = itauq + N;
               iwork = itaup + N;
-              dgebrd(
-                N,
-                N,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                itauq,
-                WK,
-                1,
-                itaup,
-                WK,
-                1,
-                iwork,
-                wsz - iwork
-              );
+              dgebrd(N, N, WK, 1, ldwrkr, ir, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
               dorgbr("apply-Q", N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork);
               iwork = ie + N;
-              info = dbdsqr(
-                "upper",
-                N,
-                0,
-                N,
-                0,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                iwork
-              );
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N,
-                N,
-                1,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                0,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
+              info = dbdsqr("upper", N, 0, N, 0, s, strideS, offsetS, WK, 1, ie, DUM, 1, 1, 0, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, WK, 1, iwork);
+              dgemm2("no-transpose", "no-transpose", M, N, N, 1, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir, 0, U, su1, su2, offsetU);
             } else if (wntvo) {
               iu = 0;
               ldwrku = N;
@@ -12985,290 +10147,42 @@ var require_base78 = __commonJS({
               ldwrkr = N;
               itau = ir + ldwrkr * N;
               iwork = itau + N;
-              dgeqrf(
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                itau,
-                WK,
-                1,
-                iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrku,
-                iu
-              );
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                WK,
-                1,
-                ldwrku,
-                iu + 1
-              );
+              dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+              dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+              dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrku, iu + 1);
               dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
               ie = itau;
               itauq = ie + N;
               itaup = itauq + N;
               iwork = itaup + N;
-              dgebrd(
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                itauq,
-                WK,
-                1,
-                itaup,
-                WK,
-                1,
-                iwork,
-                wsz - iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                WK,
-                1,
-                ldwrkr,
-                ir
-              );
+              dgebrd(N, N, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+              dlacpy("upper", N, N, WK, 1, ldwrku, iu, WK, 1, ldwrkr, ir);
               dorgbr("apply-Q", N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork);
               dorgbr("apply-P", N, N, N, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork);
               iwork = ie + N;
-              info = dbdsqr(
-                "upper",
-                N,
-                N,
-                N,
-                0,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                // VT = WORK(IR)
-                WK,
-                1,
-                ldwrku,
-                iu,
-                // U = WORK(IU)
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                iwork
-              );
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N,
-                N,
-                1,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                0,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
-              dlacpy(
-                "full",
-                N,
-                N,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                A,
-                sa1,
-                sa2,
-                offsetA
-              );
+              info = dbdsqr("upper", N, N, N, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrkr, ir, WK, 1, ldwrku, iu, DUM, 1, 1, 0, WK, 1, iwork);
+              dgemm2("no-transpose", "no-transpose", M, N, N, 1, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu, 0, U, su1, su2, offsetU);
+              dlacpy("full", N, N, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA);
             } else if (wntvas) {
               iu = 0;
               ldwrku = N;
               itau = iu + ldwrku * N;
               iwork = itau + N;
-              dgeqrf(
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                itau,
-                WK,
-                1,
-                iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrku,
-                iu
-              );
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                WK,
-                1,
-                ldwrku,
-                iu + 1
-              );
+              dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+              dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+              dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrku, iu + 1);
               dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
               ie = itau;
               itauq = ie + N;
               itaup = itauq + N;
               iwork = itaup + N;
-              dgebrd(
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                itauq,
-                WK,
-                1,
-                itaup,
-                WK,
-                1,
-                iwork,
-                wsz - iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                VT,
-                svt1,
-                svt2,
-                offsetVT
-              );
+              dgebrd(N, N, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+              dlacpy("upper", N, N, WK, 1, ldwrku, iu, VT, svt1, svt2, offsetVT);
               dorgbr("apply-Q", N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork);
               dorgbr("apply-P", N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
               iwork = ie + N;
-              info = dbdsqr(
-                "upper",
-                N,
-                N,
-                N,
-                0,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                VT,
-                svt1,
-                svt2,
-                offsetVT,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                iwork
-              );
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N,
-                N,
-                1,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                0,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
+              info = dbdsqr("upper", N, N, N, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, WK, 1, ldwrku, iu, DUM, 1, 1, 0, WK, 1, iwork);
+              dgemm2("no-transpose", "no-transpose", M, N, N, 1, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu, 0, U, su1, su2, offsetU);
             }
           } else if (wntua) {
             if (wntvn) {
@@ -13276,150 +10190,21 @@ var require_base78 = __commonJS({
               ldwrkr = N;
               itau = ir + ldwrkr * N;
               iwork = itau + N;
-              dgeqrf(
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                itau,
-                WK,
-                1,
-                iwork
-              );
-              dlacpy(
-                "lower",
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrkr,
-                ir
-              );
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                WK,
-                1,
-                ldwrkr,
-                ir + 1
-              );
+              dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+              dlacpy("lower", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
+              dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir);
+              dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrkr, ir + 1);
               dorgqr(M, M, N, U, su1, su2, offsetU, WK, 1, itau, WK, 1, iwork);
               ie = itau;
               itauq = ie + N;
               itaup = itauq + N;
               iwork = itaup + N;
-              dgebrd(
-                N,
-                N,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                itauq,
-                WK,
-                1,
-                itaup,
-                WK,
-                1,
-                iwork,
-                wsz - iwork
-              );
+              dgebrd(N, N, WK, 1, ldwrkr, ir, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
               dorgbr("apply-Q", N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork);
               iwork = ie + N;
-              info = dbdsqr(
-                "upper",
-                N,
-                0,
-                N,
-                0,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                iwork
-              );
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N,
-                N,
-                1,
-                U,
-                su1,
-                su2,
-                offsetU,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                0,
-                A,
-                sa1,
-                sa2,
-                offsetA
-              );
-              dlacpy(
-                "full",
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
+              info = dbdsqr("upper", N, 0, N, 0, s, strideS, offsetS, WK, 1, ie, DUM, 1, 1, 0, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, WK, 1, iwork);
+              dgemm2("no-transpose", "no-transpose", M, N, N, 1, U, su1, su2, offsetU, WK, 1, ldwrkr, ir, 0, A, sa1, sa2, offsetA);
+              dlacpy("full", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
             } else if (wntvo) {
               iu = 0;
               ldwrku = N;
@@ -13427,340 +10212,46 @@ var require_base78 = __commonJS({
               ldwrkr = N;
               itau = ir + ldwrkr * N;
               iwork = itau + N;
-              dgeqrf(
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                itau,
-                WK,
-                1,
-                iwork
-              );
-              dlacpy(
-                "lower",
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
+              dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+              dlacpy("lower", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
               dorgqr(M, M, N, U, su1, su2, offsetU, WK, 1, itau, WK, 1, iwork);
-              dlacpy(
-                "upper",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrku,
-                iu
-              );
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                WK,
-                1,
-                ldwrku,
-                iu + 1
-              );
+              dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+              dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrku, iu + 1);
               ie = itau;
               itauq = ie + N;
               itaup = itauq + N;
               iwork = itaup + N;
-              dgebrd(
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                itauq,
-                WK,
-                1,
-                itaup,
-                WK,
-                1,
-                iwork,
-                wsz - iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                WK,
-                1,
-                ldwrkr,
-                ir
-              );
+              dgebrd(N, N, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+              dlacpy("upper", N, N, WK, 1, ldwrku, iu, WK, 1, ldwrkr, ir);
               dorgbr("apply-Q", N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork);
               dorgbr("apply-P", N, N, N, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork);
               iwork = ie + N;
-              info = dbdsqr(
-                "upper",
-                N,
-                N,
-                N,
-                0,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                iwork
-              );
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N,
-                N,
-                1,
-                U,
-                su1,
-                su2,
-                offsetU,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                0,
-                A,
-                sa1,
-                sa2,
-                offsetA
-              );
-              dlacpy(
-                "full",
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
-              dlacpy(
-                "full",
-                N,
-                N,
-                WK,
-                1,
-                ldwrkr,
-                ir,
-                A,
-                sa1,
-                sa2,
-                offsetA
-              );
+              info = dbdsqr("upper", N, N, N, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrkr, ir, WK, 1, ldwrku, iu, DUM, 1, 1, 0, WK, 1, iwork);
+              dgemm2("no-transpose", "no-transpose", M, N, N, 1, U, su1, su2, offsetU, WK, 1, ldwrku, iu, 0, A, sa1, sa2, offsetA);
+              dlacpy("full", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
+              dlacpy("full", N, N, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA);
             } else if (wntvas) {
               iu = 0;
               ldwrku = N;
               itau = iu + ldwrku * N;
               iwork = itau + N;
-              dgeqrf(
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                itau,
-                WK,
-                1,
-                iwork
-              );
-              dlacpy(
-                "lower",
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
+              dgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
+              dlacpy("lower", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
               dorgqr(M, M, N, U, su1, su2, offsetU, WK, 1, itau, WK, 1, iwork);
-              dlacpy(
-                "upper",
-                N,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                WK,
-                1,
-                ldwrku,
-                iu
-              );
-              dlaset(
-                "lower",
-                N - 1,
-                N - 1,
-                0,
-                0,
-                WK,
-                1,
-                ldwrku,
-                iu + 1
-              );
+              dlacpy("upper", N, N, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+              dlaset("lower", N - 1, N - 1, 0, 0, WK, 1, ldwrku, iu + 1);
               ie = itau;
               itauq = ie + N;
               itaup = itauq + N;
               iwork = itaup + N;
-              dgebrd(
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                WK,
-                1,
-                itauq,
-                WK,
-                1,
-                itaup,
-                WK,
-                1,
-                iwork,
-                wsz - iwork
-              );
-              dlacpy(
-                "upper",
-                N,
-                N,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                VT,
-                svt1,
-                svt2,
-                offsetVT
-              );
+              dgebrd(N, N, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+              dlacpy("upper", N, N, WK, 1, ldwrku, iu, VT, svt1, svt2, offsetVT);
               dorgbr("apply-Q", N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork);
               dorgbr("apply-P", N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
               iwork = ie + N;
-              info = dbdsqr(
-                "upper",
-                N,
-                N,
-                N,
-                0,
-                s,
-                strideS,
-                offsetS,
-                WK,
-                1,
-                ie,
-                VT,
-                svt1,
-                svt2,
-                offsetVT,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                DUM,
-                1,
-                1,
-                0,
-                WK,
-                1,
-                iwork
-              );
-              dgemm2(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N,
-                N,
-                1,
-                U,
-                su1,
-                su2,
-                offsetU,
-                WK,
-                1,
-                ldwrku,
-                iu,
-                0,
-                A,
-                sa1,
-                sa2,
-                offsetA
-              );
-              dlacpy(
-                "full",
-                M,
-                N,
-                A,
-                sa1,
-                sa2,
-                offsetA,
-                U,
-                su1,
-                su2,
-                offsetU
-              );
+              info = dbdsqr("upper", N, N, N, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, WK, 1, ldwrku, iu, DUM, 1, 1, 0, WK, 1, iwork);
+              dgemm2("no-transpose", "no-transpose", M, N, N, 1, U, su1, su2, offsetU, WK, 1, ldwrku, iu, 0, A, sa1, sa2, offsetA);
+              dlacpy("full", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
             }
           }
         } else {
@@ -13768,61 +10259,14 @@ var require_base78 = __commonJS({
           itauq = ie + N;
           itaup = itauq + N;
           iwork = itaup + N;
-          dgebrd(
-            M,
-            N,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            WK,
-            1,
-            itauq,
-            WK,
-            1,
-            itaup,
-            WK,
-            1,
-            iwork,
-            wsz - iwork
-          );
+          dgebrd(M, N, A, sa1, sa2, offsetA, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
           if (wntuas) {
-            dlacpy(
-              "lower",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              U,
-              su1,
-              su2,
-              offsetU
-            );
+            dlacpy("lower", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
             ncu = wntus ? N : M;
             dorgbr("apply-Q", M, ncu, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
           }
           if (wntvas) {
-            dlacpy(
-              "upper",
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            dlacpy("upper", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
             dorgbr("apply-P", N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
           }
           if (wntuo) {
@@ -13841,92 +10285,11 @@ var require_base78 = __commonJS({
             ncvt = N;
           }
           if (!wntuo && !wntvo) {
-            info = dbdsqr(
-              "upper",
-              N,
-              ncvt,
-              nru,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              U,
-              su1,
-              su2,
-              offsetU,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
+            info = dbdsqr("upper", N, ncvt, nru, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
           } else if (!wntuo && wntvo) {
-            info = dbdsqr(
-              "upper",
-              N,
-              ncvt,
-              nru,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              U,
-              su1,
-              su2,
-              offsetU,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
+            info = dbdsqr("upper", N, ncvt, nru, 0, s, strideS, offsetS, WK, 1, ie, A, sa1, sa2, offsetA, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
           } else {
-            info = dbdsqr(
-              "upper",
-              N,
-              ncvt,
-              nru,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
+            info = dbdsqr("upper", N, ncvt, nru, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, A, sa1, sa2, offsetA, DUM, 1, 1, 0, WK, 1, iwork);
           }
         }
       } else if (N >= mnthr) {
@@ -13935,46 +10298,13 @@ var require_base78 = __commonJS({
           iwork = itau + M;
           dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
           if (M > 1) {
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              A,
-              sa1,
-              sa2,
-              offsetA + sa2
-            );
+            dlaset("upper", M - 1, M - 1, 0, 0, A, sa1, sa2, offsetA + sa2);
           }
           ie = 0;
           itauq = ie + M;
           itaup = itauq + M;
           iwork = itaup + M;
-          dgebrd(
-            M,
-            M,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            WK,
-            1,
-            itauq,
-            WK,
-            1,
-            itaup,
-            WK,
-            1,
-            iwork,
-            wsz - iwork
-          );
+          dgebrd(M, M, A, sa1, sa2, offsetA, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
           if (wntuo || wntuas) {
             dorgbr("apply-Q", M, M, M, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork);
           }
@@ -13983,48 +10313,9 @@ var require_base78 = __commonJS({
           if (wntuo || wntuas) {
             nru = M;
           }
-          info = dbdsqr(
-            "upper",
-            M,
-            0,
-            nru,
-            0,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            DUM,
-            1,
-            1,
-            0,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            DUM,
-            1,
-            1,
-            0,
-            WK,
-            1,
-            iwork
-          );
+          info = dbdsqr("upper", M, 0, nru, 0, s, strideS, offsetS, WK, 1, ie, DUM, 1, 1, 0, A, sa1, sa2, offsetA, DUM, 1, 1, 0, WK, 1, iwork);
           if (wntuas) {
-            dlacpy(
-              "full",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              U,
-              su1,
-              su2,
-              offsetU
-            );
+            dlacpy("full", M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
           }
         } else if (wntvo && wntun) {
           ir = 0;
@@ -14032,128 +10323,24 @@ var require_base78 = __commonJS({
           itau = ir + ldwrkr * M;
           iwork = itau + M;
           dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-          dlacpy(
-            "lower",
-            M,
-            M,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            WK,
-            1,
-            ldwrkr,
-            ir
-          );
-          dlaset(
-            "upper",
-            M - 1,
-            M - 1,
-            0,
-            0,
-            WK,
-            1,
-            ldwrkr,
-            ir + ldwrkr
-          );
+          dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir);
+          dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrkr, ir + ldwrkr);
           dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
           ie = itau;
           itauq = ie + M;
           itaup = itauq + M;
           iwork = itaup + M;
-          dgebrd(
-            M,
-            M,
-            WK,
-            1,
-            ldwrkr,
-            ir,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            WK,
-            1,
-            itauq,
-            WK,
-            1,
-            itaup,
-            WK,
-            1,
-            iwork,
-            wsz - iwork
-          );
+          dgebrd(M, M, WK, 1, ldwrkr, ir, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
           dorgbr("apply-P", M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork);
           iwork = ie + M;
-          info = dbdsqr(
-            "upper",
-            M,
-            M,
-            0,
-            0,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            WK,
-            1,
-            ldwrkr,
-            ir,
-            DUM,
-            1,
-            1,
-            0,
-            DUM,
-            1,
-            1,
-            0,
-            WK,
-            1,
-            iwork
-          );
+          info = dbdsqr("upper", M, M, 0, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, DUM, 1, 1, 0, WK, 1, iwork);
           iu = ie + M;
           ldwrku = M;
           chunk = Math.max(1, Math.floor((wsz - iu) / M));
           for (i = 0; i < N; i += chunk) {
             blk = Math.min(N - i, chunk);
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              blk,
-              M,
-              1,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              A,
-              sa1,
-              sa2,
-              offsetA + i * sa2,
-              0,
-              WK,
-              1,
-              ldwrku,
-              iu
-            );
-            dlacpy(
-              "full",
-              M,
-              blk,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              A,
-              sa1,
-              sa2,
-              offsetA + i * sa2
-            );
+            dgemm2("no-transpose", "no-transpose", M, blk, M, 1, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA + i * sa2, 0, WK, 1, ldwrku, iu);
+            dlacpy("full", M, blk, WK, 1, ldwrku, iu, A, sa1, sa2, offsetA + i * sa2);
           }
         } else if (wntvo && wntuas) {
           ir = 0;
@@ -14161,142 +10348,26 @@ var require_base78 = __commonJS({
           itau = ir + ldwrkr * M;
           iwork = itau + M;
           dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-          dlacpy(
-            "lower",
-            M,
-            M,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            U,
-            su1,
-            su2,
-            offsetU
-          );
-          dlaset(
-            "upper",
-            M - 1,
-            M - 1,
-            0,
-            0,
-            U,
-            su1,
-            su2,
-            offsetU + su2
-          );
+          dlacpy("lower", M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
+          dlaset("upper", M - 1, M - 1, 0, 0, U, su1, su2, offsetU + su2);
           dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
           ie = itau;
           itauq = ie + M;
           itaup = itauq + M;
           iwork = itaup + M;
-          dgebrd(
-            M,
-            M,
-            U,
-            su1,
-            su2,
-            offsetU,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            WK,
-            1,
-            itauq,
-            WK,
-            1,
-            itaup,
-            WK,
-            1,
-            iwork,
-            wsz - iwork
-          );
-          dlacpy(
-            "upper",
-            M,
-            M,
-            U,
-            su1,
-            su2,
-            offsetU,
-            WK,
-            1,
-            ldwrkr,
-            ir
-          );
+          dgebrd(M, M, U, su1, su2, offsetU, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+          dlacpy("upper", M, M, U, su1, su2, offsetU, WK, 1, ldwrkr, ir);
           dorgbr("apply-P", M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork);
           dorgbr("apply-Q", M, M, M, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
           iwork = ie + M;
-          info = dbdsqr(
-            "upper",
-            M,
-            M,
-            M,
-            0,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            WK,
-            1,
-            ldwrkr,
-            ir,
-            U,
-            su1,
-            su2,
-            offsetU,
-            DUM,
-            1,
-            1,
-            0,
-            WK,
-            1,
-            iwork
-          );
+          info = dbdsqr("upper", M, M, M, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrkr, ir, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
           iu = ie + M;
           ldwrku = M;
           chunk = Math.max(1, Math.floor((wsz - iu) / M));
           for (i = 0; i < N; i += chunk) {
             blk = Math.min(N - i, chunk);
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              blk,
-              M,
-              1,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              A,
-              sa1,
-              sa2,
-              offsetA + i * sa2,
-              0,
-              WK,
-              1,
-              ldwrku,
-              iu
-            );
-            dlacpy(
-              "full",
-              M,
-              blk,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              A,
-              sa1,
-              sa2,
-              offsetA + i * sa2
-            );
+            dgemm2("no-transpose", "no-transpose", M, blk, M, 1, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA + i * sa2, 0, WK, 1, ldwrku, iu);
+            dlacpy("full", M, blk, WK, 1, ldwrku, iu, A, sa1, sa2, offsetA + i * sa2);
           }
         } else if (wntvs) {
           if (wntun) {
@@ -14305,110 +10376,18 @@ var require_base78 = __commonJS({
             itau = ir + ldwrkr * M;
             iwork = itau + M;
             dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "lower",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrkr,
-              ir
-            );
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrkr,
-              ir + ldwrkr
-            );
+            dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir);
+            dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrkr, ir + ldwrkr);
             dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
             ie = itau;
             itauq = ie + M;
             itaup = itauq + M;
             iwork = itaup + M;
-            dgebrd(
-              M,
-              M,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
+            dgebrd(M, M, WK, 1, ldwrkr, ir, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
             dorgbr("apply-P", M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork);
             iwork = ie + M;
-            info = dbdsqr(
-              "upper",
-              M,
-              M,
-              0,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              DUM,
-              1,
-              1,
-              0,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N,
-              M,
-              1,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              0,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            info = dbdsqr("upper", M, M, 0, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, DUM, 1, 1, 0, WK, 1, iwork);
+            dgemm2("no-transpose", "no-transpose", M, N, M, 1, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA, 0, VT, svt1, svt2, offsetVT);
           } else if (wntuo) {
             iu = 0;
             ldwrku = M;
@@ -14417,261 +10396,41 @@ var require_base78 = __commonJS({
             itau = ir + ldwrkr * M;
             iwork = itau + M;
             dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "lower",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrku,
-              iu
-            );
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrku,
-              iu + ldwrku
-            );
+            dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+            dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrku, iu + ldwrku);
             dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
             ie = itau;
             itauq = ie + M;
             itaup = itauq + M;
             iwork = itaup + M;
-            dgebrd(
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
-            dlacpy(
-              "lower",
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              WK,
-              1,
-              ldwrkr,
-              ir
-            );
+            dgebrd(M, M, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+            dlacpy("lower", M, M, WK, 1, ldwrku, iu, WK, 1, ldwrkr, ir);
             dorgbr("apply-P", M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork);
             dorgbr("apply-Q", M, M, M, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork);
             iwork = ie + M;
-            info = dbdsqr(
-              "upper",
-              M,
-              M,
-              M,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N,
-              M,
-              1,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              0,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
-            dlacpy(
-              "full",
-              M,
-              M,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              A,
-              sa1,
-              sa2,
-              offsetA
-            );
+            info = dbdsqr("upper", M, M, M, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrku, iu, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, WK, 1, iwork);
+            dgemm2("no-transpose", "no-transpose", M, N, M, 1, WK, 1, ldwrku, iu, A, sa1, sa2, offsetA, 0, VT, svt1, svt2, offsetVT);
+            dlacpy("full", M, M, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA);
           } else if (wntuas) {
             iu = 0;
             ldwrku = M;
             itau = iu + ldwrku * M;
             iwork = itau + M;
             dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "lower",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrku,
-              iu
-            );
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrku,
-              iu + ldwrku
-            );
+            dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+            dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrku, iu + ldwrku);
             dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
             ie = itau;
             itauq = ie + M;
             itaup = itauq + M;
             iwork = itaup + M;
-            dgebrd(
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
-            dlacpy(
-              "lower",
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              U,
-              su1,
-              su2,
-              offsetU
-            );
+            dgebrd(M, M, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+            dlacpy("lower", M, M, WK, 1, ldwrku, iu, U, su1, su2, offsetU);
             dorgbr("apply-P", M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork);
             dorgbr("apply-Q", M, M, M, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
             iwork = ie + M;
-            info = dbdsqr(
-              "upper",
-              M,
-              M,
-              M,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              U,
-              su1,
-              su2,
-              offsetU,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N,
-              M,
-              1,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              0,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            info = dbdsqr("upper", M, M, M, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrku, iu, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
+            dgemm2("no-transpose", "no-transpose", M, N, M, 1, WK, 1, ldwrku, iu, A, sa1, sa2, offsetA, 0, VT, svt1, svt2, offsetVT);
           }
         } else if (wntva) {
           if (wntun) {
@@ -14680,136 +10439,20 @@ var require_base78 = __commonJS({
             itau = ir + ldwrkr * M;
             iwork = itau + M;
             dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "upper",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
-            dlacpy(
-              "lower",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrkr,
-              ir
-            );
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrkr,
-              ir + ldwrkr
-            );
+            dlacpy("upper", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
+            dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrkr, ir);
+            dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrkr, ir + ldwrkr);
             dorglq(N, N, M, VT, svt1, svt2, offsetVT, WK, 1, itau, WK, 1, iwork);
             ie = itau;
             itauq = ie + M;
             itaup = itauq + M;
             iwork = itaup + M;
-            dgebrd(
-              M,
-              M,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
+            dgebrd(M, M, WK, 1, ldwrkr, ir, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
             dorgbr("apply-P", M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork);
             iwork = ie + M;
-            info = dbdsqr(
-              "upper",
-              M,
-              M,
-              0,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              DUM,
-              1,
-              1,
-              0,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N,
-              M,
-              1,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              0,
-              A,
-              sa1,
-              sa2,
-              offsetA
-            );
-            dlacpy(
-              "full",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            info = dbdsqr("upper", M, M, 0, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, DUM, 1, 1, 0, WK, 1, iwork);
+            dgemm2("no-transpose", "no-transpose", M, N, M, 1, WK, 1, ldwrkr, ir, VT, svt1, svt2, offsetVT, 0, A, sa1, sa2, offsetA);
+            dlacpy("full", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
           } else if (wntuo) {
             iu = 0;
             ldwrku = M;
@@ -14818,313 +10461,45 @@ var require_base78 = __commonJS({
             itau = ir + ldwrkr * M;
             iwork = itau + M;
             dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "upper",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            dlacpy("upper", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
             dorglq(N, N, M, VT, svt1, svt2, offsetVT, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "lower",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrku,
-              iu
-            );
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrku,
-              iu + ldwrku
-            );
+            dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+            dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrku, iu + ldwrku);
             ie = itau;
             itauq = ie + M;
             itaup = itauq + M;
             iwork = itaup + M;
-            dgebrd(
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
-            dlacpy(
-              "lower",
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              WK,
-              1,
-              ldwrkr,
-              ir
-            );
+            dgebrd(M, M, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+            dlacpy("lower", M, M, WK, 1, ldwrku, iu, WK, 1, ldwrkr, ir);
             dorgbr("apply-P", M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork);
             dorgbr("apply-Q", M, M, M, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork);
             iwork = ie + M;
-            info = dbdsqr(
-              "upper",
-              M,
-              M,
-              M,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N,
-              M,
-              1,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              0,
-              A,
-              sa1,
-              sa2,
-              offsetA
-            );
-            dlacpy(
-              "full",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
-            dlacpy(
-              "full",
-              M,
-              M,
-              WK,
-              1,
-              ldwrkr,
-              ir,
-              A,
-              sa1,
-              sa2,
-              offsetA
-            );
+            info = dbdsqr("upper", M, M, M, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrku, iu, WK, 1, ldwrkr, ir, DUM, 1, 1, 0, WK, 1, iwork);
+            dgemm2("no-transpose", "no-transpose", M, N, M, 1, WK, 1, ldwrku, iu, VT, svt1, svt2, offsetVT, 0, A, sa1, sa2, offsetA);
+            dlacpy("full", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
+            dlacpy("full", M, M, WK, 1, ldwrkr, ir, A, sa1, sa2, offsetA);
           } else if (wntuas) {
             iu = 0;
             ldwrku = M;
             itau = iu + ldwrku * M;
             iwork = itau + M;
             dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "upper",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            dlacpy("upper", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
             dorglq(N, N, M, VT, svt1, svt2, offsetVT, WK, 1, itau, WK, 1, iwork);
-            dlacpy(
-              "lower",
-              M,
-              M,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              ldwrku,
-              iu
-            );
-            dlaset(
-              "upper",
-              M - 1,
-              M - 1,
-              0,
-              0,
-              WK,
-              1,
-              ldwrku,
-              iu + ldwrku
-            );
+            dlacpy("lower", M, M, A, sa1, sa2, offsetA, WK, 1, ldwrku, iu);
+            dlaset("upper", M - 1, M - 1, 0, 0, WK, 1, ldwrku, iu + ldwrku);
             ie = itau;
             itauq = ie + M;
             itaup = itauq + M;
             iwork = itaup + M;
-            dgebrd(
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              wsz - iwork
-            );
-            dlacpy(
-              "lower",
-              M,
-              M,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              U,
-              su1,
-              su2,
-              offsetU
-            );
+            dgebrd(M, M, WK, 1, ldwrku, iu, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
+            dlacpy("lower", M, M, WK, 1, ldwrku, iu, U, su1, su2, offsetU);
             dorgbr("apply-P", M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork);
             dorgbr("apply-Q", M, M, M, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
             iwork = ie + M;
-            info = dbdsqr(
-              "upper",
-              M,
-              M,
-              M,
-              0,
-              s,
-              strideS,
-              offsetS,
-              WK,
-              1,
-              ie,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              U,
-              su1,
-              su2,
-              offsetU,
-              DUM,
-              1,
-              1,
-              0,
-              WK,
-              1,
-              iwork
-            );
-            dgemm2(
-              "no-transpose",
-              "no-transpose",
-              M,
-              N,
-              M,
-              1,
-              WK,
-              1,
-              ldwrku,
-              iu,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              0,
-              A,
-              sa1,
-              sa2,
-              offsetA
-            );
-            dlacpy(
-              "full",
-              M,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              VT,
-              svt1,
-              svt2,
-              offsetVT
-            );
+            info = dbdsqr("upper", M, M, M, 0, s, strideS, offsetS, WK, 1, ie, WK, 1, ldwrku, iu, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
+            dgemm2("no-transpose", "no-transpose", M, N, M, 1, WK, 1, ldwrku, iu, VT, svt1, svt2, offsetVT, 0, A, sa1, sa2, offsetA);
+            dlacpy("full", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
           }
         }
       } else {
@@ -15132,60 +10507,13 @@ var require_base78 = __commonJS({
         itauq = ie + M;
         itaup = itauq + M;
         iwork = itaup + M;
-        dgebrd(
-          M,
-          N,
-          A,
-          sa1,
-          sa2,
-          offsetA,
-          s,
-          strideS,
-          offsetS,
-          WK,
-          1,
-          ie,
-          WK,
-          1,
-          itauq,
-          WK,
-          1,
-          itaup,
-          WK,
-          1,
-          iwork,
-          wsz - iwork
-        );
+        dgebrd(M, N, A, sa1, sa2, offsetA, s, strideS, offsetS, WK, 1, ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
         if (wntuas) {
-          dlacpy(
-            "lower",
-            M,
-            M,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            U,
-            su1,
-            su2,
-            offsetU
-          );
+          dlacpy("lower", M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
           dorgbr("apply-Q", M, M, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
         }
         if (wntvas) {
-          dlacpy(
-            "upper",
-            M,
-            N,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            VT,
-            svt1,
-            svt2,
-            offsetVT
-          );
+          dlacpy("upper", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
           nrvt = wntva ? N : M;
           dorgbr("apply-P", nrvt, N, M, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
         }
@@ -15205,154 +10533,25 @@ var require_base78 = __commonJS({
           ncvt = N;
         }
         if (!wntuo && !wntvo) {
-          info = dbdsqr(
-            "lower",
-            M,
-            ncvt,
-            nru,
-            0,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            VT,
-            svt1,
-            svt2,
-            offsetVT,
-            U,
-            su1,
-            su2,
-            offsetU,
-            DUM,
-            1,
-            1,
-            0,
-            WK,
-            1,
-            iwork
-          );
+          info = dbdsqr("lower", M, ncvt, nru, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
         } else if (!wntuo && wntvo) {
-          info = dbdsqr(
-            "lower",
-            M,
-            ncvt,
-            nru,
-            0,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            U,
-            su1,
-            su2,
-            offsetU,
-            DUM,
-            1,
-            1,
-            0,
-            WK,
-            1,
-            iwork
-          );
+          info = dbdsqr("lower", M, ncvt, nru, 0, s, strideS, offsetS, WK, 1, ie, A, sa1, sa2, offsetA, U, su1, su2, offsetU, DUM, 1, 1, 0, WK, 1, iwork);
         } else {
-          info = dbdsqr(
-            "lower",
-            M,
-            ncvt,
-            nru,
-            0,
-            s,
-            strideS,
-            offsetS,
-            WK,
-            1,
-            ie,
-            VT,
-            svt1,
-            svt2,
-            offsetVT,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            DUM,
-            1,
-            1,
-            0,
-            WK,
-            1,
-            iwork
-          );
+          info = dbdsqr("lower", M, ncvt, nru, 0, s, strideS, offsetS, WK, 1, ie, VT, svt1, svt2, offsetVT, A, sa1, sa2, offsetA, DUM, 1, 1, 0, WK, 1, iwork);
         }
       }
       if (iscl === 1) {
         if (anrm > bignum) {
-          dlascl(
-            "general",
-            0,
-            0,
-            bignum,
-            anrm,
-            minmn,
-            1,
-            s,
-            strideS,
-            1,
-            offsetS
-          );
+          dlascl("general", 0, 0, bignum, anrm, minmn, 1, s, strideS, 1, offsetS);
         }
         if (info !== 0 && anrm > bignum) {
-          dlascl(
-            "general",
-            0,
-            0,
-            bignum,
-            anrm,
-            minmn - 1,
-            1,
-            WK,
-            1,
-            1,
-            ie
-          );
+          dlascl("general", 0, 0, bignum, anrm, minmn - 1, 1, WK, 1, 1, ie);
         }
         if (anrm < smlnum) {
-          dlascl(
-            "general",
-            0,
-            0,
-            smlnum,
-            anrm,
-            minmn,
-            1,
-            s,
-            strideS,
-            1,
-            offsetS
-          );
+          dlascl("general", 0, 0, smlnum, anrm, minmn, 1, s, strideS, 1, offsetS);
         }
         if (info !== 0 && anrm < smlnum) {
-          dlascl(
-            "general",
-            0,
-            0,
-            smlnum,
-            anrm,
-            minmn - 1,
-            1,
-            WK,
-            1,
-            1,
-            ie
-          );
+          dlascl("general", 0, 0, smlnum, anrm, minmn - 1, 1, WK, 1, 1, ie);
         }
       }
       return info;
@@ -15377,23 +10576,6 @@ export {
 * @license Apache-2.0
 *
 * Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-/**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 Ricky Reusser.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.

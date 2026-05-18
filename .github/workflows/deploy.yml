@@ -4,14 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'blahpack/notebooks/**'
-      - 'blahpack/examples/**'
-      - 'blahpack/aaa-pure.js'
-      - 'blahpack/prz.js'
-      - 'blahpack/qz.js'
-      - 'blahpack/lib/**'
-      - 'blahpack/vite.config.js'
-      - 'blahpack/package.json'
+      - 'notebooks/**'
+      - 'examples/**'
+      - 'lib/**'
+      - 'progress.html'
+      - 'vite.config.js'
+      - 'package.json'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -27,9 +25,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: blahpack
     steps:
       - uses: actions/checkout@v4
 
@@ -37,12 +32,18 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: blahpack/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - run: npm ci
 
+      # Bundle the Node-only notebook deps esbuild can resolve but the
+      # in-browser notebooks cannot. All three notebook entry points are
+      # vite build inputs, so all must be fresh or the build fails.
       - name: Bundle notebook dependencies
-        run: npm run bundle:notebook
+        run: |
+          npm run bundle:notebook
+          npm run bundle:naca
+          npm run bundle:pseudospectra
 
       - name: Build
         run: npx vite build
@@ -51,7 +52,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: blahpack/dist
+          path: dist
 
   deploy:
     needs: build
