@@ -15,7 +15,7 @@
     - **[NST18]** Nakatsukasa, Sète, Trefethen, ["The AAA Algorithm for Rational Approximation"](https://arxiv.org/abs/1612.00337), SIAM J. Sci. Comput. 40(3), 2018.
     - **[C20]** Costa, ["Solving Laplace problems with the AAA algorithm"](https://arxiv.org/abs/2001.09439), 2020.
     - **[XWT23]** Xue, Waters, Trefethen, ["Computation of 2D Stokes flows via lightning and AAA rational approximation"](https://arxiv.org/abs/2306.13545), 2023.
-    - **[BT21]** Brubeck, Trefethen, ["Vandermonde with Arnoldi"](https://arxiv.org/abs/1911.09988), SIAM Review 63(2), 2021.
+    - **[BNT21]** Brubeck, Nakatsukasa, Trefethen, ["Vandermonde with Arnoldi"](https://arxiv.org/abs/1911.09988), SIAM Review 63(2), 2021.
   </script>
 
   <script id="method" type="text/markdown">
@@ -763,7 +763,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
   <script id="stokesHeader" type="text/markdown">
     ## 2D Stokes Flow — [XWT23]
 
-    Solving the biharmonic equation ${ tex`\nabla^4 \psi = 0` } for 2D Stokes flow via two Goursat functions ${ tex`f(z), g(z)` }, following Xue, Waters, Trefethen (2023). Lightning poles are exponentially clustered near each corner; the polynomial basis uses **Vandermonde with Arnoldi** orthogonalization [BT21] for numerical stability. The coupled system for both Goursat functions is solved in a single least-squares step. The stream function ${ tex`\psi` } is pre-evaluated on a grid (f64) and rendered via texture sampling.
+    Solving the biharmonic equation ${ tex`\nabla^4 \psi = 0` } for 2D Stokes flow via two Goursat functions ${ tex`f(z), g(z)` }, following Xue, Waters, Trefethen (2023). Lightning poles are exponentially clustered near each corner; the polynomial basis uses **Vandermonde with Arnoldi** orthogonalization [BNT21] for numerical stability. The coupled system for both Goursat functions is solved in a single least-squares step. The stream function ${ tex`\psi` } is pre-evaluated on a grid (f64) and rendered via texture sampling.
   </script>
 
   <script id="stokesControls" type="module">
