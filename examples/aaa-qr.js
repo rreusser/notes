@@ -168,7 +168,7 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
       // Step 3: SVD of small m×m R matrix
       t0 = performance.now();
       info = zgesvd(
-        'N', 'A', m, m,
+        'none', 'all-rows', m, m,
         Rmat, 1, m, 0,
         sData, 1, 0,
         UData, 1, 1, 0,
@@ -179,7 +179,7 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
     } else {
       // Small matrix or m=1: direct SVD
       info = zgesvd(
-        'N', 'A', nJ, m,
+        'none', 'all-rows', nJ, m,
         Adata, 1, nJ, 0,
         sData, 1, 0,
         UData, 1, 1, 0,
