@@ -13268,7 +13268,7 @@ function aaa(Z, F, tol = 1e-13, mmax = 100) {
     t0 = performance.now();
     const info = (0, import_ndarray.default)(
       "none",
-      "all",
+      "all-rows",
       nJ,
       m,
       Adata,
