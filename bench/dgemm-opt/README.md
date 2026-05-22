@@ -26,10 +26,12 @@ gen-tile.js          # Code generator for register-tiled kernels
 report.js            # Full markdown report generator (tables)
 svg.js               # Dependency-free SVG line/bar charting
 plots.js             # Generates the report's SVG figures
+build-html.js        # Compiles the report to a single self-contained HTML file
 render-png.sh        # Rasterizes SVG figures -> PNG (needs Chrome)
 reports/             # Generated report + figures
-  dgemm-optimization.md   #   *** The report — start here
-  fig*.svg / fig*.png     #   Figures (SVG referenced by the report; PNG fallback)
+  dgemm-optimization.md     #   *** The report (markdown) — start here
+  dgemm-optimization.html   #   Self-contained HTML (figures inlined)
+  fig*.svg / fig*.png       #   Figures (SVG referenced by the markdown; PNG fallback)
 ```
 
 **The report is `reports/dgemm-optimization.md`** — it leads with the bottom
@@ -56,8 +58,11 @@ VARIANTS=v0-reference,v4-general4x4 SIZES=64,256,512 node probe.js
 #   TRIALS     : interleaved trials per variant (default 15)
 #   TARGET     : target ms per timed batch (default 50)
 
-# 3. Full report -> reports/dgemm-optimization.md:
+# 3. Full report -> reports/dgemm-optimization.md (re-runs the sweeps):
 node report.js
+node plots.js             # regenerate the SVG figures
+node build-html.js        # compile markdown -> self-contained reports/*.html
+bash render-png.sh        # optional: SVG -> PNG fallbacks (needs Chrome)
 
 # 4. Regenerate the tile-geometry variants:
 node gen-tile.js          # default geometry set

@@ -52,6 +52,63 @@ Every variant was validated bit-for-bit against `v0` over **2560 cases** (shapes
 
 GFLOP/s = 2·M·N·K / time. FLOP count is identical across variants, so GF/s is directly comparable.
 
+## The optimization ladder — what each method does and why
+
+Each variant is one idea layered on the previous, so the speedups below can be
+read as a story rather than a menu. The whole arc is about one thing: **matrix
+multiply does O(n³) arithmetic over O(n²) data, so the only way to go fast is to
+re-use each value you load many times before it leaves the registers and the
+cache.** The reference kernel does the arithmetic correctly but moves data
+wastefully; every variant claws back some of that waste.
+
+- **`v0` — the reference triple loop.** The textbook BLAS algorithm. Its hot
+  case (`C += A·B`) walks one column of `A` at a time and adds it into a column
+  of `C`. The problem: for every one of the K inner steps it reads *and writes*
+  the whole `C` column back to memory, and re-reads all of `A` once per column
+  of `C`. Almost every value touched is used once and discarded. Result: ~2
+  GF/s, no matter the size — it is memory-bound from the start.
+
+- **`v1` — unit-stride cleanup.** When the matrix is contiguous (stride 1 down a
+  column) the generic `index += stride` bookkeeping is pure overhead. Folding it
+  into a single induction variable lets V8 generate tighter code. Marginal on
+  its own (~1.0×), but it sets up the loop shape the later kernels need.
+
+- **`v2` — register blocking over columns (the first real idea).** Instead of
+  computing one column of `C` at a time, compute **four at once**. Each value of
+  `A` loaded in the inner loop is now multiplied into four different columns of
+  `C` before being thrown away — so `A`'s memory traffic drops ~4×. This alone
+  is worth **~2.2×**. It is still an "axpy" form, though: `C` is still streamed
+  to and from memory on every K step.
+
+- **`v3` / `v4` — the register tile (the decisive idea).** Flip the loops inside
+  out into a **dot-product form** and keep a small **4×4 block of `C` in
+  registers** for the entire length of the K loop. Now `C` is read and written
+  exactly *once* (not K times), and each `A` and `B` value loaded is reused
+  across the whole 4×4 tile. This is the classic high-performance micro-kernel,
+  and it is where the big jump happens: **~4×**. `v3` hard-codes the common
+  contiguous column-major `C = A·B`; **`v4` rewrites the same tile in terms of
+  "effective strides"** so the *identical* kernel covers all four transpose
+  modes (NN/TN/NT/TT) and both memory layouts — generality for free.
+
+- **`v5` / `v6` — cache blocking (for when the matrices stop fitting).** The
+  register tile is perfect until the matrices grow past the CPU cache. Then `v4`
+  starts re-streaming `A` from main memory over and over and **collapses back
+  toward 1×** (see §A). Blocking fixes this by chopping the problem into tiles
+  (`v5` blocks the N and K dimensions; `v6` also blocks M) sized so that a panel
+  of `B` — and, for `v6`, a panel of `A` — stays resident in cache and is reused
+  before being evicted. This keeps the ~3.8× all the way out to 2048³.
+
+- **`v7` — Strassen (a different axis entirely).** Everything above keeps the
+  arithmetic identical and just moves data better. Strassen instead **does less
+  arithmetic**: it computes a 2×2 block product with 7 multiplies instead of 8,
+  at the cost of extra matrix additions. Layered on top of the fast `v5` kernel
+  it buys a further **+13–17%** — a genuine surprise (see §C), but with enough
+  caveats (square-only, allocations, accuracy) that it is documented, not
+  shipped.
+
+The sweet-spot tile size (4×4) and a curious V8 codegen detail that was worth
+~15% on its own are covered in §B.
+
 ## 1. Square matrices, NN, column-major
 
 | shape | M | N | K | v0-reference (GF/s) | v4-general4x4 (GF/s) | v5-blocked4x4 (GF/s) | v6-blocked3lvl (GF/s) | v4-general4x4 speedup | v5-blocked4x4 speedup | v6-blocked3lvl speedup |
