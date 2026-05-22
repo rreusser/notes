@@ -15,10 +15,10 @@ The headline result: **register tiling wins decisively and uniformly, and layout
 
 | regime | `v0-reference` (GF/s) | `stdlib` interchange | best tile (`v6`) |
 |---|---|---|---|
-| square, cache-resident (16–384) | 2.01 | 0.81× | **4.25×** |
-| square, large (512–1024) | 2.12 | 0.71× | **3.96×** |
-| row-major | 0.78 | 2.42× | **12.96×** |
-| transpose modes (512³) | 2.09 | 0.93× | **3.91×** |
+| square, cache-resident (16–384) | 2.00 | 0.80× | **4.27×** |
+| square, large (512–1024) | 2.13 | 0.71× | **3.96×** |
+| row-major | 0.77 | 2.46× | **13.23×** |
+| transpose modes (512³) | 2.09 | 0.93× | **3.88×** |
 
 The decision recorded here is to keep this as a documented, reproducible study (`bench/dgemm-opt/`) rather than modify the shipping kernel; every variant is preserved as a drop-in `base.js`. See [§ Caveats](#caveats-and-when-the-win-shrinks).
 
@@ -27,7 +27,7 @@ The decision recorded here is to keep this as a documented, reproducible study (
 - Node: `v24.11.1`
 - CPU: `Apple M3` (8 logical)
 - Platform: `darwin 25.2.0`
-- Load average at generation: `1.98, 2.33, 2.40`
+- Load average at generation: `1.79, 1.99, 2.17`
 
 > **Isolation note.** This machine is shared and was under variable concurrent load during measurement. The harness uses **minimum-of-trials** timing (external contention can only add wall time, so the minimum over many interleaved trials best estimates the true cost) and **round-robin interleaving** of variants (so slow drift hits all variants equally). Absolute GF/s should be read as a floor; the **speedup ratios are the robust signal** because all variants run back-to-back under identical conditions.
 
@@ -65,23 +65,23 @@ The sweet-spot tile size (4×4) and a V8 codegen detail worth ~15% are in §B.
 
 | shape | M | N | K | v0-reference (GF/s) | stdlib × | v4 × | v5 × | v6 × |
 |---|---|---|---|---|---|---|---|---|
-| 16^3 | 16 | 16 | 16 | 1.78 | 0.93x | 4.33x | 4.39x | 4.31x |
-| 32^3 | 32 | 32 | 32 | 1.95 | 0.85x | 4.27x | 4.28x | 4.30x |
-| 48^3 | 48 | 48 | 48 | 2.02 | 0.81x | 4.21x | 4.24x | 4.25x |
-| 64^3 | 64 | 64 | 64 | 2.04 | 0.80x | 4.18x | 4.24x | 4.20x |
-| 96^3 | 96 | 96 | 96 | 2.08 | 0.78x | 4.11x | 4.15x | 4.18x |
-| 128^3 | 128 | 128 | 128 | 2.01 | 0.81x | 4.31x | 4.35x | 4.34x |
-| 192^3 | 192 | 192 | 192 | 2.06 | 0.78x | 4.23x | 4.26x | 4.28x |
-| 256^3 | 256 | 256 | 256 | 2.08 | 0.77x | 4.20x | 4.24x | 4.21x |
-| 384^3 | 384 | 384 | 384 | 2.10 | 0.75x | 4.16x | 4.16x | 4.14x |
-| 512^3 | 512 | 512 | 512 | 2.10 | 0.75x | 3.88x | 3.85x | 3.84x |
-| 768^3 | 768 | 768 | 768 | 2.12 | 0.75x | 4.08x | 4.10x | 4.09x |
-| 1024^3 | 1024 | 1024 | 1024 | 2.13 | 0.64x | 3.97x | 3.93x | 3.93x |
+| 16^3 | 16 | 16 | 16 | 1.73 | 0.94x | 4.32x | 4.44x | 4.40x |
+| 32^3 | 32 | 32 | 32 | 1.91 | 0.84x | 4.29x | 4.30x | 4.30x |
+| 48^3 | 48 | 48 | 48 | 1.99 | 0.80x | 4.25x | 4.27x | 4.27x |
+| 64^3 | 64 | 64 | 64 | 2.03 | 0.79x | 4.21x | 4.24x | 4.24x |
+| 96^3 | 96 | 96 | 96 | 2.07 | 0.78x | 4.17x | 4.20x | 4.21x |
+| 128^3 | 128 | 128 | 128 | 2.01 | 0.80x | 4.30x | 4.33x | 4.33x |
+| 192^3 | 192 | 192 | 192 | 2.06 | 0.78x | 4.24x | 4.28x | 4.29x |
+| 256^3 | 256 | 256 | 256 | 2.08 | 0.77x | 4.20x | 4.24x | 4.24x |
+| 384^3 | 384 | 384 | 384 | 2.11 | 0.75x | 4.16x | 4.15x | 4.15x |
+| 512^3 | 512 | 512 | 512 | 2.12 | 0.75x | 3.84x | 3.85x | 3.85x |
+| 768^3 | 768 | 768 | 768 | 2.13 | 0.74x | 4.06x | 4.08x | 4.08x |
+| 1024^3 | 1024 | 1024 | 1024 | 2.13 | 0.65x | 3.97x | 3.92x | 3.94x |
 
 - `stdlib` mean speedup: **0.78×**
-- `v4` mean speedup: **4.16×**
-- `v5` mean speedup: **4.18×**
-- `v6` mean speedup: **4.17×**
+- `v4` mean speedup: **4.17×**
+- `v5` mean speedup: **4.19×**
+- `v6` mean speedup: **4.19×**
 
 ![Speedup vs matrix size, square NN](fig1-speedup-vs-size.svg)
 
@@ -91,10 +91,10 @@ The sweet-spot tile size (4×4) and a V8 codegen detail worth ~15% are in §B.
 
 | mode | v0-reference (GF/s) | stdlib × | v4 × | v5 × | v6 × |
 |---|---|---|---|---|---|
-| NN | 2.12 | 0.74x | 3.84x | 3.86x | 3.86x |
+| NN | 2.12 | 0.75x | 3.85x | 3.88x | 3.88x |
 | TN (AᵀB) | 2.12 | 1.50x | 4.15x | 4.16x | 4.16x |
-| NT (ABᵀ) | 2.11 | 0.74x | 3.59x | 3.58x | 3.58x |
-| TT (AᵀBᵀ) | 2.01 | 0.73x | 3.93x | 4.06x | 4.05x |
+| NT (ABᵀ) | 2.11 | 0.75x | 3.55x | 3.46x | 3.49x |
+| TT (AᵀBᵀ) | 2.02 | 0.73x | 3.89x | 4.01x | 3.98x |
 
 ![Speedup across transpose modes](fig5-transpose-modes.svg)
 
@@ -102,23 +102,23 @@ The sweet-spot tile size (4×4) and a V8 codegen detail worth ~15% are in §B.
 
 | shape | M | N | K | v0-reference (GF/s) | stdlib × | v4 × | v5 × | v6 × |
 |---|---|---|---|---|---|---|---|---|
-| 128^3 | 128 | 128 | 128 | 1.26 | 1.26x | 6.85x | 6.90x | 6.91x |
-| 256^3 | 256 | 256 | 256 | 0.63 | 2.50x | 13.92x | 14.04x | 14.04x |
-| 512^3 | 512 | 512 | 512 | 0.45 | 3.51x | 17.46x | 17.95x | 17.93x |
+| 128^3 | 128 | 128 | 128 | 1.24 | 1.27x | 6.95x | 7.00x | 7.00x |
+| 256^3 | 256 | 256 | 256 | 0.62 | 2.55x | 14.12x | 14.23x | 14.24x |
+| 512^3 | 512 | 512 | 512 | 0.44 | 3.55x | 17.82x | 18.26x | 18.45x |
 
-The naive baseline has a **row-major hole**: its fixed loop order walks columns (stride `LDA`) of a row-major matrix, so every access misses cache and throughput craters (0.45 GF/s at 512³). The `stdlib` variant's whole reason for existing is to patch this hole via layout detection — and it does help here. But the register tile touches memory in a blocked pattern and is layout-agnostic, so it simply stays ~8 GF/s without needing to know the layout at all. §6 makes this comparison head-on.
+The naive baseline has a **row-major hole**: its fixed loop order walks columns (stride `LDA`) of a row-major matrix, so every access misses cache and throughput craters (0.44 GF/s at 512³). The `stdlib` variant's whole reason for existing is to patch this hole via layout detection — and it does help here. But the register tile touches memory in a blocked pattern and is layout-agnostic, so it simply stays ~8 GF/s without needing to know the layout at all. §6 makes this comparison head-on.
 
 ## 4. Shape generalization (column-major, NN)
 
 | shape | M | N | K | v0-reference (GF/s) | stdlib × | v4 × | v5 × | v6 × |
 |---|---|---|---|---|---|---|---|---|
-| rank-16 update | 1024 | 1024 | 16 | 2.13 | 0.63x | 3.50x | 3.51x | 3.45x |
-| rank-64 update | 1024 | 1024 | 64 | 2.13 | 0.64x | 3.74x | 3.76x | 3.73x |
-| tall*skinny (N=16) | 1024 | 16 | 1024 | 2.13 | 0.67x | 3.95x | 3.93x | 3.93x |
-| short*wide (M=16) | 16 | 1024 | 1024 | 1.73 | 0.92x | 5.02x | 5.08x | 5.08x |
-| tall A panel | 2048 | 64 | 64 | 2.15 | 0.69x | 3.88x | 3.91x | 3.90x |
-| deep inner (K=2048) | 64 | 64 | 2048 | 2.03 | 0.79x | 4.24x | 4.20x | 4.20x |
-| rectangular | 512 | 256 | 128 | 2.12 | 0.76x | 3.66x | 3.68x | 3.69x |
+| rank-16 update | 1024 | 1024 | 16 | 2.13 | 0.62x | 3.38x | 3.37x | 3.37x |
+| rank-64 update | 1024 | 1024 | 64 | 2.14 | 0.64x | 3.75x | 3.79x | 3.75x |
+| tall*skinny (N=16) | 1024 | 16 | 1024 | 2.13 | 0.66x | 3.94x | 3.94x | 3.95x |
+| short*wide (M=16) | 16 | 1024 | 1024 | 1.73 | 0.92x | 5.04x | 5.08x | 5.08x |
+| tall A panel | 2048 | 64 | 64 | 2.15 | 0.69x | 3.86x | 3.89x | 3.89x |
+| deep inner (K=2048) | 64 | 64 | 2048 | 2.03 | 0.79x | 4.24x | 4.23x | 4.21x |
+| rectangular | 512 | 256 | 128 | 2.12 | 0.76x | 3.74x | 3.78x | 3.79x |
 
 ![Shape generalization: flat tile vs cache-blocked](fig6-shapes.svg)
 
@@ -126,13 +126,13 @@ The naive baseline has a **row-major hole**: its fixed loop order walks columns 
 
 | shape | M | N | K | v0-reference (GF/s) | stdlib × | v4 × | v5 × | v6 × |
 |---|---|---|---|---|---|---|---|---|
-| 2^3 | 2 | 2 | 2 | 0.54 | 0.84x | 0.97x | 0.92x | 0.89x |
-| 3^3 | 3 | 3 | 3 | 0.82 | 1.01x | 0.98x | 0.95x | 0.93x |
-| 4^3 | 4 | 4 | 4 | 1.01 | 0.99x | 3.52x | 3.12x | 3.07x |
-| 5^3 | 5 | 5 | 5 | 1.12 | 1.10x | 1.86x | 1.79x | 1.77x |
+| 2^3 | 2 | 2 | 2 | 0.54 | 0.85x | 0.99x | 0.93x | 0.89x |
+| 3^3 | 3 | 3 | 3 | 0.81 | 1.01x | 0.98x | 0.96x | 0.93x |
+| 4^3 | 4 | 4 | 4 | 1.01 | 0.99x | 3.54x | 3.08x | 3.07x |
+| 5^3 | 5 | 5 | 5 | 1.11 | 1.11x | 1.88x | 1.81x | 1.79x |
 | 6^3 | 6 | 6 | 6 | 1.23 | 1.12x | 1.43x | 1.40x | 1.39x |
-| 8^3 | 8 | 8 | 8 | 1.41 | 1.11x | 4.28x | 4.17x | 4.12x |
-| 12^3 | 12 | 12 | 12 | 1.56 | 0.90x | 4.47x | 4.43x | 4.41x |
+| 8^3 | 8 | 8 | 8 | 1.40 | 1.11x | 4.28x | 4.15x | 4.13x |
+| 12^3 | 12 | 12 | 12 | 1.57 | 0.90x | 4.47x | 4.43x | 4.41x |
 
 ## 6. Layout interchange vs register tiling — head to head
 
@@ -179,8 +179,8 @@ right design is a single layout-agnostic tiled kernel, not layout dispatch.
 
 ## Summary
 
-- **Register tiling is the win**: `v6` averages **4.17×** on square, **4.00×** on non-square shapes, vs the naive baseline — and stays flat across layouts and transpose modes.
-- **Layout interchange (`stdlib`) helps far less**: 0.78× on square col-major and 2.42× on row-major — and only for the layouts it special-cases. Against the register tile it is **~5.4–5.6× slower** depending on layout (§6).
+- **Register tiling is the win**: `v6` averages **4.19×** on square, **4.01×** on non-square shapes, vs the naive baseline — and stays flat across layouts and transpose modes.
+- **Layout interchange (`stdlib`) helps far less**: 0.78× on square col-major and 2.46× on row-major — and only for the layouts it special-cases. Against the register tile it is **~5.43–5.55× slower** depending on layout (§6).
 - **Therefore layout detection is not worth its complexity** once the kernel tiles well: a single layout-agnostic kernel is both simpler and uniformly faster.
 
 ## Caveats and when the win shrinks
