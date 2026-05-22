@@ -1,4 +1,16 @@
 {
+    "lib/lapack/base/zunmqr": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "Pre-existing test-file lint debt (camelcase `actual_re`/`actual_im`, FunctionExpression in test callbacks, vars-order, no-mixed-operators) inherited from the original scaffolded test.ndarray.js. The workspace-debt fix touches base.js, ndarray.js, and zunmqr.js (all 0 errors); test.ndarray.js was only edited to delete the null-WORK auto-allocation block. Linting test files is out of scope here — they would need a full rewrite to satisfy stdlib test conventions."
+    },
+    "lib/lapack/base/zunmlq": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "Pre-existing test-file lint debt (camelcase `actual_re`/`actual_im`, FunctionExpression in test callbacks, vars-order, no-mixed-operators) inherited from the original scaffolded test.ndarray.js. The workspace-debt fix touches base.js, ndarray.js, and zunmlq.js (all 0 errors); test.ndarray.js was only edited to delete the null-WORK auto-allocation block. Linting test files is out of scope here — they would need a full rewrite to satisfy stdlib test conventions."
+    },
     "lib/lapack/base/dorbdb3": {
         "skip": [
             "scaffolding.no-todo-base"

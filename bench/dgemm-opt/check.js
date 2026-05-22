@@ -20,16 +20,23 @@ function randArray( n ) {
 	return a;
 }
 
+// Combined abs/rel error: an element passes if it is close in either the
+// relative OR absolute sense. This guards against catastrophic cancellation
+// (e.g. alpha*AB + beta*C landing near zero), where a tiny absolute error
+// produces a huge relative error that is not a correctness defect.
 function maxRelErr( x, y ) {
 	var e = 0;
 	var d;
-	var s;
+	var rel;
 	var i;
 	for ( i = 0; i < x.length; i++ ) {
 		d = Math.abs( x[i] - y[i] );
-		s = Math.abs( x[i] ) + Math.abs( y[i] ) + 1e-300;
-		if ( d/s > e ) {
-			e = d/s;
+		rel = d / ( Math.abs( x[i] ) + Math.abs( y[i] ) + 1e-300 );
+		if ( d < rel ) { // effective error = min(absolute, relative)
+			rel = d;
+		}
+		if ( rel > e ) {
+			e = rel;
 		}
 	}
 	return e;

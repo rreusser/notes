@@ -25,15 +25,18 @@ function gen( MR, NR ) {
 	w( "var ref = require( './v0-reference.js' );" );
 	w( '' );
 	w( 'function dgemm( transa, transb, M, N, K, alpha, A, sa1, sa2, oa, B, sb1, sb2, ob, beta, C, sc1, sc2, oc ) {' );
-	w( '\tvar i, j, l, jj, ii, mb, nb, temp, pa, pb, pc, paBase;' );
-	// accumulator + operand declarations:
+	// Declare hot register operands FIRST (accumulators, then A/B operands).
+	// V8 register allocation is sensitive to declaration order; giving the
+	// accumulators priority measurably improves codegen for these kernels.
 	var accs = [];
 	for ( c = 0; c < NR; c++ ) { for ( r = 0; r < MR; r++ ) { accs.push( 'c'+r+'_'+c ); } }
 	w( '\tvar ' + accs.join( ', ' ) + ';' );
 	var as = []; for ( r = 0; r < MR; r++ ) { as.push( 'a'+r ); }
 	var bs = []; for ( c = 0; c < NR; c++ ) { bs.push( 'b'+c ); }
 	var pbs = []; for ( c = 0; c < NR; c++ ) { pbs.push( 'pb'+c ); }
-	w( '\tvar ' + as.concat( bs ).concat( pbs ).join( ', ' ) + ';' );
+	w( '\tvar ' + as.concat( bs ).join( ', ' ) + ';' );
+	w( '\tvar ' + pbs.join( ', ' ) + ';' );
+	w( '\tvar i, j, l, jj, ii, mb, nb, temp, pa, pb, pc, paBase;' );
 	w( '' );
 	w( '\tif ( M === 0 || N === 0 || ( ( alpha === 0.0 || K === 0 ) && beta === 1.0 ) ) {' );
 	w( '\t\treturn C;' );
