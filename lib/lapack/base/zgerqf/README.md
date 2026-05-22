@@ -30,55 +30,62 @@ limitations under the License.
 var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
 ```
 
-#### zgerqf( M, N, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork )
+#### zgerqf( order, M, N, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork )
 
 Computes an RQ factorization of a complex M-by-N matrix A = R * Q.
 
 ```javascript
-var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-var N = 3;
-var A = discreteUniform( N * N, -10, 10, opts );
-var TAU = discreteUniform( N, -10, 10, opts );
-var WORK = discreteUniform( N, -10, 10, opts );
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 1.0, 3.0, 1.5, 4.0, 2.0, 0.5, 1.0, 1.0, 0.5, 1.5, 1.0, 2.0, 1.5, 1.0, 0.0, 2.0, 0.5, 3.0, 1.0, 4.0, 1.5 ] );
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
 
-zgerqf.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
+zgerqf( 'column-major', 4, 3, A, 4, TAU, 1, WORK, 1, -1 );
 ```
 
 The function has the following parameters:
 
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
 -   **M**: number of rows.
 -   **N**: number of columns.
--   **A**: input array `A`.
+-   **A**: input matrix.
 -   **LDA**: leading dimension of `A`.
--   **TAU**: input array `TAU`.
+-   **TAU**: input array.
 -   **strideTAU**: stride length for `TAU`.
--   **WORK**: input array `WORK`.
+-   **WORK**: output array.
 -   **strideWORK**: stride length for `WORK`.
--   **lwork**: `lwork`.
+-   **lwork**: lwork.
 
 #### zgerqf.ndarray( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
 
 Computes an RQ factorization of a complex M-by-N matrix A = R * Q, using alternative indexing semantics.
 
 ```javascript
-var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 
-var N = 3;
-var A = discreteUniform( N * N, -10, 10, opts );
-var TAU = discreteUniform( N, -10, 10, opts );
-var WORK = discreteUniform( N, -10, 10, opts );
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 1.0, 3.0, 1.5, 4.0, 2.0, 0.5, 1.0, 1.0, 0.5, 1.5, 1.0, 2.0, 1.5, 1.0, 0.0, 2.0, 0.5, 3.0, 1.0, 4.0, 1.5 ] );
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
 
-zgerqf.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
+zgerqf.ndarray( 4, 3, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, -1 );
 ```
 
 The function has the following additional parameters:
 
+-   **M**: number of rows.
+-   **N**: number of columns.
+-   **A**: input matrix.
 -   **strideA1**: stride of dimension 1 of `A`.
 -   **strideA2**: stride of dimension 2 of `A`.
 -   **offsetA**: starting index for `A`.
+-   **TAU**: input array.
+-   **strideTAU**: stride length for `TAU`.
 -   **offsetTAU**: starting index for `TAU`.
+-   **WORK**: output array.
+-   **strideWORK**: stride length for `WORK`.
 -   **offsetWORK**: starting index for `WORK`.
+-   **lwork**: lwork.
 
 </section>
 
@@ -88,6 +95,8 @@ The function has the following additional parameters:
 
 ## Notes
 
+-   `zgerqf` computes an RQ factorization of a complex M-by-N matrix `A = R * Q` using a blocked Householder algorithm. The upper trapezoidal matrix `R` is written into the upper-right corner of `A`, and the Householder vectors encoding `Q` are stored in the remaining entries.
+-   The workspace size is automatically managed; `lwork` is accepted for API compatibility but ignored.
 -   `zgerqf()` corresponds to the [LAPACK][lapack] level routine [`zgerqf`][lapack-zgerqf].
 
 </section>
@@ -98,17 +107,16 @@ The function has the following additional parameters:
 
 ## Examples
 
-<!-- eslint no-undef: "error" -->
-
 ```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
 
-var N = 3;
-var A = discreteUniform( N * N, -10, 10, opts );
-var TAU = discreteUniform( N, -10, 10, opts );
-var WORK = discreteUniform( N, -10, 10, opts );
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, 1.0, 3.0, 1.5, 4.0, 2.0, 0.5, 1.0, 1.0, 0.5, 1.5, 1.0, 2.0, 1.5, 1.0, 0.0, 2.0, 0.5, 3.0, 1.0, 4.0, 1.5 ] );
+var TAU = new Complex128Array( 3 );
+var WORK = new Complex128Array( 256 );
 
-zgerqf.ndarray( N, N, A, N, 1, 0, TAU, 1, 0, WORK, 1, 0, N );
+var info = zgerqf( 'column-major', 4, 3, A, 4, TAU, 1, WORK, 1, -1 );
+console.log( info );
 ```
 
 </section>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<rect width="720" height="420" fill="#ffffff"/>
+<text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Large-matrix bandwidth cliff (and the cache-blocking fix)</text>
+<line x1="64" y1="356.0" x2="696" y2="356.0" stroke="#e6e6e6"/>
+<text x="56" y="360.0" text-anchor="end" font-size="12" fill="#444">0.0</text>
+<line x1="64" y1="294.8" x2="696" y2="294.8" stroke="#e6e6e6"/>
+<text x="56" y="298.8" text-anchor="end" font-size="12" fill="#444">1.0</text>
+<line x1="64" y1="233.6" x2="696" y2="233.6" stroke="#e6e6e6"/>
+<text x="56" y="237.6" text-anchor="end" font-size="12" fill="#444">2.0</text>
+<line x1="64" y1="172.4" x2="696" y2="172.4" stroke="#e6e6e6"/>
+<text x="56" y="176.4" text-anchor="end" font-size="12" fill="#444">3.0</text>
+<line x1="64" y1="111.2" x2="696" y2="111.2" stroke="#e6e6e6"/>
+<text x="56" y="115.2" text-anchor="end" font-size="12" fill="#444">4.0</text>
+<line x1="64" y1="50.0" x2="696" y2="50.0" stroke="#e6e6e6"/>
+<text x="56" y="54.0" text-anchor="end" font-size="12" fill="#444">5.0</text>
+<line x1="64" y1="294.8" x2="696" y2="294.8" stroke="#999" stroke-dasharray="5,4"/>
+<text x="692" y="288.8" text-anchor="end" font-size="11" fill="#777">reference (1.0×)</text>
+<line x1="64.0" y1="356" x2="64.0" y2="361" stroke="#444"/>
+<text x="64.0" y="376" text-anchor="middle" font-size="12" fill="#444">512</text>
+<line x1="380.0" y1="356" x2="380.0" y2="361" stroke="#444"/>
+<text x="380.0" y="376" text-anchor="middle" font-size="12" fill="#444">1024</text>
+<line x1="564.8" y1="356" x2="564.8" y2="361" stroke="#444"/>
+<text x="564.8" y="376" text-anchor="middle" font-size="12" fill="#444">1536</text>
+<line x1="696.0" y1="356" x2="696.0" y2="361" stroke="#444"/>
+<text x="696.0" y="376" text-anchor="middle" font-size="12" fill="#444">2048</text>
+<line x1="64" y1="356" x2="696" y2="356" stroke="#444"/>
+<line x1="64" y1="50" x2="64" y2="356" stroke="#444"/>
+<text x="380" y="402" text-anchor="middle" font-size="13" fill="#222">matrix dimension n</text>
+<text transform="translate(16,203) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">speedup vs reference (×)</text>
+<path d="M64.0 117.9 L380.0 173.0 L564.8 219.5 L696.0 281.9" fill="none" stroke="#d62728" stroke-width="2.4"/>
+<circle cx="64.0" cy="117.9" r="3.2" fill="#d62728"/>
+<circle cx="380.0" cy="173.0" r="3.2" fill="#d62728"/>
+<circle cx="564.8" cy="219.5" r="3.2" fill="#d62728"/>
+<circle cx="696.0" cy="281.9" r="3.2" fill="#d62728"/>
+<path d="M64.0 114.3 L380.0 120.4 L564.8 116.1 L696.0 123.4" fill="none" stroke="#1f77b4" stroke-width="2.4"/>
+<circle cx="64.0" cy="114.3" r="3.2" fill="#1f77b4"/>
+<circle cx="380.0" cy="120.4" r="3.2" fill="#1f77b4"/>
+<circle cx="564.8" cy="116.1" r="3.2" fill="#1f77b4"/>
+<circle cx="696.0" cy="123.4" r="3.2" fill="#1f77b4"/>
+<path d="M64.0 122.8 L380.0 123.4 L564.8 115.5 L696.0 130.8" fill="none" stroke="#2ca02c" stroke-width="2.4"/>
+<circle cx="64.0" cy="122.8" r="3.2" fill="#2ca02c"/>
+<circle cx="380.0" cy="123.4" r="3.2" fill="#2ca02c"/>
+<circle cx="564.8" cy="115.5" r="3.2" fill="#2ca02c"/>
+<circle cx="696.0" cy="130.8" r="3.2" fill="#2ca02c"/>
+<rect x="76" y="47" width="14" height="4" rx="2" fill="#d62728"/>
+<text x="96" y="52" font-size="12" fill="#222">v4 register tile only</text>
+<rect x="76" y="65" width="14" height="4" rx="2" fill="#1f77b4"/>
+<text x="96" y="70" font-size="12" fill="#222">v5 + N/K blocking</text>
+<rect x="76" y="83" width="14" height="4" rx="2" fill="#2ca02c"/>
+<text x="96" y="88" font-size="12" fill="#222">v6 + M/N/K blocking</text>
+</svg>

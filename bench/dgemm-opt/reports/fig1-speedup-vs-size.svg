@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<rect width="720" height="420" fill="#ffffff"/>
+<text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Speedup vs reference — square NN, column-major</text>
+<line x1="64" y1="356.0" x2="696" y2="356.0" stroke="#e6e6e6"/>
+<text x="56" y="360.0" text-anchor="end" font-size="12" fill="#444">0.0</text>
+<line x1="64" y1="294.8" x2="696" y2="294.8" stroke="#e6e6e6"/>
+<text x="56" y="298.8" text-anchor="end" font-size="12" fill="#444">1.0</text>
+<line x1="64" y1="233.6" x2="696" y2="233.6" stroke="#e6e6e6"/>
+<text x="56" y="237.6" text-anchor="end" font-size="12" fill="#444">2.0</text>
+<line x1="64" y1="172.4" x2="696" y2="172.4" stroke="#e6e6e6"/>
+<text x="56" y="176.4" text-anchor="end" font-size="12" fill="#444">3.0</text>
+<line x1="64" y1="111.2" x2="696" y2="111.2" stroke="#e6e6e6"/>
+<text x="56" y="115.2" text-anchor="end" font-size="12" fill="#444">4.0</text>
+<line x1="64" y1="50.0" x2="696" y2="50.0" stroke="#e6e6e6"/>
+<text x="56" y="54.0" text-anchor="end" font-size="12" fill="#444">5.0</text>
+<line x1="64" y1="294.8" x2="696" y2="294.8" stroke="#999" stroke-dasharray="5,4"/>
+<text x="692" y="288.8" text-anchor="end" font-size="11" fill="#777">reference (1.0×)</text>
+<line x1="64.0" y1="356" x2="64.0" y2="361" stroke="#444"/>
+<text x="64.0" y="376" text-anchor="middle" font-size="12" fill="#444">16</text>
+<line x1="190.4" y1="356" x2="190.4" y2="361" stroke="#444"/>
+<text x="190.4" y="376" text-anchor="middle" font-size="12" fill="#444">32</text>
+<line x1="316.8" y1="356" x2="316.8" y2="361" stroke="#444"/>
+<text x="316.8" y="376" text-anchor="middle" font-size="12" fill="#444">64</text>
+<line x1="443.2" y1="356" x2="443.2" y2="361" stroke="#444"/>
+<text x="443.2" y="376" text-anchor="middle" font-size="12" fill="#444">128</text>
+<line x1="569.6" y1="356" x2="569.6" y2="361" stroke="#444"/>
+<text x="569.6" y="376" text-anchor="middle" font-size="12" fill="#444">256</text>
+<line x1="696.0" y1="356" x2="696.0" y2="361" stroke="#444"/>
+<text x="696.0" y="376" text-anchor="middle" font-size="12" fill="#444">512</text>
+<line x1="64" y1="356" x2="696" y2="356" stroke="#444"/>
+<line x1="64" y1="50" x2="64" y2="356" stroke="#444"/>
+<text x="380" y="402" text-anchor="middle" font-size="13" fill="#222">matrix dimension n (n×n×n)</text>
+<text transform="translate(16,203) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">speedup (×)</text>
+<path d="M64.0 211.6 L190.4 217.7 L316.8 222.6 L443.2 223.8 L569.6 225.6 L696.0 225.6" fill="none" stroke="#ff7f0e" stroke-width="2.4"/>
+<circle cx="64.0" cy="211.6" r="3.2" fill="#ff7f0e"/>
+<circle cx="190.4" cy="217.7" r="3.2" fill="#ff7f0e"/>
+<circle cx="316.8" cy="222.6" r="3.2" fill="#ff7f0e"/>
+<circle cx="443.2" cy="223.8" r="3.2" fill="#ff7f0e"/>
+<circle cx="569.6" cy="225.6" r="3.2" fill="#ff7f0e"/>
+<circle cx="696.0" cy="225.6" r="3.2" fill="#ff7f0e"/>
+<path d="M64.0 73.9 L190.4 84.3 L316.8 95.9 L443.2 86.1 L569.6 91.6 L696.0 111.2" fill="none" stroke="#2ca02c" stroke-width="2.4"/>
+<circle cx="64.0" cy="73.9" r="3.2" fill="#2ca02c"/>
+<circle cx="190.4" cy="84.3" r="3.2" fill="#2ca02c"/>
+<circle cx="316.8" cy="95.9" r="3.2" fill="#2ca02c"/>
+<circle cx="443.2" cy="86.1" r="3.2" fill="#2ca02c"/>
+<circle cx="569.6" cy="91.6" r="3.2" fill="#2ca02c"/>
+<circle cx="696.0" cy="111.2" r="3.2" fill="#2ca02c"/>
+<path d="M64.0 85.5 L190.4 94.1 L316.8 98.3 L443.2 93.5 L569.6 98.3 L696.0 117.9" fill="none" stroke="#d62728" stroke-width="2.4"/>
+<circle cx="64.0" cy="85.5" r="3.2" fill="#d62728"/>
+<circle cx="190.4" cy="94.1" r="3.2" fill="#d62728"/>
+<circle cx="316.8" cy="98.3" r="3.2" fill="#d62728"/>
+<circle cx="443.2" cy="93.5" r="3.2" fill="#d62728"/>
+<circle cx="569.6" cy="98.3" r="3.2" fill="#d62728"/>
+<circle cx="696.0" cy="117.9" r="3.2" fill="#d62728"/>
+<rect x="76" y="47" width="14" height="4" rx="2" fill="#ff7f0e"/>
+<text x="96" y="52" font-size="12" fill="#222">v2 reg-block N×4</text>
+<rect x="76" y="65" width="14" height="4" rx="2" fill="#2ca02c"/>
+<text x="96" y="70" font-size="12" fill="#222">v3 tile 4×4 (NN)</text>
+<rect x="76" y="83" width="14" height="4" rx="2" fill="#d62728"/>
+<text x="96" y="88" font-size="12" fill="#222">v4 general 4×4</text>
+</svg>

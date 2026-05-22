@@ -64,7 +64,7 @@ function doSweep( variants, shapes, transa, transb, layout, opts ) {
 
 function main() {
 	var outfile = process.argv[2] || path.join( __dirname, 'reports', 'dgemm-optimization.md' );
-	var variants = process.env.VARIANTS ? process.env.VARIANTS.split( ',' ) : [ BASE, 'v4-general4x4' ];
+	var variants = process.env.VARIANTS ? process.env.VARIANTS.split( ',' ) : [ BASE, 'v4-general4x4', 'v5-blocked4x4', 'v6-blocked3lvl' ];
 	var md = [];
 	var sq, modes, shapesS;
 

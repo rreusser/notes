@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<rect width="720" height="420" fill="#ffffff"/>
+<text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Absolute throughput — square NN, column-major</text>
+<line x1="64" y1="356.0" x2="696" y2="356.0" stroke="#e6e6e6"/>
+<text x="56" y="360.0" text-anchor="end" font-size="12" fill="#444">0</text>
+<line x1="64" y1="294.8" x2="696" y2="294.8" stroke="#e6e6e6"/>
+<text x="56" y="298.8" text-anchor="end" font-size="12" fill="#444">2</text>
+<line x1="64" y1="233.6" x2="696" y2="233.6" stroke="#e6e6e6"/>
+<text x="56" y="237.6" text-anchor="end" font-size="12" fill="#444">4</text>
+<line x1="64" y1="172.4" x2="696" y2="172.4" stroke="#e6e6e6"/>
+<text x="56" y="176.4" text-anchor="end" font-size="12" fill="#444">6</text>
+<line x1="64" y1="111.2" x2="696" y2="111.2" stroke="#e6e6e6"/>
+<text x="56" y="115.2" text-anchor="end" font-size="12" fill="#444">8</text>
+<line x1="64" y1="50.0" x2="696" y2="50.0" stroke="#e6e6e6"/>
+<text x="56" y="54.0" text-anchor="end" font-size="12" fill="#444">10</text>
+<line x1="64.0" y1="356" x2="64.0" y2="361" stroke="#444"/>
+<text x="64.0" y="376" text-anchor="middle" font-size="12" fill="#444">64</text>
+<line x1="316.8" y1="356" x2="316.8" y2="361" stroke="#444"/>
+<text x="316.8" y="376" text-anchor="middle" font-size="12" fill="#444">256</text>
+<line x1="443.2" y1="356" x2="443.2" y2="361" stroke="#444"/>
+<text x="443.2" y="376" text-anchor="middle" font-size="12" fill="#444">512</text>
+<line x1="569.6" y1="356" x2="569.6" y2="361" stroke="#444"/>
+<text x="569.6" y="376" text-anchor="middle" font-size="12" fill="#444">1024</text>
+<line x1="643.5" y1="356" x2="643.5" y2="361" stroke="#444"/>
+<text x="643.5" y="376" text-anchor="middle" font-size="12" fill="#444">1536</text>
+<line x1="696.0" y1="356" x2="696.0" y2="361" stroke="#444"/>
+<text x="696.0" y="376" text-anchor="middle" font-size="12" fill="#444">2048</text>
+<line x1="64" y1="356" x2="696" y2="356" stroke="#444"/>
+<line x1="64" y1="50" x2="64" y2="356" stroke="#444"/>
+<text x="380" y="402" text-anchor="middle" font-size="13" fill="#222">matrix dimension n</text>
+<text transform="translate(16,203) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">GFLOP/s (2·n³ / time)</text>
+<path d="M64.0 294.2 L316.8 292.4 L443.2 291.7 L569.6 293.0 L643.5 291.7 L696.0 291.1" fill="none" stroke="#9467bd" stroke-width="2.4"/>
+<circle cx="64.0" cy="294.2" r="3.2" fill="#9467bd"/>
+<circle cx="316.8" cy="292.4" r="3.2" fill="#9467bd"/>
+<circle cx="443.2" cy="291.7" r="3.2" fill="#9467bd"/>
+<circle cx="569.6" cy="293.0" r="3.2" fill="#9467bd"/>
+<circle cx="643.5" cy="291.7" r="3.2" fill="#9467bd"/>
+<circle cx="696.0" cy="291.1" r="3.2" fill="#9467bd"/>
+<path d="M64.0 93.8 L316.8 87.0 L443.2 111.2 L569.6 116.1 L643.5 99.6 L696.0 117.6" fill="none" stroke="#2ca02c" stroke-width="2.4"/>
+<circle cx="64.0" cy="93.8" r="3.2" fill="#2ca02c"/>
+<circle cx="316.8" cy="87.0" r="3.2" fill="#2ca02c"/>
+<circle cx="443.2" cy="111.2" r="3.2" fill="#2ca02c"/>
+<circle cx="569.6" cy="116.1" r="3.2" fill="#2ca02c"/>
+<circle cx="643.5" cy="99.6" r="3.2" fill="#2ca02c"/>
+<circle cx="696.0" cy="117.6" r="3.2" fill="#2ca02c"/>
+<path d="M443.2 66.5 L569.6 80.0 L696.0 70.8" fill="none" stroke="#d62728" stroke-width="2.4"/>
+<circle cx="443.2" cy="66.5" r="3.2" fill="#d62728"/>
+<circle cx="569.6" cy="80.0" r="3.2" fill="#d62728"/>
+<circle cx="696.0" cy="70.8" r="3.2" fill="#d62728"/>
+<rect x="76" y="47" width="14" height="4" rx="2" fill="#9467bd"/>
+<text x="96" y="52" font-size="12" fill="#222">v0 reference</text>
+<rect x="76" y="65" width="14" height="4" rx="2" fill="#2ca02c"/>
+<text x="96" y="70" font-size="12" fill="#222">v6 blocked tile</text>
+<rect x="76" y="83" width="14" height="4" rx="2" fill="#d62728"/>
+<text x="96" y="88" font-size="12" fill="#222">v7 Strassen-1</text>
+</svg>
