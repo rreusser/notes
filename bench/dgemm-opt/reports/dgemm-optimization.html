@@ -36,15 +36,14 @@ strong{font-weight:650}
 <body>
 <main>
 <h1>dgemm optimization report</h1>
-<p><em>Generated 2026-05-22 on Apple M3.</em></p>
+<p><em>Generated 2026-05-22 on Apple M3. Baseline: <code>v0-reference</code> (naive fixed-layout iteration).</em></p>
 <h2>Bottom line</h2>
-<p>A <strong>4×4 register-tiled kernel</strong> (the C tile accumulated in registers across the
-whole K loop) makes the stdlib <code>dgemm</code> JS kernel <strong>~4× faster</strong> than the current
-reference across essentially the entire useful domain — every matrix size that
-fits in cache, all four transpose modes (NN/TN/NT/TT), and both row- and
-column-major layouts. Adding <strong>cache blocking</strong> keeps that ~4× from collapsing
-on large matrices, where the flat reference (and a flat tile) fall back toward
-1× as operands spill out of cache:</p>
+<p>The baseline is a <strong>naive, fixed-layout triple loop</strong> (<code>v0-reference</code>): correct, but it iterates in one fixed order and re-reads its data from memory far more than necessary. Two fundamentally different ways to do better are measured against it as variants:</p>
+<ol>
+<li><strong>Layout interchange / dispatch</strong> (<code>stdlib</code> = the current shipping <code>@stdlib/blas/base/dgemm</code>): detect whether each operand is row- or column-major and steer to whichever loop order is cache-friendly for that combination.</li>
+<li><strong>Register tiling</strong> (<code>v4</code>–<code>v6</code>): hold a 4×4 block of <code>C</code> in registers across the whole K loop so every loaded value is reused many times — fast <em>regardless</em> of layout. <code>v5</code>/<code>v6</code> add cache blocking for large matrices.</li>
+</ol>
+<p>The headline result: <strong>register tiling wins decisively and uniformly, and layout interchange is largely unnecessary once you tile well.</strong></p>
 <figure><div class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
 <rect width="720" height="420" fill="#ffffff"/>
 <text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Large-matrix bandwidth cliff (and the cache-blocking fix)</text>
@@ -100,128 +99,82 @@ on large matrices, where the flat reference (and a flat tile) fall back toward
 <thead>
 <tr>
 <th>regime</th>
-<th>reference</th>
-<th>best variant</th>
-<th>speedup</th>
+<th><code>v0-reference</code> (GF/s)</th>
+<th><code>stdlib</code> interchange</th>
+<th>best tile (<code>v6</code>)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>square, cache-resident (16–384)</td>
-<td>~2.0 GF/s</td>
-<td>~8.5 GF/s</td>
-<td><strong>~4.2×</strong></td>
+<td>2.01</td>
+<td>0.81×</td>
+<td><strong>4.25×</strong></td>
 </tr>
 <tr>
-<td>square, large (512–2048)</td>
-<td>~2.1 GF/s</td>
-<td>~8.0 GF/s</td>
-<td><strong>~3.8×</strong> (with blocking; flat tile collapses to ~1.1× at 2048)</td>
+<td>square, large (512–1024)</td>
+<td>2.12</td>
+<td>0.71×</td>
+<td><strong>3.96×</strong></td>
 </tr>
 <tr>
-<td>row-major (reference is cache-hostile here)</td>
-<td>0.4–1.4 GF/s</td>
-<td>~8 GF/s</td>
-<td><strong>6–20×</strong></td>
+<td>row-major</td>
+<td>0.78</td>
+<td>2.42×</td>
+<td><strong>12.96×</strong></td>
 </tr>
 <tr>
-<td>all transpose modes</td>
-<td>~1.7–2.0 GF/s</td>
-<td>~8 GF/s</td>
-<td><strong>3.6–4.7×</strong></td>
+<td>transpose modes (512³)</td>
+<td>2.09</td>
+<td>0.93×</td>
+<td><strong>3.91×</strong></td>
 </tr>
 </tbody>
 </table>
-<p>This is a real, broad-based win. The only costs are (1) more code and (2) a few
-machine-tuned block-size constants. The decision recorded here is to keep this
-as a documented, reproducible study (<code>bench/dgemm-opt/</code>) rather than modify the
-shipping kernel yet; every variant is preserved as a drop-in <code>base.js</code> so the
-work can be re-validated and promoted later. See <a href="#caveats-and-when-the-win-shrinks">§ Caveats</a>.</p>
+<p>The decision recorded here is to keep this as a documented, reproducible study (<code>bench/dgemm-opt/</code>) rather than modify the shipping kernel; every variant is preserved as a drop-in <code>base.js</code>. See <a href="#caveats-and-when-the-win-shrinks">§ Caveats</a>.</p>
 <h2>Environment</h2>
 <ul>
 <li>Node: <code>v24.11.1</code></li>
 <li>CPU: <code>Apple M3</code> (8 logical)</li>
 <li>Platform: <code>darwin 25.2.0</code></li>
-<li>Load average at start: <code>2.48, 3.04, 3.47</code></li>
+<li>Load average at generation: <code>1.98, 2.33, 2.40</code></li>
 </ul>
 <blockquote>
-<p><strong>Isolation note.</strong> This machine is shared and was under heavy concurrent load during measurement. The harness uses <strong>minimum-of-trials</strong> timing (external contention can only add wall time, so the minimum over many interleaved trials best estimates the true cost) and <strong>round-robin interleaving</strong> of variants (so slow drift hits all variants equally). Absolute GF/s should be read as a floor; the <strong>speedup ratios are the robust signal</strong> because both variants run back-to-back under identical conditions.</p>
+<p><strong>Isolation note.</strong> This machine is shared and was under variable concurrent load during measurement. The harness uses <strong>minimum-of-trials</strong> timing (external contention can only add wall time, so the minimum over many interleaved trials best estimates the true cost) and <strong>round-robin interleaving</strong> of variants (so slow drift hits all variants equally). Absolute GF/s should be read as a floor; the <strong>speedup ratios are the robust signal</strong> because all variants run back-to-back under identical conditions.</p>
 </blockquote>
 <h2>Variants</h2>
-<p>The study includes a full ladder (<code>v0</code>–<code>v7</code>, plus <code>gen-*</code> tile-geometry probes)
-in <code>bench/dgemm-opt/variants/</code>. The three carried through the main sweep below:</p>
+<p>The study includes a full ladder (<code>v0</code>–<code>v7</code>, plus <code>gen-*</code> tile-geometry probes) in <code>bench/dgemm-opt/variants/</code>. Those measured below:</p>
 <ul>
-<li><strong><code>v0-reference</code></strong> — exact copy of the shipping reference kernel (baseline).</li>
-<li><strong><code>v4-general4x4</code></strong> — general-stride 4×4 register tile; the C tile is held in
-registers across the K loop. Handles <strong>all</strong> transpose modes and layouts.</li>
+<li><strong><code>v0-reference</code></strong> — naive fixed-layout reference triple loop. <strong>The baseline.</strong></li>
+<li><strong><code>upstream-stdlib</code></strong> — the current shipping <code>@stdlib/blas/base/dgemm</code> (<code>stdlib-js/stdlib@develop</code>): detects row/column-major layout, routes one favorable combo to a cache-optimal <code>ddot</code> loop, loop-tiles the rest. The <strong>layout-interchange</strong> approach.</li>
+<li><strong><code>v4-general4x4</code></strong> — general-stride 4×4 register tile; the C tile is held in registers across the K loop. Handles all transpose modes and layouts.</li>
 <li><strong><code>v5-blocked4x4</code></strong> — <code>v4</code> + N/K cache blocking (removes the large-matrix cliff).</li>
 <li><strong><code>v6-blocked3lvl</code></strong> — <code>v4</code> + M/N/K (3-level) blocking (most robust on extreme shapes).</li>
 </ul>
-<p>Every variant was validated bit-for-bit against <code>v0</code> over <strong>2560 cases</strong> (shapes
-× layouts × transposes × α/β) before timing.</p>
-<p>GFLOP/s = 2·M·N·K / time. FLOP count is identical across variants, so GF/s is directly comparable.</p>
+<p>Every variant was validated bit-for-bit against the baseline over <strong>2560 cases</strong> (shapes × layouts × transposes × α/β) before timing. GFLOP/s = 2·M·N·K / time; FLOP count is identical across variants, so GF/s and speedups are directly comparable.</p>
 <h2>The optimization ladder — what each method does and why</h2>
-<p>Each variant is one idea layered on the previous, so the speedups below can be
-read as a story rather than a menu. The whole arc is about one thing: <strong>matrix
-multiply does O(n³) arithmetic over O(n²) data, so the only way to go fast is to
-re-use each value you load many times before it leaves the registers and the
-cache.</strong> The reference kernel does the arithmetic correctly but moves data
-wastefully; every variant claws back some of that waste.</p>
+<p>Each register-tiling variant is one idea layered on the previous, so the speedups can be read as a story. The whole arc is about one thing: <strong>matrix multiply does O(n³) arithmetic over O(n²) data, so the only way to go fast is to re-use each value you load many times before it leaves the registers and the cache.</strong> The baseline does the arithmetic correctly but moves data wastefully; the question is how best to fix that — by <em>routing around</em> bad data movement (stdlib’s layout interchange) or by <em>eliminating</em> it (register tiling).</p>
 <ul>
 <li>
-<p><strong><code>v0</code> — the reference triple loop.</strong> The textbook BLAS algorithm. Its hot
-case (<code>C += A·B</code>) walks one column of <code>A</code> at a time and adds it into a column
-of <code>C</code>. The problem: for every one of the K inner steps it reads <em>and writes</em>
-the whole <code>C</code> column back to memory, and re-reads all of <code>A</code> once per column
-of <code>C</code>. Almost every value touched is used once and discarded. Result: ~2
-GF/s, no matter the size — it is memory-bound from the start.</p>
+<p><strong><code>v0</code> — the naive reference loop (baseline).</strong> Its hot case (<code>C += A·B</code>) walks one column of <code>A</code> and adds it into a column of <code>C</code>. For every one of the K inner steps it reads <em>and writes</em> the whole <code>C</code> column, and re-reads all of <code>A</code> once per column of <code>C</code>. Almost every value touched is used once and discarded. Result: ~2 GF/s, regardless of size — memory-bound from the start. It also iterates in a <em>fixed</em> order, so for row-major data it strides badly and falls even further (see §3).</p>
 </li>
 <li>
-<p><strong><code>v1</code> — unit-stride cleanup.</strong> When the matrix is contiguous (stride 1 down a
-column) the generic <code>index += stride</code> bookkeeping is pure overhead. Folding it
-into a single induction variable lets V8 generate tighter code. Marginal on
-its own (~1.0×), but it sets up the loop shape the later kernels need.</p>
+<p><strong><code>stdlib</code> — layout interchange (the other philosophy).</strong> Rather than change the arithmetic, detect the operands’ layouts and pick a loop order whose memory accesses are contiguous for that combination (plus loop tiling). This fixes <code>v0</code>’s row-major hole, but only helps the layout combinations it special-cases, and it pays <code>ddot</code> call overhead per inner product. §6 measures how far this gets.</p>
 </li>
 <li>
-<p><strong><code>v2</code> — register blocking over columns (the first real idea).</strong> Instead of
-computing one column of <code>C</code> at a time, compute <strong>four at once</strong>. Each value of
-<code>A</code> loaded in the inner loop is now multiplied into four different columns of
-<code>C</code> before being thrown away — so <code>A</code>’s memory traffic drops ~4×. This alone
-is worth <strong>~2.2×</strong>. It is still an “axpy” form, though: <code>C</code> is still streamed
-to and from memory on every K step.</p>
+<p><strong><code>v2</code> — register blocking over columns (the first tiling idea).</strong> Compute <strong>four columns of <code>C</code> at once</strong>, so each <code>A</code> value loaded is multiplied into four columns before being discarded — <code>A</code> traffic drops ~4×. Worth ~2.2×, but <code>C</code> is still streamed every K step.</p>
 </li>
 <li>
-<p><strong><code>v3</code> / <code>v4</code> — the register tile (the decisive idea).</strong> Flip the loops inside
-out into a <strong>dot-product form</strong> and keep a small <strong>4×4 block of <code>C</code> in
-registers</strong> for the entire length of the K loop. Now <code>C</code> is read and written
-exactly <em>once</em> (not K times), and each <code>A</code> and <code>B</code> value loaded is reused
-across the whole 4×4 tile. This is the classic high-performance micro-kernel,
-and it is where the big jump happens: <strong>~4×</strong>. <code>v3</code> hard-codes the common
-contiguous column-major <code>C = A·B</code>; <strong><code>v4</code> rewrites the same tile in terms of
-“effective strides”</strong> so the <em>identical</em> kernel covers all four transpose
-modes (NN/TN/NT/TT) and both memory layouts — generality for free.</p>
+<p><strong><code>v3</code> / <code>v4</code> — the register tile (the decisive idea).</strong> Flip the loops into a <strong>dot-product form</strong> and keep a <strong>4×4 block of <code>C</code> in registers</strong> for the entire K loop. Now <code>C</code> is touched <em>once</em> (not K times) and each <code>A</code>/<code>B</code> load is reused across the whole tile. This is the big jump (~4×). <code>v4</code> writes the tile in terms of “effective strides” so the identical kernel covers all transpose modes (NN/TN/NT/TT) and both layouts — generality, and layout-independence, for free.</p>
 </li>
 <li>
-<p><strong><code>v5</code> / <code>v6</code> — cache blocking (for when the matrices stop fitting).</strong> The
-register tile is perfect until the matrices grow past the CPU cache. Then <code>v4</code>
-starts re-streaming <code>A</code> from main memory over and over and <strong>collapses back
-toward 1×</strong> (see §A). Blocking fixes this by chopping the problem into tiles
-(<code>v5</code> blocks the N and K dimensions; <code>v6</code> also blocks M) sized so that a panel
-of <code>B</code> — and, for <code>v6</code>, a panel of <code>A</code> — stays resident in cache and is reused
-before being evicted. This keeps the ~3.8× all the way out to 2048³.</p>
+<p><strong><code>v5</code> / <code>v6</code> — cache blocking (for when matrices stop fitting).</strong> Past the cache, <code>v4</code> re-streams <code>A</code> from memory and collapses toward 1× (§A). Blocking into tiles sized to keep a <code>B</code> panel (and, for <code>v6</code>, an <code>A</code> panel) resident keeps ~3.8× out to 2048³.</p>
 </li>
 <li>
-<p><strong><code>v7</code> — Strassen (a different axis entirely).</strong> Everything above keeps the
-arithmetic identical and just moves data better. Strassen instead <strong>does less
-arithmetic</strong>: it computes a 2×2 block product with 7 multiplies instead of 8,
-at the cost of extra matrix additions. Layered on top of the fast <code>v5</code> kernel
-it buys a further <strong>+13–17%</strong> — a genuine surprise (see §C), but with enough
-caveats (square-only, allocations, accuracy) that it is documented, not
-shipped.</p>
+<p><strong><code>v7</code> — Strassen (a different axis).</strong> Everything above keeps the arithmetic identical and just moves data better; Strassen instead does <strong>less arithmetic</strong> (7 sub-multiplies per 2×2 block instead of 8). On top of <code>v5</code> it buys a further +13–17% (§C) — a surprise — but with caveats that keep it unshipped.</p>
 </li>
 </ul>
-<p>The sweet-spot tile size (4×4) and a curious V8 codegen detail that was worth
-~15% on its own are covered in §B.</p>
+<p>The sweet-spot tile size (4×4) and a V8 codegen detail worth ~15% are in §B.</p>
 <h2>1. Square matrices, NN, column-major</h2>
 <table>
 <thead>
@@ -231,12 +184,10 @@ shipped.</p>
 <th>N</th>
 <th>K</th>
 <th>v0-reference (GF/s)</th>
-<th>v4-general4x4 (GF/s)</th>
-<th>v5-blocked4x4 (GF/s)</th>
-<th>v6-blocked3lvl (GF/s)</th>
-<th>v4-general4x4 speedup</th>
-<th>v5-blocked4x4 speedup</th>
-<th>v6-blocked3lvl speedup</th>
+<th>stdlib ×</th>
+<th>v4 ×</th>
+<th>v5 ×</th>
+<th>v6 ×</th>
 </tr>
 </thead>
 <tbody>
@@ -245,163 +196,140 @@ shipped.</p>
 <td>16</td>
 <td>16</td>
 <td>16</td>
-<td>1.689</td>
-<td>7.477</td>
-<td>7.438</td>
-<td>7.428</td>
-<td>4.426x</td>
-<td>4.403x</td>
-<td>4.397x</td>
+<td>1.78</td>
+<td>0.93x</td>
+<td>4.33x</td>
+<td>4.39x</td>
+<td>4.31x</td>
 </tr>
 <tr>
 <td>32^3</td>
 <td>32</td>
 <td>32</td>
 <td>32</td>
-<td>1.903</td>
-<td>8.147</td>
-<td>8.193</td>
-<td>8.186</td>
-<td>4.280x</td>
-<td>4.304x</td>
-<td>4.300x</td>
+<td>1.95</td>
+<td>0.85x</td>
+<td>4.27x</td>
+<td>4.28x</td>
+<td>4.30x</td>
 </tr>
 <tr>
 <td>48^3</td>
 <td>48</td>
 <td>48</td>
 <td>48</td>
-<td>1.979</td>
-<td>8.418</td>
-<td>8.465</td>
-<td>8.457</td>
-<td>4.253x</td>
-<td>4.277x</td>
-<td>4.273x</td>
+<td>2.02</td>
+<td>0.81x</td>
+<td>4.21x</td>
+<td>4.24x</td>
+<td>4.25x</td>
 </tr>
 <tr>
 <td>64^3</td>
 <td>64</td>
 <td>64</td>
 <td>64</td>
-<td>2.012</td>
-<td>8.471</td>
-<td>8.567</td>
-<td>8.564</td>
-<td>4.209x</td>
-<td>4.257x</td>
-<td>4.255x</td>
+<td>2.04</td>
+<td>0.80x</td>
+<td>4.18x</td>
+<td>4.24x</td>
+<td>4.20x</td>
 </tr>
 <tr>
 <td>96^3</td>
 <td>96</td>
 <td>96</td>
 <td>96</td>
-<td>1.968</td>
-<td>8.262</td>
-<td>8.265</td>
-<td>8.295</td>
-<td>4.198x</td>
-<td>4.200x</td>
-<td>4.215x</td>
+<td>2.08</td>
+<td>0.78x</td>
+<td>4.11x</td>
+<td>4.15x</td>
+<td>4.18x</td>
 </tr>
 <tr>
 <td>128^3</td>
 <td>128</td>
 <td>128</td>
 <td>128</td>
-<td>1.971</td>
-<td>8.547</td>
-<td>8.515</td>
-<td>8.622</td>
-<td>4.336x</td>
-<td>4.320x</td>
-<td>4.374x</td>
+<td>2.01</td>
+<td>0.81x</td>
+<td>4.31x</td>
+<td>4.35x</td>
+<td>4.34x</td>
 </tr>
 <tr>
 <td>192^3</td>
 <td>192</td>
 <td>192</td>
 <td>192</td>
-<td>2.054</td>
-<td>8.714</td>
-<td>8.780</td>
-<td>8.786</td>
-<td>4.242x</td>
-<td>4.274x</td>
-<td>4.277x</td>
+<td>2.06</td>
+<td>0.78x</td>
+<td>4.23x</td>
+<td>4.26x</td>
+<td>4.28x</td>
 </tr>
 <tr>
 <td>256^3</td>
 <td>256</td>
 <td>256</td>
 <td>256</td>
-<td>2.077</td>
-<td>8.734</td>
-<td>8.820</td>
-<td>8.812</td>
-<td>4.205x</td>
-<td>4.247x</td>
-<td>4.243x</td>
+<td>2.08</td>
+<td>0.77x</td>
+<td>4.20x</td>
+<td>4.24x</td>
+<td>4.21x</td>
 </tr>
 <tr>
 <td>384^3</td>
 <td>384</td>
 <td>384</td>
 <td>384</td>
-<td>2.104</td>
-<td>8.719</td>
-<td>8.730</td>
-<td>8.727</td>
-<td>4.143x</td>
-<td>4.149x</td>
-<td>4.147x</td>
+<td>2.10</td>
+<td>0.75x</td>
+<td>4.16x</td>
+<td>4.16x</td>
+<td>4.14x</td>
 </tr>
 <tr>
 <td>512^3</td>
 <td>512</td>
 <td>512</td>
 <td>512</td>
-<td>2.111</td>
-<td>8.138</td>
-<td>8.138</td>
-<td>8.130</td>
-<td>3.855x</td>
-<td>3.855x</td>
-<td>3.851x</td>
+<td>2.10</td>
+<td>0.75x</td>
+<td>3.88x</td>
+<td>3.85x</td>
+<td>3.84x</td>
 </tr>
 <tr>
 <td>768^3</td>
 <td>768</td>
 <td>768</td>
 <td>768</td>
-<td>2.114</td>
-<td>8.578</td>
-<td>8.589</td>
-<td>8.568</td>
-<td>4.058x</td>
-<td>4.063x</td>
-<td>4.053x</td>
+<td>2.12</td>
+<td>0.75x</td>
+<td>4.08x</td>
+<td>4.10x</td>
+<td>4.09x</td>
 </tr>
 <tr>
 <td>1024^3</td>
 <td>1024</td>
 <td>1024</td>
 <td>1024</td>
-<td>2.122</td>
-<td>8.304</td>
-<td>8.282</td>
-<td>8.269</td>
-<td>3.913x</td>
-<td>3.902x</td>
-<td>3.896x</td>
+<td>2.13</td>
+<td>0.64x</td>
+<td>3.97x</td>
+<td>3.93x</td>
+<td>3.93x</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><code>v4-general4x4</code> mean speedup: <strong>4.18x</strong></li>
-<li><code>v5-blocked4x4</code> mean speedup: <strong>4.19x</strong></li>
-<li><code>v6-blocked3lvl</code> mean speedup: <strong>4.19x</strong></li>
+<li><code>stdlib</code> mean speedup: <strong>0.78×</strong></li>
+<li><code>v4</code> mean speedup: <strong>4.16×</strong></li>
+<li><code>v5</code> mean speedup: <strong>4.18×</strong></li>
+<li><code>v6</code> mean speedup: <strong>4.17×</strong></li>
 </ul>
 <figure><div class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
 <rect width="720" height="420" fill="#ffffff"/>
@@ -495,6 +423,11 @@ shipped.</p>
 <line x1="64" y1="50" x2="64" y2="356" stroke="#444"/>
 <text x="380" y="402" text-anchor="middle" font-size="13" fill="#222">matrix dimension n</text>
 <text transform="translate(16,203) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">GFLOP/s (2·n³ / time)</text>
+<path d="M64.0 305.8 L316.8 307.0 L443.2 308.9 L569.6 315.9" fill="none" stroke="#ff7f0e" stroke-width="2.4"/>
+<circle cx="64.0" cy="305.8" r="3.2" fill="#ff7f0e"/>
+<circle cx="316.8" cy="307.0" r="3.2" fill="#ff7f0e"/>
+<circle cx="443.2" cy="308.9" r="3.2" fill="#ff7f0e"/>
+<circle cx="569.6" cy="315.9" r="3.2" fill="#ff7f0e"/>
 <path d="M64.0 294.2 L316.8 292.4 L443.2 291.7 L569.6 293.0 L643.5 291.7 L696.0 291.1" fill="none" stroke="#9467bd" stroke-width="2.4"/>
 <circle cx="64.0" cy="294.2" r="3.2" fill="#9467bd"/>
 <circle cx="316.8" cy="292.4" r="3.2" fill="#9467bd"/>
@@ -513,87 +446,104 @@ shipped.</p>
 <circle cx="443.2" cy="66.5" r="3.2" fill="#d62728"/>
 <circle cx="569.6" cy="80.0" r="3.2" fill="#d62728"/>
 <circle cx="696.0" cy="70.8" r="3.2" fill="#d62728"/>
-<rect x="76" y="47" width="14" height="4" rx="2" fill="#9467bd"/>
-<text x="96" y="52" font-size="12" fill="#222">v0 reference</text>
-<rect x="76" y="65" width="14" height="4" rx="2" fill="#2ca02c"/>
-<text x="96" y="70" font-size="12" fill="#222">v6 blocked tile</text>
-<rect x="76" y="83" width="14" height="4" rx="2" fill="#d62728"/>
-<text x="96" y="88" font-size="12" fill="#222">v7 Strassen-1</text>
+<rect x="76" y="47" width="14" height="4" rx="2" fill="#ff7f0e"/>
+<text x="96" y="52" font-size="12" fill="#222">stdlib (layout interchange)</text>
+<rect x="76" y="65" width="14" height="4" rx="2" fill="#9467bd"/>
+<text x="96" y="70" font-size="12" fill="#222">v0 naive baseline</text>
+<rect x="76" y="83" width="14" height="4" rx="2" fill="#2ca02c"/>
+<text x="96" y="88" font-size="12" fill="#222">v6 blocked tile</text>
+<rect x="76" y="101" width="14" height="4" rx="2" fill="#d62728"/>
+<text x="96" y="106" font-size="12" fill="#222">v7 Strassen-1</text>
 </svg></div><figcaption>Figure 3. Absolute throughput, square NN</figcaption></figure>
-<h2>2. Transpose-mode generalization (512^3, column-major)</h2>
+<h2>2. Transpose-mode generalization (512³, column-major)</h2>
 <table>
 <thead>
 <tr>
 <th>mode</th>
 <th>v0-reference (GF/s)</th>
-<th>v4-general4x4 speedup</th>
-<th>v5-blocked4x4 speedup</th>
-<th>v6-blocked3lvl speedup</th>
+<th>stdlib ×</th>
+<th>v4 ×</th>
+<th>v5 ×</th>
+<th>v6 ×</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>NN</td>
-<td>2.025</td>
-<td>3.840x</td>
-<td>3.837x</td>
-<td>3.869x</td>
+<td>2.12</td>
+<td>0.74x</td>
+<td>3.84x</td>
+<td>3.86x</td>
+<td>3.86x</td>
 </tr>
 <tr>
 <td>TN (AᵀB)</td>
-<td>2.026</td>
-<td>4.133x</td>
-<td>4.134x</td>
-<td>4.127x</td>
+<td>2.12</td>
+<td>1.50x</td>
+<td>4.15x</td>
+<td>4.16x</td>
+<td>4.16x</td>
 </tr>
 <tr>
 <td>NT (ABᵀ)</td>
-<td>2.008</td>
-<td>3.632x</td>
-<td>3.601x</td>
-<td>3.585x</td>
+<td>2.11</td>
+<td>0.74x</td>
+<td>3.59x</td>
+<td>3.58x</td>
+<td>3.58x</td>
 </tr>
 <tr>
 <td>TT (AᵀBᵀ)</td>
-<td>1.667</td>
-<td>4.745x</td>
-<td>4.599x</td>
-<td>4.601x</td>
+<td>2.01</td>
+<td>0.73x</td>
+<td>3.93x</td>
+<td>4.06x</td>
+<td>4.05x</td>
 </tr>
 </tbody>
 </table>
 <figure><div class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
 <rect width="720" height="420" fill="#ffffff"/>
-<text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Generalization across transpose modes (512³, col-major)</text>
+<text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Across transpose modes (512³): interchange vs register tile</text>
 <line x1="64" y1="350.0" x2="696" y2="350.0" stroke="#e6e6e6"/>
 <text x="56" y="354.0" text-anchor="end" font-size="12" fill="#444">0.0</text>
 <line x1="64" y1="290.0" x2="696" y2="290.0" stroke="#e6e6e6"/>
-<text x="56" y="294.0" text-anchor="end" font-size="12" fill="#444">1.0</text>
+<text x="56" y="294.0" text-anchor="end" font-size="12" fill="#444">0.9</text>
 <line x1="64" y1="230.0" x2="696" y2="230.0" stroke="#e6e6e6"/>
-<text x="56" y="234.0" text-anchor="end" font-size="12" fill="#444">2.0</text>
+<text x="56" y="234.0" text-anchor="end" font-size="12" fill="#444">1.8</text>
 <line x1="64" y1="170.0" x2="696" y2="170.0" stroke="#e6e6e6"/>
-<text x="56" y="174.0" text-anchor="end" font-size="12" fill="#444">3.0</text>
+<text x="56" y="174.0" text-anchor="end" font-size="12" fill="#444">2.7</text>
 <line x1="64" y1="110.0" x2="696" y2="110.0" stroke="#e6e6e6"/>
-<text x="56" y="114.0" text-anchor="end" font-size="12" fill="#444">4.0</text>
+<text x="56" y="114.0" text-anchor="end" font-size="12" fill="#444">3.6</text>
 <line x1="64" y1="50.0" x2="696" y2="50.0" stroke="#e6e6e6"/>
-<text x="56" y="54.0" text-anchor="end" font-size="12" fill="#444">5.0</text>
-<line x1="64" y1="290.0" x2="696" y2="290.0" stroke="#999" stroke-dasharray="5,4"/>
-<text transform="translate(16,200) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">speedup vs reference (×)</text>
-<rect x="81.4" y="101.6" width="110.9" height="248.4" fill="#d62728"/>
-<text x="136.8" y="97.6" text-anchor="middle" font-size="10" fill="#333">4.1</text>
+<text x="56" y="54.0" text-anchor="end" font-size="12" fill="#444">4.5</text>
+<line x1="64" y1="283.3" x2="696" y2="283.3" stroke="#999" stroke-dasharray="5,4"/>
+<text transform="translate(16,200) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">speedup vs naive baseline (×)</text>
+<rect x="81.4" y="300.7" width="55.5" height="49.3" fill="#9467bd"/>
+<text x="109.1" y="296.7" text-anchor="middle" font-size="10" fill="#333">0.7</text>
+<rect x="143.0" y="92.7" width="55.5" height="257.3" fill="#2ca02c"/>
+<text x="170.7" y="88.7" text-anchor="middle" font-size="10" fill="#333">3.9</text>
 <text x="143.0" y="368" text-anchor="middle" font-size="11" fill="#222">NN</text>
-<rect x="239.4" y="100.4" width="110.9" height="249.6" fill="#d62728"/>
-<text x="294.8" y="96.4" text-anchor="middle" font-size="10" fill="#333">4.2</text>
+<rect x="239.4" y="250.0" width="55.5" height="100.0" fill="#9467bd"/>
+<text x="267.1" y="246.0" text-anchor="middle" font-size="10" fill="#333">1.5</text>
+<rect x="301.0" y="72.7" width="55.5" height="277.3" fill="#2ca02c"/>
+<text x="328.7" y="68.7" text-anchor="middle" font-size="10" fill="#333">4.2</text>
 <text x="301.0" y="368" text-anchor="middle" font-size="11" fill="#222">TN (AᵀB)</text>
-<rect x="397.4" y="100.4" width="110.9" height="249.6" fill="#d62728"/>
-<text x="452.8" y="96.4" text-anchor="middle" font-size="10" fill="#333">4.2</text>
+<rect x="397.4" y="300.7" width="55.5" height="49.3" fill="#9467bd"/>
+<text x="425.1" y="296.7" text-anchor="middle" font-size="10" fill="#333">0.7</text>
+<rect x="459.0" y="111.3" width="55.5" height="238.7" fill="#2ca02c"/>
+<text x="486.7" y="107.3" text-anchor="middle" font-size="10" fill="#333">3.6</text>
 <text x="459.0" y="368" text-anchor="middle" font-size="11" fill="#222">NT (ABᵀ)</text>
-<rect x="555.4" y="100.4" width="110.9" height="249.6" fill="#d62728"/>
-<text x="610.8" y="96.4" text-anchor="middle" font-size="10" fill="#333">4.2</text>
+<rect x="555.4" y="301.3" width="55.5" height="48.7" fill="#9467bd"/>
+<text x="583.1" y="297.3" text-anchor="middle" font-size="10" fill="#333">0.7</text>
+<rect x="617.0" y="80.0" width="55.5" height="270.0" fill="#2ca02c"/>
+<text x="644.7" y="76.0" text-anchor="middle" font-size="10" fill="#333">4.0</text>
 <text x="617.0" y="368" text-anchor="middle" font-size="11" fill="#222">TT (AᵀBᵀ)</text>
 <line x1="64" y1="350" x2="696" y2="350" stroke="#444"/>
-<rect x="76" y="47" width="12" height="12" rx="2" fill="#d62728"/>
-<text x="94" y="57" font-size="12" fill="#222">v4 general 4×4</text>
+<rect x="76" y="47" width="12" height="12" rx="2" fill="#9467bd"/>
+<text x="94" y="57" font-size="12" fill="#222">stdlib interchange</text>
+<rect x="76" y="65" width="12" height="12" rx="2" fill="#2ca02c"/>
+<text x="94" y="75" font-size="12" fill="#222">v6 register tile</text>
 </svg></div><figcaption>Figure 4. Speedup across transpose modes</figcaption></figure>
 <h2>3. Layout generalization: row-major, NN</h2>
 <table>
@@ -604,12 +554,10 @@ shipped.</p>
 <th>N</th>
 <th>K</th>
 <th>v0-reference (GF/s)</th>
-<th>v4-general4x4 (GF/s)</th>
-<th>v5-blocked4x4 (GF/s)</th>
-<th>v6-blocked3lvl (GF/s)</th>
-<th>v4-general4x4 speedup</th>
-<th>v5-blocked4x4 speedup</th>
-<th>v6-blocked3lvl speedup</th>
+<th>stdlib ×</th>
+<th>v4 ×</th>
+<th>v5 ×</th>
+<th>v6 ×</th>
 </tr>
 </thead>
 <tbody>
@@ -618,48 +566,37 @@ shipped.</p>
 <td>128</td>
 <td>128</td>
 <td>128</td>
-<td>1.432</td>
-<td>8.257</td>
-<td>8.313</td>
-<td>8.317</td>
-<td>5.767x</td>
-<td>5.806x</td>
-<td>5.808x</td>
+<td>1.26</td>
+<td>1.26x</td>
+<td>6.85x</td>
+<td>6.90x</td>
+<td>6.91x</td>
 </tr>
 <tr>
 <td>256^3</td>
 <td>256</td>
 <td>256</td>
 <td>256</td>
-<td>0.621</td>
-<td>8.368</td>
-<td>8.432</td>
-<td>8.399</td>
-<td>13.482x</td>
-<td>13.584x</td>
-<td>13.532x</td>
+<td>0.63</td>
+<td>2.50x</td>
+<td>13.92x</td>
+<td>14.04x</td>
+<td>14.04x</td>
 </tr>
 <tr>
 <td>512^3</td>
 <td>512</td>
 <td>512</td>
 <td>512</td>
-<td>0.374</td>
-<td>7.652</td>
-<td>7.789</td>
-<td>7.684</td>
-<td>20.442x</td>
-<td>20.808x</td>
-<td>20.527x</td>
+<td>0.45</td>
+<td>3.51x</td>
+<td>17.46x</td>
+<td>17.95x</td>
+<td>17.93x</td>
 </tr>
 </tbody>
 </table>
-<p>The outsized row-major speedups are not the tile being magic — they are the
-<strong>reference kernel being pathologically cache-hostile</strong> for row-major data. Its
-inner loop walks columns (stride <code>LDA</code>) of a row-major matrix, so every access
-is a cache miss; throughput drops to 0.37 GF/s at 512³. The tiled kernel touches
-memory in a blocked pattern and is layout-agnostic, so it stays ~8 GF/s. Read
-this as “the reference has a row-major hole; the tiled kernel does not.”</p>
+<p>The naive baseline has a <strong>row-major hole</strong>: its fixed loop order walks columns (stride <code>LDA</code>) of a row-major matrix, so every access misses cache and throughput craters (0.45 GF/s at 512³). The <code>stdlib</code> variant’s whole reason for existing is to patch this hole via layout detection — and it does help here. But the register tile touches memory in a blocked pattern and is layout-agnostic, so it simply stays ~8 GF/s without needing to know the layout at all. §6 makes this comparison head-on.</p>
 <h2>4. Shape generalization (column-major, NN)</h2>
 <table>
 <thead>
@@ -669,12 +606,10 @@ this as “the reference has a row-major hole; the tiled kernel does not.”</p>
 <th>N</th>
 <th>K</th>
 <th>v0-reference (GF/s)</th>
-<th>v4-general4x4 (GF/s)</th>
-<th>v5-blocked4x4 (GF/s)</th>
-<th>v6-blocked3lvl (GF/s)</th>
-<th>v4-general4x4 speedup</th>
-<th>v5-blocked4x4 speedup</th>
-<th>v6-blocked3lvl speedup</th>
+<th>stdlib ×</th>
+<th>v4 ×</th>
+<th>v5 ×</th>
+<th>v6 ×</th>
 </tr>
 </thead>
 <tbody>
@@ -683,91 +618,77 @@ this as “the reference has a row-major hole; the tiled kernel does not.”</p>
 <td>1024</td>
 <td>1024</td>
 <td>16</td>
-<td>2.046</td>
-<td>6.969</td>
-<td>7.054</td>
-<td>6.909</td>
-<td>3.407x</td>
-<td>3.448x</td>
-<td>3.377x</td>
+<td>2.13</td>
+<td>0.63x</td>
+<td>3.50x</td>
+<td>3.51x</td>
+<td>3.45x</td>
 </tr>
 <tr>
 <td>rank-64 update</td>
 <td>1024</td>
 <td>1024</td>
 <td>64</td>
-<td>2.044</td>
-<td>7.587</td>
-<td>7.660</td>
-<td>7.504</td>
-<td>3.712x</td>
-<td>3.748x</td>
-<td>3.671x</td>
+<td>2.13</td>
+<td>0.64x</td>
+<td>3.74x</td>
+<td>3.76x</td>
+<td>3.73x</td>
 </tr>
 <tr>
 <td>tall*skinny (N=16)</td>
 <td>1024</td>
 <td>16</td>
 <td>1024</td>
-<td>2.047</td>
-<td>6.621</td>
-<td>7.678</td>
-<td>7.835</td>
-<td>3.234x</td>
-<td>3.750x</td>
-<td>3.827x</td>
+<td>2.13</td>
+<td>0.67x</td>
+<td>3.95x</td>
+<td>3.93x</td>
+<td>3.93x</td>
 </tr>
 <tr>
 <td>short*wide (M=16)</td>
 <td>16</td>
 <td>1024</td>
 <td>1024</td>
-<td>1.658</td>
-<td>8.170</td>
-<td>8.311</td>
-<td>8.307</td>
-<td>4.928x</td>
-<td>5.012x</td>
-<td>5.010x</td>
+<td>1.73</td>
+<td>0.92x</td>
+<td>5.02x</td>
+<td>5.08x</td>
+<td>5.08x</td>
 </tr>
 <tr>
 <td>tall A panel</td>
 <td>2048</td>
 <td>64</td>
 <td>64</td>
-<td>2.054</td>
-<td>7.747</td>
-<td>7.881</td>
-<td>7.785</td>
-<td>3.771x</td>
-<td>3.836x</td>
-<td>3.790x</td>
+<td>2.15</td>
+<td>0.69x</td>
+<td>3.88x</td>
+<td>3.91x</td>
+<td>3.90x</td>
 </tr>
 <tr>
 <td>deep inner (K=2048)</td>
 <td>64</td>
 <td>64</td>
 <td>2048</td>
-<td>1.945</td>
-<td>8.232</td>
-<td>8.100</td>
-<td>8.100</td>
-<td>4.232x</td>
-<td>4.164x</td>
-<td>4.164x</td>
+<td>2.03</td>
+<td>0.79x</td>
+<td>4.24x</td>
+<td>4.20x</td>
+<td>4.20x</td>
 </tr>
 <tr>
 <td>rectangular</td>
 <td>512</td>
 <td>256</td>
 <td>128</td>
-<td>2.021</td>
-<td>7.611</td>
-<td>7.751</td>
-<td>7.620</td>
-<td>3.766x</td>
-<td>3.835x</td>
-<td>3.770x</td>
+<td>2.12</td>
+<td>0.76x</td>
+<td>3.66x</td>
+<td>3.68x</td>
+<td>3.69x</td>
 </tr>
 </tbody>
 </table>
@@ -833,12 +754,10 @@ this as “the reference has a row-major hole; the tiled kernel does not.”</p>
 <th>N</th>
 <th>K</th>
 <th>v0-reference (GF/s)</th>
-<th>v4-general4x4 (GF/s)</th>
-<th>v5-blocked4x4 (GF/s)</th>
-<th>v6-blocked3lvl (GF/s)</th>
-<th>v4-general4x4 speedup</th>
-<th>v5-blocked4x4 speedup</th>
-<th>v6-blocked3lvl speedup</th>
+<th>stdlib ×</th>
+<th>v4 ×</th>
+<th>v5 ×</th>
+<th>v6 ×</th>
 </tr>
 </thead>
 <tbody>
@@ -847,132 +766,225 @@ this as “the reference has a row-major hole; the tiled kernel does not.”</p>
 <td>2</td>
 <td>2</td>
 <td>2</td>
-<td>0.515</td>
-<td>0.510</td>
-<td>0.472</td>
-<td>0.460</td>
-<td>0.989x</td>
-<td>0.917x</td>
-<td>0.893x</td>
+<td>0.54</td>
+<td>0.84x</td>
+<td>0.97x</td>
+<td>0.92x</td>
+<td>0.89x</td>
 </tr>
 <tr>
 <td>3^3</td>
 <td>3</td>
 <td>3</td>
 <td>3</td>
-<td>0.784</td>
-<td>0.766</td>
-<td>0.737</td>
-<td>0.726</td>
-<td>0.977x</td>
-<td>0.940x</td>
-<td>0.926x</td>
+<td>0.82</td>
+<td>1.01x</td>
+<td>0.98x</td>
+<td>0.95x</td>
+<td>0.93x</td>
 </tr>
 <tr>
 <td>4^3</td>
 <td>4</td>
 <td>4</td>
 <td>4</td>
-<td>0.969</td>
-<td>3.420</td>
-<td>2.982</td>
-<td>2.948</td>
-<td>3.528x</td>
-<td>3.076x</td>
-<td>3.041x</td>
+<td>1.01</td>
+<td>0.99x</td>
+<td>3.52x</td>
+<td>3.12x</td>
+<td>3.07x</td>
 </tr>
 <tr>
 <td>5^3</td>
 <td>5</td>
 <td>5</td>
 <td>5</td>
-<td>1.077</td>
-<td>2.002</td>
-<td>1.930</td>
-<td>1.914</td>
-<td>1.859x</td>
-<td>1.792x</td>
-<td>1.777x</td>
+<td>1.12</td>
+<td>1.10x</td>
+<td>1.86x</td>
+<td>1.79x</td>
+<td>1.77x</td>
 </tr>
 <tr>
 <td>6^3</td>
 <td>6</td>
 <td>6</td>
 <td>6</td>
-<td>1.182</td>
-<td>1.693</td>
-<td>1.663</td>
-<td>1.659</td>
-<td>1.433x</td>
-<td>1.408x</td>
-<td>1.404x</td>
+<td>1.23</td>
+<td>1.12x</td>
+<td>1.43x</td>
+<td>1.40x</td>
+<td>1.39x</td>
 </tr>
 <tr>
 <td>8^3</td>
 <td>8</td>
 <td>8</td>
 <td>8</td>
-<td>1.349</td>
-<td>5.763</td>
-<td>5.626</td>
-<td>5.571</td>
-<td>4.271x</td>
-<td>4.169x</td>
-<td>4.128x</td>
+<td>1.41</td>
+<td>1.11x</td>
+<td>4.28x</td>
+<td>4.17x</td>
+<td>4.12x</td>
 </tr>
 <tr>
 <td>12^3</td>
 <td>12</td>
 <td>12</td>
 <td>12</td>
-<td>1.502</td>
-<td>6.700</td>
-<td>6.648</td>
-<td>6.640</td>
-<td>4.461x</td>
-<td>4.426x</td>
-<td>4.421x</td>
+<td>1.56</td>
+<td>0.90x</td>
+<td>4.47x</td>
+<td>4.43x</td>
+<td>4.41x</td>
 </tr>
 </tbody>
 </table>
+<h2>6. Layout interchange vs register tiling — head to head</h2>
+<p>§3 showed the naive baseline has a row-major hole and that <code>stdlib</code>’s layout
+interchange patches it. The sharper question: once you have a register-tiled
+kernel that uses cache and registers well, is layout detection useful <em>at all</em>?</p>
+<p>If it were, a layout-blind kernel would have a fast direction and a slow one — a
+wide spread across layout combinations — and detection would exist to always
+pick the fast one. So measure <code>stdlib</code> (layout-aware) and <code>v6</code> (layout-blind
+register tile) across all four (A-layout × B-layout) combinations, NN at n=256:</p>
+<table>
+<thead>
+<tr>
+<th>A × B layout</th>
+<th><code>stdlib</code> (GF/s)</th>
+<th><code>v6</code> register tile (GF/s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A=row, B=col <strong>(stdlib’s fast path)</strong></td>
+<td>3.36</td>
+<td>9.00</td>
+</tr>
+<tr>
+<td>A=row, B=row</td>
+<td>1.63</td>
+<td>8.91</td>
+</tr>
+<tr>
+<td>A=col, B=col (classic BLAS)</td>
+<td>1.62</td>
+<td>8.81</td>
+</tr>
+<tr>
+<td>A=col, B=row</td>
+<td>1.60</td>
+<td>8.83</td>
+</tr>
+</tbody>
+</table>
+<figure><div class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<rect width="720" height="420" fill="#ffffff"/>
+<text x="360" y="26" text-anchor="middle" font-size="17" font-weight="600">Throughput across A×B memory layouts (NN, n=256)</text>
+<line x1="64" y1="350.0" x2="696" y2="350.0" stroke="#e6e6e6"/>
+<text x="56" y="354.0" text-anchor="end" font-size="12" fill="#444">0.0</text>
+<line x1="64" y1="290.0" x2="696" y2="290.0" stroke="#e6e6e6"/>
+<text x="56" y="294.0" text-anchor="end" font-size="12" fill="#444">2.0</text>
+<line x1="64" y1="230.0" x2="696" y2="230.0" stroke="#e6e6e6"/>
+<text x="56" y="234.0" text-anchor="end" font-size="12" fill="#444">4.0</text>
+<line x1="64" y1="170.0" x2="696" y2="170.0" stroke="#e6e6e6"/>
+<text x="56" y="174.0" text-anchor="end" font-size="12" fill="#444">6.0</text>
+<line x1="64" y1="110.0" x2="696" y2="110.0" stroke="#e6e6e6"/>
+<text x="56" y="114.0" text-anchor="end" font-size="12" fill="#444">8.0</text>
+<line x1="64" y1="50.0" x2="696" y2="50.0" stroke="#e6e6e6"/>
+<text x="56" y="54.0" text-anchor="end" font-size="12" fill="#444">10.0</text>
+<text transform="translate(16,200) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">GFLOP/s</text>
+<rect x="81.4" y="249.2" width="55.5" height="100.8" fill="#9467bd"/>
+<text x="109.1" y="245.2" text-anchor="middle" font-size="10" fill="#333">3.4</text>
+<rect x="143.0" y="80.0" width="55.5" height="270.0" fill="#2ca02c"/>
+<text x="170.7" y="76.0" text-anchor="middle" font-size="10" fill="#333">9.0</text>
+<text x="143.0" y="368" text-anchor="middle" font-size="11" fill="#222">A=row B=col*</text>
+<rect x="239.4" y="301.1" width="55.5" height="48.9" fill="#9467bd"/>
+<text x="267.1" y="297.1" text-anchor="middle" font-size="10" fill="#333">1.6</text>
+<rect x="301.0" y="82.7" width="55.5" height="267.3" fill="#2ca02c"/>
+<text x="328.7" y="78.7" text-anchor="middle" font-size="10" fill="#333">8.9</text>
+<text x="301.0" y="368" text-anchor="middle" font-size="11" fill="#222">A=row B=row</text>
+<rect x="397.4" y="301.4" width="55.5" height="48.6" fill="#9467bd"/>
+<text x="425.1" y="297.4" text-anchor="middle" font-size="10" fill="#333">1.6</text>
+<rect x="459.0" y="85.7" width="55.5" height="264.3" fill="#2ca02c"/>
+<text x="486.7" y="81.7" text-anchor="middle" font-size="10" fill="#333">8.8</text>
+<text x="459.0" y="368" text-anchor="middle" font-size="11" fill="#222">A=col B=col</text>
+<rect x="555.4" y="302.0" width="55.5" height="48.0" fill="#9467bd"/>
+<text x="583.1" y="298.0" text-anchor="middle" font-size="10" fill="#333">1.6</text>
+<rect x="617.0" y="85.1" width="55.5" height="264.9" fill="#2ca02c"/>
+<text x="644.7" y="81.1" text-anchor="middle" font-size="10" fill="#333">8.8</text>
+<text x="617.0" y="368" text-anchor="middle" font-size="11" fill="#222">A=col B=row</text>
+<line x1="64" y1="350" x2="696" y2="350" stroke="#444"/>
+<rect x="76" y="47" width="12" height="12" rx="2" fill="#9467bd"/>
+<text x="94" y="57" font-size="12" fill="#222">upstream stdlib</text>
+<rect x="76" y="65" width="12" height="12" rx="2" fill="#2ca02c"/>
+<text x="94" y="75" font-size="12" fill="#222">v6 register tile</text>
+</svg></div><figcaption>Figure 6. Throughput across memory layouts: layout interchange vs register tile</figcaption></figure>
+<p>This is the crux. <code>stdlib</code>’s throughput <strong>swings 2× (1.6 → 3.4)</strong> with layout —
+that variation is exactly what its detection logic manages — and even at its best
+(3.36, its hand-tuned fast path) it trails the register tile by 2.7×. The
+register tile is <strong>flat at 8.8–9.0 across every layout (~3% spread, within
+measurement noise)</strong>, and holds 8.86 even on padded, offset, mixed-layout strided
+sub-views. It has no slow direction to detect around.</p>
+<p>And for plain column-major square matrices, <code>stdlib</code> is actually <em>slower than the
+naive baseline</em> — its per-inner-product <code>ddot</code> calls and small tiling block
+(<code>blockSize=8</code>) cost more than they save:</p>
+<table>
+<thead>
+<tr>
+<th>n</th>
+<th><code>v0</code> naive (GF/s)</th>
+<th><code>stdlib</code> (GF/s)</th>
+<th><code>v6</code> (GF/s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>256</td>
+<td>2.09</td>
+<td>1.60</td>
+<td>8.83</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>2.12</td>
+<td>1.31</td>
+<td>8.33</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusion: with good register/cache utilization, row/column-major detection
+is not useful.</strong> Its entire purpose is to steer away from a layout the kernel
+handles badly; a 4×4 register tile handles every layout uniformly well, so the
+detection branch becomes pure complexity with no payoff — and the layout-aware
+kernel it guards is 2.7–6.4× slower than the layout-blind one regardless. The
+right design is a single layout-agnostic tiled kernel, not layout dispatch.</p>
 <h2>Summary</h2>
 <ul>
-<li><strong><code>v4-general4x4</code></strong>: square mean <strong>4.18x</strong>, non-square mean <strong>3.86x</strong>, small-matrix mean <strong>2.50x</strong>.</li>
-<li><strong><code>v5-blocked4x4</code></strong>: square mean <strong>4.19x</strong>, non-square mean <strong>3.97x</strong>, small-matrix mean <strong>2.39x</strong>.</li>
-<li><strong><code>v6-blocked3lvl</code></strong>: square mean <strong>4.19x</strong>, non-square mean <strong>3.94x</strong>, small-matrix mean <strong>2.37x</strong>.</li>
+<li><strong>Register tiling is the win</strong>: <code>v6</code> averages <strong>4.17×</strong> on square, <strong>4.00×</strong> on non-square shapes, vs the naive baseline — and stays flat across layouts and transpose modes.</li>
+<li><strong>Layout interchange (<code>stdlib</code>) helps far less</strong>: 0.78× on square col-major and 2.42× on row-major — and only for the layouts it special-cases. Against the register tile it is <strong>~5.4–5.6× slower</strong> depending on layout (§6).</li>
+<li><strong>Therefore layout detection is not worth its complexity</strong> once the kernel tiles well: a single layout-agnostic kernel is both simpler and uniformly faster.</li>
 </ul>
 <h2>Caveats and when the win shrinks</h2>
-<p>The headline ~4× is real and broad, but honesty requires the edges:</p>
+<p>The headline ~4× (vs naive) is real and broad, but honesty requires the edges:</p>
 <ul>
-<li><strong>Tiny matrices (≤ 3×3) regress slightly</strong> (0.89–0.99×). Below the 4×4 tile
-size everything falls to the scalar cleanup path, and the extra setup/branches
-cost a hair more than the reference’s plain triple loop. Sizes 4–6 are mixed
-(1.4–3.5×) as the tile starts to engage; 8³ and up are solidly ~4×. The
-blocked variants (<code>v5</code>/<code>v6</code>) carry a touch more fixed overhead than <code>v4</code> here,
-so for a small-matrix-dominated workload the flat <code>v4</code> is the better choice.</li>
-<li><strong>Block sizes are machine-tuned.</strong> <code>MC=128, NC=64, KC=256</code> were chosen on an
-Apple M3. They are conservative and should help broadly, but are not optimal
-on every cache hierarchy; a portable promotion would want them
-cache-size-derived or auto-tuned.</li>
-<li><strong><code>v4</code> (no blocking) collapses on large/awkward shapes</strong> — toward 1× at 2048³
-and to 1.2× on tall small-N matrices. If large matrices matter, blocking is
-required, not optional.</li>
-<li><strong>Numerical results change in the last bit.</strong> The dot-product accumulation
-order differs from the reference’s axpy order, so results match only to ~1e-13
-relative (well within f64 noise, validated over 2560 cases). Strassen erodes
-this further and is not shipped.</li>
+<li><strong>Tiny matrices (≤ 3×3) regress slightly</strong> (0.89–0.99×). Below the 4×4 tile size everything falls to the scalar cleanup path, and the extra setup/branches cost a hair more than the naive triple loop. Sizes 4–6 are mixed (1.4–3.5×); 8³ and up are solidly ~4×. The blocked variants (<code>v5</code>/<code>v6</code>) carry a touch more fixed overhead than <code>v4</code> here, so for a small-matrix-dominated workload the flat <code>v4</code> is the better choice.</li>
+<li><strong>Block sizes are machine-tuned.</strong> <code>MC=128, NC=64, KC=256</code> were chosen on an Apple M3. Conservative and broadly helpful, but not optimal on every cache hierarchy; a portable promotion would derive them from cache size or auto-tune.</li>
+<li><strong><code>v4</code> (no blocking) collapses on large/awkward shapes</strong> — toward 1× at 2048³ and to 1.2× on tall small-N matrices. If large matrices matter, blocking is required, not optional.</li>
+<li><strong>Numerical results change in the last bit.</strong> The dot-product accumulation order differs from the naive axpy order, so results match only to ~1e-13 relative (well within f64 noise, validated over 2560 cases). Strassen erodes this further and is not shipped.</li>
 </ul>
 <h2>A. The large-matrix bandwidth cliff (numbers)</h2>
-<p>The bottom-line figure plots this; the underlying ratios (separate runs, sizes
-are slow to measure):</p>
+<p>The bottom-line figure plots this; the underlying speedups vs the naive baseline
+(separate runs, large sizes are slow to measure):</p>
 <table>
 <thead>
 <tr>
 <th>size</th>
-<th>v0 (GF/s)</th>
-<th>v4 speedup</th>
-<th>v5 speedup</th>
-<th>v6 speedup</th>
+<th><code>v0</code> (GF/s)</th>
+<th><code>v4</code> ×</th>
+<th><code>v5</code> ×</th>
+<th><code>v6</code> ×</th>
 </tr>
 </thead>
 <tbody>
@@ -1006,9 +1018,9 @@ are slow to measure):</p>
 </tr>
 </tbody>
 </table>
-<p><code>v4</code>’s collapse at 2048³ (≈1.1× — no better than reference) is the memory wall:
-it streams A from main memory N/4 times. <code>v5</code>/<code>v6</code> bound A/B traffic by blocking
-and hold ~3.7–3.9× throughout.</p>
+<p><code>v4</code>’s collapse at 2048³ (≈1.1× — no better than naive) is the memory wall: it
+streams A from main memory N/4 times. <code>v5</code>/<code>v6</code> bound A/B traffic by blocking and
+hold ~3.7–3.9× throughout.</p>
 <h2>B. Register-tile geometry, and a V8 codegen finding</h2>
 <figure><div class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
 <rect width="720" height="420" fill="#ffffff"/>
@@ -1071,7 +1083,7 @@ and hold ~3.7–3.9× throughout.</p>
 <text x="94" y="111" font-size="12" fill="#222">4×8</text>
 <rect x="76" y="119" width="12" height="12" rx="2" fill="#ff7f0e"/>
 <text x="94" y="129" font-size="12" fill="#222">6×6</text>
-</svg></div><figcaption>Figure 6. Register-tile geometry sweep</figcaption></figure>
+</svg></div><figcaption>Figure 7. Register-tile geometry sweep</figcaption></figure>
 <table>
 <thead>
 <tr>
@@ -1114,25 +1126,17 @@ and hold ~3.7–3.9× throughout.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>4×4 is the sweet spot.</strong> Wider tiles (8×4, 4×8, 6×6) need more than the ~16
-double-precision registers V8 keeps live, so they spill and lose ground.</p>
-<p><strong>V8 register allocation is sensitive to local-variable declaration order.</strong> A
-byte-identical 4×4 kernel ran a reproducible ~15% slower (0.864× across repeated
-runs) purely because loop counters were declared <em>before</em> the 16 accumulators.
-Declaring the accumulators <strong>first</strong> closed the gap exactly (1.00×). The tile
-generator (<code>gen-tile.js</code>) bakes in accumulators-first ordering. This is the kind
-of micro-detail that only a controlled A/B harness can catch.</p>
+<p><strong>4×4 is the sweet spot.</strong> Wider tiles (8×4, 4×8, 6×6) need more than the ~16 double-precision registers V8 keeps live, so they spill and lose ground.</p>
+<p><strong>V8 register allocation is sensitive to local-variable declaration order.</strong> A byte-identical 4×4 kernel ran a reproducible ~15% slower (0.864× across repeated runs) purely because loop counters were declared <em>before</em> the 16 accumulators. Declaring the accumulators <strong>first</strong> closed the gap exactly (1.00×). The tile generator (<code>gen-tile.js</code>) bakes in accumulators-first ordering — a micro-detail only a controlled A/B harness can catch.</p>
 <h2>C. Strassen (one level) — a proven win, deliberately not shipped</h2>
-<p>One-level Strassen (<code>v7-strassen1</code>) splits a square even NN product into 2×2
-blocks and uses <strong>7 instead of 8</strong> sub-multiplies (each via the <code>v5</code> kernel).
-Theoretical multiply reduction 8/7 = 1.143×; measured:</p>
+<p>One-level Strassen (<code>v7-strassen1</code>) splits a square even NN product into 2×2 blocks and uses <strong>7 instead of 8</strong> sub-multiplies (each via the <code>v5</code> kernel). Theoretical multiply reduction 8/7 = 1.143×; measured (speedup vs naive):</p>
 <table>
 <thead>
 <tr>
 <th>size</th>
-<th>v5 blocked</th>
-<th>v7 Strassen-1</th>
-<th>Strassen vs v5</th>
+<th><code>v5</code> blocked</th>
+<th><code>v7</code> Strassen-1</th>
+<th>Strassen vs <code>v5</code></th>
 </tr>
 </thead>
 <tbody>
@@ -1156,22 +1160,18 @@ Theoretical multiply reduction 8/7 = 1.143×; measured:</p>
 </tr>
 </tbody>
 </table>
-<p>This <strong>contradicted the prior expectation</strong> that Strassen would lose in a
-bandwidth-bound regime: once the blocked kernel makes the multiplies fast, the
-1/8 multiply reduction dominates and the extra matrix additions are cheap
-relative to n³ work. Effective throughput reaches ~9.0–9.5 GF/s.</p>
-<p><strong>Not shipped</strong>, by decision, because it applies only to square / even /
-contiguous-column-major / NN inputs; it allocates 9 half-size temporaries per
-call (GC pressure under repeated use); and it compounds the accuracy loss with
-recursion depth. Recorded as an evidence-backed opportunity for a future
-allocation-free, multi-level implementation.</p>
+<p>This <strong>contradicted the prior expectation</strong> that Strassen would lose in a bandwidth-bound regime: once the blocked kernel makes the multiplies fast, the 1/8 multiply reduction dominates and the extra matrix additions are cheap relative to n³ work. Effective throughput reaches ~9.0–9.5 GF/s.</p>
+<p><strong>Not shipped</strong>, by decision, because it applies only to square / even / contiguous-column-major / NN inputs; it allocates 9 half-size temporaries per call (GC pressure under repeated use); and it compounds the accuracy loss with recursion depth. Recorded as an evidence-backed opportunity for a future allocation-free, multi-level implementation.</p>
 <h2>Reproducing</h2>
 <p>Everything here regenerates from <code>bench/dgemm-opt/</code>:</p>
-<pre><code class="language-bash">node check.js              # correctness gate (all variants vs reference)
-node report.js             # this report's tables -&gt; reports/dgemm-optimization.md
+<pre><code class="language-bash">node check.js              # correctness gate (all variants vs baseline)
+node report.js             # this report (prose + tables) -&gt; reports/dgemm-optimization.md
 node plots.js              # SVG figures
+node build-html.js         # self-contained HTML
 bash render-png.sh         # SVG -&gt; PNG (needs Chrome)
-VARIANTS=v0-reference,v7-strassen1 SIZES=512,1024,2048 node probe.js   # ad-hoc
+node probe-layout.js       # the §6 layout experiment
+# baseline/variants are configurable:
+BASE=v0-reference VARIANTS=v0-reference,upstream-stdlib,v6-blocked3lvl node report.js
 </code></pre>
 <p>See <code>bench/dgemm-opt/README.md</code> for the full methodology and file map.</p>
 

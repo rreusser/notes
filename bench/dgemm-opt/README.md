@@ -9,7 +9,8 @@ implementation is preserved as a standalone source file so the work can be
 
 ```
 variants/            # Candidate kernels (each a drop-in for lib/.../dgemm/lib/base.js)
-  v0-reference.js    #   Exact copy of the shipping reference kernel (the baseline)
+  v0-reference.js    #   Simple reference triple loop (local repo's old kernel)
+  upstream-stdlib.js #   CURRENT shipping @stdlib/blas/base/dgemm (tiled+ddot+layout-aware)
   v1-unitstride.js   #   NN, unit row-stride specialization
   v2-regblock-n4.js  #   NN, 4-wide register blocking over columns (axpy form)
   v3-tile4x4.js      #   NN col-major, 4x4 register tile (dot-product form)
@@ -105,3 +106,8 @@ See `reports/dgemm-optimization.md` for the full data. Headlines:
 - **Large matrices hit a memory-bandwidth wall.** The flat register kernel
   collapses toward reference speed once A/B/C exceed cache (~1536+). Cache
   blocking (`v5`, `v6`) targets that regime.
+- **vs the actually-shipping kernel, the win is larger (~5.3–6.4×)** and
+  **layout-agnostic.** The shipping `upstream-stdlib` kernel detects row/column
+  layout and special-cases one combo; the register tile is uniformly fast across
+  all layout combinations (`node probe-layout.js`), so that detection machinery
+  buys nothing once register/cache use is good.

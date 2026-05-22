@@ -51,7 +51,8 @@ write( 'fig3-gflops.svg', svg.lineChart({
 	'xlabel': 'matrix dimension n', 'ylabel': 'GFLOP/s (2·n³ / time)',
 	'xLog': true, 'xticks': [ 64, 256, 512, 1024, 1536, 2048 ], 'ymin': 0, 'ymax': 10, 'yprec': 0,
 	'series': [
-		{ 'name': 'v0 reference', 'color': C[3], 'points': [ [64,2.02],[256,2.08],[512,2.10],[1024,2.06],[1536,2.10],[2048,2.12] ] },
+		{ 'name': 'stdlib (layout interchange)', 'color': C[4], 'points': [ [64,1.64],[256,1.60],[512,1.54],[1024,1.31] ] },
+		{ 'name': 'v0 naive baseline', 'color': C[3], 'points': [ [64,2.02],[256,2.08],[512,2.10],[1024,2.06],[1536,2.10],[2048,2.12] ] },
 		{ 'name': 'v6 blocked tile', 'color': C[2], 'points': [ [64,8.57],[256,8.79],[512,8.00],[1024,7.84],[1536,8.38],[2048,7.79] ] },
 		{ 'name': 'v7 Strassen-1', 'color': C[1], 'points': [ [512,9.46],[1024,9.02],[2048,9.32] ] }
 	]
@@ -72,15 +73,18 @@ write( 'fig4-tile-geometry.svg', svg.barChart({
 	]
 }) );
 
-// 5. Transpose-mode generalization (512³).
+// 5. Transpose-mode generalization (512³): layout interchange vs register tile.
+function modePair( label, stdlib, v6 ) {
+	return { 'label': label, 'bars': [ { 'name': 'stdlib interchange', 'value': stdlib, 'color': C[3] }, { 'name': 'v6 register tile', 'value': v6, 'color': C[2] } ] };
+}
 write( 'fig5-transpose-modes.svg', svg.barChart({
-	'title': 'Generalization across transpose modes (512³, col-major)',
-	'ylabel': 'speedup vs reference (×)', 'ymax': 5, 'baseline': 1,
+	'title': 'Across transpose modes (512³): interchange vs register tile',
+	'ylabel': 'speedup vs naive baseline (×)', 'ymax': 4.5, 'baseline': 1,
 	'groups': [
-		{ 'label': 'NN', 'bars': [ { 'name': 'v4 general 4×4', 'value': 4.14, 'color': C[1] } ] },
-		{ 'label': 'TN (AᵀB)', 'bars': [ { 'name': 'v4 general 4×4', 'value': 4.16, 'color': C[1] } ] },
-		{ 'label': 'NT (ABᵀ)', 'bars': [ { 'name': 'v4 general 4×4', 'value': 4.16, 'color': C[1] } ] },
-		{ 'label': 'TT (AᵀBᵀ)', 'bars': [ { 'name': 'v4 general 4×4', 'value': 4.16, 'color': C[1] } ] }
+		modePair( 'NN', 0.74, 3.86 ),
+		modePair( 'TN (AᵀB)', 1.50, 4.16 ),
+		modePair( 'NT (ABᵀ)', 0.74, 3.58 ),
+		modePair( 'TT (AᵀBᵀ)', 0.73, 4.05 )
 	]
 }) );
 
@@ -97,5 +101,18 @@ write( 'fig6-shapes.svg', svg.barChart({
 		{ 'label': 'rect', 'bars': [ { 'name': 'v4 general 4×4', 'value': 4.04, 'color': C[1] }, { 'name': 'v6 blocked', 'value': 4.05, 'color': C[2] } ] }
 	]
 }) );
+
+// 7. Layout (in)dependence: shipping kernel vs register tile across A×B layouts.
+write( 'fig7-layout.svg', svg.barChart({
+	'title': 'Throughput across A×B memory layouts (NN, n=256)',
+	'ylabel': 'GFLOP/s', 'ymax': 10,
+	'groups': [
+		{ 'label': 'A=row B=col*', 'bars': [ { 'name': 'upstream stdlib', 'value': 3.36, 'color': C[3] }, { 'name': 'v6 register tile', 'value': 9.00, 'color': C[2] } ] },
+		{ 'label': 'A=row B=row', 'bars': [ { 'name': 'upstream stdlib', 'value': 1.63, 'color': C[3] }, { 'name': 'v6 register tile', 'value': 8.91, 'color': C[2] } ] },
+		{ 'label': 'A=col B=col', 'bars': [ { 'name': 'upstream stdlib', 'value': 1.62, 'color': C[3] }, { 'name': 'v6 register tile', 'value': 8.81, 'color': C[2] } ] },
+		{ 'label': 'A=col B=row', 'bars': [ { 'name': 'upstream stdlib', 'value': 1.60, 'color': C[3] }, { 'name': 'v6 register tile', 'value': 8.83, 'color': C[2] } ] }
+	]
+}) );
+console.log( '(*A=row B=col is the upstream kernel’s hand-optimized fast path.)' );
 
 console.log( 'done' );

@@ -29,6 +29,11 @@
 <line x1="64" y1="50" x2="64" y2="356" stroke="#444"/>
 <text x="380" y="402" text-anchor="middle" font-size="13" fill="#222">matrix dimension n</text>
 <text transform="translate(16,203) rotate(-90)" text-anchor="middle" font-size="13" fill="#222">GFLOP/s (2·n³ / time)</text>
+<path d="M64.0 305.8 L316.8 307.0 L443.2 308.9 L569.6 315.9" fill="none" stroke="#ff7f0e" stroke-width="2.4"/>
+<circle cx="64.0" cy="305.8" r="3.2" fill="#ff7f0e"/>
+<circle cx="316.8" cy="307.0" r="3.2" fill="#ff7f0e"/>
+<circle cx="443.2" cy="308.9" r="3.2" fill="#ff7f0e"/>
+<circle cx="569.6" cy="315.9" r="3.2" fill="#ff7f0e"/>
 <path d="M64.0 294.2 L316.8 292.4 L443.2 291.7 L569.6 293.0 L643.5 291.7 L696.0 291.1" fill="none" stroke="#9467bd" stroke-width="2.4"/>
 <circle cx="64.0" cy="294.2" r="3.2" fill="#9467bd"/>
 <circle cx="316.8" cy="292.4" r="3.2" fill="#9467bd"/>
@@ -47,10 +52,12 @@
 <circle cx="443.2" cy="66.5" r="3.2" fill="#d62728"/>
 <circle cx="569.6" cy="80.0" r="3.2" fill="#d62728"/>
 <circle cx="696.0" cy="70.8" r="3.2" fill="#d62728"/>
-<rect x="76" y="47" width="14" height="4" rx="2" fill="#9467bd"/>
-<text x="96" y="52" font-size="12" fill="#222">v0 reference</text>
-<rect x="76" y="65" width="14" height="4" rx="2" fill="#2ca02c"/>
-<text x="96" y="70" font-size="12" fill="#222">v6 blocked tile</text>
-<rect x="76" y="83" width="14" height="4" rx="2" fill="#d62728"/>
-<text x="96" y="88" font-size="12" fill="#222">v7 Strassen-1</text>
+<rect x="76" y="47" width="14" height="4" rx="2" fill="#ff7f0e"/>
+<text x="96" y="52" font-size="12" fill="#222">stdlib (layout interchange)</text>
+<rect x="76" y="65" width="14" height="4" rx="2" fill="#9467bd"/>
+<text x="96" y="70" font-size="12" fill="#222">v0 naive baseline</text>
+<rect x="76" y="83" width="14" height="4" rx="2" fill="#2ca02c"/>
+<text x="96" y="88" font-size="12" fill="#222">v6 blocked tile</text>
+<rect x="76" y="101" width="14" height="4" rx="2" fill="#d62728"/>
+<text x="96" y="106" font-size="12" fill="#222">v7 Strassen-1</text>
 </svg>
