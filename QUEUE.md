@@ -3,27 +3,23 @@
 Prioritized remaining d\*/z\* LAPACK routines, ordered by tier then by
 completion progress. Items near the top of each tier are closest to done.
 
-**Implemented: 703 modules (211 algorithms complete) | Remaining: 394 routines (188 algorithms)**
+**Implemented: 891 modules (307 algorithms complete) | Remaining: 206 routines (92 algorithms)**
 
 > To update this file after implementing a routine, run `/blahpack-status`
 > or check the box manually. Regenerate with `node bin/gen-queue.js > QUEUE.md`.
 
-## Core Solvers & Factorizations (69 routines)
+## Core Solvers & Factorizations (42 routines)
 
+- [ ] **dsytri2** (2/3 done) — Computes the inverse of a DOUBLE PRECISION symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D
 - [ ] **dbdsvdx, dgesvdx, zgesvdx** — Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B, B = U * S * VT, w
 - [ ] **dgedmd, zgedmd** — Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.
 - [ ] **dgedmdq, zgedmdq** — Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.
 - [ ] **dgejsv, zgejsv** — Computes the singular value decomposition (SVD) of a real M-by-N matrix [A], where M >= N.
 - [ ] **dgelq, zgelq** — Computes an LQ factorization of a real M-by-N matrix A: A = ( L 0 ) * Q where: Q is a N-by-N orthogonal matrix; L is a l
-- [ ] **dgelqt3, zgelqt3** — Recursively computes a LQ factorization of a general real or complex matrix using the compact WY representation of Q.
 - [ ] **dgelst, zgelst** — Solves overdetermined or underdetermined systems for GE matrices using QR or LQ factorization with compact WY representa
 - [ ] **dgelsy, zgelsy** — Solves overdetermined or underdetermined systems for GE matrices
-- [ ] **dgeqlf, zgeqlf** — Computes a QL factorization of a real M-by-N matrix A: A = Q * L.
 - [ ] **dgeqp3rk, dlaqp3rk, zgeqp3rk, zlaqp3rk** — Computes a truncated Householder QR factorization with column pivoting of a real m-by-n matrix A by using Level 3 BLAS a
 - [ ] **dgeqr, zgeqr** — Computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is
-- [ ] **dgeqr2p, zgeqr2p** — Computes the QR factorization of a general rectangular matrix with non-negative diagonal elements using an unblocked alg
-- [ ] **dgeqrfp, zgeqrfp** — DGEQR2P computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matr
-- [ ] **dgeqrt3, zgeqrt3** — Recursively computes a QR factorization of a general real or complex matrix using the compact WY representation of Q.
 - [ ] **dgesdd, zgesdd** — Computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and right singu
 - [ ] **dgesvdq, zgesvdq** — Computes the singular value decomposition (SVD) with a QR-Preconditioned QR SVD Method for GE matrices
 - [ ] **dgesvj, zgesvj** — Computes the singular value decomposition (SVD) of a real M-by-N matrix A, where M >= N.
@@ -31,19 +27,9 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dlals0, zlals0** — Applies back multiplying factors in solving the least squares problem using divide and conquer SVD approach. Used by sge
 - [ ] **dlaqp2rk, zlaqp2rk** — Computes truncated QR factorization with column pivoting of a real matrix block using Level 2 BLAS and overwrites a real
 - [ ] **dlaqz0, zlaqz0** — Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, u
-- [ ] **dlarrb** — Provides limited bisection to locate eigenvalues for more accuracy.
-- [ ] **dlarrd** — Computes the eigenvalues of a symmetric tridiagonal matrix to suitable accuracy.
-- [ ] **dlarrf** — Finds a new relatively robust representation such that at least one of the eigenvalues is relatively isolated.
-- [ ] **dlarrk** — Computes one eigenvalue of a symmetric tridiagonal matrix T to suitable accuracy.
 - [ ] **dlarrv, zlarrv** — Computes the eigenvectors of the tridiagonal matrix T = L D LT given L, D and the eigenvalues of L D LT.
-- [ ] **dlarzt, zlarzt** — Forms the triangular factor T of a block reflector H = I - vtvH.
 - [ ] **dlaswlq, zlaswlq** — Computes a blocked Tall-Skinny LQ factorization of a real M-by-N matrix A for M <= N: A = ( L 0 ) * Q, where: Q is a n-b
 - [ ] **dlatrs3, zlatrs3** — Solves a triangular system of equations with the scale factors set to prevent overflow.
-- [ ] **dlatrz, zlatrz** — Factors an upper trapezoidal matrix by means of orthogonal transformations.
-- [ ] **dormr3, zunmr3** — Multiplies a general matrix by the orthogonal matrix from a RZ factorization determined by stzrzf (unblocked algorithm).
-- [ ] **dsyconvf, zsyconvf** — If parameter WAY = 'C': DSYCONVF converts the factorization output format used in DSYTRF provided on entry in parameter 
-- [ ] **dsytri2, zhetri2, zsytri2** — Computes the inverse of a DOUBLE PRECISION symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D
-- [ ] **dsytri2x, zhetri2x, zsytri2x** — Computes the inverse of a real symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D*L**T comput
 
 ## Divide-and-Conquer (eigen/SVD) (26 routines)
 
@@ -84,141 +70,59 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dsbgvd, dspgvd, dsygvd, zhbgvd, zhegvd, zhpgvd** — Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenprob
 - [ ] **dsposv** — Computes the solution to system of linear equations A * X = B for PO matrices
 
-## Condition Numbers, Norms & Refinement (66 routines)
+## Condition Numbers, Norms & Refinement (25 routines)
 
 - [ ] **dgemlq, zgemlq** (2/4 done) — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
 - [ ] **dgemqr, zgemqr** (2/4 done) — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
+- [ ] **dla_gerfsx_extended** (1/2 done) — Improves the computed solution to a system of linear equations for general matrices by performing extra-precise iterativ
+- [ ] **dla_porfsx_extended** (1/2 done) — Improves the computed solution to a system of linear equations for symmetric or Hermitian positive-definite matrices by 
+- [ ] **zgsvj0** (1/2 done) — Pre-processor for the routine dgesvj.
+- [ ] **zgsvj1** (1/2 done) — Pre-processor for the routine dgesvj, applies Jacobi rotations targeting only particular pivots.
+- [ ] **zunbdb4** (1/2 done) — Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | 
 - [ ] **dgbrfsx, dgerfsx, dporfsx, dsyrfsx, zgbrfsx, zgerfsx, zherfsx, zporfsx, zsyrfsx** — Improves the computed solution to a system of linear equations and provides error bounds and backward error estimates fo
-- [ ] **dgsvj0, zgsvj0** — Pre-processor for the routine dgesvj.
-- [ ] **dgsvj1, zgsvj1** — Pre-processor for the routine dgesvj, applies Jacobi rotations targeting only particular pivots.
-- [ ] **dla_gbamv, zla_gbamv** — Performs a matrix-vector operation to calculate error bounds.
-- [ ] **dla_gbrcond** — Estimates the Skeel condition number for a general banded matrix.
-- [ ] **dla_gbrfsx_extended, zla_gbrfsx_extended** — Improves the computed solution to a system of linear equations for general banded matrices by performing extra-precise i
-- [ ] **dla_geamv, zla_geamv** — Computes a matrix-vector product using a general matrix to calculate error bounds.
-- [ ] **dla_gercond** — Estimates the Skeel condition number for a general matrix.
-- [ ] **dla_gerfsx_extended, zla_gerfsx_extended** — Improves the computed solution to a system of linear equations for general matrices by performing extra-precise iterativ
-- [ ] **dla_lin_berr, zla_lin_berr** — Computes a component-wise relative backward error.
-- [ ] **dla_porcond** — Estimates the Skeel condition number for a symmetric positive-definite matrix.
-- [ ] **dla_porfsx_extended, zla_porfsx_extended** — Improves the computed solution to a system of linear equations for symmetric or Hermitian positive-definite matrices by 
-- [ ] **dla_syamv, zla_syamv** — Computes a matrix-vector product using a symmetric indefinite matrix to calculate error bounds.
-- [ ] **dla_syrcond** — Estimates the Skeel condition number for a symmetric indefinite matrix.
 - [ ] **dla_syrfsx_extended, zla_syrfsx_extended** — Improves the computed solution to a system of linear equations for symmetric indefinite matrices by performing extra-pre
-- [ ] **dorgrq, zungrq** — Generates an M-by-N real matrix Q with orthonormal rows, which is defined as the last M rows of a product of K elementar
-- [ ] **dorhr_col, zunhr_col** — Takes an M-by-N real matrix Q_in with orthonormal columns as input, stored in A, and performs Householder Reconstruction
-- [ ] **dorm22, zunm22** — Multiplies a general matrix by a banded orthogonal matrix.
 - [ ] **dormrz, zunmrz** — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
-- [ ] **dsyswapr, zheswapr, zsyswapr** — Applies an elementary permutation on the rows and columns of a symmetric matrix.
 - [ ] **dsytrd_sy2sb** — Reduces a real symmetric matrix A to real symmetric band-diagonal form AB by a orthogonal similarity transformation: Q**
 - [ ] **dtrsyl3, ztrsyl3** — 
-- [ ] **dtzrzf, ztzrzf** — Reduces the M-by-N ( M<=N ) real upper trapezoidal matrix A to upper triangular form by means of orthogonal transformati
-- [ ] **zhetrd_he2hb** — Reduces a complex Hermitian matrix A to complex Hermitian band-diagonal form AB by a unitary similarity transformation: 
-- [ ] **zla_gbrcond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for general banded matrices.
-- [ ] **zla_gbrcond_x** — Computes the infinity norm condition number of op(A)*diag(x) for general banded matrices.
-- [ ] **zla_gercond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for general matrices.
-- [ ] **zla_gercond_x** — Computes the infinity norm condition number of op(A)*diag(x) for general matrices.
-- [ ] **zla_heamv** — Computes a matrix-vector product using a Hermitian indefinite matrix to calculate error bounds.
-- [ ] **zla_hercond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for Hermitian indefinite matrices.
-- [ ] **zla_hercond_x** — Computes the infinity norm condition number of op(A)*diag(x) for Hermitian indefinite matrices.
-- [ ] **zla_herfsx_extended** — Improves the computed solution to a system of linear equations for Hermitian indefinite matrices by performing extra-pre
-- [ ] **zla_porcond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for Hermitian positive-definite matrices.
-- [ ] **zla_porcond_x** — Computes the infinity norm condition number of op(A)*diag(x) for Hermitian positive-definite matrices.
-- [ ] **zla_syrcond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for symmetric indefinite matrices.
-- [ ] **zla_syrcond_x** — Computes the infinity norm condition number of op(A)*diag(x) for symmetric indefinite matrices.
 
-## Auxiliary Routines (57 routines)
+## Auxiliary Routines (14 routines)
 
+- [ ] **zlaqz2** (1/2 done) — Chases a 2x2 shift bulge in a matrix pencil down a single position
 - [ ] **dgelsd, dlalsd, zgelsd, zlalsd** — Computes the minimum-norm solution to a linear least squares problem for GE matrices
-- [ ] **dlag2s** — Converts a double precision matrix to a single precision matrix.
-- [ ] **dlaic1, zlaic1** — Applies one step of incremental condition estimation.
 - [ ] **dlalsa, zlalsa** — Computes the SVD of the coefficient matrix in compact form. Used by sgelsd.
 - [ ] **dlamswlq, zlamswlq** — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
-- [ ] **dlamtsqr, zlamtsqr** — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
-- [ ] **dlaneg** — Computes the Sturm count.
-- [ ] **dlaorhr_col_getrfnp** — Computes the modified LU factorization without pivoting of a real general M-by-N matrix A.
-- [ ] **dlaorhr_col_getrfnp2** — Computes the modified LU factorization without pivoting of a real general M-by-N matrix A.
-- [ ] **dlaqz1, zlaqz1** — Given a 3-by-3 matrix pencil (A,B), DLAQZ1 sets v to a scalar multiple of the first column of the product (*) K = (A - (
-- [ ] **dlaqz2, zlaqz2** — Chases a 2x2 shift bulge in a matrix pencil down a single position
 - [ ] **dlaqz3, zlaqz3** — Performs AED
 - [ ] **dlaqz4** — Executes a single multishift QZ sweep
-- [ ] **dlar1v, zlar1v** — Computes the (scaled) r-th column of the inverse of the submatrix in rows b1 through bn of the tridiagonal matrix LDLT -
-- [ ] **dlarfb_gett, zlarfb_gett** — Applies a real Householder block reflector H from the left to a real (K+M)-by-N "triangular-pentagonal" matrix composed 
-- [ ] **dlarfgp, zlarfgp** — Generates an elementary reflector (Householder matrix) with non-negative beta.
-- [ ] **dlarfy, zlarfy** — Applies an elementary reflector, or Householder matrix, H, to an n x n symmetric matrix C, from both the left and the ri
 - [ ] **dlarre** — Given the tridiagonal matrix T, sets small off-diagonal elements to zero and for each unreduced block Ti, finds base rep
-- [ ] **dlarrr** — Performs tests to decide whether the symmetric tridiagonal matrix T warrants expensive computations which guarantee high
-- [ ] **dlartgp** — Generates a plane rotation so that the diagonal is nonnegative.
-- [ ] **dlartgs** — Generates a plane rotation designed to introduce a bulge in implicit QR iteration for the bidiagonal SVD problem.
-- [ ] **dlarz, zlarz** — Applies an elementary reflector (as returned by stzrzf) to a general matrix.
-- [ ] **dlarzb, zlarzb** — Applies a block reflector or its transpose to a general matrix.
-- [ ] **dlasyf_aa, zlasyf_aa** — DLATRF_AA factorizes a panel of a real symmetric matrix A using the Aasen's algorithm.
-- [ ] **dlasyf_rk, zlasyf_rk** — Computes a partial factorization of a real symmetric indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivot
-- [ ] **dlasyf_rook, zlasyf_rook** — *> DLASYF_ROOK computes a partial factorization of a real symmetric matrix using the bounded Bunch-Kaufman ("rook") diag
-- [ ] **dlat2s** — Converts a double-precision triangular matrix to a single-precision triangular matrix.
-- [ ] **dlatsqr, zlatsqr** — Computes a blocked Tall-Skinny QR factorization of a real M-by-N matrix A for M >= N: A = Q * ( R ), ( 0 ) where: Q is a
-- [ ] **zlacrm** — Multiplies a complex matrix by a square real matrix.
-- [ ] **zlag2c** — Converts a complex double precision matrix to a complex single precision matrix.
 - [ ] **zlahef_aa** — DLAHEF_AA factorizes a panel of a complex hermitian matrix A using the Aasen's algorithm.
-- [ ] **zlahef_rk** — Computes a partial factorization of a complex Hermitian indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pi
-- [ ] **zlahef_rook** — Computes a partial factorization of a complex Hermitian indefinite matrix using the bounded Bunch-Kaufman ("rook") diago
-- [ ] **zlarcm** — Copies all or part of a real two-dimensional array to a complex array.
-- [ ] **zlat2c** — Converts a double complex triangular matrix to a complex triangular matrix.
-- [ ] **zlaunhr_col_getrfnp** — Computes the modified LU factorization without pivoting of a complex general M-by-N matrix A.
-- [ ] **zlaunhr_col_getrfnp2** — Computes the modified LU factorization without pivoting of a complex general M-by-N matrix A.
 
 ## Expert Drivers (9 routines)
 
 - [ ] **dgbsvxx, dgesvxx, dposvxx, dsysvxx, zgbsvxx, zgesvxx, zhesvxx, zposvxx, zsysvxx** — Computes the solution to system of linear equations A * X = B for GB matrices
 
-## Variants, TSQR, Mixed-Precision & CSD (137 routines)
+## Variants, TSQR, Mixed-Precision & CSD (60 routines)
 
+- [ ] **zhetrf_aa** (2/3 done) — Computes the factorization of a real symmetric matrix A using the Aasen's algorithm.
 - [ ] **dbbcsd, dorcsd, zbbcsd, zuncsd** — Computes the CS decomposition of an orthogonal matrix in bidiagonal-block form, [ B11 | B12 0 0 ] [ 0 | 0 -I 0 ] X = [--
 - [ ] **dgbequb, dgeequb, dpoequb, dsyequb, zgbequb, zgeequb, zheequb, zpoequb, zsyequb** — Computes row and column scalings intended to equilibrate an M-by-N matrix A and reduce its condition number.
-- [ ] **dgelqt, dtplqt, zgelqt, ztplqt** — Computes a blocked LQ factorization of a real M-by-N matrix A using the compact WY representation of Q.
-- [ ] **dgemlqt, dtpmlqt, zgemlqt, ztpmlqt** — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q C C Q TRANS = 'T': Q**T C C Q**T w
-- [ ] **dgemqrt, dtpmqrt, zgemqrt, ztpmqrt** — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q C C Q TRANS = 'T': Q**T C C Q**T w
-- [ ] **dgeqrt, dtpqrt, zgeqrt, ztpqrt** — Computes a blocked QR factorization of a real M-by-N matrix A using the compact WY representation of Q.
-- [ ] **dgeqrt2, dtpqrt2, zgeqrt2, ztpqrt2** — Computes a QR factorization of a general real or complex matrix using the compact WY representation of Q.
-- [ ] **dgetsqrhrt, zgetsqrhrt** — Computes a NB2-sized column blocked QR-factorization of a real M-by-N matrix A with M >= N, A = Q * R.
 - [ ] **dorbdb, zunbdb** — Simultaneously bidiagonalizes the blocks of an M-by-M partitioned orthogonal matrix X: [ B11 | B12 0 0 ] [ X11 | X12 ] [
-- [ ] **dorbdb1, zunbdb1** — Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | 
-- [ ] **dorbdb2, zunbdb2** — Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | 
-- [ ] **dorbdb3, zunbdb3** — Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | 
-- [ ] **dorbdb4, zunbdb4** — Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | 
-- [ ] **dorbdb5, zunbdb5** — Orthogonalizes the column vector X = [ X1 ] [ X2 ] with respect to the columns of Q = [ Q1 ] .
-- [ ] **dorbdb6, zunbdb6** — Orthogonalizes the column vector X = [ X1 ] [ X2 ] with respect to the columns of Q = [ Q1 ] .
 - [ ] **dorcsd2by1, zuncsd2by1** — Computes the CS decomposition of an M-by-Q matrix X with orthonormal columns that has been partitioned into a 2-by-1 blo
-- [ ] **dorgtsqr, zungtsqr** — Generates an M-by-N real matrix Q_out with orthonormal columns, which are the first N columns of a product of real ortho
-- [ ] **dorgtsqr_row, zungtsqr_row** — Generates an M-by-N real matrix Q_out with orthonormal columns from the output of DLATSQR.
 - [ ] **dsbev_2stage, dsyev_2stage, zhbev_2stage, zheev_2stage** — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices
 - [ ] **dsbevd_2stage, dsyevd_2stage, zhbevd_2stage, zheevd_2stage** — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices
 - [ ] **dsbevx_2stage, dsyevx_2stage, zhbevx_2stage, zheevx_2stage** — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices
 - [ ] **dsgesv** — Computes the solution to system of linear equations A * X = B for GE matrices (mixed precision with iterative refinement
-- [ ] **dsycon_3, zhecon_3, zsycon_3** — Estimates the reciprocal of the condition number (in the 1-norm) of a real symmetric matrix A using the factorization co
-- [ ] **dsycon_rook, zhecon_rook, zsycon_rook** — DSYCON_ROOK
-- [ ] **dsyconvf_rook, zsyconvf_rook** — If parameter WAY = 'C': DSYCONVF_ROOK converts the factorization output format used in DSYTRF_ROOK provided on entry in 
 - [ ] **dsyevr_2stage, zheevr_2stage** — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for SY matrices
 - [ ] **dsygv_2stage, zhegv_2stage** — Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite eigenproblem, of
 - [ ] **dsysv_aa, zhesv_aa, zsysv_aa** — Computes the solution to system of linear equations A * X = B for SY matrices
 - [ ] **dsysv_aa_2stage, zhesv_aa_2stage, zsysv_aa_2stage** — Computes the solution to system of linear equations A * X = B for SY matrices
 - [ ] **dsysv_rk, zhesv_rk, zsysv_rk** — Computes the solution to system of linear equations A * X = B for SY matrices
 - [ ] **dsysv_rook, zhesv_rook, zsysv_rook** — Computes the solution to system of linear equations A * X = B for SY matrices
-- [ ] **dsytf2_rk, zhetf2_rk, zsytf2_rk** — Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (rook) diagonal pivotin
-- [ ] **dsytf2_rook, zhetf2_rook, zsytf2_rook** — Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman ("rook") diagonal pivot
 - [ ] **dsytrd_2stage, zhetrd_2stage** — Reduces a real symmetric matrix A to real symmetric tridiagonal form T by a orthogonal similarity transformation: Q1**T 
-- [ ] **dsytrf_aa, zhetrf_aa, zsytrf_aa** — Computes the factorization of a real symmetric matrix A using the Aasen's algorithm.
 - [ ] **dsytrf_aa_2stage, zhetrf_aa_2stage, zsytrf_aa_2stage** — Computes the factorization of a real symmetric matrix A using the Aasen's algorithm.
-- [ ] **dsytrf_rk, zhetrf_rk, zsytrf_rk** — Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (rook) diagonal pivotin
-- [ ] **dsytrf_rook, zhetrf_rook, zsytrf_rook** — Computes the factorization of a real symmetric matrix A using the bounded Bunch-Kaufman ("rook") diagonal pivoting metho
-- [ ] **dsytri_3, zhetri_3, zsytri_3** — Computes the inverse of a real symmetric indefinite matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK:
-- [ ] **dsytri_3x, zhetri_3x, zsytri_3x** — Computes the inverse of a real symmetric indefinite matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK:
-- [ ] **dsytri_rook, zhetri_rook, zsytri_rook** — Computes the inverse of a real symmetric matrix A using the factorization A = U*D*U**T or A = L*D*L**T computed by DSYTR
-- [ ] **dsytrs_3, zhetrs_3, zsytrs_3** — Solves a system of linear equations A * X = B with a real symmetric matrix A using the factorization computed by DSYTRF_
 - [ ] **dsytrs_aa, zhetrs_aa, zsytrs_aa** — Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U**T*T*U or A = L
 - [ ] **dsytrs_aa_2stage, zhetrs_aa_2stage, zsytrs_aa_2stage** — Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U**T*T*U or A = L
-- [ ] **dsytrs_rook, zhetrs_rook, zsytrs_rook** — Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U*D*U**T or A = L
-- [ ] **dtplqt2, ztplqt2** — Computes a LQ factorization of a real or complex "triangular-pentagonal" matrix, which is composed of a triangular block
 - [ ] **zcgesv** — Computes the solution to system of linear equations A * X = B for GE matrices (mixed precision with iterative refinement
 - [ ] **zcposv** — Computes the solution to system of linear equations A * X = B for PO matrices
 
 ---
-**Total remaining: 394 routines across 188 algorithms**
+**Total remaining: 206 routines across 92 algorithms**

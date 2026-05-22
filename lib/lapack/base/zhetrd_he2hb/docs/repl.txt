@@ -1,0 +1,119 @@
+
+{{alias}}( order, uplo, N, kd, A, LDA, AB, LDAB, TAU, strideTAU, WORK, strideWORK )
+    Reduce a complex Hermitian matrix A to complex Hermitian band-diagonal form AB by a unitary similarity transformation: Q^H * A * Q = AB.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        uplo: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        kd: integer
+            kd.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        AB: Float64Array
+            input matrix.
+
+        LDAB: integer
+            leading dimension of `AB`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, N, kd, A, strideA1, strideA2, offsetA, AB, strideAB1, strideAB2, offsetAB, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+    Reduce a complex Hermitian matrix A to complex Hermitian band-diagonal form AB by a unitary similarity transformation: Q^H * A * Q = AB., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        uplo: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        kd: integer
+            kd.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of dimension 1 of `AB`.
+
+        strideAB2: integer
+            stride of dimension 2 of `AB`.
+
+        offsetAB: integer
+            starting index for `AB`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: integer
+            starting index for `TAU`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

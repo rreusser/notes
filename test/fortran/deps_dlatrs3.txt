@@ -1,0 +1,12 @@
+disnan
+dlaisnan
+dlamch
+dlange
+dlarmm
+dlassq
+dlatrs
+dlatrs3
+ieeeck
+ilaenv
+iparmq
+la_xisnan

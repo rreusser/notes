@@ -198,6 +198,7 @@ All array parameters follow the `(array, stride, offset)` or
 | Packed 1D | `AP, strideAP, offsetAP` | `dspmv` |
 | Integer vector | `IPIV, strideIPIV, offsetIPIV` | `dgetrf` |
 | Scalar output | `Float64Array(1)` or `Int32Array(1)` | `dlacn2` |
+| Workspace | `work, strideWork, offsetWork` (also `rwork`, `iwork`) — **caller-provided, never internally allocated** | `dlarf1f` |
 
 Verify naming:
 
@@ -205,7 +206,40 @@ Verify naming:
 # Stride names use 1/2 suffix (not 0/1)
 grep "strideA0\|strideB0\|strideC0" lib/<pkg>/base/<routine>/lib/base.js
 
-# ndarray.js signature matches base.js (minus internal workspace)
+# ndarray.js signature matches base.js
+```
+
+### 5a. Workspace (LAPACKE convention)
+
+WORK is a caller-provided strided ndarray parameter on **both** `base.js`
+and `ndarray.js`. Never allocated internally. The gate's
+`bin/gate/checks/workspace.js` runs four checks the reviewer should
+verify by hand:
+
+1. **`workspace.caller-provided`** — Every Fortran `WORK`/`RWORK`/`IWORK`/
+   `SWORK`/`BWORK` argument appears as a base.js parameter (lowercased).
+2. **`workspace.no-internal-alloc`** — No `new Float64Array(<expr>)`,
+   `new Complex128Array(<expr>)`, etc. in `lib/base.js`. Small scalar
+   temps (size ≤ 8) are allowed.
+3. **`workspace.naming`** — camelCase `strideWork`/`offsetWork`, not
+   `strideWORK`/`offsetWORK`. No `LWORK`/`LRWORK` integer-length params.
+4. **`workspace.ndarray-parity`** — `lib/ndarray.js` exposes the same
+   caller-provided workspace params and does not allocate.
+
+If you find `new Float64Array(nb*nb)` or similar inside `base.js`, that's
+the wrong fix even if the gate happens to skip it — flag it. Partition
+the caller's WORK buffer at a documented offset instead. See the
+"Workspace Convention" section of `/blahpack-translate` for the rule.
+
+The LAPACKE-style layout wrapper (`<routine>.js`, e.g. `dgesvd.js`) may
+allocate WORK as a documented convenience when the caller passes
+`null`/omits it, but the canonical signature is caller-provided.
+
+Run the audit with:
+
+```bash
+node bin/gate.js --all --fast --json > /tmp/gate.json
+node -e "const d=require('/tmp/gate.json'); const g={}; for (const m of d.modules) for (const c of m.checks||[]) if (c.status==='fail' && c.id?.startsWith('workspace.')) (g[c.id] = g[c.id]||[]).push(m.module); for (const [k,v] of Object.entries(g)) console.log(k+': '+v.length); "
 ```
 
 ---

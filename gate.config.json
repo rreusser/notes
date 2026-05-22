@@ -5,11 +5,47 @@
         ],
         "reason": "Reference LAPACK 3.12.0 dorbdb3.f line 282 calls DROT with LDX11 as the row stride for *both* X11 and X21 (likely a copy-paste typo — LDX21 would be algorithmically correct). We mirror the Fortran reference exactly so test fixtures match, but document the divergence with an inline TODO at the call site. Callers must pass matching leading dimensions for X11 and X21 (the layout wrapper enforces this implicitly because both arrays share the order parameter, and dorbdb3 is invoked from dorcsd2by1 where X11 and X21 are stored in a single contiguous M-by-Q buffer with LDX11=LDX21)."
     },
+    "lib/lapack/base/zunbdb3": {
+        "skip": [
+            "scaffolding.no-todo-base"
+        ],
+        "reason": "Same LDX cross-stride peculiarity as dorbdb3 — reference LAPACK 3.12.0 zunbdb3.f line 282 calls ZDROT with LDX11 as the row stride for *both* X11 and X21 (likely a copy-paste typo — LDX21 would be algorithmically correct). We mirror the Fortran reference exactly so test fixtures match, with an inline TODO at the call site. Callers must pass matching leading dimensions; the layout wrapper enforces this implicitly because both arrays share the order parameter, and zunbdb3 is invoked from zuncsd2by1 where X11 and X21 are stored in a single contiguous M-by-Q buffer with LDX11=LDX21."
+    },
     "lib/lapack/base/dgsvj1": {
         "skip": [
             "lint.eslint-pass"
         ],
         "reason": "ESLint's stdlib/jsdoc-doctest plugin attempts to load `@stdlib/lapack/base/dgsvj1` from the read-only stdlib clone at /Users/rreusser/gh/stdlib-js/stdlib/lib/node_modules/@stdlib/lapack/base/, where dgsvj1 (like dgsvj0 and most other lapack/base modules in this repo) does not have a corresponding upstream entry. Cannot symlink (read-only filesystem). All other lint rules pass clean — the only error is `Cannot find module ... lapack/base/dgsvj1` from the doctest rule. Coverage is 98.57% line / 93.75% branch on base.js."
+    },
+    "lib/lapack/base/zgsvj1": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "Same root cause as dgsvj1: ESLint's stdlib/jsdoc-doctest plugin attempts to load `@stdlib/lapack/base/zgsvj1` from the read-only stdlib clone, where the upstream entry does not exist. Cannot symlink (read-only filesystem). All other lint rules pass clean — the only error is `Cannot find module ... lapack/base/zgsvj1` from the doctest rule. Coverage is 96.10% line / 88.10% branch on base.js."
+    },
+    "lib/lapack/base/zgsvj0": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "Same root cause as dgsvj0/zgsvj1: ESLint's stdlib/jsdoc-doctest plugin tries to load `@stdlib/lapack/base/zgsvj0` from the read-only stdlib clone, where the upstream entry does not exist. All other lint rules pass clean."
+    },
+    "lib/lapack/base/zgemqrt": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "stdlib/jsdoc-doctest cannot resolve @stdlib/lapack/base/zgemqrt from the read-only stdlib clone. All other lint rules pass."
+    },
+    "lib/lapack/base/zgebrd": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "stdlib/jsdoc-doctest cannot resolve @stdlib/lapack/base/zgebrd from the read-only stdlib clone. All other lint rules pass."
+    },
+    "lib/lapack/base/dgebrd": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "stdlib/jsdoc-doctest cannot resolve @stdlib/lapack/base/dgebrd from the read-only stdlib clone. All other lint rules pass."
     },
     "lib/lapack/base/dlamch": {
         "skip": [
@@ -383,6 +419,18 @@
             "lint.eslint-pass"
         ],
         "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhetri (not in stdlib checkout)"
+    },
+    "lib/lapack/base/zhetri2": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhetri2 (not in stdlib checkout). All other lint rules pass clean and all fixture-driven tests pass."
+    },
+    "lib/lapack/base/zhetri2x": {
+        "skip": [
+            "lint.eslint-pass"
+        ],
+        "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhetri2x (not in stdlib checkout). All other lint rules pass clean and all fixture-driven tests pass."
     },
     "lib/lapack/base/zpptri": {
         "skip": [

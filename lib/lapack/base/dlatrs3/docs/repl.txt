@@ -1,0 +1,152 @@
+
+{{alias}}( order, uplo, trans, diag, normin, N, nrhs, A, LDA, X, LDX, SCALE, strideSCALE, CNORM, strideCNORM, WORK, strideWORK )
+    solves a triangular system of equations with the scale factors set to prevent overflow.
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        normin: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        A: Float64Array
+            input matrix.
+
+        LDA: integer
+            leading dimension of `A`.
+
+        X: Float64Array
+            input matrix.
+
+        LDX: integer
+            leading dimension of `X`.
+
+        SCALE: Float64Array
+            input array.
+
+        strideSCALE: integer
+            stride length for `SCALE`.
+
+        CNORM: Float64Array
+            input array.
+
+        strideCNORM: integer
+            stride length for `CNORM`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( uplo, trans, diag, normin, N, nrhs, A, strideA1, strideA2, offsetA, X, strideX1, strideX2, offsetX, SCALE, strideSCALE, offsetSCALE, CNORM, strideCNORM, offsetCNORM, WORK, strideWORK, offsetWORK )
+    solves a triangular system of equations with the scale factors set to prevent overflow., using alternative indexing semantics.
+
+    Parameters
+    ----------
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        normin: string
+            specifies the operation type.
+
+        N: integer
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of dimension 1 of `A`.
+
+        strideA2: integer
+            stride of dimension 2 of `A`.
+
+        offsetA: integer
+            starting index for `A`.
+
+        X: Float64Array
+            input matrix.
+
+        strideX1: integer
+            stride of dimension 1 of `X`.
+
+        strideX2: integer
+            stride of dimension 2 of `X`.
+
+        offsetX: integer
+            starting index for `X`.
+
+        SCALE: Float64Array
+            input array.
+
+        strideSCALE: integer
+            stride length for `SCALE`.
+
+        offsetSCALE: integer
+            starting index for `SCALE`.
+
+        CNORM: Float64Array
+            input array.
+
+        strideCNORM: integer
+            stride length for `CNORM`.
+
+        offsetCNORM: integer
+            starting index for `CNORM`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

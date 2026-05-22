@@ -1,0 +1,163 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# dlamswlq
+
+> Apply an orthogonal matrix `Q` (or its transpose) from a blocked Short-Wide LQ (SWLQ) factorization to a real `M`-by-`N` matrix.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var dlamswlq = require( '@stdlib/lapack/base/dlamswlq' );
+```
+
+#### dlamswlq( order, side, trans, M, N, K, mb, nb, A, LDA, T, LDT, C, LDC, WORK, strideWORK )
+
+Overwrites a real `M`-by-`N` matrix `C` with `op(Q)*C` or `C*op(Q)`, where `Q` is the orthogonal matrix produced by `dlaswlq`.
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlaswlq = require( '@stdlib/lapack/base/dlaswlq' );
+
+var K = 2;
+var X = 6;
+var MB = 2;
+var NB = 4;
+
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
+var T = new Float64Array( MB * 2 * K );
+var WORK = new Float64Array( MB * K );
+dlaswlq( 'column-major', K, X, MB, NB, A, K, T, MB, WORK, 1 );
+
+var C = new Float64Array( X );
+C[ 0 ] = 1.0;
+dlamswlq( 'column-major', 'left', 'no-transpose', X, 1, K, MB, NB, A, K, T, MB, C, X, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **side**: `'left'` to apply `Q` from the left, `'right'` to apply from the right.
+-   **trans**: `'no-transpose'` for `Q`, `'transpose'` for `Q^T`.
+-   **M**: number of rows of `C`.
+-   **N**: number of columns of `C`.
+-   **K**: number of elementary reflectors (`K <= M` for `side='left'`, `K <= N` for `side='right'`).
+-   **mb**: inner block size of the compact-WY representation (`1 <= mb <= K`).
+-   **nb**: column block size used in the `dlaswlq` factorization.
+-   **A**: reflector vectors from `dlaswlq`.
+-   **LDA**: leading dimension of `A`.
+-   **T**: block triangular factors from `dlaswlq`.
+-   **LDT**: leading dimension of `T` (`>= mb`).
+-   **C**: input/output `M`-by-`N` matrix.
+-   **LDC**: leading dimension of `C`.
+-   **WORK**: workspace array (`N*mb` doubles for `side='left'`, `M*mb` doubles for `side='right'`).
+-   **strideWORK**: stride length for `WORK`.
+
+#### dlamswlq.ndarray( side, trans, M, N, K, mb, nb, A, strideA1, strideA2, offsetA, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
+Same operation as above, with explicit per-dimension strides and offsets for each array.
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A`.
+-   **strideA2**: stride of the second dimension of `A`.
+-   **offsetA**: starting index for `A`.
+-   **strideT1**: stride of the first dimension of `T`.
+-   **strideT2**: stride of the second dimension of `T`.
+-   **offsetT**: starting index for `T`.
+-   **strideC1**: stride of the first dimension of `C`.
+-   **strideC2**: stride of the second dimension of `C`.
+-   **offsetC**: starting index for `C`.
+-   **offsetWORK**: starting index for `WORK`.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   The four supported `(side, trans)` combinations are:
+
+    ```text
+                          SIDE = 'left'    SIDE = 'right'
+    TRANS = 'no-transpose':   Q*C            C*Q
+    TRANS = 'transpose':    Q^T*C          C*Q^T
+    ```
+
+-   Block iteration runs forward through reflector blocks for `(left, no-transpose)` and `(right, transpose)`; backward for the other two combinations.
+-   When `nb <= K` or `nb >= max(M, N, K)`, the routine defers to a single `dgemlqt` call.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+var dlaswlq = require( '@stdlib/lapack/base/dlaswlq' ).ndarray;
+var dlamswlq = require( '@stdlib/lapack/base/dlamswlq' ).ndarray;
+
+var K = 2;
+var X = 6;
+var MB = 2;
+var NB = 4;
+
+var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
+var T = new Float64Array( MB * 2 * K );
+var WORK = new Float64Array( MB * K );
+dlaswlq( K, X, MB, NB, A, 1, K, 0, T, 1, MB, 0, WORK, 1, 0 );
+
+var C = new Float64Array( X );
+C[ 0 ] = 1.0;
+dlamswlq( 'left', 'no-transpose', X, 1, K, MB, NB, A, 1, K, 0, T, 1, MB, 0, C, 1, X, 0, WORK, 1, 0 );
+console.log( C );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

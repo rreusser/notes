@@ -1,0 +1,15 @@
+dgemm
+disnan
+dlacpy
+dlaisnan
+dlamch
+dlapy2
+dlaqz1
+dlaqz2
+dlaqz4
+dlartg
+dlaset
+drot
+ieeeck
+ilaenv
+iparmq

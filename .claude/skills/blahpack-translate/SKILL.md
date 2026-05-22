@@ -375,6 +375,24 @@ NOT count as tests. The `stdlib/no-scaffold-assertions` ESLint rule catches
 scaffold `assert.fail('TODO:...')` remnants automatically during linting.
 **Do not commit a test file that only has the scaffolded type-check assertions.**
 
+**Use stdlib assertion utilities — don't roll your own tolerance loops.**
+
+| Need | Use |
+|------|-----|
+| Fuzzy equality of typed arrays | `@stdlib/assert/is-almost-equal-float64array` or `@stdlib/assert-is-almost-same-float64array` |
+| Element-wise tolerance check | `@stdlib/math/base/special/abs` + a single ULP/relative comparison helper, NOT a hand-rolled `for` loop with `Math.abs(a-b) < tol` everywhere |
+
+Writing custom `for (i=0; i<n; i++) { t.ok(Math.abs(a[i]-b[i])<tol, ...) }`
+loops makes tests harder to read and easier to silently weaken. Prefer the
+stdlib helpers; they produce one assertion with a meaningful message.
+
+**Orthogonality / diagonality checks:** Utilities for these are
+work-in-progress at stdlib. For now, write a small local helper inside
+the test file (`Q^T Q ≈ I` for orthogonality, `|A_ij| < tol for i≠j` for
+diagonal), but keep it small and readable rather than spreading raw
+tolerance arithmetic across tests. Watch the stdlib repo for the official
+utilities and switch over when they land.
+
 ### Step 6: Verify test coverage
 
 ```bash
@@ -696,7 +714,7 @@ sine values from a reinterpreted WORK array, copy to a scratch
 | `DLAMCH('S')` | `Number.MIN_VALUE` or stdlib constant | Replace DLAMCH constants with direct numeric literals |
 | `DLAMCH('E')` | `Number.EPSILON / 2` | Machine epsilon (half-precision) |
 | `DLAMCH('P')` / `DLAMCH('Precision')` | `Number.EPSILON` | Precision = epsilon * base (full-precision). Distinct from `'E'`. |
-| `ILAENV(1, ...)` | `NB = 32` (hardcoded) | Remove ILAENV/LWORK workspace queries entirely — allocate internally. **Defaults vary by query:** `ILAENV(1)` → NB=32, `ILAENV(3)` → NX=128 (crossover), `ILAENV(12)` → NMIN=12 (dlaqr3 threshold). Check the Fortran source for which query is used. |
+| `ILAENV(1, ...)` | `NB = 32` (hardcoded) | Remove ILAENV/LWORK workspace queries entirely. WORK is a **caller-provided strided-array parameter** (LAPACKE convention) — see "Workspace Convention" below. **Defaults vary by query:** `ILAENV(1)` → NB=32, `ILAENV(3)` → NX=128 (crossover), `ILAENV(12)` → NMIN=12 (dlaqr3 threshold). Check the Fortran source for which query is used. |
 | Integer division | `(expr)\|0` | Fortran integer division truncates toward zero (like JS `\|0`), NOT `Math.floor`. For negative dividends, `Math.floor(-3/2) = -2` but Fortran gives `-1`. Always use `\|0` for integer division of expressions that can be negative. |
 | `ABS(z)` (complex) | `Math.sqrt(re*re + im*im)` | Complex modulus. Safe to inline (no division). |
 | `CABS1(z)` | `Math.abs(re) + Math.abs(im)` | NOT the same as `ABS`. Used for backward error norms. `ABS` is the true modulus — do not confuse them. |
@@ -797,12 +815,51 @@ Do NOT let linters or formatters reorder statements. In dtrmm, a linter
 moved the diagonal multiply before the off-diagonal loop, causing incorrect
 results. The Fortran operation order is load-bearing — preserve it exactly.
 
-### Workspace Aliasing Bugs
+### Workspace Convention (LAPACKE — STRICT)
 
-TAU and WORK must NEVER alias. If TAU occupies `WORK[0..K*2-1]` and
-subsequent operations (zunmqr, zungqr) use WORK as scratch, they clobber
-TAU. Fix: always allocate separate arrays. Same for ztgevc's RWORK vs
-LSCALE/RSCALE data.
+**WORK is a caller-provided strided-array parameter, never internally
+allocated.** This follows the LAPACKE convention and is enforced by the
+`workspace.no-internal-alloc` gate check on `lib/base.js` and
+`lib/ndarray.js`. Reasons:
+
+- Avoids JS allocation churn — mirrors how C/Fortran callers pre-size buffers.
+- Enables batching: the layer above `ndarray.js` allocates ONE workspace
+  and reuses it across every matrix in a stack.
+- Keeps the JS surface aligned with eventual C interop.
+
+**Hard rules:**
+
+1. **`lib/base.js` and `lib/ndarray.js` MUST NOT call `new Float64Array`,
+   `new Complex128Array`, `new Int32Array`, `Array.from`, etc. for
+   workspace** — even small NB×NB block-reflector scratch. Pass it in as
+   a caller-provided WORK segment instead.
+2. **Auxiliary scratches (T for block reflectors, S1/S2 for panel
+   reductions, RWORK for complex) MUST be partitioned out of the
+   caller-provided WORK array** at known offsets, just like the Fortran
+   reference does. Document the required WORK size + partition layout in
+   the JSDoc `@param` for WORK and in README.md.
+3. **The LAPACKE-style layout wrapper (e.g., `dgesvd.js`)** is the
+   highest level that may, as a documented convenience, allocate WORK
+   when the caller passes `null`/omitted. Prefer requiring caller-provided
+   WORK; if you do offer convenience allocation, gate it on `WORK == null`
+   and use the same partition formula the routine documents.
+4. **`LWORK` parameters are removed.** The Fortran `LWORK=-1`
+   workspace-query pattern is not exposed. The required size is fixed by
+   the algorithm + parameters and documented in the JSDoc.
+5. **TAU and WORK must NEVER alias** — they are separate caller-provided
+   strided arrays. Same for ZTGEVC's RWORK vs LSCALE/RSCALE. If two
+   regions inside WORK would overlap, that's a bug — partition with
+   non-overlapping offsets.
+
+**WORK as ndarray-style parameter:** Expose `work, strideWork, offsetWork`
+(snake-cased like other stdlib strided params). The gate also warns on
+the uppercase Fortran-style `strideWORK`/`offsetWORK` form — fix those
+to `strideWork`/`offsetWork`.
+
+**If you find yourself writing `new Float64Array(nb*nb)` for a block
+reflector inside a base.js — stop.** That's an algorithmic dependency
+on storage you don't control, and it permanently locks the routine out
+of zero-allocation batching. Make the caller pass the buffer.
 
 ### Dependency Calling Convention Surprises
 
@@ -817,8 +874,9 @@ Additional common gotchas:
   routine may differ in subtle ways. dlacn2 has an ISGN parameter that
   zlacn2 lacks. zdscal takes a real scalar; zscal takes Complex128.
   Always check the actual signature, not just the d-prefix equivalent.
-- **LWORK is removed in JS.** Routines allocate workspace internally.
-  The Fortran workspace-query pattern (`LWORK=-1`) does not exist.
+- **LWORK is removed in JS.** WORK is a caller-provided strided-array
+  parameter (LAPACKE convention) — see the "Workspace Convention" section.
+  The Fortran workspace-query pattern (`LWORK=-1`) is not exposed.
 - **Always verify the callee's string convention.** Some JSDoc comments
   may still reference single-char Fortran flags even when the code uses
   long-form strings. Trust the actual `===` comparisons, not the docs.
@@ -928,8 +986,11 @@ for code examples):**
 2. **Cache typed-array reads into locals** in hot inner loops (eliminates
    V8 aliasing concerns, reduces bounds checks).
 3. **Avoid redundant `reinterpret()` calls** when `cx === cy`.
-4. **Size WORK buffers correctly.** If WORK is undersized, callees silently
-   allocate their own, wasting the caller's buffer. Check actual formulas.
+4. **Document the required WORK size in the JSDoc + README.** WORK is
+   caller-provided (LAPACKE convention) — see the "Workspace Convention"
+   section. If you find yourself reaching for `new Float64Array` inside
+   base.js to "just allocate it", that's the wrong fix — partition the
+   caller's WORK instead and document the size formula.
 
 **Profiling:** `bin/instrument.js` for subroutine-level, `bin/profile-zhgeqz.js`
 for per-line V8 CPU profiling, `bin/bench-blas.js` for leaf-node throughput.

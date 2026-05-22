@@ -1,0 +1,179 @@
+
+{{alias}}( order, M, p, q, X11, LDX11, X21, LDX21, THETA, strideTHETA, PHI, stridePHI, TAUP1, strideTAUP1, TAUP2, strideTAUP2, TAUQ1, strideTAUQ1, WORK, strideWORK )
+    Simultaneously bidiagonalize the blocks of a tall and skinny complex matrix with orthonormal columns (variant 3)
+
+    Parameters
+    ----------
+        order: string
+            Row-major (C-style) or column-major (Fortran-style) order.
+
+        M: integer
+            number of rows.
+
+        p: integer
+            p.
+
+        q: integer
+            q.
+
+        X11: Float64Array
+            input matrix.
+
+        LDX11: integer
+            leading dimension of `X11`.
+
+        X21: Float64Array
+            input matrix.
+
+        LDX21: integer
+            leading dimension of `X21`.
+
+        THETA: Float64Array
+            input array.
+
+        strideTHETA: integer
+            stride length for `THETA`.
+
+        PHI: Float64Array
+            input array.
+
+        stridePHI: integer
+            stride length for `PHI`.
+
+        TAUP1: Float64Array
+            input array.
+
+        strideTAUP1: integer
+            stride length for `TAUP1`.
+
+        TAUP2: Float64Array
+            input array.
+
+        strideTAUP2: integer
+            stride length for `TAUP2`.
+
+        TAUQ1: Float64Array
+            input array.
+
+        strideTAUQ1: integer
+            stride length for `TAUQ1`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+
+{{alias}}.ndarray( M, p, q, X11, strideX111, strideX112, offsetX11, X21, strideX211, strideX212, offsetX21, THETA, strideTHETA, offsetTHETA, PHI, stridePHI, offsetPHI, TAUP1, strideTAUP1, offsetTAUP1, TAUP2, strideTAUP2, offsetTAUP2, TAUQ1, strideTAUQ1, offsetTAUQ1, WORK, strideWORK, offsetWORK )
+    Simultaneously bidiagonalize the blocks of a tall and skinny complex matrix with orthonormal columns (variant 3), using alternative indexing semantics.
+
+    Parameters
+    ----------
+        M: integer
+            number of rows.
+
+        p: integer
+            p.
+
+        q: integer
+            q.
+
+        X11: Float64Array
+            input matrix.
+
+        strideX111: integer
+            stride of dimension 1 of `X11`.
+
+        strideX112: integer
+            stride of dimension 2 of `X11`.
+
+        offsetX11: integer
+            starting index for `X11`.
+
+        X21: Float64Array
+            input matrix.
+
+        strideX211: integer
+            stride of dimension 1 of `X21`.
+
+        strideX212: integer
+            stride of dimension 2 of `X21`.
+
+        offsetX21: integer
+            starting index for `X21`.
+
+        THETA: Float64Array
+            input array.
+
+        strideTHETA: integer
+            stride length for `THETA`.
+
+        offsetTHETA: integer
+            starting index for `THETA`.
+
+        PHI: Float64Array
+            input array.
+
+        stridePHI: integer
+            stride length for `PHI`.
+
+        offsetPHI: integer
+            starting index for `PHI`.
+
+        TAUP1: Float64Array
+            input array.
+
+        strideTAUP1: integer
+            stride of dimension 1 of `TAUP`.
+
+        offsetTAUP1: integer
+            starting index for `TAUP1`.
+
+        TAUP2: Float64Array
+            input array.
+
+        strideTAUP2: integer
+            stride of dimension 2 of `TAUP`.
+
+        offsetTAUP2: integer
+            starting index for `TAUP2`.
+
+        TAUQ1: Float64Array
+            input array.
+
+        strideTAUQ1: integer
+            stride of dimension 1 of `TAUQ`.
+
+        offsetTAUQ1: integer
+            starting index for `TAUQ1`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: integer
+            starting index for `WORK`.
+
+    Returns
+    -------
+    out: integer
+        Result.
+
+    Examples
+    --------
+    // TODO: Add examples
+
+    See Also
+    --------

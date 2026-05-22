@@ -1,0 +1,155 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zhetri2x
+
+> Computes the inverse of a complex Hermitian indefinite matrix `A` using the factorization `A = U*D*U**H` or `A = L*D*L**H` produced by [`zhetrf`][@stdlib/lapack/base/zhetrf] (classic Bunch-Kaufman, blocked worker routine).
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zhetri2x = require( '@stdlib/lapack/base/zhetri2x' );
+```
+
+#### zhetri2x( order, uplo, N, A, LDA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, nb )
+
+Computes the inverse of a complex Hermitian indefinite matrix `A` using the factorization produced by `zhetrf`.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var nb = 2;
+var ldwork = 1 + nb + 1;
+
+var A = new Complex128Array( [ 4.0, 0.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var WORK = new Complex128Array( ldwork * ( nb + 3 ) );
+
+var info = zhetri2x( 'column-major', 'lower', 1, A, 1, IPIV, 1, 0, WORK, 1, nb );
+// returns 0
+// A is now [ 0.25 + 0i ]
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **uplo**: specifies whether the upper or lower triangle of `A` is referenced (`'upper'` or `'lower'`). Must match the factorization.
+-   **N**: order of the matrix `A`.
+-   **A**: input/output [`Complex128Array`][@stdlib/array/complex128] containing the factored form of `A` from `zhetrf` on entry; the inverse on successful exit.
+-   **LDA**: leading dimension of `A`. Must satisfy `LDA >= max(1, N)`.
+-   **IPIV**: pivot indices from `zhetrf` (Int32Array). Non-negative entries are zero-based row indices for `1x1` pivot blocks; negative entries encode `2x2` pivot blocks via bitwise NOT (`~p`).
+-   **strideIPIV**: stride length for `IPIV`.
+-   **offsetIPIV**: starting index for `IPIV`.
+-   **WORK**: workspace [`Complex128Array`][@stdlib/array/complex128] of length `(N+nb+1) * (nb+3)`.
+-   **strideWORK**: row stride for `WORK` (in complex elements).
+-   **nb**: block size.
+
+Returns an integer `info` value: `0` on success; `info > 0` indicates that `D(info, info) = 0` and the matrix is singular.
+
+#### zhetri2x.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, nb )
+
+Same computation using strided/offset semantics (ndarray-style).
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+
+var nb = 2;
+var ldwork = 1 + nb + 1;
+var A = new Complex128Array( [ 4.0, 0.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var WORK = new Complex128Array( ldwork * ( nb + 3 ) );
+
+var info = zhetri2x.ndarray( 'lower', 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0, nb );
+// returns 0
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A` (in complex elements).
+-   **strideA2**: stride of the second dimension of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **offsetWORK**: starting index for `WORK` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   This is the blocked worker routine invoked by `zhetri2`. Callers typically compute the factorization with `zhetrf`, then call `zhetri2x` directly when `N >= nb` to benefit from BLAS-3 GEMM/TRMM updates, falling back to `zhetri` for small `N`.
+-   On entry, `A` must contain the Bunch-Kaufman factorization of a Hermitian matrix as produced by [`zhetrf`][@stdlib/lapack/base/zhetrf].
+-   The diagonal entries of `D` are real-valued (Hermitian symmetry forces the imaginary part to zero). The off-diagonal entries of `2x2` pivot blocks are complex.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+<!-- eslint no-undef: "error" -->
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' );
+var zhetri2x = require( '@stdlib/lapack/base/zhetri2x' );
+
+var nb = 2;
+var ldwork = 1 + nb + 1;
+
+var A = new Complex128Array( [ 0.5, 0.0 ] );
+var IPIV = new Int32Array( [ 0 ] );
+var WORK = new Complex128Array( ldwork * ( nb + 3 ) );
+
+var info = zhetri2x( 'column-major', 'lower', 1, A, 1, IPIV, 1, 0, WORK, 1, nb );
+console.log( 'info = ' + info );
+console.log( 'inv(A)[0,0] = ' + A.get( 0 ).re + ' + ' + A.get( 0 ).im + 'i' );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[@stdlib/array/complex128]: https://github.com/stdlib-js/stdlib
+
+[@stdlib/lapack/base/zhetrf]: https://github.com/stdlib-js/stdlib
+
+</section>
+
+<!-- /.links -->

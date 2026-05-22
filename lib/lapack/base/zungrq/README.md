@@ -1,0 +1,156 @@
+<!--
+
+@license Apache-2.0
+
+Copyright (c) 2025 The Stdlib Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+# zungrq
+
+> Generate an M-by-N complex matrix Q with orthonormal rows from the elementary reflectors returned by `ZGERQF`.
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zungrq = require( '@stdlib/lapack/base/zungrq' );
+```
+
+#### zungrq( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK )
+
+Generates an M-by-N complex matrix Q with orthonormal rows, defined as the last M rows of a product of K elementary reflectors of order N.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
+
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, -0.3, 3.0, 0.2, 4.0, 0.6 ] );
+var TAU = new Complex128Array( 1 );
+var WORK = new Complex128Array( 32 );
+
+zgerqf( 'column-major', 1, 4, A, 1, TAU, 1, WORK, 1 );
+var info = zungrq( 'column-major', 1, 4, 1, A, 1, TAU, 1, WORK, 1 );
+```
+
+The function has the following parameters:
+
+-   **order**: storage layout (`'row-major'` or `'column-major'`).
+-   **M**: number of rows of Q (`M >= 0`).
+-   **N**: number of columns of Q (`N >= M`).
+-   **K**: number of elementary reflectors (`0 <= K <= M`).
+-   **A**: input/output complex matrix. On entry, the (m-k+i)-th row contains the reflector vector for `H(i)` as returned by `zgerqf`. On exit, contains the M-by-N matrix Q.
+-   **LDA**: leading dimension of `A`.
+-   **TAU**: scalar factors of the elementary reflectors (length `K`).
+-   **strideTAU**: stride length for `TAU`.
+-   **WORK**: complex workspace array (length `>= M*NB`, where `NB = 32`).
+-   **strideWORK**: stride length for `WORK`.
+
+#### zungrq.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
+
+Generates an M-by-N complex matrix Q with orthonormal rows, using alternative indexing semantics.
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
+
+var A = new Complex128Array( [ 1.0, 0.5, 2.0, -0.3, 3.0, 0.2, 4.0, 0.6 ] );
+var TAU = new Complex128Array( 1 );
+var WORK = new Complex128Array( 32 );
+
+zgerqf.ndarray( 1, 4, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+var info = zungrq.ndarray( 1, 4, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+```
+
+The function has the following additional parameters:
+
+-   **strideA1**: stride of the first dimension of `A` (in complex elements).
+-   **strideA2**: stride of the second dimension of `A` (in complex elements).
+-   **offsetA**: starting index for `A` (in complex elements).
+-   **offsetTAU**: starting index for `TAU` (in complex elements).
+-   **offsetWORK**: starting index for `WORK` (in complex elements).
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   `zungrq()` corresponds to the [LAPACK][lapack] routine [`zungrq`][lapack-zungrq].
+-   `Q` is defined as `Q = H(1)^H H(2)^H ... H(K)^H`, where each `H(i)` is an elementary reflector.
+-   The blocked algorithm uses `NB = 32` and falls back to `ZUNGR2` for the leading unblocked block.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+<!-- eslint no-undef: "error" -->
+
+```javascript
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgerqf = require( '@stdlib/lapack/base/zgerqf' );
+var zungrq = require( '@stdlib/lapack/base/zungrq' );
+
+var M = 3;
+var N = 4;
+var K = M;
+var A = new Complex128Array( [
+    2.0, 1.0,  1.0, 0.2,  3.0, 0.8,
+    1.0, -0.5, 4.0, -1.0, 2.0, 0.1,
+    3.0, 0.7,  2.0, 0.4,  5.0, 0.6,
+    1.0, 0.3,  3.0, -0.2, 2.0, -0.3
+]);
+var TAU = new Complex128Array( K );
+var WORK = new Complex128Array( M * 32 );
+
+zgerqf.ndarray( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
+var info = zungrq.ndarray( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
+console.log( info );
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[lapack]: https://www.netlib.org/lapack/explore-html/
+
+[lapack-zungrq]: https://www.netlib.org/lapack/explore-html/d5/d2f/group__zungrq.html
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->
